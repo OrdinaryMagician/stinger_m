@@ -169,6 +169,7 @@ Class BackpackSpawner : RandomSpawner2 replaces Backpack
 		DropItem "ForceField", 255;
 		DropItem "UnrealBackpack", 255;
 		DropItem "MinigunSentry", 255;
+		DropItem "Peacemaker", 255;
 	}
 }
 
