@@ -1,0 +1,9 @@
+// shrunk version of -noflat- for Kinsie's test map, looks better
+Texture "-kinsie-",128,128
+{
+	XScale 8
+	YScale 8
+	WorldPanning
+	Patch "-noflat-",0,0{}
+}
+Sprite "BPAKA0",0,0{}

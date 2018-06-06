@@ -1,0 +1,9 @@
+GameInfo
+{
+	AddEventHandlers = "UnrealMainHandler"
+	PlayerClasses = "UnrealPlayer"
+	StatusBarClass = "UnrealHud"
+	BorderFlat = "Border"
+	BackpackType = "UnrealBackpack"
+	Border = 0,0,"","","","","","","",""
+}

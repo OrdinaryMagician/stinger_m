@@ -1,0 +1,32 @@
+ULargeFont
+{
+	TEMPLATE lfnt_%03d
+}
+UMedFont
+{
+	TEMPLATE mfnt_%03d
+}
+ULargeRedFont
+{
+	TEMPLATE lrf_%03d
+}
+UTinyFont
+{
+	TEMPLATE tf_%03d
+}
+UTinyRedFont
+{
+	TEMPLATE trf_%03d
+}
+UTinyWhiteFont
+{
+	TEMPLATE twf_%03d
+}
+UWhiteFont
+{
+	TEMPLATE wf_%03d
+}
+UTahoma10
+{
+	TEMPLATE th10_%03d
+}

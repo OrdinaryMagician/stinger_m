@@ -1,0 +1,13 @@
+Model "UnrealBackpack"
+{
+	Path "models"
+	Model 0 "Backpack2_d.3d"	// cheaply edited out of SelectionMale1 (offsets weren't even readjusted, so I have to do it here)
+	Skin 0 "bpak.png"
+	Offset -15.795 13.1625 -16	// calculating the X and Y offsets was hard, but I'm glad I added the "estimated center" feature in umeshinfo now
+	Scale 0.36 0.3 0.3
+	AngleOffset 90
+	RollOffset -90
+	ROTATING
+
+	FrameIndex BPAK A 0 0
+}

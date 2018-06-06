@@ -1,0 +1,40 @@
+// Guarantee there's dark variants of team colors (yes, even black and white)
+DarkBlack
+{
+	#090909  #282828
+Console:
+	#000000  #191919    0 127
+	#050505  #282828  128 256
+Flat:
+	#000000
+}
+
+DarkPurple
+{
+	#110011  #670067
+Console:
+	#000000  #4F004D    0 127
+	#800080  #808080  128 256
+Flat:
+	#4C3366
+}
+
+DarkOrange
+{
+	#100000  #804000
+Console:
+	#100000  #482000    0 127
+	#804000  #807F7F  128 256
+Flat:
+	#805500
+}
+
+DarkWhite
+{
+	#121212  #808080
+Console:
+	#000000  #404040    0 127
+	#808080  #808080  128 256
+Flat:
+	#707070
+}

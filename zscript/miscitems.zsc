@@ -1,0 +1,151 @@
+// Backpack that only gives ammo for valid weapons
+Class UnrealBackpack : BackpackItem replaces Backpack
+{
+	override Inventory CreateCopy( Actor other )
+	{
+		// Find every unique type of ammoitem. Give it to the player if
+		// he doesn't have it already, and double its maximum capacity.
+		for ( int i=0; i<AllActorClasses.Size(); i++ )
+		{
+			let type = (class<Ammo>)(AllActorClasses[i]);
+			if ( !type || (type.GetParentClass() != 'Ammo') ) continue;
+			// check that it's for a valid weapon
+			bool isvalid = false;
+			for ( int j=0; j<AllActorClasses.Size(); j++ )
+			{
+				let type2 = (class<Weapon>)(AllActorClasses[j]);
+				if ( !type2 ) continue;
+				let rep = GetReplacement(type2);
+				if ( (rep != type2) && !(rep is "DehackedPickup") ) continue;
+				readonly<Weapon> weap = GetDefaultByType(type2);
+				if ( !other.player || !other.player.weapons.LocateWeapon(type2) || weap.bCheatNotWeapon ) continue;
+				if ( (weap.AmmoType1 == type) || (weap.AmmoType2 == type) )
+				{
+					isvalid = true;
+					break;
+				}
+			}
+			if ( !isvalid ) continue;
+			let ammoitem = Ammo(other.FindInventory(type));
+			int amount = GetDefaultByType(type).BackpackAmount;
+			// extra ammo in baby mode and nightmare mode
+			if ( !bIgnoreSkill ) amount = int(amount*G_SkillPropertyFloat(SKILLP_AmmoFactor));
+			if ( amount < 0 ) amount = 0;
+			if ( !ammoitem )
+			{
+				// The player did not have the ammoitem. Add it.
+				ammoitem = Ammo(Spawn(type));
+				ammoitem.Amount = bDepleted?0:amount;
+				if ( ammoitem.BackpackMaxAmount > ammoitem.MaxAmount )
+					ammoitem.MaxAmount = ammoitem.BackpackMaxAmount;
+				if ( ammoitem.Amount > ammoitem.MaxAmount )
+					ammoitem.Amount = ammoitem.MaxAmount;
+				ammoitem.AttachToOwner(other);
+			}
+			else
+			{
+				// The player had the ammoitem. Give some more.
+				if ( ammoitem.MaxAmount < ammoitem.BackpackMaxAmount )
+					ammoitem.MaxAmount = ammoitem.BackpackMaxAmount;
+				if ( !bDepleted && (ammoitem.Amount < ammoitem.MaxAmount) )
+				{
+					ammoitem.Amount += amount;
+					if ( ammoitem.Amount > ammoitem.MaxAmount )
+						ammoitem.Amount = ammoitem.MaxAmount;
+				}
+			}
+		}
+		return Inventory.CreateCopy(other);
+	}
+	override bool HandlePickup (Inventory item)
+	{
+		// Since you already have a backpack, that means you already have every
+		// kind of ammo in your inventory, so we don't need to look at the
+		// entire PClass list to discover what kinds of ammo exist, and we don't
+		// have to alter the MaxAmount either.
+		if ( item is 'BackpackItem' )
+		{
+			for ( let probe = Owner.Inv; probe; probe = probe.Inv )
+			{
+				if ( probe.GetParentClass() != 'Ammo' ) continue;
+				if ( probe.Amount >= probe.MaxAmount && !sv_unlimited_pickup ) continue;
+				int amount = Ammo(probe).Default.BackpackAmount;
+				// extra ammo in baby mode and nightmare mode
+				if ( !bIgnoreSkill )
+					amount = int(amount*G_SkillPropertyFloat(SKILLP_AmmoFactor));
+				probe.Amount += amount;
+				if ( (probe.Amount > probe.MaxAmount) && !sv_unlimited_pickup )
+					probe.Amount = probe.MaxAmount;
+			}
+			// The pickup always succeeds, even if you didn't get anything
+			item.bPickupGood = true;
+			return true;
+		}
+		return false;
+	}
+	Default
+	{
+		Tag "Backpack";
+		Inventory.PickupMessage "You got a Backpack.";
+		Inventory.RespawnTics 2100;
+	}
+	States
+	{
+	Spawn:
+		BPAK A -1;
+		Stop;
+	}
+}
+
+Class UTranslator : UnrealInventory
+{
+	bool bCurrentlyActivated, bNewMessage, bNotNewMessage, bShowHint;
+	string NewMessage, Hint;
+	ui TextureID thud;
+	ui Font tfnt;
+
+	ui void DrawTranslator( Vector2 scalev, double ClipX, double ClipY )
+	{
+		if ( thud.IsNull() ) thud = TexMan.CheckForTexture("TranHUD3",TexMan.Type_Any);
+		if ( !tfnt ) tfnt = Font.FindFont('UTahoma10');
+		double CurX, CurY;
+		CurX = ClipX/2-128;
+		CurY = ClipY/2-68;
+		Screen.DrawTexture(thud,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+		String ttxt;
+		if ( bShowHint && (Hint.length() > 0) ) ttxt = String.Format("Hint: %s",Hint);
+		else if ( NewMessage.length() > 0 ) ttxt = NewMessage;
+		else ttxt = "I'd just like to interject for a moment. What you're referring to as Linux, is in fact, GNU/Linux, or as I've recently taken to calling it, GNU plus Linux. Linux is not an operating system unto itself, but rather another free component of a fully functioning GNU system made useful by the GNU corelibs, shell utilities and vital system components comprising a full OS as defined by POSIX.";
+		BrokenLines lines = tfnt.BreakLines(ttxt,220);
+		int th = tfnt.GetHeight();
+		CurX += 20;
+		CurY += 18;
+		for ( int i=0; i<lines.Count() && i<(110/th); i++ )
+		{
+			Screen.DrawText(tfnt,Font.CR_GREEN,CurX,CurY,lines.StringAt(i),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+			CurY += th-1;
+		}
+	}
+
+	override void Travelled()
+	{
+		Super.Travelled();
+		NewMessage = Hint = "";
+	}
+
+	override bool Use( bool pickup )
+	{
+		if ( pickup ) return false;
+		bActive = bCurrentlyActivated = !bCurrentlyActivated;
+		if ( !bActive ) bShowHint = bNewMessage = bNotNewmessage = false;
+		return false;
+	}
+
+	Default
+	{
+		Tag "Universal Translator";
+		Inventory.PickupMessage "You got the Universal Translator.";
+		Inventory.Icon "I_Tran";
+		Inventory.MaxAmount 1;
+	}
+}

@@ -1,0 +1,192 @@
+// Tier 1 (chainsaw)
+Class Tier1Weapon : RandomSpawner2 replaces Chainsaw
+{
+	Default
+	{
+		DropItem "Stunner", 255;
+		DropItem "UnrealTranslocator", 255;
+	}
+}
+
+// Tier 2 (pistol, clip)
+Class Tier2Weapon : RandomSpawner2 replaces Pistol
+{
+	Default
+	{
+		DropItem "Automag", 255;
+		DropItem "OldAutomag", 255;
+	}
+}
+
+Class Tier2Ammo : RandomSpawner2 replaces Clip
+{
+	Default
+	{
+		DropItem "UClip", 255;
+	}
+}
+
+// Tier 3 (shotgun, shells)
+Class Tier3Weapon : RandomSpawner2 replaces Shotgun
+{
+	Default
+	{
+		DropItem "Stinger", 255;
+		DropItem "ASMD", 255;
+		DropItem "Quadshot", 255;
+		DropItem "Impaler", 255;
+	}
+}
+Class Tier3Weapon2 : Tier3Weapon replaces SuperShotgun {}
+Class Tier3Ammo : RandomSpawner2 replaces Shell
+{
+	Default
+	{
+		DropItem "StingerAmmo", 255;
+		DropItem "ASMDAmmo", 255;
+		DropItem "QShells", 255;
+	}
+}
+Class Tier3Ammo2 : Tier3Ammo replaces ShellBox {}
+
+// Tier 4 (chaingun, ammo box)
+Class Tier4Weapon : RandomSpawner2 replaces Chaingun
+{
+	Default
+	{
+		DropItem "Razorjack", 255;
+		DropItem "UMinigun", 255;
+	}
+}
+Class Tier4Ammo : RandomSpawner2 replaces ClipBox
+{
+	Default
+	{
+		DropItem "RazorAmmo", 255;
+		DropItem "UMiniAmmo", 255;
+	}
+}
+
+// Tier 5 (rocket launcher, rocket ammo)
+Class Tier5Weapon : RandomSpawner2 replaces RocketLauncher
+{
+	Default
+	{
+		DropItem "Eightball", 255;
+		DropItem "UFlakCannon", 255;
+	}
+}
+Class Tier5Ammo : RandomSpawner2 replaces RocketAmmo
+{
+	Default
+	{
+		DropItem "RocketCan", 255;
+		DropItem "UFlakAmmo", 255;
+	}
+}
+Class Tier5Ammo2 : RandomSpawner2 replaces RocketBox
+{
+	Default
+	{
+		DropItem "RocketCan", 255;
+		DropItem "UFlakBox", 255;
+	}
+}
+
+// Tier 6 (plasma rifle, cell)
+Class Tier6Weapon : RandomSpawner2 replaces PlasmaRifle
+{
+	Default
+	{
+		DropItem "GESBioRifle", 255;
+		DropItem "Rifle", 255;
+		DropItem "Flamethrower", 255;
+	}
+}
+Class Tier6Ammo : RandomSpawner2 replaces Cell
+{
+	Default
+	{
+		DropItem "BioSludge", 255;
+		DropItem "URifleShell", 255;
+		DropItem "NapalmCan", 255;
+	}
+}
+Class Tier6Ammo2 : RandomSpawner2 replaces CellPack
+{
+	Default
+	{
+		DropItem "BioSludge", 255;
+		DropItem "URifleAmmo", 255;
+		DropItem "NapalmCan", 255;
+	}
+}
+
+// Tier 7 (bfg9000)
+Class Tier7Weapon : RandomSpawner2 replaces BFG9000
+{
+	Default
+	{
+		DropItem "GatlingGun", 255;
+	}
+}
+
+// Misc.
+Class BerserkSpawner : RandomSpawner2 replaces Berserk
+{
+	Default
+	{
+		DropItem "Amplifier", 255;
+		DropItem "WeaponPowerup", 255;
+		DropItem "UPowerup", 255;
+	}
+}
+
+Class LightSpawner : RandomSpawner2 replaces Infrared
+{
+	Default
+	{
+		DropItem "Flashlight", 255;
+		DropItem "USearchlight", 255;
+	}
+}
+
+Class RadsuitSpawner : RandomSpawner2 replaces Radsuit
+{
+	Default
+	{
+		DropItem "UJumpBoots", 255;
+		DropItem "ToxinSuit", 255;
+	}
+}
+
+Class BackpackSpawner : RandomSpawner2 replaces Backpack
+{
+	Default
+	{
+		DropItem "AsbestosSuit", 255;
+		DropItem "VoiceBox", 255;
+		DropItem "ForceField", 255;
+		DropItem "UnrealBackpack", 255;
+		DropItem "MinigunSentry", 255;
+	}
+}
+
+Class BlursphereSpawner : RandomSpawner2 replaces Blursphere
+{
+	Default
+	{
+		DropItem "UInvisibility", 255;
+		DropItem "Dampener", 255;
+		DropItem "ChameleonHeart", 255;
+	}
+}
+
+Class StimpakSpawner : RandomSpawner2 replaces Stimpack
+{
+	Default
+	{
+		DropItem "Bandages", 255;
+		DropItem "NaliFruit", 255;
+	}
+}

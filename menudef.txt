@@ -1,0 +1,8 @@
+OptionMenu "UnrealOptionMenu"
+{
+	Title "Unreal Options"
+
+	StaticText "HUD Options", "Gold"
+	Slider "HUD Mode", "stinger_hudmode", 0, 5, 1, 0
+	Slider "HUD Mode", "stinger_hudscale", 1, 8, 1, 0
+}

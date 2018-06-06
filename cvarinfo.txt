@@ -1,0 +1,3 @@
+user bool stinger_footsteps = true;
+user int stinger_hudmode = 0;
+user int stinger_hudscale = 1;

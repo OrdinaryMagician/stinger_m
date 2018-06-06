@@ -1,0 +1,48 @@
+/*Brightmap Texture "models/JRelicSkull_01b.png"
+{
+	Map "brightmaps/JRelicSkull_01b.png"
+}*/
+HardwareShader Texture "models/JRelicSkull_01b.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
+/*Brightmap Texture "models/JRelicSkull_01g.png"
+{
+	Map "brightmaps/JRelicSkull_01g.png"
+}*/
+HardwareShader Texture "models/JRelicSkull_01g.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
+/*Brightmap Texture "models/JRelicSkull_01r.png"
+{
+	Map "brightmaps/JRelicSkull_01r.png"
+}*/
+HardwareShader Texture "models/JRelicSkull_01r.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
+HardwareShader Texture "models/BlueSkin2.png"
+{
+	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
+}
+HardwareShader Texture "models/RedSkin2.png"
+{
+	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
+}
+HardwareShader Texture "models/GoldSkin2.png"
+{
+	Shader "shaders/glsl/MeshEnviroMap_AmbientGlow.fp"
+}
+HardwareShader Texture "models/Sting1_.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
+Brightmap Texture "models/Sting1.png"
+{
+	Map "brightmaps/Sting1.png"
+}
+HardwareShader Texture "models/JTaryPick1.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}

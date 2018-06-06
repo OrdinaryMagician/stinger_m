@@ -1,0 +1,3 @@
+Models, textures and audio (C)1995-1999 Epic Games.
+
+Porting and adjustments by Marisa Kirisame.

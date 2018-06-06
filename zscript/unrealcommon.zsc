@@ -1,0 +1,388 @@
+Class UnrealPlayer : DoomPlayer
+{
+	bool lastground;
+	double lastvelz, prevvelz;
+	transient CVar footsteps;
+
+	Default
+	{
+		Player.StartItem "Automag";
+		Player.StartItem "DispersionPistol";
+		Player.StartItem "UMiniAmmo", 30;
+		Player.DamageScreenColor "FF 00 00", 1.0;
+		Player.ViewHeight 46;
+	}
+
+	// Have to modify the give cheat to handle UT armor
+	override void CheatGive( String name, int amount )
+	{
+		if ( PlayerNumber() != consoleplayer )
+			A_Log(String.Format("%s is a cheater: give %s\n",player.GetUserName(),name));
+		if ( !player.mo || (player.health <= 0) ) return;
+		int giveall = ALL_NO;
+		if ( name ~== "all" ) giveall = ALL_YES;
+		else if (name ~== "everything") giveall = ALL_YESYES;
+		if ( name ~== "health" )
+		{
+			if ( amount > 0 )
+			{
+				health += amount;
+				player.health = health;
+			}
+			else player.health = health = GetMaxHealth(true);
+		}
+		if ( giveall || (name ~== "backpack") )
+		{
+			// Select the correct type of backpack based on the game
+			let type = (class<Inventory>)(gameinfo.backpacktype);
+			if ( type ) GiveInventory(type,1,true);
+			if ( !giveall ) return;
+		}
+		if ( giveall || (name ~== "ammo") )
+		{
+			// Find every unique type of ammo. Give it to the player if
+			// he doesn't have it already, and set each to its maximum.
+			for ( int i=0; i<AllActorClasses.Size(); i++ )
+			{
+				let type = (class<Ammo>)(AllActorClasses[i]);
+				if ( !type || (type.GetParentClass() != "Ammo") )
+					continue;
+				// Only give if it's for a valid weapon, unless using "give everything"
+				bool isvalid = false;
+				for ( int j=0; j<AllActorClasses.Size(); j++ )
+				{
+					let type2 = (class<Weapon>)(AllActorClasses[j]);
+					if ( !type2 ) continue;
+					let rep = GetReplacement(type2);
+					if ( (rep != type2) && !(rep is "DehackedPickup") ) continue;
+					readonly<Weapon> weap = GetDefaultByType(type2);
+					if ( !player.weapons.LocateWeapon(type2) || (weap.bCheatNotWeapon && (giveall != ALL_YESYES)) ) continue;
+					if ( (weap.AmmoType1 == type) || (weap.AmmoType2 == type) )
+					{
+						isvalid = true;
+						break;
+					}
+				}
+				if ( !isvalid ) continue;
+				let ammoitem = FindInventory(type);
+				if ( !ammoitem )
+				{
+					ammoitem = Inventory(Spawn(type));
+					ammoitem.AttachToOwner(self);
+					ammoitem.Amount = ammoitem.MaxAmount;
+				}
+				else if ( ammoitem.Amount < ammoitem.MaxAmount )
+					ammoitem.Amount = ammoitem.MaxAmount;
+			}
+			if ( !giveall ) return;
+		}
+		if ( giveall || (name ~== "armor") )
+		{
+			// Doomreal gives the player all subclasses of UnrealArmor
+			for ( int i=0; i<AllActorClasses.Size(); i++ )
+			{
+				if ( !(AllActorClasses[i] is "UnrealArmor") ) continue;
+				let item = Inventory(Spawn(AllActorClasses[i]));
+				if ( !item.CallTryPickup(self) ) item.Destroy();
+			}
+			if ( !giveall ) return;
+		}
+		if ( giveall || (name ~== "keys") )
+		{
+			for ( int i=0; i<AllActorClasses.Size(); i++ )
+			{
+				if ( !(AllActorClasses[i] is "Key") ) continue;
+				let keyitem = GetDefaultByType(AllActorClasses[i]);
+				if ( keyitem.special1 )
+				{
+					let item = Inventory(Spawn(AllActorClasses[i]));
+					if ( !item.CallTryPickup(self) ) item.Destroy();
+				}
+			}
+			if ( !giveall ) return;
+		}
+		if ( giveall || (name ~== "weapons") )
+		{
+			let savedpending = player.PendingWeapon;
+			for ( int i=0; i<AllActorClasses.Size(); i++ )
+			{
+				let type = (class<Weapon>)(AllActorClasses[i]);
+				if ( !type || (type == "Weapon") ) continue;
+				// Don't give replaced weapons unless the replacement was done by Dehacked.
+				let rep = GetReplacement(type);
+				if ( (rep == type) || (rep is "DehackedPickup") )
+				{
+					// Give the weapon only if it is set in a weapon slot.
+					if ( !player.weapons.LocateWeapon(type) ) continue;
+					readonly<Weapon> def = GetDefaultByType(type);
+					if ( (giveall == ALL_YESYES) || !def.bCheatNotWeapon )
+						GiveInventory(type,1,true);
+				}
+			}
+			player.PendingWeapon = savedpending;
+			if ( !giveall ) return;
+		}
+		if ( giveall || (name ~== "artifacts") )
+		{
+			for ( int i=0; i<AllActorClasses.Size(); i++ )
+			{
+				let type = (class<Inventory>)(AllActorClasses[i]);
+				if ( !type ) continue;
+				let def = GetDefaultByType (type);
+				if ( def.Icon.isValid() && (def.MaxAmount > 1) &&
+					!(type is "PuzzleItem") && !(type is "Powerup") && !(type is "Ammo") &&	!(type is "Armor"))
+				{
+					// Do not give replaced items unless using "give everything"
+					if ( (giveall == ALL_YESYES) || (GetReplacement(type) == type) )
+						GiveInventory(type,(amount<=0)?def.MaxAmount:amount,true);
+				}
+			}
+			if ( !giveall ) return;
+		}
+		if ( giveall || (name ~== "puzzlepieces") )
+		{
+			for ( int i=0; i<AllActorClasses.Size(); i++ )
+			{
+				let type = (class<PuzzleItem>)(AllActorClasses[i]);
+				if ( !type ) continue;
+				let def = GetDefaultByType(type);
+				if ( !def.Icon.isValid() ) continue;
+				// Do not give replaced items unless using "give everything"
+				if ( (giveall == ALL_YESYES) || (GetReplacement(type) == type) )
+					GiveInventory(type,(amount<=0)?def.MaxAmount:amount,true);
+			}
+			if ( !giveall ) return;
+		}
+		if ( giveall ) return;
+		let type = name;
+		if ( !type )
+		{
+			if ( PlayerNumber() == consoleplayer )
+				A_Log(String.Format("Unknown item \"%s\"\n",name));
+		}
+		else GiveInventory(type,amount,true);
+	}
+
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !player ) return;
+		if ( !footsteps ) footsteps = CVar.GetCVar('stinger_footsteps',players[consoleplayer]);
+		if ( !footsteps.GetBool() ) return;
+		double ang = level.time/(20*TICRATE/35.)*360.;
+		if ( (abs(sin(ang)) >= 1.0) && player.onground && (player.cmd.forwardmove || player.cmd.sidemove) )
+		{
+			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid ) A_PlaySound("u1/playerfootstepwet",CHAN_5,abs(vel.xy.length())*0.03);
+			else A_PlaySound("u1/playerfootstep",CHAN_5,abs(vel.xy.length())*0.03);
+		}
+		if ( player.onground && !bNoGravity && !lastground && (lastvelz < -4) && (lastvelz >= -8) )
+		{
+			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid ) A_PlaySound("u1/wetsplash",CHAN_AUTO,abs(lastvelz*0.0625));
+			else A_PlaySound("*land",CHAN_AUTO,abs(lastvelz*0.03));
+		}
+		lastground = player.onground;
+		lastvelz = prevvelz;
+		prevvelz = vel.z;
+	}
+}
+
+// Random Spawner that passes through dropped status to items
+Class RandomSpawner2 : RandomSpawner
+{
+	override void PostSpawn( Actor spawned )
+	{
+		if ( !bDROPPED ) return;
+		if ( spawned is 'Inventory' ) Inventory(spawned).bTOSSED = bDROPPED;
+		if ( spawned is 'UnrealWeapon' )
+		{
+			spawned.SetState(spawned.ResolveState("Spawn")+1);
+			Inventory(spawned).bALWAYSPICKUP = true;
+		}
+	}
+}
+
+Class UnrealWeapon : Weapon
+{
+	// Drawstuffs under HUD
+	virtual ui void PreRender( double lbottom ) {}
+	// Drawstuffs over HUD
+	virtual ui void PostRender( double lbottom ) {}
+
+	override Inventory CreateTossable( int amt )
+	{
+		if ( Ammo1 && (Ammo1.Amount <= 0) ) return null;
+		Inventory d = Super.CreateTossable(amt);
+		if ( d && (d.GetClass() == GetClass()) )
+		{
+			d.SetState(d.ResolveState("Spawn")+1);
+			d.bALWAYSPICKUP = true;
+		}
+		return d;
+	}
+
+	override bool SpecialDropAction( Actor dropper )
+	{
+		SetState(ResolveState("Spawn")+1);
+		bALWAYSPICKUP = true;
+		return false;
+	}
+
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !Owner || !Owner.player || (Owner.player.ReadyWeapon != self) ) return;
+		Owner.player.WeaponState |= WF_WEAPONBOBBING; // U1 weapons always bob
+	}
+
+	override void OwnerDied()
+	{
+		Super.OwnerDied();
+		A_ClearRefire();
+	}
+
+	Default
+	{
+		Weapon.BobStyle "Smooth";
+		Weapon.BobSpeed 1.5;
+		Weapon.BobRangeX 0.2;
+		Weapon.BobRangeY 0.4;
+		+WEAPON.NOALERT;
+	}
+}
+
+Class UnrealInventory : Inventory
+{
+	bool bActive;	// is currently activated
+	int Charge;	// for timed items
+	int DefaultCharge;
+
+	Property Charge : DefaultCharge;
+
+	// Drawstuffs under HUD
+	virtual ui void PreRender( double lbottom ) {}
+	// Drawstuffs over HUD
+	virtual ui void PostRender( double lbottom ) {}
+
+	Default
+	{
+		+INVENTORY.INVBAR;
+		UnrealInventory.Charge 0;
+	}
+}
+
+Class UnrealArmor : Armor
+{
+	int absorb;
+
+	Property ArmorAbsorption : absorb;
+
+	Default
+	{
+		+INVENTORY.AUTOACTIVATE;
+		+INVENTORY.UNTOSSABLE;
+		Inventory.MaxAmount 0;
+	}
+	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
+	{
+		int saved;
+		if ( (amount > 0) && !DamageTypeDefinition.IgnoreArmor(damageType) )
+		{
+			saved = damage*absorb/100.;
+			if ( amount <= saved ) saved = amount;
+			newdamage -= saved;
+			amount -= saved;
+			damage = newdamage;
+		}
+		if ( damage > 0 ) newdamage = ApplyDamageFactors(GetClass(),damageType,damage,damage);
+		if ( amount <= 0 ) Destroy();
+	}
+}
+
+Class GenericFlash : HUDMessageBase
+{
+	Color col;
+	int duration;
+	double alpha;
+	Actor cam;
+	GenericFlash Setup( Actor camera, Color c, int d )
+	{
+		alpha = 1.0;
+		col = c;
+		duration = d;
+		cam = camera;
+		return self;
+	}
+	override bool Tick()
+	{
+		alpha -= 1./duration;
+		return (alpha<=0);
+	}
+	override void Draw( int bottom, int visibility )
+	{
+		if ( automapactive || (visibility != BaseStatusBar.HUDMSGLayer_UnderHUD) ) return;
+		if ( cam && (players[consoleplayer].camera != cam) ) return;
+		Screen.Dim(col,(col.a/255.)*alpha,0,0,Screen.GetWidth(),Screen.GetHeight());
+	}
+}
+
+Class QueuedFlash
+{
+	Color c;
+	int duration;
+	int tic;
+	Actor cam;
+}
+
+Class UnrealMainHandler : StaticEventHandler
+{
+	Array<QueuedFlash> flashes;
+
+	override void WorldLoaded( WorldEvent e )
+	{
+		if ( gamestate != GS_LEVEL || e.IsSaveGame ) return;
+		// prettify Kinsie's test map for a more Unreal feel
+		if ( level.levelname ~== "Modder Test Map" )
+		{
+			TexMan.ReplaceTextures("-noflat-","-kinsie-",0);
+			TextureID skytx = TexMan.CheckForTexture("BlueSky",TexMan.Type_Any);
+			level.ChangeSky(skytx,skytx);
+			// TODO handplace some dynamic lights and add Unreal/UT ambient sounds
+		}
+	}
+
+	override void WorldThingSpawned( WorldEvent e )
+	{
+		if ( e.Thing.bBOSS ) e.Thing.bNOTELEFRAG = true;
+	}
+
+	override void WorldTick()
+	{
+		for ( int i=0; i<flashes.size(); i++ )
+		{
+			if ( flashes[i].tic >= gametic ) continue;
+			flashes.Delete(i);
+			i--;
+		}
+	}
+
+	override void PostUiTick()
+	{
+		for ( int i=0; i<flashes.size(); i++ )
+		{
+			if ( flashes[i].tic < gametic ) continue;
+			GenericFlash gf = new("GenericFlash").Setup(flashes[i].cam,flashes[i].c,flashes[i].duration);
+			StatusBar.AttachMessage(gf,0,BaseStatusBar.HUDMSGLayer_UnderHUD);
+		}
+	}
+
+	static void DoFlash( Actor camera, Color c, int duration )
+	{
+		QueuedFlash qf = new("QueuedFlash");
+		qf.duration = duration;
+		qf.c = c;
+		qf.tic = gametic;
+		qf.cam = camera;
+		let hnd = UnrealMainHandler(StaticEventHandler.Find("UnrealMainHandler"));
+		hnd.flashes.push(qf);
+	}
+}
