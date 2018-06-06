@@ -3,8 +3,7 @@
 The Unreal 1 counterpart to Doom Tournament. Adds Unreal 1 weapons and items
 (including dummied out stuff and others).
 
-This mod requires very recent devbuilds of GZDoom or QZDoom. You can get them
-[here](https://devbuilds.drdteam.org/).
+This mod requires GZDoom 3.4.0 or later.
 
 ## Currently Implemented
 
