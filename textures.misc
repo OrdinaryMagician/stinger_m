@@ -6,4 +6,4 @@ Texture "-kinsie-",128,128
 	WorldPanning
 	Patch "-noflat-",0,0{}
 }
-Sprite "BPAKA0",0,0{}
+Sprite "BPAKA0",1,1{}

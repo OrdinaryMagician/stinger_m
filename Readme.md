@@ -9,11 +9,12 @@ This mod requires GZDoom 3.4.0 or later.
 
  - Stinger (slot 3) (replaces shotgun)
  - Backpack (replaces backpack, identical to Doom Tournament version)
+ - Unreal 1 HUD
+ - Translator (has to be spawned in, since it would only be useful for mappers)
 
 ## In progress
 
- - Unreal 1 HUD
- - Translator (has to be spawned in, since it would only be useful for mappers)
+ - Flak Cannon (slot 6) (replaces rocket launcher)
 
 ## Planned
 
@@ -22,7 +23,6 @@ This mod requires GZDoom 3.4.0 or later.
  - Automag (slot 2) (replaces pistol)
  - ASMD (slot 4) (replaces shotgun)
  - Eightball (slot 5) (replaces rocket launcher)
- - Flak Cannon (slot 6) (replaces rocket launcher)
  - Razorjack (slot 7) (replaces chaingun)
  - GES Bio Rifle (slot 8) (replaces plasma rifle)
  - Rifle (slot 9) (replaces plasma rifle)

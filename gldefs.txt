@@ -46,3 +46,15 @@ HardwareShader Texture "models/JTaryPick1.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
 }
+/*Brightmap Texture "models/JPickup1.png"
+{
+	Map "brightmaps/JPickup1.png"
+}*/
+HardwareShader Texture "models/JPickup1_.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+}
+HardwareShader Texture "models/Jflakshel1_.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}

@@ -57,7 +57,7 @@ Model "Stinger"
 	Model 2 "StingerM_d.3d"
 	SurfaceSkin 2 2 "FireEffect18.png"
 	SurfaceSkin 2 3 "FireEffect18.png"
-	Scale 0.1 -0.05 0.1
+	Scale 0.1 -0.08 0.1
 	AngleOffset 89
 	Offset 6.8 -13.2 -10.6
 	DONTCULLBACKFACES
@@ -82,7 +82,7 @@ Model "Stinger"
 	Model 0 "StingerM_d.3d"
 	SurfaceSkin 0 0 "Sting1.png"
 	SurfaceSkin 0 1 "Sting1.png"
-	Scale 0.1 -0.05 0.1
+	Scale 0.1 -0.08 0.1
 	AngleOffset 89
 	Offset 6.8 -13.2 -10.6
 
