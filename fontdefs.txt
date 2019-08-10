@@ -28,5 +28,5 @@ UWhiteFont
 }
 UTahoma10
 {
-	TEMPLATE th10_%03d
+	TEMPLATE tu10_%03d
 }

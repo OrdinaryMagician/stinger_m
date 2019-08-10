@@ -1,0 +1,103 @@
+// draws unreal-style main menu
+Class ListMenuItemUnrealBg : ListMenuItem
+{
+	TextureID tex[3];
+
+	void Init( ListMenuDescriptor desc, String dummy )
+	{
+		Super.Init(0,0);
+		tex[0] = TexMan.CheckForTexture("graphics/rmetal.png",TexMan.Type_Any);
+		tex[1] = TexMan.CheckForTexture("graphics/menubarr.png",TexMan.Type_Any);
+		tex[2] = TexMan.CheckForTexture("graphics/unlogo.png",TexMan.Type_Any);
+	}
+
+	override void Drawer( bool selected )
+	{
+		double StartX = 0.5*CleanWidth_1-128;
+		int num = (CleanHeight_1/512)+1;
+		for ( int i=0; i<=num; i++ )
+			Screen.DrawTexture(tex[0],false,StartX*CleanXFac_1,512*CleanYFac_1*i,DTA_CleanNoMove_1,true);
+		Screen.DrawTexture(tex[1],false,StartX*CleanXFac_1,(CleanHeight_1-58)*CleanYFac_1,DTA_CleanNoMove_1,true,DTA_LegacyRenderStyle,STYLE_Add);
+		Screen.DrawTexture(tex[2],false,StartX*CleanXFac_1,(CleanHeight_1-52)*CleanYFac_1,DTA_CleanNoMove_1,true);
+	}
+}
+
+Class ListMenuItemUnrealTextItem : ListMenuItemSelectable
+{
+	String mText;
+	Font mFont;
+	int mColor;
+	int mSpacing;
+
+	void Init( ListMenuDescriptor desc, String text, String hotkey, Name child, int param = 0 )
+	{
+		Super.Init(desc.mXpos,desc.mYpos,desc.mLinespacing,child,param);
+		mText = text;
+		mFont = Font.GetFont('ULargeFont');
+		mColor = Font.CR_UNTRANSLATED;
+		mSpacing = desc.mLineSpacing;
+		mHotkey = hotkey.GetNextCodePoint(0);
+	}
+
+	void InitDirect( double x, double y, int height, String hotkey, String text, Font font, int color, int color2, Name child, int param = 0 )
+	{
+		Super.Init(x,y,height,child,param);
+		mText = text;
+		mFont = Font.GetFont('ULargeFont');
+		mColor = Font.CR_UNTRANSLATED;
+		int pos = 0;
+		mHotkey = hotkey.GetNextCodePoint(0);
+	}
+
+	override void Drawer( bool selected )
+	{
+		let tFont = generic_ui?NewSmallFont:mFont;
+		double basex = floor(0.5*(CleanWidth_1-tFont.StringWidth(StringTable.Localize(mText))));
+		double basey = floor(0.25*(CleanHeight_1-mSpacing*5));
+		Screen.DrawText(tFont,mColor,(basex+mXPos)*CleanXFac_1,(basey+mYpos)*CleanYFac_1,mText,DTA_CleanNoMove_1,true,DTA_Alpha,selected?1.0:0.5);
+	}
+
+	override int GetWidth()
+	{
+		let tFont = generic_ui?NewSmallFont:mFont;
+		return max(1,tFont.StringWidth(StringTable.Localize(mText)));
+	}
+
+	override void DrawSelector( double xofs, double yofs, TextureID tex )
+	{
+		// nothing
+	}
+}
+
+// for hud config
+Class OptionMenuItemHudType : OptionMenuItem
+{
+	TextureID tex[6];
+	CVar mCVar;
+
+	OptionMenuItemHudType Init( String label )
+	{
+		Super.Init(label,"",true);
+		mCVar = CVar.FindCVar('stinger_hudmode');
+		tex[0] = TexMan.CheckForTexture("graphics/Hud1.png",TexMan.Type_Any);
+		tex[1] = TexMan.CheckForTexture("graphics/Hud2.png",TexMan.Type_Any);
+		tex[2] = TexMan.CheckForTexture("graphics/Hud3.png",TexMan.Type_Any);
+		tex[3] = TexMan.CheckForTexture("graphics/Hud4.png",TexMan.Type_Any);
+		tex[4] = TexMan.CheckForTexture("graphics/Hud5.png",TexMan.Type_Any);
+		tex[5] = TexMan.CheckForTexture("graphics/Hud6.png",TexMan.Type_Any);
+		return self;
+	}
+
+	override bool Selectable()
+	{
+		return false;
+	}
+
+	override int Draw( OptionMenuDescriptor desc, int y, int indent, bool selected )
+	{
+		int xpos = indent + CursorSpace();
+		int ypos = y + OptionMenuSettings.mLinespacing*CleanYfac_1;
+		Screen.DrawTexture(tex[mCVar.GetInt()],false,xpos,ypos,DTA_CleanNoMove_1,true);
+		return -1;
+	}
+}

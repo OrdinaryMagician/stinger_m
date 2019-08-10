@@ -3,7 +3,7 @@
 The Unreal 1 counterpart to Doom Tournament. Adds Unreal 1 weapons and items
 (including dummied out stuff and others).
 
-This mod requires GZDoom 3.4.0 or later.
+This mod requires GZDoom 4.1.0 or later, and runs on top of Doom Tournament.
 
 ## Currently Implemented
 
@@ -29,18 +29,21 @@ This mod requires GZDoom 3.4.0 or later.
  - Minigun (slot 0) (replaces chaingun)
 
  - Stunner (slot 1) (replaces chainsaw)
- - Translocator (slot 1) (replaces chainsaw)
+ - "Bonesaw" (slot 1) (replaces chainsaw)
+ - Translocator (slot 1)
  - Old Automag (slot 2) (replaces pistol)
  - Quadshot (slot 3) (replaces super shotgun)
- - Peacemaker (slot 5) (replaces backpack)
- - Impaler (slot 4) (replaces super shotgun)
- - Flamethrower (slot 8) (replaces plasma rifle)
- - Gatling Gun (slot 0) (replaces bfg9000)
+ - Peacemaker (slot 5) (rare spawn near backpack)
+ - Impaler (slot 4) (replaces bfg9000)
+ - Flamethrower (slot 8) (replaces bfg9000)
+ - Flame Gun (slot 7) (replaces bfg9000)
+ - Bigman Handgun (slot 5) (replaces bfg9000)
+ - Autocannon (slot 7) (replaces bfg9000)
 
  - Amplifier (replaces berserk)
  - Armor (replaces blue armor)
  - Flare (replaces armor bonus)
- - Flashlight (replaces  light amplifier)
+ - Flashlight (replaces light amplifier)
    - Searchlight (replaces light amplifier)
  - Medkit (replaces medkit)
  - Bandages (replaces stimpak)
@@ -51,18 +54,16 @@ This mod requires GZDoom 3.4.0 or later.
  - AntiGrav Boots (replaces radsuit)
  - Shield Belt (replaces megasphere)
    - Power Shield (replaces invulnerability)
- - Asbestos Suit (replaces backpack)
+ - Asbestos Suit (replaces radsuit if map has lava)
  - Kevlar Suit (replaces green armor)
- - Toxin Suit (replaces radsuit)
- - Voice Box (replaces backpack)
- - Forcefield (replaces backpack)
- - Dampener (replaces blursphere)
+ - Toxin Suit (replaces radsuit if map has slime)
+ - Voice Box (rare spawn near backpack)
+ - Forcefield (rare spawn near backpack)
+ - Dampener (rare spawn near backpack)
 
  - Motion Detector (replaces computer map)
- - Chameleon's Heart (replaces blursphere)
  - Light/Dark Flare (given at start, infinite use)
- - Minigun Sentry (replaces backpack)
- - Powerup (replaces berserk)
+ - Minigun Sentry (rare spawn near backpack)
 
 ## Known bugs
 

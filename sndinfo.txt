@@ -1,22 +1,5 @@
 $pitchshiftrange 0
 
-misc/gibbed1	gib1
-misc/gibbed2	gib2
-misc/gibbed3	gib3
-misc/gibbed4	gib4
-misc/gibbed5	gib5
-$random misc/gibbed { misc/gibbed1 misc/gibbed2 misc/gibbed3 misc/gibbed4 misc/gibbed5 }
-// universal gibs compat
-$alias UniversalGibs/Gib misc/gibbed
-// droplets compat
-misc/gibp1	gibp1
-misc/gibp2	gibp3
-misc/gibp3	gibp4
-misc/gibp4	gibp5
-misc/gibp5	gibp6
-$random misc/gibp { misc/gibp1 misc/gibp2 misc/gibp3 misc/gibp4 misc/gibp5 }
-$alias blood/hit misc/gibp
-
 // player sounds
 u1/maledie1	mdeath1
 u1/maledie2	mdeath3
@@ -37,26 +20,27 @@ u1/drowned	muwhit2
 $random u1/maledrowned { u1/maledrowned1 u1/drowned }
 u1/maledrowning	mdrown1
 
-$playeralias	player	male	*death		u1/maledie
-$playeralias	player	male	*xdeath		u1/maledie
-$playeralias	player	male	*gibbed		misc/gibbed
-$playeralias	player	male	*pain100	u1/malepain1
-$playeralias	player	male	*pain75		u1/malepain2
-$playeralias	player	male	*pain50		u1/malepain3
-$playeralias	player	male	*pain25		u1/malepain4
-$playeralias	player	male	*grunt		u1/malegrunt
-$playeralias	player	male	*land		u1/land
-$playeralias	player	male	*jump		u1/malejump
-$playeralias	player	male	*usefail	u1/malehump
-$playeralias	player	male	*surface	u1/malesurface
-$playeralias	player	male	*gasp		u1/malegasp
+$playeralias	umale	neutral	*death		u1/maledie
+$playeralias	umale	neutral	*xdeath		u1/maledie
+$playeralias	umale	neutral	*gibbed		misc/gibbed
+$playeralias	umale	neutral	*pain100	u1/malepain1
+$playeralias	umale	neutral	*pain75		u1/malepain2
+$playeralias	umale	neutral	*pain50		u1/malepain3
+$playeralias	umale	neutral	*pain25		u1/malepain4
+$playeralias	umale	neutral	*grunt		u1/malegrunt
+$playeralias	umale	neutral	*land		DSEMPTY
+$playeralias	umale	neutral	*uland		u1/land
+$playeralias	umale	neutral	*jump		u1/malejump
+$playeralias	umale	neutral	*usefail	u1/malehump
+$playeralias	umale	neutral	*surface	u1/malesurface
+$playeralias	umale	neutral	*gasp		u1/malegasp
 
-$playeralias	player	male	*death-drowning		u1/maledrowned
-$playeralias	player	male	*xdeath-drowning	u1/maledrowned
-$playeralias	player	male	*pain100-drowning	u1/maledrowning
-$playeralias	player	male	*pain75-drowning	u1/maledrowning
-$playeralias	player	male	*pain50-drowning	u1/maledrowning
-$playeralias	player	male	*pain25-drowning	u1/maledrowning
+$playeralias	umale	neutral	*death-drowning		u1/maledrowned
+$playeralias	umale	neutral	*xdeath-drowning	u1/maledrowned
+$playeralias	umale	neutral	*pain100-drowning	u1/maledrowning
+$playeralias	umale	neutral	*pain75-drowning	u1/maledrowning
+$playeralias	umale	neutral	*pain50-drowning	u1/maledrowning
+$playeralias	umale	neutral	*pain25-drowning	u1/maledrowning
 
 u1/femaledie1	death1df
 u1/femaledie2	death2af
@@ -71,56 +55,52 @@ u1/femalegrunt	lland1f
 u1/femalejump	jump1f
 u1/femalesurf	lgasp1f
 u1/femalegasp	hgasp3f
-u1/femaledrowned1	fuwhit1
+u1/femaledrowned1	uwhit1
 $random u1/femaledrowned { u1/femaledroenwd1 u1/drowned }
 u1/femaledrowning	mdrown2f
 
-$playeralias	player	female	*death		u1/femaledie
-$playeralias	player	female	*xdeath		u1/femaledie
-$playeralias	player	female	*gibbed		misc/gibbed
-$playeralias	player	female	*pain100	u1/femalepain1
-$playeralias	player	female	*pain75		u1/femalepain2
-$playeralias	player	female	*pain50		u1/femalepain3
-$playeralias	player	female	*pain25		u1/femalepain4
-$playeralias	player	female	*grunt		u1/femalegrunt
-$playeralias	player	female	*land		u1/land
-$playeralias	player	female	*jump		u1/femalejump
-$playeralias	player	female	*usefail	u1/femalegrunt
-$playeralias	player	female	*surface	u1/femalesurf
-$playeralias	player	female	*gasp		u1/femalegasp
+$playeralias	ufemale	neutral	*death		u1/femaledie
+$playeralias	ufemale	neutral	*xdeath		u1/femaledie
+$playeralias	ufemale	neutral	*gibbed		misc/gibbed
+$playeralias	ufemale	neutral	*pain100	u1/femalepain1
+$playeralias	ufemale	neutral	*pain75		u1/femalepain2
+$playeralias	ufemale	neutral	*pain50		u1/femalepain3
+$playeralias	ufemale	neutral	*pain25		u1/femalepain4
+$playeralias	ufemale	neutral	*grunt		u1/femalegrunt
+$playeralias	ufemale	neutral	*land		DSEMPTY
+$playeralias	ufemale	neutral	*uland		u1/land
+$playeralias	ufemale	neutral	*jump		u1/femalejump
+$playeralias	ufemale	neutral	*usefail	u1/femalegrunt
+$playeralias	ufemale	neutral	*surface	u1/femalesurf
+$playeralias	ufemale	neutral	*gasp		u1/femalegasp
 
-$playeralias	player	female	*death-drowning		u1/femaledrowned
-$playeralias	player	female	*xdeath-drowning	u1/femaledrowned
-$playeralias	player	female	*pain100-drowning	u1/femaledrowning
-$playeralias	player	female	*pain75-drowning	u1/femaledrowning
-$playeralias	player	female	*pain50-drowning	u1/femaledrowning
-$playeralias	player	female	*pain25-drowning	u1/femaledrowning
+$playeralias	ufemale	neutral	*death-drowning		u1/femaledrowned
+$playeralias	ufemale	neutral	*xdeath-drowning	u1/femaledrowned
+$playeralias	ufemale	neutral	*pain100-drowning	u1/femaledrowning
+$playeralias	ufemale	neutral	*pain75-drowning	u1/femaledrowning
+$playeralias	ufemale	neutral	*pain50-drowning	u1/femaledrowning
+$playeralias	ufemale	neutral	*pain25-drowning	u1/femaledrowning
 
-u1/playerfootstep1	stwalk1
-u1/playerfootstep2	stwalk2
-u1/playerfootstep3	stwalk3
-$random u1/playerfootstep { u1/playerfootstep1 u1/playerfootstep2 u1/playerfootstep3 }
-
-u1/playerfootstepwet	lsplash
-u1/wetsplash		dsplash
-
-misc/secret	teleprt1
+misc/secret	teleprt2
 misc/i_pkup	ammosnd
-misc/k_pkup	ammosnd
-misc/w_pkup	weappick
 misc/p_pkup	gpicksnd
 misc/spawn	respsnd
 misc/chat	beep
 misc/chat2	beep
-misc/teleport	resp2a
 misc/u1superh	health1
 misc/u1heal	health2
 misc/u1armor	armorsnd
-belt/pickup	beltsnd
-belt/absorb	sbelthe2
-boot/pickup	bootsnd
-boot/jump	bootjmp
-invis/pickup	invisibl
+misc/teleport	teleprt1
+
+menu/activate	Select4	// Activate a new menu
+menu/backup	Select4	// Backup to previous menu
+menu/prompt	Select4	// Activate a prompt "menu"
+menu/cursor	Updown3		// Move cursor up/down
+menu/change	Select4	// Select new value for option
+menu/invalid	lland01		// Menu not available
+menu/dismiss	Select4	// Dismiss a prompt message
+menu/choose	Select4	// Choose a menu item
+menu/clear	Select4	// Close top menu
 
 stinger/select	stingerl
 stinger/fire	stingerf

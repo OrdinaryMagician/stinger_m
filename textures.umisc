@@ -1,0 +1,7 @@
+Texture "BLKNESS",64,64
+{
+	Patch "MFLR8_1",0,0
+	{
+		Blend "#000000",1.0
+	}
+}

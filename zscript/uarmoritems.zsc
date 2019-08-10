@@ -1,0 +1,7 @@
+Class UnrealArmor : UTArmor
+{
+	Default
+	{
+		-INVENTORY.ALWAYSPICKUP;
+	}
+}

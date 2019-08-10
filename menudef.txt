@@ -1,8 +1,117 @@
+OptionValue "IntroTypeMenu"
+{
+	0, "$STING_UNREAL99"
+	1, "$STING_UNREAL97"
+	2, "$STING_UNREAL95"
+}
+
 OptionMenu "UnrealOptionMenu"
 {
-	Title "Unreal Options"
+	Title "$STING_MTITLE"
 
-	StaticText "HUD Options", "Gold"
-	Slider "HUD Mode", "stinger_hudmode", 0, 5, 1, 0
-	Slider "HUD Mode", "stinger_hudscale", 1, 8, 1, 0
+	Option "$STING_INTRO", "stinger_introtype", "IntroTypeMenu"
+	Command "$FLAK_APPLY", "event refreshmenu"
+	StaticText " "
+	StaticText "$STING_HOPTS", "Gold"
+	HudType " "
+	StaticText " "
+	StaticText " "
+	StaticText " "
+	StaticText " "
+	Slider "$STING_HUDMODE", "stinger_hudmode", 0, 5, 1, 0
+	ScaleSlider "$STING_HUDSCALE", "stinger_hudscale", 0, 8, 1, "$STING_HUDFIT"
+}
+
+AddOptionMenu "OptionsMenu"
+{
+	StaticText " "
+	Submenu "$STING_MTITLE", "UnrealOptionMenu"
+	Submenu "$STING_MCREDS", "UnrealCreditsMenu"
+}
+
+OptionMenu "UnrealCreditsMenu"
+{
+	Title "$STING_MCREDS"
+
+	StaticText "$STING_CDR", "Red"
+	StaticText " "
+	StaticText "$STING_CLEAD", "Gold"
+	StaticText "Marisa Kirisame", "White"
+	StaticText " "
+	StaticText "$STING_CASSETS", "Gold"
+	StaticText "Epic Games, id Software, Bethesda Softworks", "White"
+	StaticText " "
+	StaticText "$STING_CPATRON", "Gold"
+	StaticText "Aisamai, Alexa Jones-Gonzales, Jonas Höglund,", "White"
+	StaticText "Zard1084, Jonathan Nemo, NekoMithos, 3d0xp0xy", "White"
+	StaticText " "
+	StaticText "$STING_CTHANK", "Gold"
+	StaticText "KynikossDragonn, The Cutting Room Floor", "White"
+	StaticText " "
+	StaticText "Unreal", "Red"
+	StaticText " "
+	StaticText "$STING_CTOP", "White"
+	StaticText " "
+	StaticText "$STING_CGDES", "Gold"
+	StaticText "James Schmalz, Cliff Bleszinski", "White"
+	StaticText " "
+	StaticText "$STING_CLEVEL", "Gold"
+	StaticText "Cliff Bleszinski, T. Elliot Cannon,", "White"
+	StaticText "Pancho Eekels, Jeremy War,", "White"
+	StaticText "Cedric Fiorentino, Shane Caudle", "White"
+	StaticText " "
+	StaticText "$STING_CANIM", "Gold"
+	StaticText "Dave Carter", "White"
+	StaticText " "
+	StaticText "$STING_CART", "Gold"
+	StaticText "James Schmalz, Mike Leatham, Artur Bialas", "White"
+	StaticText " "
+	StaticText "$STING_CPROG", "Gold"
+	StaticText "Tim Sweeney, Steven Polge, Erik de Neve,", "White"
+	StaticText "James Schmalz, Carlo Vogelsang, Nick Michon", "White"
+	StaticText " "
+	StaticText "$STING_CMUS", "Gold"
+	StaticText "Alexander Brandon, Michiel van den Bos", "White"
+	StaticText " "
+	StaticText "$STING_CSND", "Gold"
+	StaticText "Dave Ewing", "White"
+	StaticText " "
+	StaticText "$STING_CGT", "Gold"
+	StaticText "Jason Schreiber", "White"
+	StaticText " "
+	StaticText "$STING_CBIZ", "Gold"
+	StaticText "Mark Rein, Nigel Kent, Craig Lafferty", "White"
+	StaticText " "
+}
+
+ListMenu "MainMenu"
+{
+	LineSpacing 40
+	UnrealBg " "
+	Position 0, 0
+	UnrealTextItem "$MNU_NEWGAME", "n", "PlayerclassMenu"
+	UnrealTextItem "$MNU_OPTIONS", "o", "OptionsMenu"
+	UnrealTextItem "$MNU_LOADGAME", "l", "LoadGameMenu"
+	UnrealTextItem "$MNU_SAVEGAME", "s", "SaveGameMenu"
+	IfOption(ReadThis)
+	{
+		UnrealTextItem "$MNU_INFO", "i", "ReadThisMenu"
+	}
+	UnrealTextItem "$MNU_QUITGAME", "q", "QuitMenu"
+}
+
+ListMenu "MainMenuTextOnly"
+{
+	LineSpacing 40
+	UnrealBg " "
+	Position 0, 0
+	UnrealTextItem "$MNU_NEWGAME", "n", "PlayerclassMenu"
+	UnrealTextItem "$MNU_OPTIONS", "o", "OptionsMenu"
+	UnrealTextItem "$MNU_LOADGAME", "l", "LoadGameMenu"
+	UnrealTextItem "$MNU_SAVEGAME", "s", "SaveGameMenu"
+	IfOption(ReadThis)
+	{
+		UnrealTextItem "$MNU_INFO", "i", "ReadThisMenu"
+	}
+	UnrealTextItem "$MNU_QUITGAME", "q", "QuitMenu"
 }

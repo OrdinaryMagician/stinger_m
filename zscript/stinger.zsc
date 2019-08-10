@@ -2,14 +2,18 @@ Class StingerAmmo : Ammo
 {
 	Default
 	{
-		Tag "Tarydium Shards";
+		Tag "$T_STINGERAMMO";
 		Inventory.Icon "I_Stingr";
-		Inventory.PickupMessage "You picked up 40 Tarydium Shards.";
+		Inventory.PickupMessage "";
 		Inventory.Amount 40;
 		Inventory.MaxAmount 200;
 		Ammo.BackpackAmount 80;
 		Ammo.BackpackMaxAmount 400;
 		Ammo.DropAmount 10;
+	}
+	override String PickupMessage()
+	{
+		return String.Format("%s%d%s",StringTable.Localize("$I_STINGERAMMOL"),Amount,StringTable.Localize("$I_STINGERAMMOR"));
 	}
 	States
 	{
@@ -23,7 +27,7 @@ Class StingerProjectile : Actor
 {
 	Default
 	{
-		Obituary "%o was perforated by %k's Stinger.";
+		Obituary "$O_STINGER";
 		DamageType 'shot';
 		DamageFunction Random[Stinger](15,25);
 		Speed 40;
@@ -52,12 +56,12 @@ Class StingerProjectile : Actor
 	}
 }
 
-Class Stinger : UnrealWeapon
+Class Stinger : UTWeapon
 {
 	Default
 	{
-		Tag "Stinger";
-		Inventory.PickupMessage "You picked up the Stinger.";
+		Tag "$T_STINGER";
+		Inventory.PickupMessage "$I_STINGER";
 		Weapon.UpSound "stinger/select";
 		Weapon.SlotNumber 3;
 		Weapon.SelectionOrder 7;
@@ -66,6 +70,7 @@ Class Stinger : UnrealWeapon
 		Weapon.AmmoType2 "StingerAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 40;
+		UTWeapon.DropAmmo 20;
 	}
 	action void A_StingerFire()
 	{
@@ -73,11 +78,12 @@ Class Stinger : UnrealWeapon
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
-		UnrealMainHandler.DoFlash(self,Color(16,0,64,255),1);
+		UTMainHandler.DoFlash(self,Color(16,0,64,255),1);
+		UTMainHandler.DoSwing(self,(FRandom[Stinger](-0.1,-0.2),FRandom[Stinger](-0.1,0.1)),4,-1.5,2,SWING_Spring,2,2);
 		A_AlertMonsters();
 		A_QuakeEx(1,1,1,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+8.0*y-9.0*z;
 		Actor p = Spawn("StingerProjectile",origin);
 		p.angle = angle;
@@ -90,13 +96,14 @@ Class Stinger : UnrealWeapon
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
-		UnrealMainHandler.DoFlash(self,Color(16,0,64,255),1);
+		UTMainHandler.DoFlash(self,Color(16,0,64,255),1);
+		UTMainHandler.DoSwing(self,(FRandom[Stinger](-0.3,-0.8),FRandom[Stinger](-0.4,0.4)),4,-1,3,SWING_Spring,3,5);
 		A_AlertMonsters();
 		A_QuakeEx(1,1,1,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
-		[x, y, z] = Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+8.0*y-9.0*z;
-		[x, y, z] = Matrix4.GetAxes(BulletSlope(),angle,roll);
+		[x, y, z] = dt_Matrix4.GetAxes(BulletSlope(),angle,roll);
 		A_PlaySound("stinger/altfire",CHAN_WEAPON);
 		Actor p;
 		double a, s;

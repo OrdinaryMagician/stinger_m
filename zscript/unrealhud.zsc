@@ -1,24 +1,4 @@
 // An almost 1:1 recreation of the Unreal 1 HUD
-Class ViewTracer : LineTracer
-{
-	Actor ignore;
-
-	override ETraceStatus TraceCallback()
-	{
-		if ( Results.HitType == TRACE_HitActor )
-		{
-			if ( (Results.HitActor == ignore) || !Results.HitActor.player || !Results.HitActor.bSHOOTABLE || Results.HitActor.bINVISIBLE ) return TRACE_Skip;
-			return TRACE_Stop;
-		}
-		else if ( (Results.HitType == TRACE_HitWall) && (Results.Tier == TIER_Middle) )
-		{
-			if ( !Results.HitLine.sidedef[1] ) return TRACE_Stop;
-			return TRACE_Skip;
-		}
-		return TRACE_Stop;
-	}
-}
-
 Class UnrealHUD : BaseStatusBar
 {
 	double FracTic;
@@ -38,6 +18,7 @@ Class UnrealHUD : BaseStatusBar
 	// Fonts
 	Font LargeFont, LargeRedFont, MedFont, WhiteFont, TinyFont,
 		TinyWhiteFont, TinyRedFont;
+	HUDFont mMapFont;
 
 	// Common Textures
 	TextureID HalfHud, HudLine, HudAmmo, IconHeal, IconSkul, IconSel,
@@ -64,6 +45,7 @@ Class UnrealHUD : BaseStatusBar
 		TinyFont = Font.FindFont('UTinyFont');
 		TinyWhiteFont = Font.FindFont('UTinyWhiteFont');
 		TinyRedFont = Font.FindFont('UTinyRedFont');
+		mMapFont = HUDFont.Create(WhiteFont);
 		HalfHud = TexMan.CheckForTexture("HalfHud",TexMan.Type_Any);
 		HudLine = TexMan.CheckForTexture("HudLine",TexMan.Type_Any);
 		HudAmmo = TexMan.CheckForTexture("HudAmmo",TexMan.Type_Any);
@@ -78,17 +60,19 @@ Class UnrealHUD : BaseStatusBar
 	{
 		Super.Draw(state,TicFrac);
 		HudMode = CVar.GetCVar('stinger_hudmode',players[consoleplayer]).GetInt();
-		scalev.x = scalev.y = Max(1,CVar.GetCVar('stinger_hudscale',players[consoleplayer]).GetInt());
+		scalev.x = scalev.y = Max(0,CVar.GetCVar('stinger_hudscale',players[consoleplayer]).GetInt());
+		if ( scalev.x == 0 )
+			scalev.x = scalev.y = max(1,min(Screen.GetWidth()/640.,Screen.GetHeight()/480.));
 		ClipX = Screen.GetWidth()/scalev.x;
 		ClipY = Screen.GetHeight()/scalev.y;
 		CurX = 0;
 		CurY = 0;
-		double lbottom = Screen.GetHeight()-32*scalev.y;	// TODO properly calculate
+		double lbottom = Screen.GetHeight()-32*scalev.y;
 		for ( Inventory i=CPlayer.mo.inv; i; i=i.inv )
 			if ( i is 'UnrealInventory' )
 				UnrealInventory(i).PreRender(lbottom);
-		if ( CPlayer.ReadyWeapon is 'UnrealWeapon' )
-			UnrealWeapon(CPlayer.ReadyWeapon).PreRender(lbottom);
+		if ( CPlayer.ReadyWeapon is 'UTWeapon' )
+			UTWeapon(CPlayer.ReadyWeapon).PreRender(lbottom);
 		if ( (state == HUD_StatusBar) || (state == HUD_Fullscreen) )
 		{
 			BeginHUD();
@@ -98,8 +82,8 @@ Class UnrealHUD : BaseStatusBar
 		for ( Inventory i=CPlayer.mo.inv; i; i=i.inv )
 			if ( i is 'UnrealInventory' )
 				UnrealInventory(i).PostRender(lbottom);
-		if ( CPlayer.ReadyWeapon is 'UnrealWeapon' )
-			UnrealWeapon(CPlayer.ReadyWeapon).PostRender(lbottom);
+		if ( CPlayer.ReadyWeapon is 'UTWeapon' )
+			UTWeapon(CPlayer.ReadyWeapon).PostRender(lbottom);
 	}
 
 	private void DrawNumberOf( int n, double x, double y )
@@ -132,8 +116,21 @@ Class UnrealHUD : BaseStatusBar
 		double width = CurX;
 		CurX = x;
 		CurY = y;
-		if ( bRed ) Screen.DrawTexture(i.Icon,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_TranslationIndex,RedIcon);
-		else Screen.DrawTexture(i.Icon,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+		// scale to fit
+		Vector2 scl = TexMan.GetScaledSize(i.Icon);
+		double mscl = 32./max(scl.x,scl.y);
+		double dw = (ClipX/mscl), dh = (ClipY/mscl);
+		double dx = CurX/mscl, dy = CurY/mscl;
+		if ( bRed )
+		{
+			Screen.DrawTexture(IconBase,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_TranslationIndex,RedIcon);
+			Screen.DrawTexture(i.Icon,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_TranslationIndex,RedIcon,DTA_TopOffset,0,DTA_LeftOffset,0);
+		}
+		else
+		{
+			Screen.DrawTexture(IconBase,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+			Screen.DrawTexture(i.Icon,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_TopOffset,0,DTA_LeftOffset,0);
+		}
 	}
 
 	private void DrawFragCount( double x, double y )
@@ -200,8 +197,11 @@ Class UnrealHUD : BaseStatusBar
 		if ( cw && (cw.SlotNumber != -1) ) cwslot = cw.SlotNumber?(cw.SlotNumber-1):9;
 		let pw = CPlayer.PendingWeapon;
 		int pwslot = -1;
-		if ( pw && (pw.SlotNumber != -1) ) pwslot = pw.SlotNumber?(pw.SlotNumber-1):9;
+		if ( pw && (pw != WP_NOCHANGE) && (pw.SlotNumber != -1) ) pwslot = pw.SlotNumber?(pw.SlotNumber-1):9;
 		Weapon wslots[10];
+		// zero-initialize, fixes asmjit crash
+		for ( int i=0; i<10; i++ )
+			wslots[i] = null;
 		// first run, populate the full array of weapons
 		for ( int i=0; i<10; i++ )
 		{
@@ -237,7 +237,7 @@ Class UnrealHUD : BaseStatusBar
 				if ( !wslots[i] ) continue;
 				Font cfont = TinyFont;
 				if ( cwslot == i ) cfont = TinyWhiteFont;
-				int realslot = (i<9)?(i+1):i;
+				int realslot = (i<9)?(i+1):9;
 				CurX = HalfHUDX-3+realslot*6;
 				CurY = HalfHUDY+4;
 				Screen.DrawText(cfont,Font.CR_UNTRANSLATED,CurX,CurY,String.Format("%d",realslot),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
@@ -262,7 +262,7 @@ Class UnrealHUD : BaseStatusBar
 				}
 			}
 		}
-		// TODO draw translator
+		// draw translator
 		if ( translator )
 		{
 			if ( translator.bCurrentlyActivated ) translator.DrawTranslator(scalev,ClipX,ClipY);
@@ -303,7 +303,7 @@ Class UnrealHUD : BaseStatusBar
 		CurY = y;
 		for ( Inv=CPlayer.mo.Inv; Inv; Inv=Inv.Inv )
 		{
-			if ( !(Inv is 'UnrealArmor') ) continue;
+			if ( !(Inv is 'UTArmor') ) continue;
 			ArmorAmount += Inv.Amount;
 			if ( (Inv.Amount <= 0) || Inv.Icon.IsNull() ) continue;
 			if ( !bDrawOne )
@@ -312,9 +312,9 @@ Class UnrealHUD : BaseStatusBar
 				DrawIconValue(Inv.Amount);
 				CurX += 32;
 			}
-			else if ( UnrealArmor(Inv).absorb > CurAbs )
+			else if ( UTArmor(Inv).absorb > CurAbs )
 			{
-				CurAbs = UnrealArmor(Inv).absorb;
+				CurAbs = UTArmor(Inv).absorb;
 				BestArmor = Inv;
 			}
 		}
@@ -346,9 +346,13 @@ Class UnrealHUD : BaseStatusBar
 		}
 		CurX = x;
 		Screen.DrawTexture(IconBase,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
-		// TODO downscale icons in cases where they're bigger than a 32x32 box
 		TextureID icon = CPlayer.ReadyWeapon.Icon.IsNull()?CPlayer.ReadyWeapon.Ammo1.Icon:CPlayer.ReadyWeapon.Icon;
-		Screen.DrawTexture(icon,false,CurX+16,CurY+16,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_CenterOffset,true);
+		// scale to fit
+		Vector2 scl = TexMan.GetScaledSize(icon);
+		double mscl = 32./max(scl.x,scl.y);
+		double dw = (ClipX/mscl), dh = (ClipY/mscl);
+		double dx = CurX/mscl, dy = CurY/mscl;
+		Screen.DrawTexture(icon,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_TopOffset,0,DTA_LeftOffset,0);
 		CurX += 32;
 		CurY += 29;
 		DrawIconValue(CPlayer.ReadyWeapon.Ammo1.Amount);
@@ -386,21 +390,21 @@ Class UnrealHUD : BaseStatusBar
 			cl2 = teams[lastseen.player.GetTeam()].mName;
 			cl1 = String.Format("Dark%s",cl2);
 		}
-		String tname = String.Format("\c[%s]Name:\c[%s] %s",cl1,cl2,lastseen.player.GetUserName());
+		String tname = String.Format("\c[%s]%s:\c[%s] %s",cl1,StringTable.Localize("$M_NAME"),cl2,lastseen.player.GetUserName());
 		CurX = (ClipX-WhiteFont.StringWidth(tname))/2;
 		CurY = ClipY-54;
 		Screen.DrawText(WhiteFont,Font.CR_UNTRANSLATED,CurX,CurY,tname,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_Alpha,lalpha/2.);
 		if ( !deathmatch || (lastseen.IsTeammate(CPlayer.mo)) )
 		{
 			CurY += 1.2*WhiteFont.GetHeight();
-			tname = String.Format("\c[%s]Health:\c[%s] %d",cl1,cl2,lastseen.Health);
+			tname = String.Format("\c[%s]%s:\c[%s] %d",cl1,StringTable.Localize("$M_HEALTH"),cl2,lastseen.Health);
 			Screen.DrawText(WhiteFont,Font.CR_UNTRANSLATED,CurX,CurY,tname,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_Alpha,lalpha/2.);
 		}
 	}
 
 	private void DrawKeys( double x, double y )
 	{
-		// TODO
+		// TODO draws the key icons from right to left, bottom to top
 	}
 
 	private void DrawUnrealHUD()
@@ -432,8 +436,8 @@ Class UnrealHUD : BaseStatusBar
 		else if ( HudMode == 3 ) DrawFragCount(0,ClipY-64);
 		else if ( HudMode == 4 ) DrawFragCount(0,ClipY-32);
 		// Display Keys
-		if ( HudMode < 3 ) DrawKeys(ClipX,ClipY-64);
-		else if ( HudMode < 6 ) DrawKeys(ClipX,ClipY);
+		if ( HudMode < 3 ) DrawKeys(ClipX-32,ClipY-32);
+		else if ( HudMode < 6 ) DrawKeys(ClipX,ClipY-32);
 		// Display Identification Info
 		DrawIdentifyInfo();
 	}
@@ -449,7 +453,71 @@ Class UnrealHUD : BaseStatusBar
 		CPlayer.inventorytics = 0;
 	}
 
-	override void DrawAutomapHUD( double TicFrac )
+	override void DrawAutomapHUD( double ticFrac )
 	{
+		int crdefault = Font.CR_GREY;
+		int highlight = Font.CR_RED;
+		double cbottom = Screen.GetHeight()*0.99;
+		let scale = GetHUDScale();
+		double textdist = 8./scale.Y;
+		int height = WhiteFont.GetHeight();
+		String printtext;
+		int SCREENWIDTH = screen.GetWidth();
+		BeginHUD();
+		let y = textdist;
+		let width = WhiteFont.StringWidth("00:00:00");
+		double tmp, hres;
+		[tmp,tmp,hres] = StatusbarToRealCoords(0,0,HorizontalResolution);
+		double swidth = 0;
+		double ltop = 0, rtop = 0;
+		if ( HudMode < 2 )
+		{
+			for ( Inventory Inv=CPlayer.mo.Inv; Inv; Inv=Inv.Inv )
+			{
+				if ( !(Inv is 'UTArmor') ) continue;
+				if ( (Inv.Amount <= 0) || Inv.Icon.IsNull() ) continue;
+				rtop += 64*scalev.y;
+				break;
+			}
+			if ( CPlayer.mo.InvSel ) ltop += 64*scalev.y;
+		}
+		int protrusion = GetProtrusion(swidth/hres);
+		[tmp,tmp,hres] = StatusbarToRealCoords(0,0,protrusion);
+		width += int((swidth-hres)/scale.X);
+		if ( am_showtime )
+		{
+			printtext = level.TimeFormatted();
+			DrawString(mMapFont,level.TimeFormatted(),(-textdist-width,y+rtop),0,crdefault);
+			y += height;
+		}
+		if ( am_showtotaltime ) DrawString(mMapFont,level.TimeFormatted(true),(-textdist-width,y+rtop),0,crdefault);
+		if ( !deathmatch )
+		{
+			y = textdist;
+			if ( am_showmonsters )
+			{
+				DrawString(mMapFont,String.Format("%s\34%c %d/%d",Stringtable.Localize("$AM_MONSTERS"),crdefault+65,level.killed_monsters,level.total_monsters),(textdist,y+ltop),0,highlight);
+				y += height;
+			}
+			if ( am_showsecrets )
+			{
+				DrawString(mMapFont,String.Format("%s\34%c %d/%d",Stringtable.Localize("$AM_SECRETS"),crdefault+65,level.found_secrets,level.total_secrets),(textdist,y+ltop),0,highlight);
+				y += height;
+			}
+			if ( am_showitems ) DrawString(mMapFont,String.Format("%s\34%c %d/%d",Stringtable.Localize("$AM_ITEMS"),crdefault+65,level.found_items,level.total_items),(textdist,y+ltop),0,highlight);
+		}
+		String mapname = level.FormatMapName(crdefault);
+		BrokenLines lines = WhiteFont.BreakLines(mapname,int(SCREENWIDTH/scale.X));
+		int numlines = lines.Count();
+		int finalwidth = int(WhiteFont.StringWidth(lines.StringAt(numlines-1))*scale.X);
+		[tmp,tmp,hres] = StatusbarToRealCoords(0,0,HorizontalResolution);
+		protrusion = GetProtrusion(finalwidth/hres);
+		[tmp,tmp,tmp,hres] = StatusbarToRealCoords(0,0,0,protrusion);
+		y = (cbottom-hres)/scale.Y-height*numlines;
+		for ( int i = 0; i < numlines; i++ )
+		{
+			DrawString(mMapFont,lines.StringAt(i),(0,y+ltop),DI_TEXT_ALIGN_CENTER|DI_SCREEN_HCENTER|DI_SCREEN_TOP,highlight);
+			y += height;
+		}
 	}
 }

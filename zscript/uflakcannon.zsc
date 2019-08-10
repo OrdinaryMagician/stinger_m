@@ -1,0 +1,128 @@
+Class UFlakBox : Ammo
+{
+	Default
+	{
+		Tag "$T_FLAKAMMO";
+		Inventory.Icon "I_FlakAm";
+		Inventory.PickupMessage "";
+		Inventory.Amount 10;
+		Inventory.MaxAmount 50;
+		Ammo.BackpackAmount 5;
+		Ammo.BackpackMaxAmount 100;
+		Ammo.DropAmount 5;
+	}
+	override String PickupMessage()
+	{
+		return String.Format("%s%d%s",StringTable.Localize("$I_FLAKAMMOL"),Amount,StringTable.Localize("$I_FLAKAMMOR"));
+	}
+	States
+	{
+	Spawn:
+		FBOX A -1;
+		Stop;
+	}
+}
+
+Class UFlakAmmo : UFlakBox
+{
+	Default
+	{
+		Tag "$T_FLAKAMMO2";
+		Inventory.Icon "I_FlakAm";
+		Inventory.PickupMessage "$I_FLAKAMMO2";
+		Inventory.Amount 1;
+		Ammo.DropAmount 1;
+		+INVENTORY.IGNORESKILL;
+	}
+	States
+	{
+	Spawn:
+		FSHL B -1;
+		Stop;
+	}
+}
+
+Class UFlakCannon : UTWeapon
+{
+	action void A_Loading( bool first = false )
+	{
+		if ( first ) A_PlaySound("flak/load",CHAN_WEAPON);
+		else A_PlaySound("flak/reload",CHAN_6);
+	}
+	Default
+	{
+		Tag "$T_FLAKCANNON";
+		Inventory.PickupMessage "$I_FLAKCANNON";
+		Weapon.UpSound "flak/select";
+		Weapon.SlotNumber 6;
+		Weapon.SelectionOrder 4;
+		Weapon.AmmoType "UFlakBox";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "UFlakBox";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 10;
+		UTWeapon.DropAmmo 5;
+	}
+	States
+	{
+	Spawn:
+		FLKP A -1;
+		Stop;
+		FLKP B -1;
+		Stop;
+	Select:
+		FLKS A 1 A_Raise(int.max);
+		Wait;
+	Ready:
+		FLKS ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE);
+		FLS2 ABCD 1 A_WeaponReady(WRF_NOFIRE);
+		FLKL A 1 A_Loading(true);
+		FLKL BCEFGIJKMNO 1;
+		Goto Idle;
+	Loading:
+		FLKL A 1
+		{
+			A_CheckReload();
+			if ( invoker.Ammo1.Amount > 0 ) A_Loading();
+		}
+		FLKL BCEFGIJKMNO 1;
+		Goto Idle;
+	Idle:
+		FLKI A 1 A_WeaponReady();
+		Wait;
+	Fire:
+		FLKF A 1
+		{
+			A_Overlay(PSP_FLASH,"Flash");
+			A_OverlayFlags(PSP_FLASH,PSPF_RenderStyle,true);
+			A_OverlayRenderstyle(PSP_FLASH,STYLE_Add);
+		}
+		FLKF BCDEFGHIJ 1;
+		FLKE ABCDEFGHIJKLMNS 1;
+		Goto Loading;
+	AltFire:
+		FLKA A 2
+		{
+			A_Overlay(PSP_FLASH,"AltFlash");
+			A_OverlayFlags(PSP_FLASH,PSPF_RenderStyle,true);
+			A_OverlayRenderstyle(PSP_FLASH,STYLE_Add);
+		}
+		FLKA BCDEFGHIJK 2;
+		Goto Loading;
+	Deselect:
+		FLKD A 0 A_JumpIfNoAmmo("Deselect2");
+		FLKD ABCDEF 1;
+		FLKD F 1 A_Lower(int.max);
+		Wait;
+	Deselect2:
+		FLD2 ABCDEF 1;
+		FLD2 F 1 A_Lower(int.max);
+		Wait;
+	Flash:
+		FLFF ABCDEFGHIJ 1 Bright;
+		Stop;
+	AltFlash:
+		FLFA ABCDEFGHIJK 2 Bright;
+		Stop;
+	}
+}

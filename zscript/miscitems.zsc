@@ -85,8 +85,8 @@ Class UnrealBackpack : BackpackItem replaces Backpack
 	}
 	Default
 	{
-		Tag "Backpack";
-		Inventory.PickupMessage "You got a Backpack.";
+		Tag "$T_BACKPACK";
+		Inventory.PickupMessage "$I_BACKPACK";
 		Inventory.RespawnTics 2100;
 	}
 	States
@@ -113,9 +113,9 @@ Class UTranslator : UnrealInventory
 		CurY = ClipY/2-68;
 		Screen.DrawTexture(thud,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
 		String ttxt;
-		if ( bShowHint && (Hint.length() > 0) ) ttxt = String.Format("Hint: %s",Hint);
+		if ( bShowHint && (Hint.length() > 0) ) ttxt = String.Format("%s: %s",StringTable.Localize("$TR_HINT"),Hint);
 		else if ( NewMessage.length() > 0 ) ttxt = NewMessage;
-		else ttxt = "No new messages.";
+		else ttxt = StringTable.Localize("$TR_NOMSG");
 		BrokenLines lines = tfnt.BreakLines(ttxt,220);
 		int th = tfnt.GetHeight();
 		CurX += 20;
@@ -143,8 +143,8 @@ Class UTranslator : UnrealInventory
 
 	Default
 	{
-		Tag "Universal Translator";
-		Inventory.PickupMessage "You got the Universal Translator.";
+		Tag "$T_TRANSLATOR";
+		Inventory.PickupMessage "$I_TRANSLATOR";
 		Inventory.Icon "I_Tran";
 		Inventory.MaxAmount 1;
 	}

@@ -1,0 +1,92 @@
+[default eng enc ena enz eni ens enj enb enl ent enw]
+/* Obituaries */
+O_STINGER = "%o was perforated by %k's Stinger.";
+/* Pickup messages */
+I_STINGERAMMOL = "You picked up ";
+I_STINGERAMMOR = " Tarydium Shards.";
+I_STINGER = "You picked up the Stinger.";
+I_TRANSLATOR = "You picked up the Universal Translator.";
+/* Tags */
+T_STINGERAMMO = "Tarydium Shards";
+T_STINGER = "Stinger";
+T_TRANSLATOR = "Translator";
+/* Miscellaneous */
+TR_HINT = "Hint";
+TR_NOMSG = "No new messages";
+N_MALE1 = "Kurgan";
+N_MALE2 = "Ash";
+N_MALE3 = "Dante";
+N_FEMALE1 = "Gina";
+N_FEMALE2 = "Sonya";
+/* Menus */
+STING_MTITLE = "Unreal Options";
+STING_HOPTS = "HUD Options";
+STING_HUDMODE = "HUD Mode";
+STING_HUDSCALE = "HUD Scale";
+STING_HUDFIT = "Fit 640x480";
+STING_INTRO = "Intro Type";
+STING_UNREAL99 = "Standard";
+STING_UNREAL97 = "Unreal '97";
+STING_UNREAL95 = "Unreal '95";
+STING_MCREDS = "Unreal Credits";
+STING_CDR = "Doomreal";
+STING_CLEAD = "Development Lead:";
+STING_CASSETS = "Additional Assets:";
+STING_CPATRON = "Patreon Backers:";
+STING_CTHANK = "Special Thanks:";
+STING_CUNR = "Unreal";
+STING_CTOP = "A Digital Extremes/Epic Megagames Collaboration";
+STING_CGDES = "Game Design:";
+STING_CLEVEL = "Level Design:";
+STING_CANIM = "Animator:";
+STING_CART = "Art:";
+STING_CPROG = "Programming:";
+STING_CMUS = "Music:";
+STING_CSND = "Sound Effects:";
+STING_CGT = "Producer for GT:";
+STING_CBIZ = "Biz:";
+
+[es esm esn esg esc esa esd esv eso esr ess esf esl esy esz esb ese esh esi esu]
+/* Obituaries */
+O_STINGER = "%o fue perforad@[ao_esp] por el Arma Aguijón de %k.";
+/* Pickup messages */
+I_STINGERAMMOL = "Has recogido ";
+I_STINGERAMMOR = " Fragmentos de Tarydium.";
+I_STINGER = "Has obtenido el Arma Aguijón.";
+I_TRANSLATOR = "Has obtenido el Traductor Universal.";
+/* Tags */
+T_STINGERAMMO = "Fragmentos de Tarydium";
+T_STINGER = "Arma Aguijón";
+T_TRANSLATOR = "Traductor";
+/* Miscellaneous */
+TR_HINT = "Pista";
+TR_NOMSG = "No hay mensajes nuevos";
+/* Menus */
+STING_MTITLE = "Opciones de Unreal";
+STING_HOPTS = "Opciones de HUD";
+STING_HUDMODE = "Modo de HUD";
+STING_HUDSCALE = "Escala de HUD";
+STING_HUDFIT = "Contener 640x480";
+STING_INTRO = "Tipo de Intro";
+STING_UNREAL99 = "Estándar";
+STING_MCREDS = "Créditos de Unreal";
+STING_CDR = "Doomreal";
+STING_CLEAD = "Desarrolladora Jefe:";
+STING_CASSETS = "Assets Adicionales:";
+STING_CPATRON = "Mecenas de Patreon:";
+STING_CTHANK = "Agradecimientos Especiales:";
+STING_CUNR = "Unreal";
+STING_CTOP = "Una Colaboración de Digital Extremes/Epic Megagames";
+STING_CGDES = "Diseño de Juego:";
+STING_CLEVEL = "Diseño de Niveles:";
+STING_CANIM = "Animador:";
+STING_CART = "Arte:";
+STING_CPROG = "Programación:";
+STING_CMUS = "Música:";
+STING_CSND = "Efectos de Sonido:";
+STING_CGT = "Productor para GT:";
+STING_CBIZ = "Negocios:";
+
+[fr]
+
+[it]

@@ -1,9 +1,12 @@
 GameInfo
 {
-	AddEventHandlers = "UnrealMainHandler"
-	PlayerClasses = "UnrealPlayer"
+	AddEventHandlers = "UnrealMainHandler", "UnrealStaticHandler"
+	PlayerClasses = "UPlayerMale1", "UPlayerMale2", "UPlayerMale3", "UPlayerFemale1", "UPlayerFemale2"
 	StatusBarClass = "UnrealHud"
 	BorderFlat = "Border"
 	BackpackType = "UnrealBackpack"
-	Border = 0,0,"","","","","","","",""
+	menufontcolor_title = "Green"
+	menufontcolor_label = "DarkGreen"
+	menufontcolor_selection = "Green"
+	MenuSliderColor = "Red"
 }

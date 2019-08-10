@@ -1,3 +1,5 @@
+// Unused dead code, kept for reference
+
 // Tier 1 (chainsaw)
 Class Tier1Weapon : RandomSpawner2 replaces Chainsaw
 {

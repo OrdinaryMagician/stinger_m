@@ -1,0 +1,200 @@
+Model "UFlakBox"
+{
+	Path "models"
+	Model 0 "flakboxMesh_d.3d"
+	Skin 0 "JPickup1.png"
+	Scale 0.09 0.09 0.108
+	ZOffset 6
+	RollOffset 180
+
+	FrameIndex FBOX A 0 0
+}
+
+Model "UFlakAmmo"
+{
+	Path "models"
+	Model 0 "FlakSh_d.3d"
+	Skin 0 "Jflakshel1_.png"
+	Scale 0.2 0.24 0.2
+	ZOffset 2.25
+	RollOffset -90
+
+	FrameIndex FSHL B 0 0
+}
+
+Model "UFlakCannon"
+{
+	Path "models"
+	Model 1 "FlakPick_d.3d"
+	Skin 1 "Jflak1_.png"
+	ZOffset 12
+	AngleOffset 90
+	Scale 0.12 0.12 0.134
+
+	FrameIndex FLKP B 1 0
+
+	ZOffset 12
+	ROTATING
+	FrameIndex FLKP A 1 0
+}
+
+Model "UFlakCannon"
+{
+	Path "models"
+	Model 2 "flak_d.3d"
+	SurfaceSkin 2 0 "FireEffect13.png"
+	Scale 0.1 -0.08 0.1
+	AngleOffset -90
+	Offset 5 -9 -5
+	DONTCULLBACKFACES
+
+	// Fire
+	FrameIndex FLFF A 2 46
+	FrameIndex FLFF B 2 47
+	FrameIndex FLFF C 2 48
+	FrameIndex FLFF D 2 49
+	FrameIndex FLFF E 2 50
+	FrameIndex FLFF F 2 51
+	FrameIndex FLFF G 2 52
+	FrameIndex FLFF H 2 53
+	FrameIndex FLFF I 2 54
+	FrameIndex FLFF J 2 55
+	// AltFire
+	FrameIndex FLFA A 2 56
+	FrameIndex FLFA B 2 57
+	FrameIndex FLFA C 2 58
+	FrameIndex FLFA D 2 59
+	FrameIndex FLFA E 2 60
+	FrameIndex FLFA F 2 61
+	FrameIndex FLFA G 2 62
+	FrameIndex FLFA H 2 63
+	FrameIndex FLFA I 2 64
+	FrameIndex FLFA J 2 65
+	FrameIndex FLFA K 2 66
+}
+
+Model "UFlakCannon"
+{
+	Path "models"
+	Model 0 "flak_d.3d"
+	SurfaceSkin 0 1 "Jflak1.png"
+	Scale 0.1 -0.08 0.1
+	AngleOffset -90
+	Offset 5 -9 -5
+
+	// Select
+	FrameIndex FLKS A 0 0
+	FrameIndex FLKS B 0 1
+	FrameIndex FLKS C 0 2
+	FrameIndex FLKS D 0 3
+	FrameIndex FLKS E 0 4
+	FrameIndex FLKS F 0 5
+	FrameIndex FLKS G 0 6
+	FrameIndex FLKS H 0 7
+	FrameIndex FLKS I 0 8
+	FrameIndex FLKS J 0 9
+	FrameIndex FLKS K 0 10
+	FrameIndex FLKS L 0 11
+	FrameIndex FLKS M 0 12
+	FrameIndex FLKS N 0 13
+	FrameIndex FLKS O 0 14
+	FrameIndex FLKS P 0 15
+	FrameIndex FLKS Q 0 16
+	FrameIndex FLKS R 0 17
+	FrameIndex FLKS S 0 18
+	FrameIndex FLKS T 0 19
+	FrameIndex FLKS U 0 20
+	FrameIndex FLKS V 0 21
+	FrameIndex FLKS W 0 22
+	FrameIndex FLKS X 0 23
+	FrameIndex FLKS Y 0 24
+	FrameIndex FLKS Z 0 25
+	FrameIndex FLS2 A 0 26
+	FrameIndex FLS2 B 0 27
+	FrameIndex FLS2 C 0 28
+	FrameIndex FLS2 D 0 29
+	// Loading
+	FrameIndex FLKL A 0 30
+	FrameIndex FLKL B 0 31
+	FrameIndex FLKL C 0 32
+	FrameIndex FLKL D 0 33
+	FrameIndex FLKL E 0 34
+	FrameIndex FLKL F 0 35
+	FrameIndex FLKL G 0 36
+	FrameIndex FLKL H 0 37
+	FrameIndex FLKL I 0 38
+	FrameIndex FLKL J 0 39
+	FrameIndex FLKL K 0 40
+	FrameIndex FLKL L 0 41
+	FrameIndex FLKL M 0 42
+	FrameIndex FLKL N 0 43
+	FrameIndex FLKL O 0 44
+	// Still
+	FrameIndex FLKI A 0 45
+	// Fire
+	FrameIndex FLKF A 0 46
+	FrameIndex FLKF B 0 47
+	FrameIndex FLKF C 0 48
+	FrameIndex FLKF D 0 49
+	FrameIndex FLKF E 0 50
+	FrameIndex FLKF F 0 51
+	FrameIndex FLKF G 0 52
+	FrameIndex FLKF H 0 53
+	FrameIndex FLKF I 0 54
+	FrameIndex FLKF J 0 55
+	// AltFire
+	FrameIndex FLKA A 0 56
+	FrameIndex FLKA B 0 57
+	FrameIndex FLKA C 0 58
+	FrameIndex FLKA D 0 59
+	FrameIndex FLKA E 0 60
+	FrameIndex FLKA F 0 61
+	FrameIndex FLKA G 0 62
+	FrameIndex FLKA H 0 63
+	FrameIndex FLKA I 0 64
+	FrameIndex FLKA J 0 65
+	FrameIndex FLKA K 0 66
+	// Eject
+	FrameIndex FLKE A 0 67
+	FrameIndex FLKE B 0 68
+	FrameIndex FLKE C 0 69
+	FrameIndex FLKE D 0 70
+	FrameIndex FLKE E 0 71
+	FrameIndex FLKE F 0 72
+	FrameIndex FLKE G 0 73
+	FrameIndex FLKE H 0 74
+	FrameIndex FLKE I 0 75
+	FrameIndex FLKE J 0 76
+	FrameIndex FLKE K 0 77
+	FrameIndex FLKE L 0 78
+	FrameIndex FLKE M 0 79
+	FrameIndex FLKE N 0 80
+	FrameIndex FLKE O 0 81
+	FrameIndex FLKE P 0 82
+	FrameIndex FLKE Q 0 83
+	FrameIndex FLKE R 0 84
+	FrameIndex FLKE S 0 85
+	// Down2
+	FrameIndex FLD2 A 0 86
+	FrameIndex FLD2 B 0 87
+	FrameIndex FLD2 C 0 88
+	FrameIndex FLD2 D 0 89
+	FrameIndex FLD2 E 0 90
+	FrameIndex FLD2 F 0 91
+	FrameIndex FLD2 G 0 92
+	FrameIndex FLD2 H 0 93
+	FrameIndex FLD2 I 0 94
+	FrameIndex FLD2 J 0 95
+	FrameIndex FLD2 K 0 96
+	FrameIndex FLD2 L 0 97
+	FrameIndex FLD2 M 0 98
+	FrameIndex FLD2 N 0 99
+	FrameIndex FLD2 O 0 100
+	// Down
+	FrameIndex FLKD A 0 104
+	FrameIndex FLKD B 0 105
+	FrameIndex FLKD C 0 106
+	FrameIndex FLKD D 0 107
+	FrameIndex FLKD E 0 108
+	FrameIndex FLKD F 0 109
+}

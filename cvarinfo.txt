@@ -1,3 +1,5 @@
-user bool stinger_footsteps = true;
-user int stinger_hudmode = 0;
-user int stinger_hudscale = 1;
+user int stinger_hudmode = 0;	// hud mode
+user int stinger_hudscale = 1;	// scale of hud (0 = fit to 480p)
+user int stinger_introtype = 0;	// 0 - standard
+				// 1 - unreal '97
+				// 2 - unreal '95

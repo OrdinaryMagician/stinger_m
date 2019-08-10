@@ -1,16 +1,10 @@
-Class UnrealPlayer : DoomPlayer
+Class UPlayer : UTPlayer
 {
-	bool lastground;
-	double lastvelz, prevvelz;
-	transient CVar footsteps;
-
 	Default
 	{
-		Player.StartItem "Automag";
-		Player.StartItem "DispersionPistol";
-		Player.StartItem "UMiniAmmo", 30;
-		Player.DamageScreenColor "FF 00 00", 1.0;
-		Player.ViewHeight 46;
+		//Player.StartItem "Automag";
+		//Player.StartItem "DispersionPistol";
+		//Player.StartItem "UMiniAmmo", 30;
 	}
 
 	// Have to modify the give cheat to handle UT armor
@@ -81,7 +75,7 @@ Class UnrealPlayer : DoomPlayer
 			// Doomreal gives the player all subclasses of UnrealArmor
 			for ( int i=0; i<AllActorClasses.Size(); i++ )
 			{
-				if ( !(AllActorClasses[i] is "UnrealArmor") ) continue;
+				if ( !(AllActorClasses[i].GetParentClass() is "UnrealArmor") ) continue;
 				let item = Inventory(Spawn(AllActorClasses[i]));
 				if ( !item.CallTryPickup(self) ) item.Destroy();
 			}
@@ -162,91 +156,61 @@ Class UnrealPlayer : DoomPlayer
 		}
 		else GiveInventory(type,amount,true);
 	}
-
-	override void Tick()
-	{
-		Super.Tick();
-		if ( !player ) return;
-		if ( !footsteps ) footsteps = CVar.GetCVar('stinger_footsteps',players[consoleplayer]);
-		if ( !footsteps.GetBool() ) return;
-		double ang = level.time/(20*TICRATE/35.)*360.;
-		if ( (abs(sin(ang)) >= 1.0) && player.onground && (player.cmd.forwardmove || player.cmd.sidemove) )
-		{
-			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid ) A_PlaySound("u1/playerfootstepwet",CHAN_5,abs(vel.xy.length())*0.03);
-			else A_PlaySound("u1/playerfootstep",CHAN_5,abs(vel.xy.length())*0.03);
-		}
-		if ( player.onground && !bNoGravity && !lastground && (lastvelz < -4) && (lastvelz >= -8) )
-		{
-			if ( (waterlevel > 0) || GetFloorTerrain().IsLiquid ) A_PlaySound("u1/wetsplash",CHAN_AUTO,abs(lastvelz*0.0625));
-			else A_PlaySound("*land",CHAN_AUTO,abs(lastvelz*0.03));
-		}
-		lastground = player.onground;
-		lastvelz = prevvelz;
-		prevvelz = vel.z;
-	}
 }
 
-// Random Spawner that passes through dropped status to items
-Class RandomSpawner2 : RandomSpawner
+Class UPlayerMale1 : UPlayer
 {
-	override void PostSpawn( Actor spawned )
-	{
-		if ( !bDROPPED ) return;
-		if ( spawned is 'Inventory' ) Inventory(spawned).bTOSSED = bDROPPED;
-		if ( spawned is 'UnrealWeapon' )
-		{
-			spawned.SetState(spawned.ResolveState("Spawn")+1);
-			Inventory(spawned).bALWAYSPICKUP = true;
-		}
-	}
-}
-
-Class UnrealWeapon : Weapon
-{
-	// Drawstuffs under HUD
-	virtual ui void PreRender( double lbottom ) {}
-	// Drawstuffs over HUD
-	virtual ui void PostRender( double lbottom ) {}
-
-	override Inventory CreateTossable( int amt )
-	{
-		if ( Ammo1 && (Ammo1.Amount <= 0) ) return null;
-		Inventory d = Super.CreateTossable(amt);
-		if ( d && (d.GetClass() == GetClass()) )
-		{
-			d.SetState(d.ResolveState("Spawn")+1);
-			d.bALWAYSPICKUP = true;
-		}
-		return d;
-	}
-
-	override bool SpecialDropAction( Actor dropper )
-	{
-		SetState(ResolveState("Spawn")+1);
-		bALWAYSPICKUP = true;
-		return false;
-	}
-
-	override void Tick()
-	{
-		Super.Tick();
-		if ( !Owner || !Owner.player || (Owner.player.ReadyWeapon != self) ) return;
-		Owner.player.WeaponState |= WF_WEAPONBOBBING; // U1 weapons always bob
-	}
-
-	override void OwnerDied()
-	{
-		Super.OwnerDied();
-		A_ClearRefire();
-	}
-
 	Default
 	{
-		Weapon.BobStyle "Smooth";
-		Weapon.BobSpeed 1.5;
-		Weapon.BobRangeX 0.2;
-		Weapon.BobRangeY 0.4;
-		+WEAPON.NOALERT;
+		Player.SoundClass "umale";
+		Player.DisplayName "$N_MALE1";
+		Player.Portrait "";
+		UTPlayer.VoiceType VOICE_MaleOne;
+		-NOMENU;
+	}
+}
+Class UPlayerMale2 : UPlayer
+{
+	Default
+	{
+		Player.SoundClass "umale";
+		Player.DisplayName "$N_MALE2";
+		Player.Portrait "";
+		UTPlayer.VoiceType VOICE_MaleOne;
+		-NOMENU;
+	}
+}
+Class UPlayerMale3 : UPlayer
+{
+	Default
+	{
+		Player.SoundClass "umale";
+		Player.DisplayName "$N_MALE3";
+		Player.Portrait "";
+		UTPlayer.VoiceType VOICE_MaleTwo;
+		-NOMENU;
+	}
+}
+Class UPlayerFemale1 : UPlayer
+{
+	Default
+	{
+		Player.SoundClass "ufemale";
+		Player.DisplayName "$N_FEMALE1";
+		Player.Portrait "";
+		UTPlayer.VoiceType VOICE_FemaleTwo;
+		-NOMENU;
+	}
+}
+Class UPlayerFemale2 : UPlayer
+{
+	Default
+	{
+		Player.SoundClass "ufemale";
+		Player.DisplayName "$N_FEMALE2";
+		Player.Portrait "";
+		UTPlayer.VoiceType VOICE_FemaleOne;
+		-NOMENU;
 	}
 }
 
@@ -270,119 +234,96 @@ Class UnrealInventory : Inventory
 	}
 }
 
-Class UnrealArmor : Armor
+Class UnrealStaticHandler : StaticEventHandler
 {
-	int absorb;
+	ui TextureID tex[6];
+	ui int mtics, cur;
+	ui String lastmusic;
 
-	Property ArmorAbsorption : absorb;
-
-	Default
+	ui void StartMenu()
 	{
-		+INVENTORY.AUTOACTIVATE;
-		+INVENTORY.UNTOSSABLE;
-		Inventory.MaxAmount 0;
-	}
-	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
-	{
-		int saved;
-		if ( (amount > 0) && !DamageTypeDefinition.IgnoreArmor(damageType) )
-		{
-			saved = damage*absorb/100.;
-			if ( amount <= saved ) saved = amount;
-			newdamage -= saved;
-			amount -= saved;
-			damage = newdamage;
-		}
-		if ( damage > 0 ) newdamage = ApplyDamageFactors(GetClass(),damageType,damage,damage);
-		if ( amount <= 0 ) Destroy();
-	}
-}
-
-Class GenericFlash : HUDMessageBase
-{
-	Color col;
-	int duration;
-	double alpha;
-	Actor cam;
-	GenericFlash Setup( Actor camera, Color c, int d )
-	{
-		alpha = 1.0;
-		col = c;
-		duration = d;
-		cam = camera;
-		return self;
-	}
-	override bool Tick()
-	{
-		alpha -= 1./duration;
-		return (alpha<=0);
-	}
-	override void Draw( int bottom, int visibility )
-	{
-		if ( automapactive || (visibility != BaseStatusBar.HUDMSGLayer_UnderHUD) ) return;
-		if ( cam && (players[consoleplayer].camera != cam) ) return;
-		Screen.Dim(col,(col.a/255.)*alpha,0,0,Screen.GetWidth(),Screen.GetHeight());
-	}
-}
-
-Class QueuedFlash
-{
-	Color c;
-	int duration;
-	int tic;
-	Actor cam;
-}
-
-Class UnrealMainHandler : StaticEventHandler
-{
-	Array<QueuedFlash> flashes;
-
-	override void WorldLoaded( WorldEvent e )
-	{
-		if ( gamestate != GS_LEVEL || e.IsSaveGame ) return;
-		// prettify Kinsie's test map for a more Unreal feel
-		if ( level.levelname ~== "Modder Test Map" )
-		{
-			TexMan.ReplaceTextures("-noflat-","-kinsie-",0);
-			TextureID skytx = TexMan.CheckForTexture("BlueSky",TexMan.Type_Any);
-			level.ChangeSky(skytx,skytx);
-			// TODO handplace some dynamic lights and add Unreal/UT ambient sounds
-		}
+		CVar protomenu = CVar.GetCVar('stinger_introtype',players[consoleplayer]);
+		if ( !protomenu ) return;	// this can happen
+		int proto = protomenu.GetInt();
+		tex[0] = TexMan.CheckForTexture("graphics/UnLogo0.png",TexMan.Type_Any);
+		tex[1] = TexMan.CheckForTexture("graphics/UnLogo1.png",TexMan.Type_Any);
+		tex[2] = TexMan.CheckForTexture("graphics/UnLogo2.png",TexMan.Type_Any);
+		tex[3] = TexMan.CheckForTexture("graphics/UnBg.png",TexMan.Type_Any);
+		tex[4] = TexMan.CheckForTexture("graphics/97Bg.png",TexMan.Type_Any);
+		tex[5] = TexMan.CheckForTexture("graphics/95Bg.png",TexMan.Type_Any);
+		if ( proto > 1 ) S_ChangeMusic("Unreal");
+		else if ( proto == 1 ) S_ChangeMusic("Unreal2");
+		else S_ChangeMusic("FlyBy");
+		cur = proto;
 	}
 
-	override void WorldThingSpawned( WorldEvent e )
+	override void OnRegister()
 	{
-		if ( e.Thing.bBOSS ) e.Thing.bNOTELEFRAG = true;
+		// remove the UT static handler
+		let hnd = UTStaticHandler(StaticEventHandler.Find("UTStaticHandler"));
+		if ( hnd ) hnd.Destroy();
 	}
 
-	override void WorldTick()
+	override void ConsoleProcess( ConsoleEvent e )
 	{
-		for ( int i=0; i<flashes.size(); i++ )
-		{
-			if ( flashes[i].tic >= gametic ) continue;
-			flashes.Delete(i);
-			i--;
-		}
+		if ( gamestate != GS_TITLELEVEL ) return;
+		if ( e.Name ~== "refreshmenu" ) StartMenu();
 	}
 
 	override void PostUiTick()
 	{
-		for ( int i=0; i<flashes.size(); i++ )
+		if ( gamestate != GS_TITLELEVEL ) return;
+		if ( gametic <= 0 ) StartMenu();
+		if ( musplaying.Name != lastmusic )
 		{
-			if ( flashes[i].tic < gametic ) continue;
-			GenericFlash gf = new("GenericFlash").Setup(flashes[i].cam,flashes[i].c,flashes[i].duration);
-			StatusBar.AttachMessage(gf,0,BaseStatusBar.HUDMSGLayer_UnderHUD);
+			mtics = 0;
+			lastmusic = musplaying.Name;
 		}
+		else mtics++;
 	}
 
-	static void DoFlash( Actor camera, Color c, int duration )
+	override void RenderOverlay( RenderEvent e )
 	{
-		QueuedFlash qf = new("QueuedFlash");
-		qf.duration = duration;
-		qf.c = c;
-		qf.tic = gametic;
-		qf.cam = camera;
-		let hnd = UnrealMainHandler(StaticEventHandler.Find("UnrealMainHandler"));
-		hnd.flashes.push(qf);
+		// we have to stand in for the UT handler on this function
+		// although it doesn't make much sense yet
+		if ( players[consoleplayer].camera.player && players[consoleplayer].camera.player.ReadyWeapon && (players[consoleplayer].camera.player.ReadyWeapon is 'UTWeapon') )
+			UTWeapon(players[consoleplayer].camera.player.ReadyWeapon).RenderOverlay(e);
+		if ( gamestate != GS_TITLELEVEL ) return;
+		double ar = Screen.GetAspectRatio();
+		Vector2 tsize = TexMan.GetScaledSize(tex[cur+3]);
+		double sar = tsize.x/tsize.y;
+		Vector2 vsize;
+		if ( sar > ar ) vsize = (tsize.y*ar,tsize.y);
+		else if ( sar < ar ) vsize = (tsize.x,tsize.x/ar);
+		else vsize = tsize;
+		Screen.DrawTexture(tex[cur+3],false,(vsize.x-tsize.x)/2,(vsize.y-tsize.y)/2,DTA_VirtualWidthF,vsize.x,DTA_VirtualHeightF,vsize.y,DTA_KeepRatio,true);
+		Screen.Dim("Black",clamp(1.-((mtics+e.FracTic)/Thinker.TICRATE)*.2,0.,1.),0,0,Screen.GetWidth(),Screen.GetHeight());
+		if ( menuactive ) return;
+		tsize = TexMan.GetScaledSize(tex[cur]);
+		sar = tsize.x/tsize.y;
+		if ( sar > ar ) vsize = (tsize.x,tsize.x/ar);
+		else if ( sar < ar ) vsize = (tsize.y*ar,tsize.y);
+		else vsize = tsize;
+		double alf = clamp(((mtics+e.FracTic)/Thinker.TICRATE)-8,0.,1.);
+		Screen.DrawTexture(tex[cur],false,(vsize.x-tsize.x)/2,(vsize.y-tsize.y)/2,DTA_VirtualWidthF,vsize.x,DTA_VirtualHeightF,vsize.y,DTA_KeepRatio,true,DTA_Alpha,alf);
+	}
+}
+
+Class UnrealMainHandler : EventHandler
+{
+	override void CheckReplacement( ReplaceEvent e )
+	{
+		if ( (e.Replacee == 'Shotgun') || (e.Replacee == 'SuperShotgun') || (e.Replacee == 'Crossbow') )
+		{
+			/*if ( !Random[Replacements](0,3) ) e.Replacement = 'Enforcer';
+			else if ( Random[Replacements](0,1) ) */e.Replacement = 'Stinger';
+			/*else e.Replacement = 'ShockRifle';*/
+		}
+		else if ( (e.Replacee == 'RocketLauncher') || (e.Replacee == 'PhoenixRod') )
+		{
+			/*if ( Random[Replacements](0,1) ) */e.Replacement = 'UFlakCannon';
+			/*else e.Replacement = 'UTRocketLauncher';*/
+		}
+		else if ( e.Replacee == 'Backpack' ) e.Replacement = 'UnrealBackpack';
 	}
 }
