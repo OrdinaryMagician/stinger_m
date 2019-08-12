@@ -1,4 +1,4 @@
-### Unnamed Weapon / Bigman Gun
+### Unnamed Weapon / Bigman Gun / Demolisher
 
  - Undocumented, shape-wise it's reminiscent of the Bigman's guns, so I'm
    going to repurpose it as pretty much that.
@@ -6,26 +6,30 @@
    various overlays from Mine.utx just for kicks.
  - It's big. Pretty much as big as a Redeemer, so you need two hands to use it.
  - Fires exploding boolets. Altfire is a rapid fire mode with a lot of recoil.
+ - Came up with a name for it.
+ - Ammo models were improvised by editing the unused sconce part of the Jclip1
+   texture.
 
-### Bonesaw?
+### Bonesaw? / Razorclaw
 
  - The closest thing to whatever was described in the Unreal bible. Original
    model looked like it could spin, so I did just that.
  - Has "stab" (grab) and "slice" (spin) animations, close enough.
  - Bible describes a "Skaarj Blade" upgrade, guess since I'm using the
    Razorjack texture for them then it's already upgraded.
+ - Also came up with a name for it.
 
-### Flame Gun
+### Flame Gun / Fireblaster
 
  - Changed up to not make it redundant since the Flamethrower is in too. It
    shoots fireballs, so it's more of a long range single shot weapon compared
    to the medium range dps barrage that is the flamethrower.
  - Altfire is a three-shot burst in a horizontal arc. Kinda like the "spray"
    attack mercs do.
- - The original was supposed to have 900 max ammo, give 100 per pickup and use
-   10 per shot. This is dumb so I'm dividing all of that by 10.
  - The model had no UV mapping so I improvised a lot. Thankfully Blender's
    texture paint helped for most of it.
+ - New name given, "flame gun" sounds too placeholder-y.
+ - Uses same ammo as flamethrower.
 
 ### Flamethrower / Napalm Gun
 
@@ -43,6 +47,7 @@
  - Actually I made an alternate model with the old texture. It had some shape
    changes to accomodate for it. I still think the texture sucks. It should be
    switchable, just like how you can change weapon sprites in Smooth Doom.
+ - Ammo is just a recolored explosive barrel.
 
 ### Quadshot
 
@@ -71,25 +76,26 @@
    with an electricity texture.
  - The weapon will use two ammo types. One for individual gems, and another for
    the total charge of each gem (which will be used for the altfire).
+ - This weapon is kind of OP, so it needs to be in the BFG replacement pool.
+ - Supposedly meant to use the same ammo as the stinger, but... I'm giving it
+   a separate one.
 
 ### Stunner
 
  - This one can be used as-is.
  - Made a separate pickup model with holes filled.
+ - Has a similar regenerating ammo as the dispersion pistol.
 
 ### "Teleport gun"
 
  - Them teleport capsules.
  - Although I can leave this as-is I think I should change the hand.
- - Might also use the UT 220 model just for kicks, since it has an automag
-   hand already. Would do it as an alternate skin, like the Flamethrower.
 
-### Old Automag
+### Old Automag / Proto Automag
 
- - Gotta decide on which version of the skin to use. I personally prefer the
-   black one, as it'll difference it from the standard automag.
- - May want to change the hand (which will involve re-animating the gun, welp).
-   At least doing that I have an excuse to fix some holes in the mesh.
+ - Gun is re-animated in order to use the same hand as the final automag.
+ - Uses the old black skin, but the off-hand gun when dual wielding will use
+   the newer skin.
 
 ### Sentry
 
@@ -114,3 +120,4 @@
    barrel one by one like it. Plus an alt-fire that shoots all four, of course.
  - This will be the Redeemer equivalent, so it needs to be powerful as heck but
    have a low ammo count.
+ - No ammo pickups.

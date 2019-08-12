@@ -51,7 +51,7 @@ STING_CBIZ = "Biz:";
 O_STINGER = "%o fue perforad@[ao_esp] por el Arma Aguijón de %k.";
 /* Pickup messages */
 I_STINGERAMMOL = "Has recogido ";
-I_STINGERAMMOR = " Fragmentos de Tarydium.";
+I_STINGERAMMOR = " fragmentos de Tarydium.";
 I_STINGER = "Has obtenido el Arma Aguijón.";
 I_TRANSLATOR = "Has obtenido el Traductor Universal.";
 /* Tags */

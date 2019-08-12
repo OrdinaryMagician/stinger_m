@@ -158,6 +158,28 @@ Class UPlayer : UTPlayer
 	}
 }
 
+Class UPlayerFemale1 : UPlayer
+{
+	Default
+	{
+		Player.SoundClass "ufemale";
+		Player.DisplayName "$N_FEMALE1";
+		Player.Portrait "";
+		UTPlayer.VoiceType VOICE_FemaleTwo;
+		-NOMENU;
+	}
+}
+Class UPlayerFemale2 : UPlayer
+{
+	Default
+	{
+		Player.SoundClass "ufemale";
+		Player.DisplayName "$N_FEMALE2";
+		Player.Portrait "";
+		UTPlayer.VoiceType VOICE_FemaleOne;
+		-NOMENU;
+	}
+}
 Class UPlayerMale1 : UPlayer
 {
 	Default
@@ -188,28 +210,6 @@ Class UPlayerMale3 : UPlayer
 		Player.DisplayName "$N_MALE3";
 		Player.Portrait "";
 		UTPlayer.VoiceType VOICE_MaleTwo;
-		-NOMENU;
-	}
-}
-Class UPlayerFemale1 : UPlayer
-{
-	Default
-	{
-		Player.SoundClass "ufemale";
-		Player.DisplayName "$N_FEMALE1";
-		Player.Portrait "";
-		UTPlayer.VoiceType VOICE_FemaleTwo;
-		-NOMENU;
-	}
-}
-Class UPlayerFemale2 : UPlayer
-{
-	Default
-	{
-		Player.SoundClass "ufemale";
-		Player.DisplayName "$N_FEMALE2";
-		Player.Portrait "";
-		UTPlayer.VoiceType VOICE_FemaleOne;
 		-NOMENU;
 	}
 }
@@ -315,14 +315,14 @@ Class UnrealMainHandler : EventHandler
 	{
 		if ( (e.Replacee == 'Shotgun') || (e.Replacee == 'SuperShotgun') || (e.Replacee == 'Crossbow') )
 		{
-			/*if ( !Random[Replacements](0,3) ) e.Replacement = 'Enforcer';
+			/*if ( !Random[Replacements](0,3) ) e.Replacement = 'Automag';
 			else if ( Random[Replacements](0,1) ) */e.Replacement = 'Stinger';
-			/*else e.Replacement = 'ShockRifle';*/
+			/*else e.Replacement = 'ASMD';*/
 		}
 		else if ( (e.Replacee == 'RocketLauncher') || (e.Replacee == 'PhoenixRod') )
 		{
 			/*if ( Random[Replacements](0,1) ) */e.Replacement = 'UFlakCannon';
-			/*else e.Replacement = 'UTRocketLauncher';*/
+			/*else e.Replacement = 'Eightball';*/
 		}
 		else if ( e.Replacee == 'Backpack' ) e.Replacement = 'UnrealBackpack';
 	}

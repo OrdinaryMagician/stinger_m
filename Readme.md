@@ -18,27 +18,33 @@ This mod requires GZDoom 4.1.0 or later, and runs on top of Doom Tournament.
 
 ## Planned
 
+ - Implement Stinger behavior described in the Unreal Bible.
  - Dispersion Pistol (slot 1) (replaces fist)
    - Dispersion Pistol Powerup (replaces Berserk)
  - Automag (slot 2) (replaces pistol)
+   - Dual Automags
  - ASMD (slot 4) (replaces shotgun)
  - Eightball (slot 5) (replaces rocket launcher)
  - Razorjack (slot 7) (replaces chaingun)
+   - Make altfire actually seek where player is aiming
  - GES Bio Rifle (slot 8) (replaces plasma rifle)
  - Rifle (slot 9) (replaces plasma rifle)
+   - Restored rapid fire
+   - Restored flashlight
  - Minigun (slot 0) (replaces chaingun)
 
  - Stunner (slot 1) (replaces chainsaw)
- - "Bonesaw" (slot 1) (replaces chainsaw)
- - Translocator (slot 1)
- - Old Automag (slot 2) (replaces pistol)
+ - Razorclaw (slot 1) (replaces chainsaw)
+ - Teleport Capsule (slot 1)
+ - Proto Automag (slot 2) (replaces pistol)
+   - Dual Protomags
  - Quadshot (slot 3) (replaces super shotgun)
  - Peacemaker (slot 5) (rare spawn near backpack)
- - Impaler (slot 4) (replaces bfg9000)
- - Flamethrower (slot 8) (replaces bfg9000)
- - Flame Gun (slot 7) (replaces bfg9000)
- - Bigman Handgun (slot 5) (replaces bfg9000)
- - Autocannon (slot 7) (replaces bfg9000)
+ - Impaler (slot 4) (replaces plasma rifle)
+ - Flamethrower (slot 8) (replaces plasma rifle)
+ - Fireblaster (slot 7) (replaces rocket launcher)
+ - Demolisher (slot 9) (replaces bfg9000)
+ - Autocannon (slot 0) (replaces bfg9000)
 
  - Amplifier (replaces berserk)
  - Armor (replaces blue armor)
@@ -62,7 +68,6 @@ This mod requires GZDoom 4.1.0 or later, and runs on top of Doom Tournament.
  - Dampener (rare spawn near backpack)
 
  - Motion Detector (replaces computer map)
- - Light/Dark Flare (given at start, infinite use)
  - Minigun Sentry (rare spawn near backpack)
 
 ## Known bugs

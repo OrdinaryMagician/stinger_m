@@ -1,7 +1,7 @@
 GameInfo
 {
 	AddEventHandlers = "UnrealMainHandler", "UnrealStaticHandler"
-	PlayerClasses = "UPlayerMale1", "UPlayerMale2", "UPlayerMale3", "UPlayerFemale1", "UPlayerFemale2"
+	PlayerClasses = "UPlayerFemale1", "UPlayerFemale2", "UPlayerMale1", "UPlayerMale2", "UPlayerMale3"
 	StatusBarClass = "UnrealHud"
 	BorderFlat = "Border"
 	BackpackType = "UnrealBackpack"
