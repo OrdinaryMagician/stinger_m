@@ -16,13 +16,16 @@ Class UnrealHUD : BaseStatusBar
 	int lastseentic, Count;
 
 	// Fonts
-	Font LargeFont, LargeRedFont, MedFont, WhiteFont, TinyFont,
-		TinyWhiteFont, TinyRedFont;
+	Font LargeFont, LargeRedFont, MedFont, WhiteFont, TinyFont, TinyWhiteFont, TinyRedFont;
 	HUDFont mMapFont;
 
 	// Common Textures
-	TextureID HalfHud, HudLine, HudAmmo, IconHeal, IconSkul, IconSel,
-		IconBase;
+	TextureID HalfHud, HudLine, HudAmmo, IconHeal, IconSkul, IconSel, IconBase;
+
+	// 0.83 HUD stuff
+	String OldAmmo[32];
+	Class<Ammo> OldAmmoType[32];
+	HUDFont mOldDigits;
 
 	// Translations
 	int RedIcon;
@@ -30,7 +33,7 @@ Class UnrealHUD : BaseStatusBar
 	override void Init()
 	{
 		Super.Init();
-		SetSize(0,320,200);
+		SetSize(64,640,400);
 		// Initialize
 		Count = 0;
 		vtracer = new("ViewTracer");
@@ -54,6 +57,11 @@ Class UnrealHUD : BaseStatusBar
 		IconSel = TexMan.CheckForTexture("IconSel",TexMan.Type_Any);
 		IconBase = TexMan.CheckForTexture("IconBase",TexMan.Type_Any);
 		RedIcon = Translation.GetID('RedIcon');
+		mOldDigits = HUDFont.Create(Font.FindFont('U083Digits'),26,Mono_CellLeft);
+		OldAmmo[0] = "Clip083";
+		OldAmmo[1] = "Shell083";
+		OldAmmo[2] = "Tary083";
+		OldAmmoType[2] = "StingerAmmo";
 	}
 
 	override void Draw( int state, double TicFrac )
@@ -61,8 +69,7 @@ Class UnrealHUD : BaseStatusBar
 		Super.Draw(state,TicFrac);
 		HudMode = CVar.GetCVar('stinger_hudmode',players[consoleplayer]).GetInt();
 		scalev.x = scalev.y = Max(0,CVar.GetCVar('stinger_hudscale',players[consoleplayer]).GetInt());
-		if ( scalev.x == 0 )
-			scalev.x = scalev.y = max(1,min(Screen.GetWidth()/640.,Screen.GetHeight()/480.));
+		if ( scalev.x == 0 ) scalev.x = scalev.y = max(1,min(Screen.GetWidth()/640.,Screen.GetHeight()/480.));
 		ClipX = Screen.GetWidth()/scalev.x;
 		ClipY = Screen.GetHeight()/scalev.y;
 		CurX = 0;
@@ -73,7 +80,13 @@ Class UnrealHUD : BaseStatusBar
 				UnrealInventory(i).PreRender(lbottom);
 		if ( CPlayer.ReadyWeapon is 'UTWeapon' )
 			UTWeapon(CPlayer.ReadyWeapon).PreRender(lbottom);
-		if ( (state == HUD_StatusBar) || (state == HUD_Fullscreen) )
+		if ( state == HUD_StatusBar )
+		{
+			BeginStatusBar();
+			FracTic = TicFrac;
+			DrawUnrealBar();
+		}
+		else if ( state == HUD_Fullscreen )
 		{
 			BeginHUD();
 			FracTic = TicFrac;
@@ -145,14 +158,14 @@ Class UnrealHUD : BaseStatusBar
 		Screen.DrawText(TinyWhiteFont,Font.CR_UNTRANSLATED,CurX,CurY,score,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
 	}
 
-	private void DrawInventory( double x, double y, bool bDrawOne )
+	private void DrawInventory( double x, double y, bool bDrawOne = false, bool bNoWeapons = false )
 	{
 		bool bGotNext, bGotPrev, bGotSelected, bRed, bFlashTranslator;
 		Inventory Inv, Prev, Next, SelectedItem;
 		UTranslator translator;
 		double HalfHUDX, HalfHUDY;
 		double AmmoBarSize;
-		if ( HudMode < 4 )	// then draw HalfHUD
+		if ( (HudMode < 4) && !bNoWeapons )	// then draw HalfHUD
 		{
 			HalfHUDX = ClipX-64;
 			HalfHUDY = ClipY-32;
@@ -194,71 +207,81 @@ Class UnrealHUD : BaseStatusBar
 		// drawing weapon slots differently than Unreal 1 because we have better methods here
 		let cw = CPlayer.ReadyWeapon;
 		int cwslot = -1;
-		if ( cw && (cw.SlotNumber != -1) ) cwslot = cw.SlotNumber?(cw.SlotNumber-1):9;
+		if ( cw && (cw.SlotNumber != -1) ) cwslot = cw.SlotNumber;
 		let pw = CPlayer.PendingWeapon;
 		int pwslot = -1;
-		if ( pw && (pw != WP_NOCHANGE) && (pw.SlotNumber != -1) ) pwslot = pw.SlotNumber?(pw.SlotNumber-1):9;
-		Weapon wslots[10];
-		// zero-initialize, fixes asmjit crash
-		for ( int i=0; i<10; i++ )
-			wslots[i] = null;
+		if ( pw && (pw != WP_NOCHANGE) && (pw.SlotNumber != -1) ) pwslot = pw.SlotNumber;
+		Array<Weapon> wslots[10];
+		// clear the arrays before work
+		for ( int i=0; i<10; i++ ) wslots[i].Clear();
 		// first run, populate the full array of weapons
 		for ( int i=0; i<10; i++ )
 		{
-			int sslot = (i<9)?(i+1):0;
 			for ( Inv = CPlayer.mo.Inv; Inv; Inv=Inv.Inv )
 			{
 				if ( !(Inv is 'Weapon') ) continue;
 				let w = Weapon(Inv);
-				if ( w.SlotNumber != sslot ) continue;
-				int slot = w.SlotNumber?(w.SlotNumber-1):9;
-				if ( !wslots[slot] )
+				if ( w.SlotNumber != i ) continue;
+				int slot = w.SlotNumber;
+				wslots[slot].Push(w);
+			}
+		}
+		// second run, sort the slot arrays
+		for ( int i=0; i<10; i++ )
+		{
+			int j = 1;
+			while ( j < wslots[i].Size() )
+			{
+				int k = j;
+				while ( (k > 0) && (wslots[i][k-1].SelectionOrder >= wslots[i][k].SelectionOrder) )
 				{
-					wslots[slot] = w;
-					continue;
+					Weapon tmp = wslots[i][k];
+					wslots[i][k] = wslots[i][k-1];
+					wslots[i][k-1] = tmp;
+					k--;
 				}
-				if ( (wslots[slot] == pw) || (wslots[slot] == cw) ) continue;
-				if ( (w == pw) || (w == cw) )
-				{
-					wslots[slot] = w;
-					continue;
-				}
-				if ( (w.SelectionOrder < wslots[slot].SelectionOrder) && (!w.Ammo1 || (w.Ammo1.Amount > 0)) )
-					wslots[slot] = w;
-				else if ( (w.SelectionOrder >= wslots[slot].SelectionOrder) && wslots[slot].Ammo1 && (wslots[slot].Ammo1.Amount <= 0) )
-					wslots[slot] = w;
+				j++;
 			}
 		}
 		// draw the slots
-		if ( HudMode < 4 )
+		if ( (HudMode < 4) && !bNoWeapons )
 		{
 			for ( int i=0; i<10; i++ )
 			{
-				if ( !wslots[i] ) continue;
+				if ( wslots[i].Size() <= 0 ) continue;
 				Font cfont = TinyFont;
 				if ( cwslot == i ) cfont = TinyWhiteFont;
-				int realslot = (i<9)?(i+1):9;
+				int realslot = i?i:10;
 				CurX = HalfHUDX-3+realslot*6;
 				CurY = HalfHUDY+4;
-				Screen.DrawText(cfont,Font.CR_UNTRANSLATED,CurX,CurY,String.Format("%d",realslot),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
-				// Draw ammo bar
-				let amo = wslots[i].Ammo1;
-				if ( !amo ) continue;
-				CurY = HalfHUDY+11;
-				AmmoBarSize = 16*min(1.0,amo.Amount/double(amo.MaxAmount));
-				CurY = HalfHUDY+29-AmmoBarSize;
-				if ( (AmmoBarSize < 8) && (amo.Amount < 10) && (amo.Amount > 0) )
+				Screen.DrawText(cfont,Font.CR_UNTRANSLATED,CurX,CurY,String.Format("%d",i),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+				// Draw ammo bar(s)
+				int nammo = 0;
+				for ( int j=0; j<wslots[i].Size(); j++ ) if ( wslots[i][j].Ammo1 ) nammo++;
+				if ( nammo <= 0 ) continue;
+				int cbar = 0;
+				for ( int j=0; j<wslots[i].Size(); j++ )
 				{
-					CurY -= 9;
-					Screen.DrawText(TinyRedFont,Font.CR_UNTRANSLATED,CurX,CurY,String.Format("%d",amo.Amount),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
-					CurY += 9;
-				}
-				DrawColor = "00 FF 00";
-				if ( AmmoBarSize < 8 ) DrawColor = Color(255-int(AmmoBarSize)*30,int(AmmoBarSize)*30+40,0);
-				if ( amo.Amount > 0 )
-				{
-					Screen.DrawTexture(HudAmmo,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_FillColor,BlackColor,DTA_DestWidth,4,DTA_DestHeightF,AmmoBarSize);
-					Screen.DrawTexture(HudAmmo,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_AlphaChannel,true,DTA_FillColor,DrawColor,DTA_DestWidth,4,DTA_DestHeightF,AmmoBarSize);
+					let amo = wslots[i][j].Ammo1;
+					if ( !amo ) continue;
+					AmmoBarSize = 16*min(1.0,amo.Amount/double(amo.MaxAmount));
+					CurX = HalfHUDX-3+realslot*6+(4./nammo)*cbar;
+					CurY = HalfHUDY+29-AmmoBarSize;
+					if ( (AmmoBarSize < 8) && (amo.Amount < 10) && (amo.Amount > 0) && (nammo == 1) )
+					{
+						CurY -= 9;
+						Screen.DrawText(TinyRedFont,Font.CR_UNTRANSLATED,CurX,CurY,String.Format("%d",amo.Amount),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+						CurY += 9;
+					}
+					DrawColor = Color(0,255,0);
+					if ( AmmoBarSize < 8 ) DrawColor = Color(255-int(AmmoBarSize)*30,int(AmmoBarSize)*30+40,0);
+					if ( wslots[i][j] != cw ) DrawColor = Color(DrawColor.r/2,DrawColor.g/2,DrawColor.b/2);
+					if ( amo.Amount > 0 )
+					{
+						Screen.DrawTexture(HudAmmo,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_FillColor,BlackColor,DTA_DestWidthF,4./nammo,DTA_DestHeightF,AmmoBarSize);
+						Screen.DrawTexture(HudAmmo,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_AlphaChannel,true,DTA_FillColor,DrawColor,DTA_DestWidthF,4./nammo,DTA_DestHeightF,AmmoBarSize);
+					}
+					cbar++;
 				}
 			}
 		}
@@ -294,7 +317,7 @@ Class UnrealHUD : BaseStatusBar
 		}
 	}
 
-	private void DrawArmor( double x, double y, bool bDrawOne )
+	private void DrawArmor( double x, double y, bool bDrawOne = false )
 	{
 		int ArmorAmount = 0, CurAbs = 0;
 		Inventory Inv, BestArmor;
@@ -332,16 +355,12 @@ Class UnrealHUD : BaseStatusBar
 	{
 		CurX = x;
 		CurY = y;
-		if ( !CPlayer.ReadyWeapon || !CPlayer.ReadyWeapon.Ammo1 )
-		{
-			Screen.DrawTexture(IconBase,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
-			return;
-		}
+		if ( !CPlayer.ReadyWeapon || !CPlayer.ReadyWeapon.Ammo1 ) return;
 		Font cfont = LargeFont;
-		if ( CPlayer.ReadyWeapon.Ammo1.Amount < 10 ) cfont = LargeRedFont;
+		if ( CPlayer.ReadyWeapon.Ammo1.Amount <= min(9,CPlayer.ReadyWeapon.Ammo1.MaxAmount/3) ) cfont = LargeRedFont;
 		if ( !HudMode )
 		{
-			CurX -= cfont.StringWidth(String.Format("%d",CPlayer.ReadyWeapon.Ammo1.Amount));
+			CurX -= cfont.StringWidth(String.Format("%d",CPlayer.ReadyWeapon.Ammo1.Amount))+2;
 			Screen.DrawText(cfont,Font.CR_UNTRANSLATED,CurX,CurY,String.Format("%d",CPlayer.ReadyWeapon.Ammo1.Amount),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
 		}
 		CurX = x;
@@ -360,6 +379,7 @@ Class UnrealHUD : BaseStatusBar
 		CurY = Y+29;
 		if ( (HudMode != 1) && (HudMode != 2) && (HudMode != 4) )
 			Screen.DrawTexture(HudLine,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_WindowRightF,Min(27.*(CPlayer.ReadyWeapon.Ammo1.Amount/double(CPlayer.ReadyWeapon.Ammo1.MaxAmount)),27.));
+		// TODO secondary ammo display
 	}
 
 	private void DrawHealth( double x, double y )
@@ -411,13 +431,13 @@ Class UnrealHUD : BaseStatusBar
 	{
 		if ( HudMode == 5 )
 		{
-			DrawInventory(ClipX-96,0,false);
+			DrawInventory(ClipX-96,0);
 			return;
 		}
 		if ( ClipX < 320 ) HudMode = 4;
 		// Draw Armor
-		if ( HudMode < 2 ) DrawArmor(0,0,false);
-		else if ( (HudMode == 3) || (HudMode == 2) ) DrawArmor(0,ClipY-32,false);
+		if ( HudMode < 2 ) DrawArmor(0,0);
+		else if ( (HudMode == 3) || (HudMode == 2) ) DrawArmor(0,ClipY-32);
 		else if ( HudMode == 4 ) DrawArmor(ClipX-64,ClipY-64,true);
 		// Draw Ammo
 		if ( HudMode != 4 ) DrawAmmo(ClipX-96,ClipY-32);
@@ -427,10 +447,10 @@ Class UnrealHUD : BaseStatusBar
 		else if ( (HudMode == 3) || (HudMode == 2) ) DrawHealth(ClipX-128,ClipY-32);
 		else if ( HudMode == 4 ) DrawHealth(ClipX-64,ClipY-32);
 		// Display Inventory
-		if ( HudMode < 2 ) DrawInventory(ClipX-96,0,false);
-		else if ( HudMode == 3 ) DrawInventory(ClipX-96,ClipY-64,false);
+		if ( HudMode < 2 ) DrawInventory(ClipX-96,0);
+		else if ( HudMode == 3 ) DrawInventory(ClipX-96,ClipY-64);
 		else if ( HudMode == 4 ) DrawInventory(ClipX-64,ClipY-64,true);
-		else if ( HudMode == 2 ) DrawInventory(ClipX/2-64,ClipY-32,false);
+		else if ( HudMode == 2 ) DrawInventory(ClipX/2-64,ClipY-32);
 		// Display Frag count
 		if ( HudMode < 3 ) DrawFragCount(ClipX-32,ClipY-64);
 		else if ( HudMode == 3 ) DrawFragCount(0,ClipY-64);
@@ -440,6 +460,51 @@ Class UnrealHUD : BaseStatusBar
 		else if ( HudMode < 6 ) DrawKeys(ClipX,ClipY-32);
 		// Display Identification Info
 		DrawIdentifyInfo();
+	}
+
+	private void DrawUnrealBar()
+	{
+		// 0.83 status bar, just for funsies
+		DrawImage("Bar083",(0,336),DI_ITEM_OFFSETS);
+		static const float slotofs[] = {525, 84, 128, 173, 216, 259, 349, 392, 436, 481};
+		for ( int i=0; i<10; i++ )
+		{
+			if ( !CPlayer.HasWeaponsInSlot(i) ) continue;
+			bool used = (CPlayer.ReadyWeapon&&(CPlayer.ReadyWeapon.SlotNumber==i));
+			DrawImage("Slot083",(slotofs[i],342),DI_ITEM_OFFSETS,used?1.:.8);
+		}
+		DrawString(mOldDigits,FormatNumber(CPlayer.health,3),(359,367),DI_TEXT_ALIGN_RIGHT);
+		int ArmorAmount = 0, CurAbs = 0;
+		Inventory BestArmor = null;
+		for ( Inventory Inv=CPlayer.mo.Inv; Inv; Inv=Inv.Inv )
+		{
+			if ( !(Inv is 'UTArmor') ) continue;
+			ArmorAmount += Inv.Amount;
+			if ( Inv.Amount <= 0 ) continue;
+			if ( UTArmor(Inv).absorb > CurAbs )
+			{
+				CurAbs = UTArmor(Inv).absorb;
+				BestArmor = Inv;
+			}
+		}
+		// TODO draw different icons based on armor class
+		if ( BestArmor ) DrawImage("Armor083",(4,340),DI_ITEM_OFFSETS);
+		if ( ArmorAmount ) DrawString(mOldDigits,FormatNumber(ArmorAmount,3),(168,367),DI_TEXT_ALIGN_RIGHT);
+		Inventory Ammo1, Ammo2;
+		[Ammo1, Ammo2] = GetCurrentAmmo();
+		if ( Ammo1 )
+		{
+			if ( Ammo1.Amount ) DrawString(mOldDigits,FormatNumber(Ammo1.Amount,3),(550,367),DI_TEXT_ALIGN_RIGHT);
+			for ( int i=0; i<32; i++ )
+			{
+				if ( !(Ammo1 is OldAmmoType[i]) ) continue;
+				DrawImage(OldAmmo[i],(560,336),DI_ITEM_OFFSETS);
+				break;
+			}
+		}
+		// Need to draw the inventory bar (and translator)
+		if ( ClipX < 320 ) HudMode = 4;
+		DrawInventory(ClipX-96,0,false,true);
 	}
 
 	override void Tick()

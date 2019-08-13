@@ -1,5 +1,7 @@
 $pitchshiftrange 0
 
+StartupTick	DSEMPTY
+
 // player sounds
 u1/maledie1	mdeath1
 u1/maledie2	mdeath3
@@ -111,3 +113,5 @@ stinger/hit	bladehit
 stinger/hit2	ricochet
 stinger/flesh	chunkhit
 $pitchshift stinger/hit2 5
+
+flak/click	click

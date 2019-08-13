@@ -1,0 +1,266 @@
+Model "UPlayerMale3"
+{
+	Path "models"
+	Model 0 "Male3_d.3d"
+	SurfaceSkin 0 0 "Dante.png"
+	SurfaceSkin 0 1 "GunPick1.png"
+	Scale 0.216 0.18 0.18
+	Offset 4 -5 28
+	RollOffset -90
+	AngleOffset -90
+	IGNORETRANSLATION	// I'll figure out eventually how to make color changes work, but for now this is it
+	// Still
+	FrameIndex PLAY A 0 480
+	FrameIndex PLAY B 0 481
+	FrameIndex PLAY C 0 482
+	FrameIndex PLAY D 0 483
+	FrameIndex PLAY E 0 484
+	FrameIndex PLAY F 0 485
+	FrameIndex PLAY G 0 486
+	// Still (Air)
+	FrameIndex PLYA A 0 181
+	// Land
+	FrameIndex PLYL A 0 183
+	// Still (Swim)
+	FrameIndex PLYS A 0 315
+	FrameIndex PLYS B 0 317
+	FrameIndex PLYS C 0 319
+	FrameIndex PLYS D 0 321
+	FrameIndex PLYS E 0 323
+	FrameIndex PLYS F 0 325
+	FrameIndex PLYS G 0 327
+	// Run
+	FrameIndex PLAY H 0 212
+	FrameIndex PLAY I 0 214
+	FrameIndex PLAY J 0 216
+	FrameIndex PLAY K 0 218
+	FrameIndex PLAY L 0 220
+	// Run (Swim)
+	FrameIndex PLYS H 0 285
+	FrameIndex PLYS I 0 288
+	FrameIndex PLYS J 0 291
+	FrameIndex PLYS K 0 294
+	FrameIndex PLYS L 0 297
+	// Fire (Loop)
+	FrameIndex PLAY R 0 252
+	FrameIndex PLAY S 0 255
+	FrameIndex PLAY T 0 258
+	FrameIndex PLAY U 0 261
+	FrameIndex PLAY V 0 264
+	// Fire (Single)
+	FrameIndex PLAY M 0 267
+	FrameIndex PLAY N 0 269
+	FrameIndex PLAY O 0 271
+	FrameIndex PLAY P 0 273
+	FrameIndex PLAY Q 0 275
+	// Pain
+	FrameIndex PLAY W 0 0	// gut
+	FrameIndex PLAY X 0 180	// head
+	FrameIndex PLAY Y 0 185	// left
+	FrameIndex PLAY Z 0 211	// right
+	// Reload
+	FrameIndex PLYR A 0 493
+	FrameIndex PLYR B 0 494
+	FrameIndex PLYR C 0 495
+	FrameIndex PLYR D 0 496
+	FrameIndex PLYR E 0 497
+	FrameIndex PLYR F 0 498
+	FrameIndex PLYR G 0 499
+	FrameIndex PLYR H 0 500
+	// Crouch
+	FrameIndex PLYC A 0 150
+	FrameIndex PLYC B 0 153
+	FrameIndex PLYC C 0 156
+	FrameIndex PLYC D 0 159
+	FrameIndex PLYC E 0 162
+	// Turn
+	FrameIndex PLYT A 0 385
+	FrameIndex PLYT B 0 386
+	// Dead1 (Backflip)
+	FrameIndex PLD1 A 0 445
+	FrameIndex PLD1 B 0 446
+	FrameIndex PLD1 C 0 447
+	FrameIndex PLD1 D 0 448
+	FrameIndex PLD1 E 0 449
+	FrameIndex PLD1 F 0 450
+	FrameIndex PLD1 G 0 451
+	FrameIndex PLD1 H 0 452
+	FrameIndex PLD1 I 0 453
+	FrameIndex PLD1 J 0 454
+	FrameIndex PLD1 K 0 455
+	FrameIndex PLD1 L 0 456
+	FrameIndex PLD1 M 0 457
+	// Dead2 (Fall back)
+	FrameIndex PLD2 A 0 33
+	FrameIndex PLD2 B 0 34
+	FrameIndex PLD2 C 0 35
+	FrameIndex PLD2 D 0 36
+	FrameIndex PLD2 E 0 37
+	FrameIndex PLD2 F 0 38
+	FrameIndex PLD2 G 0 39
+	FrameIndex PLD2 H 0 40
+	FrameIndex PLD2 I 0 41
+	FrameIndex PLD2 J 0 42
+	FrameIndex PLD2 K 0 43
+	FrameIndex PLD2 L 0 44
+	FrameIndex PLD2 M 0 45
+	FrameIndex PLD2 N 0 46
+	FrameIndex PLD2 O 0 47
+	FrameIndex PLD2 P 0 48
+	// Dead3 (Fall forward)
+	FrameIndex PLD3 A 0 49
+	FrameIndex PLD3 B 0 50
+	FrameIndex PLD3 C 0 51
+	FrameIndex PLD3 D 0 52
+	FrameIndex PLD3 E 0 53
+	FrameIndex PLD3 F 0 54
+	FrameIndex PLD3 G 0 55
+	FrameIndex PLD3 H 0 56
+	FrameIndex PLD3 I 0 57
+	FrameIndex PLD3 J 0 58
+	FrameIndex PLD3 K 0 59
+	FrameIndex PLD3 L 0 60
+	FrameIndex PLD3 M 0 61
+	// Dead4 (Decapitate)
+	FrameIndex PLD4 A 0 62
+	FrameIndex PLD4 B 0 63
+	FrameIndex PLD4 C 0 64
+	FrameIndex PLD4 D 0 65
+	FrameIndex PLD4 E 0 66
+	FrameIndex PLD4 F 0 67
+	FrameIndex PLD4 G 0 68
+	FrameIndex PLD4 H 0 69
+	FrameIndex PLD4 I 0 70
+	FrameIndex PLD4 J 0 71
+	FrameIndex PLD4 K 0 72
+	FrameIndex PLD4 L 0 73
+	FrameIndex PLD4 M 0 74
+	FrameIndex PLD4 N 0 75
+	FrameIndex PLD4 O 0 76
+	FrameIndex PLD4 P 0 77
+	// Dead5 (Torso blown off)
+	FrameIndex PLD5 A 0 78
+	FrameIndex PLD5 B 0 79
+	FrameIndex PLD5 C 0 80
+	FrameIndex PLD5 D 0 81
+	FrameIndex PLD5 E 0 82
+	FrameIndex PLD5 F 0 83
+	FrameIndex PLD5 G 0 84
+	FrameIndex PLD5 H 0 85
+	FrameIndex PLD5 I 0 86
+	FrameIndex PLD5 J 0 87
+	FrameIndex PLD5 K 0 88
+	FrameIndex PLD5 L 0 89
+	FrameIndex PLD5 M 0 90
+	FrameIndex PLD5 N 0 91
+	FrameIndex PLD5 O 0 92
+	FrameIndex PLD5 P 0 93
+	FrameIndex PLD5 Q 0 94
+	FrameIndex PLD5 R 0 95
+	FrameIndex PLD5 S 0 96
+	FrameIndex PLD5 T 0 97
+	FrameIndex PLD5 U 0 98
+	FrameIndex PLD5 V 0 99
+	FrameIndex PLD5 W 0 100
+	// Dead6 (SPIN)
+	FrameIndex PLD6 A 0 101
+	FrameIndex PLD6 B 0 102
+	FrameIndex PLD6 C 0 103
+	FrameIndex PLD6 D 0 104
+	FrameIndex PLD6 E 0 105
+	FrameIndex PLD6 F 0 106
+	FrameIndex PLD6 G 0 107
+	FrameIndex PLD6 H 0 108
+	FrameIndex PLD6 I 0 109
+	FrameIndex PLD6 J 0 110
+	FrameIndex PLD6 K 0 111
+	FrameIndex PLD6 L 0 112
+	FrameIndex PLD6 M 0 113
+	FrameIndex PLD6 N 0 114
+	FrameIndex PLD6 O 0 115
+	FrameIndex PLD6 P 0 116
+	FrameIndex PLD6 Q 0 117
+	FrameIndex PLD6 R 0 118
+	FrameIndex PLD6 S 0 119
+	FrameIndex PLD6 T 0 120
+	FrameIndex PLD6 U 0 121
+	FrameIndex PLD6 V 0 122
+	FrameIndex PLD6 W 0 123
+	FrameIndex PLD6 X 0 124
+	FrameIndex PLD6 Y 0 125
+	FrameIndex PLD6 Z 0 126
+	FrameIndex PLD6 [ 0 127
+	FrameIndex PLD6 \ 0 128
+	// Dead7 (Faint)
+	FrameIndex PLD7 A 0 129
+	FrameIndex PLD7 B 0 130
+	FrameIndex PLD7 C 0 131
+	FrameIndex PLD7 D 0 132
+	FrameIndex PLD7 E 0 133
+	FrameIndex PLD7 F 0 134
+	FrameIndex PLD7 G 0 135
+	FrameIndex PLD7 H 0 136
+	FrameIndex PLD7 I 0 137
+	FrameIndex PLD7 J 0 138
+	FrameIndex PLD7 K 0 139
+	FrameIndex PLD7 L 0 140
+	FrameIndex PLD7 M 0 141
+	FrameIndex PLD7 N 0 142
+	FrameIndex PLD7 O 0 143
+	FrameIndex PLD7 P 0 144
+	FrameIndex PLD7 Q 0 145
+	FrameIndex PLD7 R 0 146
+	FrameIndex PLD7 S 0 147
+	FrameIndex PLD7 T 0 148
+	FrameIndex PLD7 U 0 149
+	// Taunt1
+	FrameIndex PLT1 A 0 473
+	FrameIndex PLT1 B 0 474
+	FrameIndex PLT1 C 0 475
+	FrameIndex PLT1 D 0 476
+	FrameIndex PLT1 E 0 477
+	FrameIndex PLT1 F 0 478
+	FrameIndex PLT1 G 0 479
+	// Victory
+	FrameIndex PLT2 A 0 526
+	FrameIndex PLT2 B 0 527
+	FrameIndex PLT2 C 0 528
+	FrameIndex PLT2 D 0 529
+	FrameIndex PLT2 E 0 530
+	FrameIndex PLT2 F 0 531
+	FrameIndex PLT2 G 0 532
+	FrameIndex PLT2 H 0 533
+	FrameIndex PLT2 I 0 534
+	FrameIndex PLT2 J 0 535
+	FrameIndex PLT2 K 0 536
+	FrameIndex PLT2 L 0 537
+	FrameIndex PLT2 M 0 538
+	FrameIndex PLT2 N 0 539
+	FrameIndex PLT2 O 0 540
+	FrameIndex PLT2 P 0 541
+	FrameIndex PLT2 Q 0 542
+	FrameIndex PLT2 R 0 543
+	FrameIndex PLT2 S 0 544
+	FrameIndex PLT2 T 0 545
+	FrameIndex PLT2 U 0 546
+	FrameIndex PLT2 V 0 547
+	FrameIndex PLT2 W 0 548
+	FrameIndex PLT2 X 0 549
+	FrameIndex PLT2 Y 0 550
+	// Wave
+	FrameIndex PLT3 A 0 551
+	FrameIndex PLT3 B 0 552
+	FrameIndex PLT3 C 0 553
+	FrameIndex PLT3 D 0 554
+	FrameIndex PLT3 E 0 555
+	FrameIndex PLT3 F 0 556
+	FrameIndex PLT3 G 0 557
+	FrameIndex PLT3 H 0 558
+	FrameIndex PLT3 I 0 559
+	FrameIndex PLT3 J 0 560
+	FrameIndex PLT3 K 0 561
+	FrameIndex PLT3 L 0 562
+	FrameIndex PLT3 M 0 563
+	FrameIndex PLT3 N 0 564
+	FrameIndex PLT3 O 0 565
+}

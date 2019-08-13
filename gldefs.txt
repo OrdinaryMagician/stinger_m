@@ -44,3 +44,7 @@ HardwareShader Texture "graphics/UnBg.png"
 {
 	Shader "shaders/glsl/UnBg.fp"
 }
+Brightmap Texture "models/Ash.png"
+{
+	Map "brightmaps/Ash.png"
+}

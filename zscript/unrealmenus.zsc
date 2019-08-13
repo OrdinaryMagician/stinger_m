@@ -101,3 +101,35 @@ Class OptionMenuItemHudType : OptionMenuItem
 		return -1;
 	}
 }
+
+// because I can't change the font color in mapinfo
+Class GreenMessageBox : MessageBoxMenu
+{
+	override void Drawer ()
+	{
+		int i, y;
+		int fontheight = textFont.GetHeight();
+		y = destHeight/2;
+		int c = mMessage.Count();
+		y -= c*fontHeight/2;
+		for ( i=0; i<c; i++ )
+		{
+			screen.DrawText (textFont,Font.CR_GREEN,(destWidth/2)-mMessage.StringWidth(i)/2,y,mMessage.StringAt(i),DTA_VirtualWidth,destWidth,DTA_VirtualHeight,destHeight,DTA_KeepRatio,true);
+			y += fontheight;
+		}
+		if ( mMessageMode == 0 )
+		{
+			y += fontheight;
+			mMouseY = y;
+			screen.DrawText(textFont,(messageSelection==0)?Font.CR_WHITE:Font.CR_DARKGREEN,destWidth/2,y,Stringtable.Localize("$TXT_YES"),DTA_VirtualWidth,destWidth,DTA_VirtualHeight,destHeight,DTA_KeepRatio,true);
+			screen.DrawText(textFont,(messageSelection==1)?Font.CR_WHITE:Font.CR_DARKGREEN,destWidth/2,y+fontheight,Stringtable.Localize("$TXT_NO"),DTA_VirtualWidth,destWidth,DTA_VirtualHeight,destHeight,DTA_KeepRatio,true);
+			if ( messageSelection >= 0 )
+			{
+				if ( (MenuTime()%8) < 6 )
+				{
+					screen.DrawText(arrowFont,OptionMenuSettings.mFontColorSelection,(destWidth/2)-11,y+fontheight*messageSelection,selector,DTA_VirtualWidth,destWidth,DTA_VirtualHeight,destHeight,DTA_KeepRatio,true);
+				}
+			}
+		}
+	}
+}

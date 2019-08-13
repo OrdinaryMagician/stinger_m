@@ -30,3 +30,16 @@ UTahoma10
 {
 	TEMPLATE tu10_%03d
 }
+U083Digits
+{
+	0 Zero083
+	1 One083
+	2 Two083
+	3 Three083
+	4 Four083
+	5 Five083
+	6 Six083
+	7 Seven083
+	8 Eight083
+	9 Nine083
+}
