@@ -35,7 +35,16 @@ Class StingerProjectile : Actor
 		Height 2;
 		PROJECTILE;
 		+SKYEXPLODE;
-		+BLOODSPLATTER;
+	}
+	override int DoSpecialDamage( Actor target, int damage, Name damagetype )
+	{
+		if ( !target.bNOBLOOD )
+		{
+			target.SpawnBlood(pos,AngleTo(target),damage);
+			A_PlaySound("stinger/flesh");
+			A_AlertMonsters();
+		}
+		return damage;
 	}
 	States
 	{
@@ -43,15 +52,17 @@ Class StingerProjectile : Actor
 		TPRJ A -1 Bright;
 		Stop;
 	Death:
+	Crash:
 		TNT1 A 0
 		{
-			if ( !Random[Stinger](0,2) ) A_PlaySound("stinger/hit2",CHAN_BODY,0.5);
+			if ( !Random[Stinger](0,2) ) A_PlaySound("stinger/hit2",CHAN_BODY,0.5,pitch:FRandom[Stinger](0.5,1.5));
 			else A_PlaySound("stinger/hit",CHAN_BODY,0.6);
+			A_AlertMonsters();
 		}
 		TPRJ BCDEFG 2 Bright;
 		Stop;
 	XDeath:
-		TNT1 A 1 A_PlaySound("stinger/flesh");
+		TNT1 A 1;
 		Stop;
 	}
 }

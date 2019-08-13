@@ -112,6 +112,5 @@ stinger/altfire	stingera
 stinger/hit	bladehit
 stinger/hit2	ricochet
 stinger/flesh	chunkhit
-$pitchshift stinger/hit2 5
 
 flak/click	click
