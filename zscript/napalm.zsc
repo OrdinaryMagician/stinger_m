@@ -1,0 +1,7 @@
+Class FlameAmmo : Ammo
+{
+}
+
+Class UFlamethrower : UTWeapon
+{
+}

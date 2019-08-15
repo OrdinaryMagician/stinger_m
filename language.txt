@@ -1,15 +1,24 @@
 [default eng enc ena enz eni ens enj enb enl ent enw]
 /* Obituaries */
 O_STINGER = "%o was perforated by %k's Stinger.";
+O_ASMD = "%k inflicted mortal damage upon %o with the ASMD.";
 /* Pickup messages */
 I_STINGERAMMOL = "You picked up ";
 I_STINGERAMMOR = " Tarydium Shards.";
 I_STINGER = "You picked up the Stinger.";
 I_TRANSLATOR = "You picked up the Universal Translator.";
+I_BACKPACKEXTRA = "The backpack also contains: ";
+I_ASMDAMMO = "You picked up an ASMD Core.";
+I_ASMDAMMO2 = "You picked up a Small ASMD Core.";
+I_ASMD = "You got the ASMD.";
 /* Tags */
 T_STINGERAMMO = "Tarydium Shards";
+T_STINGERAMMO2 = "Tarydium Shard Pack";
 T_STINGER = "Stinger";
 T_TRANSLATOR = "Translator";
+T_ASMDAMMO = "ASMD Core";
+T_ASMDAMMO2 = "Small ASMD Core";
+T_ASMD = "ASMD";
 /* Miscellaneous */
 TR_HINT = "Hint";
 TR_NOMSG = "No new messages";
@@ -49,15 +58,22 @@ STING_CBIZ = "Biz:";
 [es esm esn esg esc esa esd esv eso esr ess esf esl esy esz esb ese esh esi esu]
 /* Obituaries */
 O_STINGER = "%o fue perforad@[ao_esp] por el Arma Aguijón de %k.";
+O_ASMD = "%k infligió un daño mortal sobre %o con el ASMD.";
 /* Pickup messages */
 I_STINGERAMMOL = "Has recogido ";
 I_STINGERAMMOR = " fragmentos de Tarydium.";
 I_STINGER = "Has obtenido el Arma Aguijón.";
 I_TRANSLATOR = "Has obtenido el Traductor Universal.";
+I_BACKPACKEXTRA = "La mochila tambien contiene: ";
+I_ASMDAMMO = "Has recogido un Núcleo de ASMD.";
+I_ASMDAMMO2 = "Has recogido un Núcleo Pequeño de ASMD.";
+I_ASMD = "Has obtenido el ASMD.";
 /* Tags */
 T_STINGERAMMO = "Fragmentos de Tarydium";
 T_STINGER = "Arma Aguijón";
 T_TRANSLATOR = "Traductor";
+T_ASMDAMMO = "Núcleo de ASMD";
+T_ASMDAMMO2 = "Núcleo Pequeño de ASMD";
 /* Miscellaneous */
 TR_HINT = "Pista";
 TR_NOMSG = "No hay mensajes nuevos";

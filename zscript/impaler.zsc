@@ -1,0 +1,14 @@
+Class ImpalerAmmo : Ammo
+{
+}
+Class ImpalerAmmo2 : ImpalerAmmo
+{
+}
+
+Class ImpalerCharge : Ammo
+{
+}
+
+Class Impaler : UTWeapon
+{
+}

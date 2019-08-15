@@ -1,0 +1,7 @@
+Class UBioAmmo : Ammo
+{
+}
+
+Class UBioRifle : UTWeapon
+{
+}

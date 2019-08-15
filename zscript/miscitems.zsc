@@ -57,7 +57,7 @@ Class UnrealBackpack : BackpackItem replaces Backpack
 		}
 		return Inventory.CreateCopy(other);
 	}
-	override bool HandlePickup (Inventory item)
+	override bool HandlePickup( Inventory item )
 	{
 		// Since you already have a backpack, that means you already have every
 		// kind of ammo in your inventory, so we don't need to look at the
@@ -82,6 +82,41 @@ Class UnrealBackpack : BackpackItem replaces Backpack
 			return true;
 		}
 		return false;
+	}
+	override void DoPickupSpecial( Actor toucher )
+	{
+		Super.DoPickupSpecial(toucher);
+		if ( gameinfo.gametype&GAME_DOOMCHEX )
+		{
+			static const Class<Inventory> xitems[] = {"Flare", "Seeds", "SentryItem", "VoiceBox", "ForceField", "Dampener"};
+			int xitemn[6];
+			xitemn[0] = max(0,Random[BackpackExtra](-3,5));
+			xitemn[1] = max(0,Random[BackpackExtra](-3,5));
+			xitemn[2] = max(0,Random[BackpackExtra](-4,1));
+			xitemn[3] = max(0,Random[BackpackExtra](-2,1));
+			xitemn[4] = max(0,Random[BackpackExtra](-3,1));
+			xitemn[5] = max(0,Random[BackpackExtra](-2,1));
+			// random doubling
+			if ( !Random[BackpackExtra](0,4) ) xitemn[0] *= 2;
+			if ( !Random[BackpackExtra](0,4) ) xitemn[1] *= 2;
+			if ( !Random[BackpackExtra](0,9) ) xitemn[2] *= 2;
+			if ( !Random[BackpackExtra](0,7) ) xitemn[3] *= 2;
+			if ( !Random[BackpackExtra](0,6) ) xitemn[4] *= 2;
+			if ( !Random[BackpackExtra](0,5) ) xitemn[5] *= 2;
+			int total = 0;
+			for ( int i=0; i<6; i++ ) total += xitemn[i];
+			if ( total <= 0 ) return;
+			String extratxt = StringTable.Localize("$I_BACKPACKEXTRA");
+			for ( int i=0; i<6; i++ )
+			{
+				if ( xitemn[i] <= 0 ) continue;
+				extratxt = extratxt..String.Format("%dx %s, ",xitemn[i],GetDefaultByType(xitems[i]).GetTag());
+				toucher.GiveInventory(xitems[i],xitemn[i]);
+			}
+			// remove trailing comma
+			extratxt.Truncate(extratxt.Length()-2);
+			PrintPickupMessage(true,extratxt..".");
+		}
 	}
 	Default
 	{
@@ -148,4 +183,54 @@ Class UTranslator : UnrealInventory
 		Inventory.Icon "I_Tran";
 		Inventory.MaxAmount 1;
 	}
+}
+
+Class VoiceBox : UnrealInventory
+{
+}
+
+Class Flare : UnrealInventory
+{
+}
+
+Class LightFlare : UnrealInventory
+{
+}
+
+Class DarkFlare : UnrealInventory
+{
+}
+
+Class Dampener : UnrealInventory
+{
+	static bool Active( Actor Owner )
+	{
+		let d = Dampener(Owner.FindInventory("Dampener"));
+		if ( d && d.bActive ) return true;
+		return false;
+	}
+}
+
+Class Forcefield : UnrealInventory
+{
+}
+
+Class ForcefieldEffect : Actor
+{
+}
+
+Class UFlashlight : UnrealInventory
+{
+}
+
+Class USearchlight : UnrealInventory
+{
+}
+
+Class SentryItem : UnrealInventory
+{
+}
+
+Class MinigunSentry : Actor
+{
 }

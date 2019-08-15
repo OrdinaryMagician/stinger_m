@@ -1,0 +1,7 @@
+Class PeaceAmmo : Ammo
+{
+}
+
+Class Peacemaker : UTWeapon
+{
+}

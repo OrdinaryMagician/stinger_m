@@ -89,7 +89,8 @@
 ### "Teleport gun"
 
  - Them teleport capsules.
- - Although I can leave this as-is I think I should change the hand.
+ - Redid the whole thing with the modern hand model.
+ - There is a pickup mesh, it's rudimentary but does the job.
 
 ### Old Automag / Proto Automag
 

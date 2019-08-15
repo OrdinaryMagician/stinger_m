@@ -1,0 +1,99 @@
+// These are here for Doom Tournament maps
+Class MultiItemSpawner : Actor
+{
+}
+
+Class Slot1Weapons : MultiItemSpawner
+{
+}
+
+Class Slot2Weapons : MultiItemSpawner
+{
+}
+
+Class Slot3Weapons : MultiItemSpawner
+{
+}
+
+Class Slot4Weapons : MultiItemSpawner
+{
+}
+
+Class Slot5Weapons : MultiItemSpawner
+{
+}
+
+Class Slot6Weapons : MultiItemSpawner
+{
+}
+
+Class Slot7Weapons : MultiItemSpawner
+{
+}
+
+Class Slot8Weapons : MultiItemSpawner
+{
+}
+
+Class Slot9Weapons : MultiItemSpawner
+{
+}
+
+Class Slot0Weapons : MultiItemSpawner
+{
+}
+
+Class Slot0SWeapons : MultiItemSpawner
+{
+}
+
+Class Slot2Ammo : MultiItemSpawner
+{
+}
+
+Class Slot3Ammo : MultiItemSpawner
+{
+}
+
+Class Slot4Ammo : MultiItemSpawner
+{
+}
+
+Class Slot5Ammo : MultiItemSpawner
+{
+}
+
+Class Slot6Ammo : MultiItemSpawner
+{
+}
+
+Class Slot7Ammo : MultiItemSpawner
+{
+}
+
+Class Slot8Ammo : MultiItemSpawner
+{
+}
+
+Class Slot9Ammo : MultiItemSpawner
+{
+}
+
+Class Slot0Ammo : MultiItemSpawner
+{
+}
+
+Class Slot0SAmmo : MultiItemSpawner
+{
+}
+
+// nothing at all
+Class UNothing : Actor
+{
+	States
+	{
+	Spawn:
+		TNT1 A 1;
+		Stop;
+	}
+}

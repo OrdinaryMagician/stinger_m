@@ -5,3 +5,27 @@ Class UnrealArmor : UTArmor
 		-INVENTORY.ALWAYSPICKUP;
 	}
 }
+
+Class UArmor : UnrealArmor
+{
+}
+
+Class KevlarSuit : UnrealArmor
+{
+}
+
+Class AsbestosSuit : UnrealArmor
+{
+}
+
+Class ToxinSuit : UnrealArmor
+{
+}
+
+Class ShieldBelt : UnrealArmor
+{
+}
+
+Class PowerShield : UnrealArmor
+{
+}

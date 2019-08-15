@@ -1,0 +1,10 @@
+Class URocketAmmo : Ammo
+{
+}
+Class URocketAmmo2 : URocketAmmo
+{
+}
+
+Class Eightball : UTWeapon
+{
+}

@@ -1,0 +1,11 @@
+Class WeaponPowerUp : Inventory
+{
+}
+
+Class DispersionAmmo : Ammo
+{
+}
+
+Class DispersionPistol : UTWeapon
+{
+}

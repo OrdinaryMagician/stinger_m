@@ -18,7 +18,7 @@ Model "StingerAmmo"
 {
 	Path "models"
 	Model 0 "TarydiumPickup_d.3d"
-	Skin 0 "JTaryPick1.png"
+	Skin 0 "JTaryPick1_.png"
 	Scale 0.04 0.04 0.048
 	ZOffset 1
 

@@ -1,0 +1,25 @@
+Class UInvisibility : UnrealInventory
+{
+}
+
+Class PowerUInvisibility : PowerInvisibility
+{
+}
+
+Class Amplifier : UnrealInventory
+{
+	static Amplifier Active( Actor Owner )
+	{
+		let d = Amplifier(Owner.FindInventory("Amplifier"));
+		if ( d && d.bActive ) return d;
+		return null;
+	}
+}
+
+Class UJumpBoots : UnrealInventory
+{
+}
+
+Class MotionDetector : UnrealInventory
+{
+}

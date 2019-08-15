@@ -1,0 +1,11 @@
+Class UShells : Ammo
+{
+}
+
+Class UShells2 : UShells
+{
+}
+
+Class QuadShot : UTWeapon
+{
+}

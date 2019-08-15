@@ -1,0 +1,118 @@
+Class ASMDAmmo : Ammo
+{
+	Default
+	{
+		Tag "$T_ASMDAMMO";
+		Inventory.Icon "I_ASMD";
+		Inventory.PickupMessage "$I_ASMDAMMO";
+		Inventory.Amount 10;
+		Inventory.MaxAmount 50;
+		Ammo.BackpackAmount 5;
+		Ammo.BackpackMaxAmount 100;
+		Ammo.DropAmount 5;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		tracer = Spawn("ASMDAmmoX",pos);
+		tracer.angle = angle;
+		tracer.target = self;
+	}
+	States
+	{
+	Spawn:
+		ASMA A -1;
+		Stop;
+	}
+}
+
+Class ASMDAmmoX : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		+NOGRAVITY;
+		+NOCLIP;
+		+DONTSPLASH;
+		Radius 0.1;
+		Height 0;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target )
+		{
+			Destroy();
+			return;
+		}
+		Warp(target,flags:WARPF_COPYINTERPOLATION|WARPF_NOCHECKPOSITION);
+		bInvisible = target.bInvisible||!target.InStateSequence(target.CurState,target.FindState("Spawn"));
+	}
+	States
+	{
+	Spawn:
+		ASMA A -1 Bright;
+		Stop;
+	}
+}
+
+Class ASMDAmmo2X : ASMDAmmoX
+{
+	States
+	{
+	Spawn:
+		ASMA B -1 Bright;
+		Stop;
+	}
+}
+
+Class ASMDAmmo2 : ASMDAmmo
+{
+	Default
+	{
+		Tag "$T_ASMDAMMO2";
+		Inventory.Icon "I_ASMD";
+		Inventory.PickupMessage "$I_ASMDAMMO2";
+		Inventory.Amount 5;
+		Ammo.DropAmount 3;
+	}
+	override void PostBeginPlay()
+	{
+		Ammo.PostBeginPlay();
+		tracer = Spawn("ASMDAmmo2X",pos);
+		tracer.angle = angle;
+		tracer.target = self;
+	}
+	States
+	{
+	Spawn:
+		ASMA B -1;
+		Stop;
+	}
+}
+
+Class ASMD : UTWeapon
+{
+	Default
+	{
+		Tag "$T_ASMD";
+		Inventory.PickupMessage "$I_ASMD";
+		Weapon.UpSound "shock/select";
+		Weapon.SlotNumber 4;
+		Weapon.SelectionOrder 4;
+		Weapon.AmmoType "ASMDAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "ASMDAmmo";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 20;
+		UTWeapon.DropAmmo 10;
+	}
+	States
+	{
+	Spawn:
+		ASMP A -1;
+		Stop;
+		ASMP B -1;
+		Stop;
+	}
+}

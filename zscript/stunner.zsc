@@ -1,0 +1,7 @@
+Class StunnerAmmo : Ammo
+{
+}
+
+Class Stunner : UTWeapon
+{
+}

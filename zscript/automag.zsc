@@ -1,0 +1,7 @@
+Class UClip : UMiniAmmo
+{
+}
+
+Class Automag : UTWeapon
+{
+}

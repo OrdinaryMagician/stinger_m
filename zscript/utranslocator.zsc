@@ -1,0 +1,7 @@
+Class UTranslocatorAmmo : Ammo
+{
+}
+
+Class UTranslocator : UTWeapon
+{
+}

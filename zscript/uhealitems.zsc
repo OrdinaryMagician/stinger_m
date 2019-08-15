@@ -1,0 +1,19 @@
+Class Bandages : Health
+{
+}
+
+Class UHealth : Health
+{
+}
+
+Class NaliFruit : Health
+{
+}
+
+Class Seeds : UnrealInventory
+{
+}
+
+Class SuperHealth : Health
+{
+}

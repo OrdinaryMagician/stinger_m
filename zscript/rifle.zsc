@@ -1,0 +1,11 @@
+Class URifleAmmo : Ammo
+{
+}
+
+Class URifleAmmo2 : URifleAmmo
+{
+}
+
+Class URifle : UTWeapon
+{
+}

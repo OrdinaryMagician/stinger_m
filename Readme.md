@@ -7,7 +7,7 @@ This mod requires GZDoom 4.2.0 or later, and runs on top of Doom Tournament.
 
 ## Currently Implemented
 
- - Stinger (slot 3) (replaces shotgun)
+ - Stinger (slot 3) (replaces shotguns)
  - Backpack (replaces backpack, identical to Doom Tournament version)
  - Unreal 1 HUD
  - Translator (has to be spawned in, since it would only be useful for mappers)
@@ -15,6 +15,7 @@ This mod requires GZDoom 4.2.0 or later, and runs on top of Doom Tournament.
 ## In progress
 
  - Flak Cannon (slot 6) (replaces rocket launcher)
+ - ASMD (slot 4) (replaces shotguns)
 
 ## Planned
 
@@ -23,7 +24,6 @@ This mod requires GZDoom 4.2.0 or later, and runs on top of Doom Tournament.
    - Dispersion Pistol Powerup (replaces Berserk)
  - Automag (slot 2) (replaces pistol)
    - Dual Automags
- - ASMD (slot 4) (replaces shotgun)
  - Eightball (slot 5) (replaces rocket launcher)
  - Razorjack (slot 7) (replaces chaingun)
    - Make altfire actually seek where player is aiming
@@ -38,7 +38,7 @@ This mod requires GZDoom 4.2.0 or later, and runs on top of Doom Tournament.
  - Teleport Capsule (slot 1)
  - Proto Automag (slot 2) (replaces pistol)
    - Dual Protomags
- - Quadshot (slot 3) (replaces super shotgun)
+ - Quadshot (slot 3) (replaces shotguns)
  - Peacemaker (slot 5) (rare spawn near backpack)
  - Impaler (slot 4) (replaces plasma rifle)
  - Flamethrower (slot 8) (replaces plasma rifle)
@@ -53,8 +53,7 @@ This mod requires GZDoom 4.2.0 or later, and runs on top of Doom Tournament.
    - Searchlight (replaces light amplifier)
  - Medkit (replaces medkit)
  - Bandages (replaces stimpak)
- - Nali Fruit (replaces stimpak)
-   - Nali Fruit Seed (replaces health bonus)
+ - Nali Fruit Seed (replaces health bonus)
  - Super Health (replaces soulsphere)
  - Invisibility (replaces blursphere)
  - AntiGrav Boots (replaces radsuit)
