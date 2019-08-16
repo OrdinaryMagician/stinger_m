@@ -22,6 +22,13 @@ Class UnrealHUD : BaseStatusBar
 	// Common Textures
 	TextureID HalfHud, HudLine, HudAmmo, IconHeal, IconSkul, IconSel, IconBase, KeyIcons[7];
 
+	// These can't be used yet
+	/*String PickupMsg;
+	int PickupMsgTic;
+	String ShortMsg[4];
+	int ShortMsgTic[4];
+	int ShortMsgCol[4];*/
+
 	// 0.83 HUD stuff
 	String OldAmmo[18];
 	Class<Inventory> OldAmmoType[18];
@@ -128,6 +135,7 @@ Class UnrealHUD : BaseStatusBar
 	override void Draw( int state, double TicFrac )
 	{
 		Super.Draw(state,TicFrac);
+		FracTic = TicFrac;
 		HudMode = CVar.GetCVar('stinger_hudmode',players[consoleplayer]).GetInt();
 		scalev.x = scalev.y = Max(0,CVar.GetCVar('stinger_hudscale',players[consoleplayer]).GetInt());
 		if ( scalev.x == 0 ) scalev.x = scalev.y = max(1,min(Screen.GetWidth()/640.,Screen.GetHeight()/480.));
@@ -144,13 +152,11 @@ Class UnrealHUD : BaseStatusBar
 		if ( state == HUD_StatusBar )
 		{
 			BeginStatusBar();
-			FracTic = TicFrac;
 			DrawUnrealBar();
 		}
 		else if ( state == HUD_Fullscreen )
 		{
 			BeginHUD();
-			FracTic = TicFrac;
 			DrawUnrealHUD();
 		}
 		for ( Inventory i=CPlayer.mo.inv; i; i=i.inv )
@@ -158,6 +164,7 @@ Class UnrealHUD : BaseStatusBar
 				UnrealInventory(i).PostRender(lbottom);
 		if ( CPlayer.ReadyWeapon is 'UTWeapon' )
 			UTWeapon(CPlayer.ReadyWeapon).PostRender(lbottom);
+		DrawMessages(state);
 	}
 
 	private void DrawNumberOf( Inventory i, double x, double y )
@@ -384,8 +391,9 @@ Class UnrealHUD : BaseStatusBar
 		}
 	}
 
-	private void DrawArmor( double x, double y, bool bDrawOne = false )
+	private bool DrawArmor( double x, double y, bool bDrawOne = false, bool bCheckOnly = false )
 	{
+		bool hasdrawn = false;
 		int ArmorAmount = 0, CurAbs = 0;
 		Inventory Inv, BestArmor;
 		double XL, YL;
@@ -398,10 +406,11 @@ Class UnrealHUD : BaseStatusBar
 			if ( (Inv.Amount <= 0) || Inv.Icon.IsNull() ) continue;
 			if ( !bDrawOne )
 			{
-				DrawHudIcon(CurX,y,Inv,false);
+				hasdrawn = true;
+				if ( !bCheckOnly ) DrawHudIcon(CurX,y,Inv,false);
 				CurX += 32;
 				CurY += HudMode?29:27;
-				DrawIconValue(Inv.Amount);
+				if ( !bCheckOnly ) DrawIconValue(Inv.Amount);
 				CurY -= HudMode?29:27;
 			}
 			else if ( UTArmor(Inv).absorb > CurAbs )
@@ -412,14 +421,19 @@ Class UnrealHUD : BaseStatusBar
 		}
 		if ( bDrawOne && BestArmor )
 		{
-			DrawHudIcon(CurX,Y,BestArmor,false);
+			hasdrawn = true;
+			if ( !bCheckOnly ) DrawHudIcon(CurX,Y,BestArmor,false);
 			CurX += 32;
 			CurY += HudMode?29:27;
-			DrawIconValue(BestArmor.Amount);
+			if ( !bCheckOnly ) DrawIconValue(BestArmor.Amount);
 			CurY -= HudMode?29:27;
 		}
 		if ( (ArmorAmount > 0) && !HudMode )
-			Screen.DrawText(LargeFont,Font.CR_UNTRANSLATED,CurX+2,Y,String.Format("%d",ArmorAmount),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+		{
+			hasdrawn = true;
+			if ( !bCheckOnly ) Screen.DrawText(LargeFont,Font.CR_UNTRANSLATED,CurX+2,Y,String.Format("%d",ArmorAmount),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+		}
+		return hasdrawn;
 	}
 
 	private void DrawAmmo( double x, double y )
@@ -614,17 +628,108 @@ Class UnrealHUD : BaseStatusBar
 		if ( deathmatch ) DrawFragCount(ClipX-32,0);
 		// Need to draw the inventory bar (and translator)
 		DrawInventory(ClipX-(deathmatch?128:96),0,false,true);
+		// Display Identification Info
+		DrawIdentifyInfo();
 	}
 
 	override void Tick()
 	{
 		Super.Tick();
+		// prune expired short messages
+		/*for ( int i=0; i<3; i++ )
+		{
+			if ( (gametic-ShortMsgTic[i]) < 70 ) continue;
+			ShortMsg[i] = ShortMsg[i+1];
+			ShortMsgTic[i] = ShortMsgTic[i+1];
+			ShortMsgCol[i] = ShortMsgCol[i+1];
+		}*/
 		CPlayer.inventorytics = 0;
 		vtracer.ignore = CPlayer.mo;
 		vtracer.trace(CPlayer.mo.Vec2OffsetZ(0,0,CPlayer.viewz),CPlayer.mo.CurSector,(cos(CPlayer.mo.angle)*cos(CPlayer.mo.pitch),sin(CPlayer.mo.angle)*cos(CPlayer.mo.pitch),-sin(CPlayer.mo.pitch)),1000,0);
 		if ( vtracer.Results.HitType != TRACE_HitActor ) return;
 		lastseen = vtracer.Results.HitActor;
 		lastseentic = gametic;
+	}
+
+	// all of this requires features that are not available yet
+	/*override void NewGame()
+	{
+		PickupMsg = "";
+	}
+
+	override void FlushNotify()
+	{
+		for ( int i=0; i<4; i++ )
+			ShortMsg[i] = "";
+	}
+
+	override bool ProcessNotify( EPrintLevel printlevel, String outline )
+	{
+		if ( printlevel == PRINT_LOW )
+		{
+			// set pickup message
+			PickupMsg = outline;
+			PickupMsgTic = gametic;
+			return true;
+		}
+		else
+		{
+			// put message into queue
+			for ( int i=3; i>0; i-- )
+			{
+				ShortMsg[i] = ShortMsg[i-1];
+				ShortMsgTic[i] = ShortMsgTic[i-1];
+				ShortMsgCol[i] = ShortMsgCol[i-1];
+			}
+			if ( printlevel == PRINT_MEDIUM ) ShortMsgCol[0] = Font.CR_RED;
+			else if ( (printlevel == PRINT_CHAT) || (printlevel == PRINT_TEAMCHAT) ) ShortMsgCol[0] = Font.CR_GREEN;
+			else ShortMsgCol[0] = Font.CR_WHITE;
+			ShortMsg[0] = outline;
+			ShortMsgTic[0] = gametic;
+			return true;
+		}
+		return false;
+	}
+
+	override bool DrawChat( String txt )
+	{
+		int xpos = 4*CleanXFac_1;
+		int ypos = (screenblocks<=10)?GetTopOfStatusBar():(Screen.GetHeight()-((screenblocks>11)?0:int(32*scalev.y)));
+		ypos -= (WhiteFont.GetHeight()+4)*CleanYFac_1;
+		String fullstr = String.Format("(> Say %s%s",txt,WhiteFont.GetCursor());
+		// cut out until it fits
+		while ( (WhiteFont.StringWidth(fullstr) > CleanWidth_1) && fullstr.Length() > 7 )
+			fullstr.Remove(7,1);
+		Screen.DrawText(WhiteFont,Font.CR_GREEN,xpos,ypos,fullstr,DTA_CleanNoMove_1,true);
+		return true;
+	}*/
+
+	private void DrawMessages( int state )
+	{
+		// TODO add map intro text like in Unreal
+		/*double malpha = 2.0-((gametic+fractic)-PickupMsgTic)/Thinker.TICRATE;
+		int xpos, ypos;
+		if ( PickupMsg.Length() > 0 && (malpha > 0) )
+		{
+			xpos = (Screen.GetWidth()-WhiteFont.StringWidth(PickupMsg)*CleanXFac_1)/2;
+			if ( state == HUD_Statusbar ) ypos = GetTopOfStatusBar()-21*CleanYFac_1;
+			else ypos = Screen.GetHeight()-41*CleanYFac_1;
+			Screen.DrawText(WhiteFont,Font.CR_WHITE,xpos,ypos,PickupMsg,DTA_CleanNoMove_1,true,DTA_Alpha,min(1.,malpha),DTA_LegacyRenderStyle,STYLE_Add);
+		}
+		// draw messages
+		xpos = 4*CleanXFac_1;
+		ypos = 4*CleanYFac_1;
+		if ( (state == HUD_Fullscreen) && (HudMode < 2) && DrawArmor(0,0,false,true) ) ypos += int(32*scalev.y);
+		for ( int i=3; i>=0; i-- )
+		{
+			if ( (ShortMsg[i].Length() <= 0) || (gametic-ShortMsgTic[i] >= 70) ) continue;
+			let lines = WhiteFont.BreakLines(ShortMsg[i],CleanWidth_1/2);
+			for ( int j=0; j<lines.Count(); j++ )
+			{
+				Screen.DrawText(WhiteFont,ShortMsgCol[i],xpos,ypos,lines.StringAt(j),DTA_CleanNoMove_1,true);
+				ypos += (WhiteFont.GetHeight()+2)*CleanYFac_1;
+			}
+		}*/
 	}
 
 	override void DrawAutomapHUD( double ticFrac )

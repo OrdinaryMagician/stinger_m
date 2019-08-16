@@ -10,26 +10,28 @@ Class UnrealArmor : UTArmor
 		UnrealArmor.AbsorptionPriority 0;
 	}
 
+	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
+	{
+		Console.Printf("%s absorbs %d",GetTag(),damage);
+		Super.AbsorbDamage(damage,damageType,newdamage);
+	}
+
 	override void AttachToOwner( Actor other )
 	{
 		Super.AttachToOwner(other);
-		// re-sort self against other armors based on priority
-		Inventory cprev = null, prev = null;
+		// find last armor that's better than us
+		Inventory found = null;
 		for ( Inventory i=other.Inv; i; i=i.Inv )
 		{
-			if ( i.Inv == self ) prev = i;
-			if ( !(i is 'UnrealArmor') || (i == self) || (UnrealArmor(i).priority >= priority) )
-			{
-				cprev = i;
-				continue;
-			}
-			// got one, move ourselves
-			if ( prev ) prev.Inv = Inv;
-			if ( cprev ) cprev.Inv = self;
-			else other.Inv = self;
-			Inv = i;
-			break;
+			if ( !(i is 'UnrealArmor') || (i == self) || (UnrealArmor(i).priority < priority) ) continue;
+			found = i;
 		}
+		if ( !found ) return;
+		// place ourselves right after it
+		Inventory saved = found.Inv;
+		found.Inv = self;
+		other.Inv = Inv;
+		Inv = saved;
 	}
 }
 
@@ -169,7 +171,7 @@ Class ShieldBelt : UnrealArmor
 		}
 		int oldamt = amount;
 		Super.AbsorbDamage(damage,damageType,newdamage);
-		if ( (oldamt > 0) && (amount <= 0) ) PrintPickupMessage(true,StringTable.Localize("$D_SHIELDBELT"));
+		if ( (oldamt > 0) && (amount <= 0) && Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_SHIELDBELT"));
 	}
 	Default
 	{
@@ -220,9 +222,10 @@ Class PowerShield : UnrealArmor
 			amount--;
 			gothit = false;
 		}
+		if ( !(level.maptime%15) ) amount--;
 		if ( amount <= 0 )
 		{
-			PrintPickupMessage(true,StringTable.Localize("$D_POWERSHIELD"));
+			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_POWERSHIELD"));
 			DepleteOrDestroy();
 		}
 	}

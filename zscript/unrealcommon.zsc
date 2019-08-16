@@ -518,6 +518,29 @@ Class UnrealInventory : Inventory
 		}
 		return Super.HandlePickup(item);
 	}
+	override void Tick()
+	{
+		Super.Tick();
+		// don't slide on floor when dropped
+		if ( bDROPPED && (pos.z <= floorz) )
+			vel.xy *= 0;
+	}
+	override void OnDrop( Actor dropper )
+	{
+		Super.OnDrop(dropper);
+		// deactivate
+		bActive = false;
+		// drop like weapons
+		Vector2 hofs = RotateVector((dropper.radius,0),dropper.angle);
+		SetOrigin(dropper.Vec3Offset(hofs.x,hofs.y,dropper.height*0.5),false);
+		Vector3 x, y, z;
+		[x, y, z] = dt_CoordUtil.GetAxes(dropper.pitch,dropper.angle,dropper.roll);
+		vel = x*12.0;
+		vel.z += 4.0;
+		angle = dropper.angle;
+		pitch = 0;
+		roll = 0;
+	}
 
 	Default
 	{

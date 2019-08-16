@@ -105,19 +105,11 @@ Class UnrealBackpack : BackpackItem replaces Backpack
 			if ( !Random[BackpackExtra](0,6) ) xitemn[4] *= 2;
 			if ( !Random[BackpackExtra](0,5) ) xitemn[5] *= 2;
 			if ( !Random[BackpackExtra](0,9) ) xitemn[6] *= 2;
-			int total = 0;
-			for ( int i=0; i<7; i++ ) total += xitemn[i];
-			if ( total <= 0 ) return;
-			String extratxt = StringTable.Localize("$I_BACKPACKEXTRA");
 			for ( int i=0; i<7; i++ )
 			{
 				if ( xitemn[i] <= 0 ) continue;
-				extratxt = extratxt..String.Format("%dx %s, ",xitemn[i],GetDefaultByType(xitems[i]).GetTag());
 				toucher.GiveInventory(xitems[i],xitemn[i]);
 			}
-			// remove trailing comma
-			extratxt.Truncate(extratxt.Length()-2);
-			PrintPickupMessage(true,extratxt..".");
 		}
 	}
 	Default
@@ -386,7 +378,7 @@ Class Dampener : UnrealInventory
 		if ( DrainCharge(1) )
 		{
 			Owner.A_PlaySound("dampener/off",CHAN_ITEM);
-			PrintPickupMessage(true,StringTable.Localize("$D_DAMPENER"));
+			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_DAMPENER"));
 		}
 	}
 	Default
@@ -429,13 +421,13 @@ Class Forcefield : UnrealInventory
 		origin = level.Vec3Offset(origin,(0,0,-GetDefaultByType("ForceFieldEffect").Height*.5));
 		if ( !level.IsPointInLevel(origin) )
 		{
-			PrintPickupMessage(true,StringTable.Localize("$M_FFNOROOM"));
+			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$M_FFNOROOM"));
 			return false;
 		}
 		let a = Spawn("ForceFieldEffect",origin);
 		if ( !a.TestMobjLocation() )
 		{
-			PrintPickupMessage(true,StringTable.Localize("$M_FFNOROOM"));
+			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$M_FFNOROOM"));
 			a.Destroy();
 			return false;
 		}
