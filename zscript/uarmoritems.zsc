@@ -1,31 +1,250 @@
 Class UnrealArmor : UTArmor
 {
+	int priority;
+
+	Property AbsorptionPriority : priority;
+
 	Default
 	{
 		-INVENTORY.ALWAYSPICKUP;
+		UnrealArmor.AbsorptionPriority 0;
+	}
+
+	override void AttachToOwner( Actor other )
+	{
+		Super.AttachToOwner(other);
+		// re-sort self against other armors based on priority
+		Inventory cprev = null, prev = null;
+		for ( Inventory i=other.Inv; i; i=i.Inv )
+		{
+			if ( i.Inv == self ) prev = i;
+			if ( !(i is 'UnrealArmor') || (i == self) || (UnrealArmor(i).priority >= priority) )
+			{
+				cprev = i;
+				continue;
+			}
+			// got one, move ourselves
+			if ( prev ) prev.Inv = Inv;
+			if ( cprev ) cprev.Inv = self;
+			else other.Inv = self;
+			Inv = i;
+			break;
+		}
 	}
 }
 
 Class UArmor : UnrealArmor
 {
-}
-
-Class KevlarSuit : UnrealArmor
-{
+	Default
+	{
+		Tag "$T_UARMOR";
+		Inventory.Amount 100;
+		Inventory.MaxAmount 100;
+		Inventory.InterHubAmount 100;
+		UTArmor.ArmorAbsorption 90;
+		UnrealArmor.AbsorptionPriority 7;
+		Inventory.PickupMessage "$I_UARMOR";
+		Inventory.PickupSound "misc/u1armor";
+		Inventory.Icon "I_Armor";
+	}
+	States
+	{
+	Spawn:
+		UARM A -1;
+		Stop;
+	}
 }
 
 Class AsbestosSuit : UnrealArmor
 {
+	Default
+	{
+		Tag "$T_ASBSUIT";
+		Inventory.Amount 50;
+		Inventory.MaxAmount 50;
+		Inventory.InterHubAmount 50;
+		UTArmor.ArmorAbsorption 50;
+		UnrealArmor.AbsorptionPriority 6;
+		Inventory.PickupMessage "$I_ASBSUIT";
+		Inventory.PickupSound "misc/suit";
+		Inventory.Icon "I_Suit";
+	}
+	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
+	{
+		if ( (damageType == 'Fire') || (damageType == 'Ice') ) damage = newdamage = 0;
+		Super.AbsorbDamage(damage,damageType,newdamage);
+	}
+	override void AttachToOwner( Actor other )
+	{
+		// remove other suits
+		Inventory i = other.FindInventory("ToxinSuit");
+		if ( i ) other.RemoveInventory(i);
+		i = other.FindInventory("KevlarSuit");
+		if ( i ) other.RemoveInventory(i);
+		Super.AttachToOwner(other);
+	}
+	States
+	{
+	Spawn:
+		ASBS A -1;
+		Stop;
+	}
 }
 
 Class ToxinSuit : UnrealArmor
 {
+	Default
+	{
+		Tag "$T_TOXSUIT";
+		Inventory.Amount 50;
+		Inventory.MaxAmount 50;
+		Inventory.InterHubAmount 50;
+		UTArmor.ArmorAbsorption 50;
+		UnrealArmor.AbsorptionPriority 6;
+		Inventory.PickupMessage "$I_TOXSUIT";
+		Inventory.PickupSound "misc/suit";
+		Inventory.Icon "I_TSuit";
+	}
+	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
+	{
+		if ( damageType == 'Slime' ) damage = newdamage = 0;
+		Super.AbsorbDamage(damage,damageType,newdamage);
+	}
+	override void AttachToOwner( Actor other )
+	{
+		Super.AttachToOwner(other);
+		// remove other suits
+		Inventory i = other.FindInventory("AsbestosSuit");
+		if ( i ) other.RemoveInventory(i);
+		i = other.FindInventory("KevlarSuit");
+		if ( i ) other.RemoveInventory(i);
+	}
+	States
+	{
+	Spawn:
+		TOXS A -1;
+		Stop;
+	}
+}
+
+Class KevlarSuit : UnrealArmor
+{
+	Default
+	{
+		Tag "$T_KEVSUIT";
+		Inventory.Amount 100;
+		Inventory.MaxAmount 100;
+		Inventory.InterHubAmount 100;
+		UTArmor.ArmorAbsorption 80;
+		UnrealArmor.AbsorptionPriority 6;
+		Inventory.PickupMessage "$I_KEVSUIT";
+		Inventory.PickupSound "misc/suit";
+		Inventory.Icon "I_Kevlar";
+	}
+	override void AttachToOwner( Actor other )
+	{
+		Super.AttachToOwner(other);
+		// remove other suits
+		Inventory i = other.FindInventory("AsbestosSuit");
+		if ( i ) other.RemoveInventory(i);
+		i = other.FindInventory("ToxinSuit");
+		if ( i ) other.RemoveInventory(i);
+	}
+	States
+	{
+	Spawn:
+		KEVS A -1;
+		Stop;
+	}
 }
 
 Class ShieldBelt : UnrealArmor
 {
+	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
+	{
+		if ( (damage > 0) && (amount > 0) && !DamageTypeDefinition.IgnoreArmor(damageType) )
+		{
+			Owner.A_PlaySound("belt/absorb",CHAN_7);
+			UTMainHandler.DoFlash(Owner,Color(80,255,224,0),5);
+		}
+		int oldamt = amount;
+		Super.AbsorbDamage(damage,damageType,newdamage);
+		if ( (oldamt > 0) && (amount <= 0) ) PrintPickupMessage(true,StringTable.Localize("$D_SHIELDBELT"));
+	}
+	Default
+	{
+		Tag "$T_SHIELDBELT";
+		+COUNTITEM;
+		+INVENTORY.BIGPOWERUP;
+		Inventory.Amount 100;
+		Inventory.MaxAmount 100;
+		Inventory.InterHubAmount 100;
+		UTArmor.ArmorAbsorption 100;
+		UnrealArmor.AbsorptionPriority 10;
+		Inventory.PickupMessage "$I_SHIELDBELT";
+		Inventory.PickupSound "belt/pickup";
+		Inventory.RespawnTics 2100;
+		Inventory.Icon "I_Shield";
+	}
+	States
+	{
+	Spawn:
+		BELT A -1;
+		Stop;
+	}
 }
 
 Class PowerShield : UnrealArmor
 {
+	bool gothit;
+
+	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
+	{
+		if ( (damage > 0) && (amount > 0) && !DamageTypeDefinition.IgnoreArmor(damageType) )
+		{
+			Owner.A_PlaySound("belt/absorb",CHAN_7);
+			UTMainHandler.DoFlash(Owner,Color(80,224,0,255),5);
+			gothit = true;
+		}
+		int oldamt = amount;
+		amount = int.max;	// blocks all damage
+		Super.AbsorbDamage(damage,damageType,newdamage);
+		amount = oldamt;	// does not drain here
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !Owner || !Owner.player ) return;
+		if ( gothit )
+		{
+			amount--;
+			gothit = false;
+		}
+		if ( amount <= 0 )
+		{
+			PrintPickupMessage(true,StringTable.Localize("$D_POWERSHIELD"));
+			DepleteOrDestroy();
+		}
+	}
+	Default
+	{
+		Tag "$T_POWERSHIELD";
+		+COUNTITEM;
+		+INVENTORY.BIGPOWERUP;
+		Inventory.Amount 200;
+		Inventory.MaxAmount 200;
+		Inventory.InterHubAmount 200;
+		UTArmor.ArmorAbsorption 100;
+		UnrealArmor.AbsorptionPriority 11;	// wow dude
+		Inventory.PickupMessage "$I_POWERSHIELD";
+		Inventory.PickupSound "sbelt/pickup";
+		Inventory.RespawnTics 3500;
+		Inventory.Icon "I_PBelt";
+	}
+	States
+	{
+	Spawn:
+		BELT A -1;
+		Stop;
+	}
 }

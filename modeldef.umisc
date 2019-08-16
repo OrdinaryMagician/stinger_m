@@ -11,3 +11,171 @@ Model "UnrealBackpack"
 
 	FrameIndex BPAK A 0 0
 }
+
+Model "UArmor"
+{
+	Path "models"
+	Model 0 "ArmorM_d.3d"
+	Skin 0 "Jarmor1.png"
+	ZOffset 9
+	AngleOffset -90
+	Scale 0.07 -0.07 0.084
+
+	FrameIndex UARM A 0 0
+}
+
+Model "AsbestosSuit"
+{
+	Path "models"
+	Model 0 "Suit_d.3d"
+	Skin 0 "Asuit1.png"
+	RollOffset 90
+	AngleOffset -90
+	ZOffset 17
+	Scale 0.096 -0.08 0.08
+
+	FrameIndex ASBS A 0 0
+}
+
+Model "ToxinSuit"
+{
+	Path "models"
+	Model 0 "ToxSuit_d.3d"
+	Skin 0 "AToxSuit1.png"
+	RollOffset 90
+	AngleOffset -90
+	ZOffset 17
+	Scale 0.096 -0.08 0.08
+
+	FrameIndex TOXS A 0 0
+}
+
+Model "KevlarSuit"
+{
+	Path "models"
+	Model 0 "KevSuit_d.3d"
+	Skin 0 "AkevSuit1.png"
+	AngleOffset -90
+	ZOffset 5
+	Scale 0.08 -0.08 0.096
+
+	FrameIndex KEVS A 0 0
+}
+
+Model "ShieldBelt"
+{
+	Path "models"
+	Model 0 "ShieldBeltMesh_d.3d"
+	Skin 0 "Abelt1.png"
+	AngleOffset 90
+	ZOffset 2
+	Scale 0.05 -0.05 0.06
+
+	FrameIndex BELT A 0 0
+}
+
+Model "PowerShield"
+{
+	Path "models"
+	Model 0 "ShieldBeltMesh_d.3d"
+	Skin 0 "Apbelt1.png"
+	AngleOffset 90
+	ZOffset 2
+	Scale 0.05 -0.05 0.06
+
+	FrameIndex BELT A 0 0
+}
+
+Model "VoiceBox"
+{
+	Path "models"
+	Model 0 "VoiceBoxMesh_d.3d"
+	Skin 0 "Ainv1_.png"
+	ZOffset 4
+	Scale 0.08 -0.08 0.096
+
+	FrameIndex VBOX A 0 0
+}
+Model "VoiceBoxActive"
+{
+	Path "models"
+	Model 0 "VoiceBoxMesh_d.3d"
+	Skin 0 "Ainv1.png"
+	ZOffset 4
+	Scale 0.08 -0.08 0.096
+
+	FrameIndex VBOX A 0 0
+	FrameIndex VBOX B 0 1
+	FrameIndex VBOX C 0 2
+	FrameIndex VBOX D 0 3
+	FrameIndex VBOX E 0 4
+	FrameIndex VBOX F 0 5
+	FrameIndex VBOX G 0 6
+	FrameIndex VBOX H 0 7
+	FrameIndex VBOX I 0 8
+	FrameIndex VBOX J 0 9
+}
+
+Model "Dampener"
+{
+	Path "models"
+	Model 0 "DampenerM_d.3d"
+	Skin 0 "Ainv1.png"
+	ZOffset 6
+	Scale 0.06 -0.06 0.072
+
+	FrameIndex DAMP A 0 0
+	FrameIndex DAMP B 0 1
+	FrameIndex DAMP C 0 2
+	FrameIndex DAMP D 0 3
+	FrameIndex DAMP E 0 4
+	FrameIndex DAMP F 0 5
+	FrameIndex DAMP G 0 6
+	FrameIndex DAMP H 0 7
+	FrameIndex DAMP I 0 8
+	FrameIndex DAMP J 0 9
+}
+
+Model "Forcefield"
+{
+	Path "models"
+	Model 0 "ForceFieldPick_d.3d"
+	SurfaceSkin 0 1 "aforce1.png"
+	ZOffset 11
+	Scale 0.14 -0.14 0.168
+
+	FrameIndex FFPK A 0 0
+}
+
+Model "ForcefieldX"
+{
+	Path "models"
+	Model 0 "ForceFieldPick_d.3d"
+	SurfaceSkin 0 0 "ForceF.png"
+	ZOffset 11
+	Scale 0.14 -0.14 0.168
+	DONTCULLBACKFACES
+
+	FrameIndex FFPK A 0 0
+}
+
+Model "ForcefieldEffect"
+{
+	Path "models"
+	Model 0 "ForceFieldM_d.3d"
+	Skin 0 "textures/ForceFieldFX.png"
+	ZOffset 22
+	Scale 0.16 -0.16 0.16
+	DONTCULLBACKFACES
+
+	FrameIndex FFLD A 0 0
+	FrameIndex FFLD B 0 1
+	FrameIndex FFLD C 0 2
+	FrameIndex FFLD D 0 3
+	FrameIndex FFLD E 0 4
+	FrameIndex FFLD F 0 5
+	FrameIndex FFLD G 0 6
+	FrameIndex FFLD H 0 7
+	FrameIndex FFLD I 0 8
+	FrameIndex FFLD J 0 9
+}

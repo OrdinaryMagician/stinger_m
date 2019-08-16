@@ -1,3 +1,179 @@
+// Lights
+PointLight ASMDAMMOLIGHT
+{
+	Color 0.0 0.4 0.7
+	Size 15
+	Offset 0 11 8
+	Attenuate 1
+}
+PointLight ASMDAMMOLIGHT2
+{
+	Color 0.0 0.4 0.7
+	Size 15
+	Offset 0 5 8
+	Attenuate 1
+}
+Object AsmdAmmo
+{
+	Frame "SHOA" { light "ASMDAMMOLIGHT" }
+}
+Object AsmdAmmo2
+{
+	Frame "SHOA" { light "ASMDAMMOLIGHT2" }
+}
+PointLight STINGERAMMOLIGHT
+{
+	Color 0.1 0.2 0.4
+	Size 12
+	Offset 0 5 0
+	Attenuate 1
+}
+PointLight STINGERAMMOLIGHT2
+{
+	Color 0.1 0.2 0.4
+	Size 12
+	Offset 0 12 0
+	Attenuate 1
+}
+Object StingerAmmo
+{
+	Frame "SAMO" { light "STINGERAMMOLIGHT" }
+}
+Object StingerAmmo2
+{
+	Frame "SAMO" { light "STINGERAMMOLIGHT2" }
+}
+PointLight FLAKAMMOLIGHT
+{
+	Color 0.1 0.4 0.0
+	Size 8
+	Offset 0 15 4
+	Attenuate 1
+}
+Object UFlakBox
+{
+	Frame "FAMO" { light "FLAKAMMOLIGHT" }
+}
+PointLight STINGERLIGHT0
+{
+	Color 0.1 0.4 1.0
+	Size 30
+	Attenuate 1
+}
+PointLight STINGERLIGHT1
+{
+	Color 0.1 0.3 0.8
+	Size 40
+	Attenuate 1
+}
+PointLight STINGERLIGHT2
+{
+	Color 0.1 0.2 0.6
+	Size 45
+	Attenuate 1
+}
+PointLight STINGERLIGHT3
+{
+	Color 0.08 0.15 0.5
+	Size 50
+	Attenuate 1
+}
+PointLight STINGERLIGHT4
+{
+	Color 0.05 0.12 0.4
+	Size 55
+	Attenuate 1
+}
+PointLight STINGERLIGHT5
+{
+	Color 0.0 0.03 0.2
+	Size 60
+	Attenuate 1
+}
+Object StingerProjectile
+{
+	Frame "TPRJA" { light "STINGERLIGHT0" }
+	Frame "TPRJB" { light "STINGERLIGHT1" }
+	Frame "TPRJC" { light "STINGERLIGHT1" }
+	Frame "TPRJD" { light "STINGERLIGHT2" }
+	Frame "TPRJE" { light "STINGERLIGHT3" }
+	Frame "TPRJF" { light "STINGERLIGHT4" }
+	Frame "TPRJG" { light "STINGERLIGHT5" }
+}
+
+PointLight DAMPENERLIGHT0
+{
+	Color 0.2 0.0 0.0
+	Size 6
+	Offset 0 6 0
+	Attenuate 1
+}
+PointLight DAMPENERLIGHT1
+{
+	Color 0.6 0.0 0.0
+	Size 15
+	Offset 0 8 0
+	Attenuate 1
+}
+PointLight DAMPENERLIGHT2
+{
+	Color 0.8 0.0 0.0
+	Size 22
+	Offset 0 10 0
+	Attenuate 1
+}
+PointLight DAMPENERLIGHT3
+{
+	Color 0.9 0.0 0.0
+	Size 28
+	Offset 0 10 0
+	Attenuate 1
+}
+PointLight DAMPENERLIGHT4
+{
+	Color 1.0 0.0 0.0
+	Size 32
+	Offset 0 10 0
+	Attenuate 1
+}
+Object Dampener
+{
+	Frame "DAMPA" { light "DAMPENERLIGHT0" }
+	Frame "DAMPB" { light "DAMPENERLIGHT1" }
+	Frame "DAMPC" { light "DAMPENERLIGHT2" }
+	Frame "DAMPD" { light "DAMPENERLIGHT3" }
+	Frame "DAMPE" { light "DAMPENERLIGHT4" }
+	Frame "DAMPF" { light "DAMPENERLIGHT3" }
+	Frame "DAMPG" { light "DAMPENERLIGHT2" }
+	Frame "DAMPH" { light "DAMPENERLIGHT2" }
+	Frame "DAMPI" { light "DAMPENERLIGHT2" }
+	Frame "DAMPJ" { light "DAMPENERLIGHT2" }
+}
+
+PointLight SBELTLIGHT
+{
+	Color 0.25 0.0 0.0
+	Size 20
+	Offset 0 2 0
+	Attenuate 1
+}
+PointLight PBELTLIGHT
+{
+	Color 0.15 0.0 0.25
+	Size 20
+	Offset 0 2 0
+	Attenuate 1
+}
+Object ShieldBelt
+{
+	Frame "BELT" { light "SBELTLIGHT" }
+}
+Object PowerShield
+{
+	Frame "BELT" { light "PBELTLIGHT" }
+}
+
+// Shaders / Brightmaps
 HardwareShader Texture "graphics/MenuBarr.png"
 {
 	Shader "shaders/glsl/MenuBarrier.fp"
@@ -127,10 +303,12 @@ HardwareShader Texture "models/JTaryPick1_.png"
 Brightmap Texture "models/JTaryPick1.png"
 {
 	Map "brightmaps/JTaryPick1.png"
+	DisableFullbright
 }
 Brightmap Texture "models/Jburst1.png"
 {
 	Map "brightmaps/Jburst1.png"
+	DisableFullbright
 }
 Brightmap Texture "models/Jflare.png"
 {
@@ -315,4 +493,14 @@ HardwareShader Texture "models/aPower1.png"
 HardwareShader Texture "models/minigun1_.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/ShockSm.png"
+{
+	Shader "shaders/glsl/ShockSm.fp"
+	Texture "smoketex" "models/ShockSm2.png"
+}
+HardwareShader Texture "textures/ForceFieldFX.png"
+{
+	Shader "shaders/glsl/FizzDistortXY.fp"
+	Texture "warptex" "textures/warptex.png"
 }

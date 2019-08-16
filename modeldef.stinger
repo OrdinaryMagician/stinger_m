@@ -3,7 +3,7 @@ Model "Stinger"
 	Path "models"
 	Model 1 "StingerPickup_d.3d"
 	Skin 1 "Sting1_.png"
-	Offset -3 -3 2
+	Offset -3 3 2
 	AngleOffset -90
 	Scale 0.06 0.06 0.072
 
@@ -23,6 +23,17 @@ Model "StingerAmmo"
 	ZOffset 1
 
 	FrameIndex SAMO A 0 0
+}
+
+Model "StingerAmmo2"
+{
+	Path "models"
+	Model 0 "TarydiumLarge_d.3d"
+	Skin 0 "JTaryPick1_.png"
+	Scale 0.04 0.04 0.048
+	ZOffset 3
+
+	FrameIndex SAMO B 0 0
 }
 
 Model "StingerProjectile"
@@ -57,9 +68,9 @@ Model "Stinger"
 	Path "models"
 	Model 2 "StingerM_d.3d"
 	SurfaceSkin 2 0 "FireEffect18.png"
-	Scale 0.1 -0.08 0.1
-	AngleOffset 89
-	Offset 6.8 -13.2 -10.6
+	Scale 0.1 -0.1 0.1
+	AngleOffset 90
+	Offset 9 -12.5 -12
 	DONTCULLBACKFACES
 
 	// Fire
@@ -81,9 +92,9 @@ Model "Stinger"
 	Path "models"
 	Model 0 "StingerM_d.3d"
 	SurfaceSkin 0 1 "Sting1.png"
-	Scale 0.1 -0.08 0.1
-	AngleOffset 89
-	Offset 6.8 -13.2 -10.6
+	Scale 0.1 -0.1 0.1
+	AngleOffset 90
+	Offset 9 -12.5 -12
 
 	// Select
 	FrameIndex STNS A 0 0

@@ -7,7 +7,7 @@ Model "UFlakBox"
 	ZOffset 6
 	RollOffset 180
 
-	FrameIndex FBOX A 0 0
+	FrameIndex FAMO A 0 0
 }
 
 Model "UFlakAmmo"
@@ -19,7 +19,7 @@ Model "UFlakAmmo"
 	ZOffset 2.25
 	RollOffset -90
 
-	FrameIndex FSHL B 0 0
+	FrameIndex FAMO B 0 0
 }
 
 Model "UFlakCannon"
@@ -31,11 +31,11 @@ Model "UFlakCannon"
 	AngleOffset 90
 	Scale 0.12 0.12 0.134
 
-	FrameIndex FLKP B 1 0
+	FrameIndex FPCK B 1 0
 
 	ZOffset 12
 	ROTATING
-	FrameIndex FLKP A 1 0
+	FrameIndex FPCK A 1 0
 }
 
 Model "UFlakCannon"
@@ -43,9 +43,9 @@ Model "UFlakCannon"
 	Path "models"
 	Model 2 "flak_d.3d"
 	SurfaceSkin 2 0 "FireEffect13.png"
-	Scale 0.1 -0.08 0.1
+	Scale 0.1 -0.1 0.1
 	AngleOffset -90
-	Offset 5 -9 -5
+	Offset 7 -9.7 -5.8
 	DONTCULLBACKFACES
 
 	// Fire
@@ -78,9 +78,9 @@ Model "UFlakCannon"
 	Path "models"
 	Model 0 "flak_d.3d"
 	SurfaceSkin 0 1 "Jflak1.png"
-	Scale 0.1 -0.08 0.1
+	Scale 0.1 -0.1 0.1
 	AngleOffset -90
-	Offset 5 -9 -5
+	Offset 7 -9.7 -5.8
 
 	// Select
 	FrameIndex FLKS A 0 0

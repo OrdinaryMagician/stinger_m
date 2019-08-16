@@ -124,7 +124,7 @@ Class UPlayer : UTPlayer
 				if ( !type ) continue;
 				let def = GetDefaultByType (type);
 				if ( def.Icon.isValid() && (def.MaxAmount > 1) &&
-					!(type is "PuzzleItem") && !(type is "Powerup") && !(type is "Ammo") &&	!(type is "Armor"))
+					!(type is "PuzzleItem") && !(type is "Powerup") && !(type is "Ammo") &&	!(type is "Armor") )
 				{
 					// Do not give replaced items unless using "give everything"
 					if ( (giveall == ALL_YESYES) || (GetReplacement(type) == type) )
@@ -488,10 +488,42 @@ Class UnrealInventory : Inventory
 	// Drawstuffs over HUD
 	virtual ui void PostRender( double lbottom ) {}
 
+	bool DrainCharge( int val )
+	{
+		Charge -= val;
+		if ( Charge > 0 ) return false;
+		if ( Amount > 1 )
+		{
+			Amount--;
+			Charge = DefaultCharge;
+			bActive = false;
+			return true;
+		}
+		DepleteOrDestroy();
+		return true;
+	}
+	override void AttachToOwner( Actor other )
+	{
+		Super.AttachToOwner(other);
+		Charge = DefaultCharge;
+	}
+	override bool HandlePickup( Inventory item )
+	{
+		if ( (item.GetClass() == GetClass()) && ((MaxAmount > 1) || (DefaultCharge > 0)) )
+		{
+			if ( MaxAmount > 1 ) Amount = min(MaxAmount,Amount+item.Amount);
+			else Charge = DefaultCharge;	// reset charge
+			item.bPickupGood = true;
+			return true;
+		}
+		return Super.HandlePickup(item);
+	}
+
 	Default
 	{
 		+INVENTORY.INVBAR;
 		UnrealInventory.Charge 0;
+		Inventory.PickupSound "misc/p_pkup";
 	}
 }
 
@@ -599,21 +631,6 @@ Class UnrealStaticHandler : StaticEventHandler
 
 Class UnrealMainHandler : EventHandler
 {
-	// can't detect terraindef-based damage
-	// this is currently an engine limitation
-	static bool, bool DetectHurtfloors()
-	{
-		bool foundslime = false, foundlava = false;
-		for ( int i=0; i<level.Sectors.Size(); i++ )
-		{
-			Sector s = level.Sectors[i];
-			if ( !s.DamageAmount || !s.DamageInterval ) continue;
-			if ( s.DamageType == 'Slime' ) foundslime = true;
-			else if ( s.DamageType == 'Fire' ) foundlava = true;
-		}
-		return foundslime, foundlava;
-	}
-
 	override void CheckReplacement( ReplaceEvent e )
 	{
 		if ( (e.Replacee == 'Chainsaw') || (e.Replacee == 'Gauntlets') )
@@ -719,7 +736,7 @@ Class UnrealMainHandler : EventHandler
 			else switch( Random[Replacements](0,2) )
 			{
 			case 0:
-				e.Replacement = 'StingerAmmo2';
+				e.Replacement = 'StingerAmmo';
 				break;
 			case 1:
 				e.Replacement = 'ASMDAmmo2';
@@ -734,7 +751,7 @@ Class UnrealMainHandler : EventHandler
 			switch( Random[Replacements](0,2) )
 			{
 			case 0:
-				e.Replacement = 'StingerAmmo';
+				e.Replacement = 'StingerAmmo2';
 				break;
 			case 1:
 				e.Replacement = 'ASMDAmmo';
@@ -792,37 +809,9 @@ Class UnrealMainHandler : EventHandler
 		else if ( (e.Replacee == 'Soulsphere') || (e.Replacee == 'ArtiSuperHealth') ) e.Replacement = 'SuperHealth';
 		else if ( e.Replacee == 'Megasphere' ) e.Replacement = 'ShieldBelt';
 		else if ( (e.Replacee == 'Allmap') || (e.Replacee == 'SuperMap') ) e.Replacement = 'MotionDetector';
-		else if ( (e.Replacee == 'BlurSphere') || (e.Replacee == 'ArtiInvisibility') )
-		{
-			if ( Random[Replacements](0,1) ) e.Replacement = 'UInvisibility';
-			else e.Replacement = 'Dampener';
-		}
-		else if ( (e.Replacee == 'Infrared') || (e.Replacee == 'ArtiTorch') )
-		{
-			if ( !Random[Replacements](0,2) ) e.Replacement = 'USearchlight';
-			else e.Replacement = 'UFlashlight';
-		}
-		else if ( e.Replacee == 'RadSuit' )
-		{
-			bool HasSlime, HasLava;
-			[HasSlime, HasLava] = DetectHurtfloors();
-			if ( HasSlime )
-			{
-				if ( HasLava )
-				{
-					if ( Random[Replacements](0,3) )
-					{
-						if ( Random[Replacements](0,1) ) e.Replacement = 'AsbestosSuit';
-						else e.Replacement = 'ToxinSuit';
-					}
-					else e.Replacement = 'UJumpBoots';
-				}
-				else if ( Random[Replacements](0,3) ) e.Replacement = 'ToxinSuit';
-				else e.Replacement = 'UJumpBoots';
-			}
-			else if ( HasLava && Random[Replacements](0,3) ) e.Replacement = 'AsbestosSuit';
-			else e.Replacement = 'UJumpBoots';
-		}
+		else if ( (e.Replacee == 'BlurSphere') || (e.Replacee == 'ArtiInvisibility') ) e.Replacement = 'UInvisibility';
+		else if ( (e.Replacee == 'Infrared') || (e.Replacee == 'ArtiTorch') ) e.Replacement = 'UFlashlight';
+		else if ( e.Replacee == 'RadSuit' ) e.Replacement = 'UJumpBoots';
 		else if ( e.Replacee == 'ArtiFly' ) e.Replacement = 'UJumpBoots';
 		else if ( (e.Replacee == 'Backpack') || (e.Replacee == 'BagOfHolding') ) e.Replacement = 'UnrealBackpack';
 		else if ( (e.Replacee == 'ArmorBonus') || (e.Replacee == 'ArtiTimeBomb') ) e.Replacement = 'Flare';
@@ -843,7 +832,7 @@ Class UnrealMainHandler : EventHandler
 		else if ( e.Replacee == 'ArtiTeleport' )
 		{
 			// I have no idea what to replace this with, so just have some random stuff
-			switch( Random[Replacements](0,5) )
+			switch( Random[Replacements](0,7) )
 			{
 			case 0:
 				e.Replacement = 'UnrealBackpack';
@@ -865,6 +854,9 @@ Class UnrealMainHandler : EventHandler
 				break;
 			case 6:
 				e.Replacement = 'SentryItem';
+				break;
+			case 7:
+				e.Replacement = 'Peacemaker';
 				break;
 			}
 		}
@@ -898,6 +890,9 @@ Class UnrealMainHandler : EventHandler
 		else if ( e.Replacee is 'EnhancedShockAmmo' ) e.Replacement = 'UNothing';
 		else if ( e.Replacee is 'UTBackpack' ) e.Replacement = 'UnrealBackpack';
 		else if ( e.Replacee is 'UDamage' ) e.Replacement = 'Amplifier';
+		// we don't need these
+		else if ( e.Replacee is 'UTActivatable' ) e.Replacement = 'UNothing';
+		else if ( e.Replacee is 'UTActivatableHealth' ) e.Replacement = 'UNothing';
 	}
 
 	// translocator stuff

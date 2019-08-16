@@ -18,7 +18,7 @@ Class UFlakBox : Ammo
 	States
 	{
 	Spawn:
-		FBOX A -1;
+		FAMO A -1;
 		Stop;
 	}
 }
@@ -37,17 +37,21 @@ Class UFlakAmmo : UFlakBox
 	States
 	{
 	Spawn:
-		FSHL B -1;
+		FAMO B -1;
 		Stop;
 	}
 }
 
 Class UFlakCannon : UTWeapon
 {
+	override void PlayUpSound( Actor origin )
+	{
+		origin.A_PlaySound(upsound,CHAN_WEAPON,Dampener.Active(origin)?.1:1.);
+	}
 	action void A_Loading( bool first = false )
 	{
-		if ( first ) A_PlaySound("flak/load",CHAN_WEAPON);
-		else A_PlaySound("flak/reload",CHAN_6);
+		if ( first ) A_PlaySound("flak/load",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+		else A_PlaySound("flak/reload",CHAN_6,Dampener.Active(self)?.06:.6);
 	}
 	action void A_FireChunks()
 	{
@@ -96,16 +100,16 @@ Class UFlakCannon : UTWeapon
 	States
 	{
 	Spawn:
-		FLKP A -1;
+		FPCK A -1;
 		Stop;
-		FLKP B -1;
+		FPCK B -1;
 		Stop;
 	Select:
 		FLKS A 1 A_Raise(int.max);
 		Wait;
 	Ready:
-		FLKS ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE);
-		FLS2 ABCD 1 A_WeaponReady(WRF_NOFIRE);
+		FLKS ABCDFGHIKLMNPQRSUVWXZ 1 A_WeaponReady(WRF_NOFIRE);
+		FLS2 ABC 1 A_WeaponReady(WRF_NOFIRE);
 		FLKL A 1 A_Loading(true);
 		FLKL BCEFGIJKMNO 1;
 		Goto Idle;
@@ -124,7 +128,7 @@ Class UFlakCannon : UTWeapon
 		FLKF A 1 A_FireChunks();
 		FLKF BCDEFGHI 1;
 		FLKF J 5;
-		FLKE A 1 A_PlaySound("flak/click",CHAN_6);
+		FLKE A 1 A_PlaySound("flak/click",CHAN_6,Dampener.Active(self)?.05:.5);
 		FLKE BCDEFGHIJKLMN 1;
 		FLKE S 4;
 		Goto Loading;

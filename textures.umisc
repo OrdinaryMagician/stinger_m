@@ -5,3 +5,11 @@ Texture "BLKNESS",64,64
 		Blend "#000000",1.0
 	}
 }
+Sprite "UARMA0",1,1{}
+Sprite "ASBSA0",1,1{}
+Sprite "TOXSA0",1,1{}
+Sprite "KEVSA0",1,1{}
+Sprite "VBOXA0",1,1{}
+Sprite "DAMPA0",1,1{}
+Sprite "FFPKA0",1,1{}
+Sprite "FFLDA0",1,1{}

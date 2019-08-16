@@ -17,11 +17,14 @@ Class ASMDAmmo : Ammo
 		tracer = Spawn("ASMDAmmoX",pos);
 		tracer.angle = angle;
 		tracer.target = self;
+		tracer = Spawn("ASMDAmmoXX",pos);
+		tracer.angle = angle;
+		tracer.target = self;
 	}
 	States
 	{
 	Spawn:
-		ASMA A -1;
+		SHOA A -1;
 		Stop;
 	}
 }
@@ -51,7 +54,17 @@ Class ASMDAmmoX : Actor
 	States
 	{
 	Spawn:
-		ASMA A -1 Bright;
+		SHOA A -1 Bright;
+		Stop;
+	}
+}
+
+Class ASMDAmmoXX : ASMDAmmoX
+{
+	States
+	{
+	Spawn:
+		SHOA A -1;
 		Stop;
 	}
 }
@@ -61,7 +74,7 @@ Class ASMDAmmo2X : ASMDAmmoX
 	States
 	{
 	Spawn:
-		ASMA B -1 Bright;
+		SHOA B -1 Bright;
 		Stop;
 	}
 }
@@ -86,13 +99,43 @@ Class ASMDAmmo2 : ASMDAmmo
 	States
 	{
 	Spawn:
-		ASMA B -1;
+		SHOA B -1;
 		Stop;
 	}
 }
 
 Class ASMD : UTWeapon
 {
+	override void PlayUpSound( Actor origin )
+	{
+		origin.A_PlaySound(upsound,CHAN_WEAPON,Dampener.Active(origin)?.1:1.);
+	}
+	action void A_ShockFire()
+	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		if ( weap.Ammo1.Amount <= 0 ) return;
+		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
+		A_PlaySound("shock/fire",CHAN_WEAPON,Dampener.Active(self)?.2:1.);
+		invoker.FireEffect();
+		UTMainHandler.DoFlash(self,Color(80,64,32,255),1);
+		UTMainHandler.DoSwing(self,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),2,-0.3,3,SWING_Spring,0,4);
+		if ( !Dampener.Active(self) ) A_AlertMonsters();A_AlertMonsters();
+		A_QuakeEx(2,2,2,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
+	}
+	action void A_ShockAlt()
+	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		if ( weap.Ammo1.Amount <= 0 ) return;
+		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
+		A_PlaySound("shock/altfire",CHAN_WEAPON,Dampener.Active(self)?.2:1.);
+		invoker.FireEffect();
+		UTMainHandler.DoFlash(self,Color(80,64,32,255),1);
+		UTMainHandler.DoSwing(self,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),3,-0.4,3,SWING_Spring,0,4);
+		if ( !Dampener.Active(self) ) A_AlertMonsters();A_AlertMonsters();
+		A_QuakeEx(2,2,2,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
+	}
 	Default
 	{
 		Tag "$T_ASMD";
@@ -114,5 +157,85 @@ Class ASMD : UTWeapon
 		Stop;
 		ASMP B -1;
 		Stop;
+	Ready:
+		ASMS ABCDEFGHIJKLMN 1 A_WeaponReady(WRF_NOFIRE);
+	Idle:
+		#### # 8 A_Overlay(-9999,"Dummy");	// little hackeroo to make this more responsive
+		ASMI AB 30;
+		Goto Idle+1;
+	Dummy:
+		TNT1 A 1
+		{
+			A_CheckReload();
+			A_WeaponReady();
+			// that's a mouthful
+			if ( player.FindPSprite(PSP_WEAPON).CurState.InStateSequence(invoker.FindState("Idle")) && (player.cmd.forwardmove || player.cmd.sidemove) && (player.vel.length() > 0.5) )
+				player.SetPSPrite(PSP_WEAPON,invoker.FindState("Sway"));
+		}
+		Wait;
+	Vapour:
+		#### # 2 A_Overlay(-9999,"Dummy");
+		ASMI A 6
+		{
+			A_PlaySound("asmd/vapour",CHAN_6,0.5);
+			A_Overlay(PSP_FLASH,"VapourFlash");
+			A_OverlayFlags(PSP_FLASH,PSPF_RenderStyle,true);
+			A_OverlayRenderstyle(PSP_FLASH,STYLE_Add);
+		}
+		ASMV ABCDEFGHIJ 4;
+		Goto Idle;
+	VapourFlash:
+		ASVI A 6;
+		ASVF ABCDEFGHIJ 4;
+		Stop;
+	Sway:
+		#### # 4;
+		ASMI C 10 A_JumpIf((!player.cmd.forwardmove && !player.cmd.sidemove) || (player.vel.length() < 0.5),4);
+		ASMI D 10 A_JumpIf((!player.cmd.forwardmove && !player.cmd.sidemove) || (player.vel.length() < 0.5),5);
+		ASMI E 10 A_JumpIf((!player.cmd.forwardmove && !player.cmd.sidemove) || (player.vel.length() < 0.5),6);
+		ASMI F 10 A_JumpIf((!player.cmd.forwardmove && !player.cmd.sidemove) || (player.vel.length() < 0.5),7);
+		Goto Sway+1;
+		ASMI C 4;
+		ASMI A 0 A_Jump(32,"Vapour");
+		Goto Idle;
+		ASMI D 4;
+		ASMI A 0 A_Jump(32,"Vapour");
+		Goto Idle;
+		ASMI E 4;
+		ASMI A 0 A_Jump(32,"Vapour");
+		Goto Idle;
+		ASMI F 4;
+		ASMI A 0 A_Jump(32,"Vapour");
+		Goto Idle;
+	Fire:
+		#### # 1
+		{
+			A_ShockFire();
+			A_Overlay(-9999,"Null");
+		}
+		ASMF ABCDEFGH 2;
+		ASMF I 5;
+		ASMI A 0 A_Refire();
+		ASMI A 0 A_Jump(48,"Vapour");
+		Goto Idle;
+	AltFire:
+		#### # 1
+		{
+			A_ShockAlt();
+			A_Overlay(-9999,"Null");
+		}
+		ASMA ABCDFGHI 2;
+		ASMA J 1;
+		ASMA J 0 A_Refire();
+		ASMI A 0 A_Jump(48,"Vapour");
+		Goto Idle;
+	Deselect:
+		ASMD A 1 A_Overlay(-9999,"Null");
+		ASMD BCDEFGHIJ 1;
+		ASMD J 1 A_Lower(int.max);
+		Wait;
+	Select:
+		ASMS A 1 A_Raise(int.max);
+		Wait;
 	}
 }

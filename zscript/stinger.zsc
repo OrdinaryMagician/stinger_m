@@ -5,11 +5,11 @@ Class StingerAmmo : Ammo
 		Tag "$T_STINGERAMMO";
 		Inventory.Icon "I_Stingr";
 		Inventory.PickupMessage "";
-		Inventory.Amount 40;
+		Inventory.Amount 5;
 		Inventory.MaxAmount 200;
-		Ammo.BackpackAmount 80;
+		Ammo.BackpackAmount 20;
 		Ammo.BackpackMaxAmount 400;
-		Ammo.DropAmount 10;
+		Ammo.DropAmount 2;
 	}
 	override String PickupMessage()
 	{
@@ -25,6 +25,18 @@ Class StingerAmmo : Ammo
 
 Class StingerAmmo2 : StingerAmmo
 {
+	Default
+	{
+		Tag "$T_STINGERAMMO2";
+		Inventory.Amount 40;
+		Ammo.DropAmount 15;
+	}
+	States
+	{
+	Spawn:
+		SAMO B -1;
+		Stop;
+	}
 }
 
 Class StingerProjectile : Actor
@@ -86,6 +98,10 @@ Class Stinger : UTWeapon
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 40;
 		UTWeapon.DropAmmo 20;
+	}
+	override void PlayUpSound( Actor origin )
+	{
+		origin.A_PlaySound(upsound,CHAN_WEAPON,Dampener.Active(origin)?.1:1.);
 	}
 	action void A_StingerFire( bool hold = false )
 	{
@@ -177,7 +193,7 @@ Class Stinger : UTWeapon
 		STNI A 3;
 		STNI A 0 A_Refire(1);
 		Goto Idle;
-		STNI A 0 A_PlaySound("stinger/hold",CHAN_WEAPON,CountInv("Dampener")?.1:1.,true);
+		STNI A 0 A_PlaySound("stinger/hold",CHAN_WEAPON,Dampener.Active(self)?.1:1.,true);
 	Hold:
 		STNH A 1
 		{
@@ -188,7 +204,7 @@ Class Stinger : UTWeapon
 		}
 		STNH BCDEFG 1;
 		STNH A 0 A_Refire();
-		STNH A 2 A_PlaySound("stinger/release",CHAN_WEAPON);
+		STNH A 2 A_PlaySound("stinger/release",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
 		Goto Idle;
 	AltFire:
 		STNF A 2 A_StingerAltFire();

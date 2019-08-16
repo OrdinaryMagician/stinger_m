@@ -18,6 +18,23 @@ Class Amplifier : UnrealInventory
 
 Class UJumpBoots : UnrealInventory
 {
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		// detect hurtfloors
+		// can't detect terraindef-based damage
+		// this is currently an engine limitation
+		bool foundslime = false;
+		bool foundlava = false;
+		for ( int i=0; i<level.Sectors.Size(); i++ )
+		{
+			Sector s = level.Sectors[i];
+			if ( !s.DamageInterval || !s.DamageAmount ) continue;
+			if ( s.DamageType == 'Slime' ) foundslime = true;
+			else if ( s.DamageType == 'Fire' ) foundlava = true;
+		}
+		// TODO replace self with asbestos/toxin suits
+	}
 }
 
 Class MotionDetector : UnrealInventory

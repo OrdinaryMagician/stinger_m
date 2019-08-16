@@ -83,9 +83,9 @@ $playeralias	ufemale	neutral	*pain75-drowning	u1/femaledrowning
 $playeralias	ufemale	neutral	*pain50-drowning	u1/femaledrowning
 $playeralias	ufemale	neutral	*pain25-drowning	u1/femaledrowning
 
-misc/secret	teleprt2
+misc/secret	secret
 misc/i_pkup	ammosnd
-misc/p_pkup	gpicksnd
+misc/p_pkup	genpicks
 misc/spawn	respsnd
 misc/chat	beep
 misc/chat2	beep
@@ -93,6 +93,9 @@ misc/u1superh	health1
 misc/u1heal	health2
 misc/u1armor	armorsnd
 misc/teleport	teleprt1
+misc/suit	suitsnd
+
+sbelt/pickup	psbelta2
 
 menu/activate	Select4	// Activate a new menu
 menu/backup	Select4	// Backup to previous menu
@@ -114,3 +117,12 @@ stinger/hit2	ricochet
 stinger/flesh	chunkhit
 
 flak/click	click
+
+asmd/vapour	vapour
+
+dampener/on	dampsnd
+dampener/off	dampndea
+
+ffield/on	fieldsnd
+ffield/active	ffieldl2
+ffield/hit	ffieldh2

@@ -11,6 +11,15 @@ This mod requires GZDoom 4.2.0 or later, and runs on top of Doom Tournament.
  - Backpack (replaces backpack, identical to Doom Tournament version)
  - Unreal 1 HUD
  - Translator (has to be spawned in, since it would only be useful for mappers)
+ - Armor (replaces blue armor)
+ - Shield Belt (replaces megasphere)
+   - Power Shield (replaces invulnerability)
+ - Asbestos Suit (replaces radsuit if map has lava)
+ - Kevlar Suit (replaces green armor)
+ - Toxin Suit (replaces radsuit if map has slime)
+ - Voice Box (rare spawn in backpacks)
+ - Dampener (rare spawn in backpacks)
+ - Forcefield (rare spawn in backpacks)
 
 ## In progress
 
@@ -19,7 +28,7 @@ This mod requires GZDoom 4.2.0 or later, and runs on top of Doom Tournament.
 
 ## Planned
 
- - Implement Stinger behavior described in the Unreal Bible.
+ - Implement Stinger behavior described in the Unreal Bible
  - Dispersion Pistol (slot 1) (replaces fist)
    - Dispersion Pistol Powerup (replaces Berserk)
  - Automag (slot 2) (replaces pistol)
@@ -39,7 +48,7 @@ This mod requires GZDoom 4.2.0 or later, and runs on top of Doom Tournament.
  - Proto Automag (slot 2) (replaces pistol)
    - Dual Protomags
  - Quadshot (slot 3) (replaces shotguns)
- - Peacemaker (slot 5) (rare spawn near backpack)
+ - Peacemaker (slot 5) (rare spawn in backpacks)
  - Impaler (slot 4) (replaces plasma rifle)
  - Flamethrower (slot 8) (replaces plasma rifle)
  - Fireblaster (slot 7) (replaces rocket launcher)
@@ -47,27 +56,18 @@ This mod requires GZDoom 4.2.0 or later, and runs on top of Doom Tournament.
  - Autocannon (slot 0) (replaces bfg9000)
 
  - Amplifier (replaces berserk)
- - Armor (replaces blue armor)
  - Flare (replaces armor bonus)
  - Flashlight (replaces light amplifier)
-   - Searchlight (replaces light amplifier)
+   - Searchlight (must be placed manually for balance reasons)
  - Medkit (replaces medkit)
  - Bandages (replaces stimpak)
  - Nali Fruit Seed (replaces health bonus)
  - Super Health (replaces soulsphere)
  - Invisibility (replaces blursphere)
- - AntiGrav Boots (replaces radsuit)
- - Shield Belt (replaces megasphere)
-   - Power Shield (replaces invulnerability)
- - Asbestos Suit (replaces radsuit if map has lava)
- - Kevlar Suit (replaces green armor)
- - Toxin Suit (replaces radsuit if map has slime)
- - Voice Box (rare spawn near backpack)
- - Forcefield (rare spawn near backpack)
- - Dampener (rare spawn near backpack)
+ - Jump Boots (replaces radsuit)
 
  - Motion Detector (replaces computer map)
- - Minigun Sentry (rare spawn near backpack)
+ - Minigun Sentry (rare spawn in backpacks)
 
 ## Known bugs
 

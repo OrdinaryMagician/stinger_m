@@ -3,10 +3,10 @@ Model "ASMDAmmo"
 	Path "models"
 	Model 0 "AsmdAmmoM_d.3d"
 	SurfaceSkin 0 1 "JAsmdAmmo1.png"
-	Scale 0.09 0.09 0.108
+	Scale 0.09 -0.09 0.108
 	ZOffset 10
 
-	FrameIndex ASMA A 0 0
+	FrameIndex SHOA A 0 0
 }
 
 Model "ASMDAmmoX"
@@ -14,12 +14,23 @@ Model "ASMDAmmoX"
 	Path "models"
 	Model 0 "AsmdAmmoM_d.3d"
 	SurfaceSkin 0 0 "ShockC.png"
-	//SurfaceSkin 0 2 "ShockSm.png"
-	Scale 0.09 0.09 0.108
+	Scale 0.09 -0.09 0.108
 	ZOffset 10
 	DONTCULLBACKFACES
 
-	FrameIndex ASMA A 0 0
+	FrameIndex SHOA A 0 0
+}
+
+Model "ASMDAmmoXX"
+{
+	Path "models"
+	Model 0 "AsmdAmmoM_d.3d"
+	SurfaceSkin 0 2 "ShockSm.png"
+	Scale 0.09 -0.09 0.108
+	ZOffset 10
+	DONTCULLBACKFACES
+
+	FrameIndex SHOA A 0 0
 }
 
 Model "ASMDAmmo2"
@@ -27,10 +38,10 @@ Model "ASMDAmmo2"
 	Path "models"
 	Model 0 "AsmdAmmoSmallM_d.3d"
 	SurfaceSkin 0 0 "JAsmdAmmo1.png"
-	Scale 0.05 0.05 0.06
+	Scale 0.05 -0.05 0.06
 	ZOffset 6
 
-	FrameIndex ASMA B 0 0
+	FrameIndex SHOA B 0 0
 }
 
 Model "ASMDAmmo2X"
@@ -38,11 +49,11 @@ Model "ASMDAmmo2X"
 	Path "models"
 	Model 0 "AsmdAmmoSmallM_d.3d"
 	SurfaceSkin 0 1 "ShockC.png"
-	Scale 0.05 0.05 0.06
+	Scale 0.05 -0.05 0.06
 	ZOffset 6
 	DONTCULLBACKFACES
 
-	FrameIndex ASMA B 0 0
+	FrameIndex SHOA B 0 0
 }
 
 Model "ASMD"
@@ -50,7 +61,7 @@ Model "ASMD"
 	Path "models"
 	Model 1 "ASMDPick_d.3d"
 	Skin 1 "ASMD1_.png"
-	ZOffset 12
+	ZOffset 8
 	AngleOffset 90
 	Scale 0.2 0.2 0.24
 
@@ -59,4 +70,104 @@ Model "ASMD"
 	ZOffset 12
 	ROTATING
 	FrameIndex ASMP A 1 0
+}
+
+Model "ASMD"
+{
+	Path "models"
+	Model 2 "ASMDM_d.3d"
+	SurfaceSkin 2 0 "ShockSm.png"
+	AngleOffset -90
+	Scale 0.14 -0.1 0.1
+	Offset 9 -17.5 -10
+
+	// steam
+	FrameIndex ASVI A 2 14
+	FrameIndex ASVF A 2 47
+	FrameIndex ASVF B 2 48
+	FrameIndex ASVF C 2 49
+	FrameIndex ASVF D 2 50
+	FrameIndex ASVF E 2 51
+	FrameIndex ASVF F 2 52
+	FrameIndex ASVF G 2 53
+	FrameIndex ASVF H 2 54
+	FrameIndex ASVF I 2 55
+	FrameIndex ASVF J 2 56
+}
+
+Model "ASMD"
+{
+	Path "models"
+	Model 0 "ASMDM_d.3d"
+	SurfaceSkin 0 1 "ASMD1.png"
+	AngleOffset -90
+	Scale 0.14 -0.1 0.1
+	Offset 9 -17.5 -10
+
+	// select
+	FrameIndex ASMS A 0 0
+	FrameIndex ASMS B 0 1
+	FrameIndex ASMS C 0 2
+	FrameIndex ASMS D 0 3
+	FrameIndex ASMS E 0 4
+	FrameIndex ASMS F 0 5
+	FrameIndex ASMS G 0 6
+	FrameIndex ASMS H 0 7
+	FrameIndex ASMS I 0 8
+	FrameIndex ASMS J 0 9
+	FrameIndex ASMS K 0 10
+	FrameIndex ASMS L 0 11
+	FrameIndex ASMS M 0 12
+	FrameIndex ASMS N 0 13
+	// idle
+	FrameIndex ASMI A 0 14
+	FrameIndex ASMI B 0 15
+	// sway
+	FrameIndex ASMI C 0 76
+	FrameIndex ASMI D 0 77
+	FrameIndex ASMI E 0 78
+	FrameIndex ASMI F 0 79
+	// deselect
+	FrameIndex ASMD A 0 16
+	FrameIndex ASMD B 0 17
+	FrameIndex ASMD C 0 18
+	FrameIndex ASMD D 0 19
+	FrameIndex ASMD E 0 20
+	FrameIndex ASMD F 0 21
+	FrameIndex ASMD G 0 22
+	FrameIndex ASMD H 0 23
+	FrameIndex ASMD I 0 24
+	FrameIndex ASMD J 0 25
+	// fire
+	FrameIndex ASMF A 0 28
+	FrameIndex ASMF B 0 29
+	FrameIndex ASMF C 0 30
+	FrameIndex ASMF D 0 31
+	FrameIndex ASMF E 0 32
+	FrameIndex ASMF F 0 33
+	FrameIndex ASMF G 0 34
+	FrameIndex ASMF H 0 35
+	FrameIndex ASMF I 0 36
+	// altfire
+	FrameIndex ASMA A 0 37
+	FrameIndex ASMA B 0 38
+	FrameIndex ASMA C 0 39
+	FrameIndex ASMA D 0 40
+	FrameIndex ASMA E 0 41
+	FrameIndex ASMA F 0 42
+	FrameIndex ASMA G 0 43
+	FrameIndex ASMA H 0 44
+	FrameIndex ASMA I 0 45
+	FrameIndex ASMA J 0 46
+	// steam
+	FrameIndex ASMV A 0 47
+	FrameIndex ASMV B 0 48
+	FrameIndex ASMV C 0 49
+	FrameIndex ASMV D 0 50
+	FrameIndex ASMV E 0 51
+	FrameIndex ASMV F 0 52
+	FrameIndex ASMV G 0 53
+	FrameIndex ASMV H 0 54
+	FrameIndex ASMV I 0 55
+	FrameIndex ASMV J 0 56
 }

@@ -4,8 +4,8 @@ Model "UPlayerFemale1"
 	Model 0 "Female1_d.3d"
 	SurfaceSkin 0 0 "gina.png"
 	SurfaceSkin 0 1 "GunPick1.png"
-	Scale 0.216 -0.18 0.18
-	Offset 0 0 35
+	Scale 0.24 0.2 0.2
+	Offset -2 0 32
 	RollOffset -90
 	AngleOffset -90
 	IGNORETRANSLATION	// I'll figure out eventually how to make color changes work, but for now this is it
