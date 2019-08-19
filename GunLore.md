@@ -226,8 +226,8 @@ barrel. Moderate damage, short spread.
 Secondary fire: Shoots all loaded barrels at once. Deadly if fully loaded, but
 the spread is much wider.
 
-Has to be reloaded after four shots. A skilled user may be able to load more
-than one shell at a time to save time.
+Has to be reloaded after four shots. A skilled user may be able to reload
+faster by putting in more than one shell at a time.
 
 ## Peacemaker
 
