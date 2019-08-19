@@ -209,8 +209,7 @@ no need to reload. An experimental entanglement unit inside the gun's internal
 clip locates spare ammunition carried by the user and automatically loads it.
 
 Since there's no need to reload, pressing the reload button makes use of the
-gun's weight to beat the crap out of your enemies up close. If there are no
-targets to hit with this.
+gun's weight to beat the crap out of your enemies up close.
 
 As an added bonus, you can press the zoom button to spin the gun. This doesn't
 serve any purpose other than looking cool. Press again to stop spinning.
