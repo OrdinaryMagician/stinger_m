@@ -16,7 +16,7 @@ until the end of time.
 ## Automag
 
 A very reliable gunpowder-based firearm, chambered in 9mm. Uses two 10-round
-clips simultaneously.
+clips in tandem.
 
 Primary fire: The typical. Hold for automatic fire.
 
