@@ -6,6 +6,6 @@ Class BigAmmo2 : BigAmmo
 {
 }
 
-Class BigGun : UTWeapon
+Class BigGun : UnrealWeapon
 {
 }

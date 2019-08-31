@@ -51,16 +51,18 @@ Class ListMenuItemUnrealTextItem : ListMenuItemSelectable
 
 	override void Drawer( bool selected )
 	{
-		let tFont = generic_ui?NewSmallFont:mFont;
-		double basex = floor(0.5*(CleanWidth_1-tFont.StringWidth(StringTable.Localize(mText))));
+		String str = StringTable.Localize(mText);
+		let fnt = (generic_ui||!mFont.CanPrint(str))?NewSmallFont:mFont;
+		double basex = floor(0.5*(CleanWidth_1-fnt.StringWidth(str)));
 		double basey = floor(0.25*(CleanHeight_1-mSpacing*5));
-		Screen.DrawText(tFont,mColor,(basex+mXPos)*CleanXFac_1,(basey+mYpos)*CleanYFac_1,mText,DTA_CleanNoMove_1,true,DTA_Alpha,selected?1.0:0.5);
+		Screen.DrawText(fnt,(fnt==NewSmallFont)?Font.CR_GREEN:mColor,(basex+mXPos)*CleanXFac_1,(basey+mYpos)*CleanYFac_1,str,DTA_CleanNoMove_1,true,DTA_Alpha,selected?1.0:0.5);
 	}
 
 	override int GetWidth()
 	{
-		let tFont = generic_ui?NewSmallFont:mFont;
-		return max(1,tFont.StringWidth(StringTable.Localize(mText)));
+		String str = StringTable.Localize(mText);
+		let fnt = (generic_ui||!mFont.CanPrint(str))?NewSmallFont:mFont;
+		return max(1,fnt.StringWidth(StringTable.Localize(mText)));
 	}
 
 	override void DrawSelector( double xofs, double yofs, TextureID tex )
@@ -97,14 +99,44 @@ Class OptionMenuItemHudType : OptionMenuItem
 	{
 		int xpos = indent + CursorSpace();
 		int ypos = y + OptionMenuSettings.mLinespacing*CleanYfac_1;
+		Screen.DrawFrame(xpos,ypos,64*CleanXFac_1,64*CleanYFac_1);
 		Screen.DrawTexture(tex[mCVar.GetInt()],false,xpos,ypos,DTA_CleanNoMove_1,true);
 		return -1;
 	}
 }
 
-// because I can't change the font color in mapinfo
+// because I can't change the font or color in mapinfo
 Class GreenMessageBox : MessageBoxMenu
 {
+	override void Init( Menu parent, String message, int messagemode, bool playsound, Name cmd, voidptr native_handler )
+	{
+		Super.Init(parent,message,messagemode,playsound,cmd,native_handler);
+		Font NFont = Font.GetFont('UMedFont');
+		if ( !generic_ui )
+		{
+			if ( NFont && NFont.CanPrint(message) && NFont.CanPrint("$TXT_YES") && NFont.CanPrint("$TXT_NO") ) textFont = NFont;
+			else if ( OriginalSmallFont && OriginalSmallFont.CanPrint(message) && OriginalSmallFont.CanPrint("$TXT_YES") && OriginalSmallFont.CanPrint("$TXT_NO") ) textFont = OriginalSmallFont;
+		}
+		if ( !textFont )
+		{
+			arrowFont = textFont = NewSmallFont;
+			int factor = (CleanXfac+1)/2;
+			destWidth = screen.GetWidth()/factor;
+			destHeight = screen.GetHeight()/factor;
+			selector = "▶";
+		}
+		else
+		{
+			arrowFont = ConFont;
+			destWidth = CleanWidth;
+			destHeight = CleanHeight;
+			selector = "\xd";
+		}
+		int mr1 = destWidth/2+10+textFont.StringWidth(Stringtable.Localize("$TXT_YES"));
+		int mr2 = destWidth/2+10+textFont.StringWidth(Stringtable.Localize("$TXT_NO"));
+		mMouseRight = MAX(mr1,mr2);
+		mMessage = textFont.BreakLines(Stringtable.Localize(message),generic_ui?600:300);
+	}
 	override void Drawer ()
 	{
 		int i, y;
@@ -131,5 +163,204 @@ Class GreenMessageBox : MessageBoxMenu
 				}
 			}
 		}
+	}
+}
+
+// Translator display as a menu, allows for more interactivity
+// TODO:
+//  - additional mouse input options
+//  - support for extended menu graphic
+Class TranslatorMenu : GenericMenu
+{
+	bool bShowHint;
+	UTranslator trns;
+	TextureID thud, scroll[4];
+	Font tfnt, mfnt, pfnt;
+	BrokenLines lines;
+	int th, startline[0], maxlines[2], entry;
+
+	private void SetText( String txt )
+	{
+		String ttxt = (txt.Length()>0)?txt:StringTable.Localize("$TR_NOMSG");
+		tfnt = (!mfnt.CanPrint(ttxt))?NewSmallFont:mfnt;
+		lines = tfnt.BreakLines(ttxt,200);
+		th = tfnt.GetHeight();
+		startline[0] = 0;
+		startline[1] = 0;
+		maxlines[0] = 88/th;
+	}
+
+	override void Init( Menu parent )
+	{
+		Super.Init(parent);
+		trns = UTranslator(players[consoleplayer].mo.FindInventory('UTranslator'));
+		mfnt = Font.GetFont('UMedFont');
+		pfnt = Font.GetFont('UOldTinyFont');
+		if ( !trns || !trns.Owner || (trns.Owner.Health <= 0) )
+		{
+			// don't do anything, will get killed in the next tick
+			return;
+		}
+		MenuSound("menu/activate");
+		thud = TexMan.CheckForTexture("TranHUD3",TexMan.Type_Any);
+		scroll[0] = TexMan.CheckForTexture("VSldT",TexMan.Type_Any);
+		scroll[1] = TexMan.CheckForTexture("VSldM",TexMan.Type_Any);
+		scroll[2] = TexMan.CheckForTexture("VSldB",TexMan.Type_Any);
+		scroll[3] = TexMan.CheckForTexture("VSldO",TexMan.Type_Any);
+		if ( StatusBar is 'UnrealHUD' )
+			UnrealHUD(StatusBar).bTranslatorActive = true;
+		entry = 0;
+		SetText(StringTable.Localize(GetMessage(entry)));
+	}
+
+	private String GetMessage( int idx = 0 )
+	{
+		if ( idx == 0 ) return trns.NewMessage;
+		else return trns.OldMessages[trns.OldMessages.Size()-idx];
+	}
+
+	private String GetHint( int idx = 0 )
+	{
+		if ( idx == 0 ) return trns.Hint;
+		else return trns.OldHints[trns.OldHints.Size()-idx];
+	}
+
+	override void Ticker()
+	{
+		menuactive = OnNoPause;	// don't pause game while translator is active
+		if ( trns && trns.Owner && (trns.Owner.Health > 0) ) return;
+		if ( StatusBar is 'UnrealHUD' )
+			UnrealHUD(StatusBar).bTranslatorActive = false;
+		Close();
+	}
+
+	override bool OnUIEvent( UIEvent ev )
+	{
+		switch ( ev.type )
+		{
+		case UIEvent.Type_WheelUp:
+			if ( startline[0] > 0 ) MenuSound("menu/cursor");
+			startline[0] = max(0,startline[0]-3);
+			return true;
+		case UIEvent.Type_WheelDown:
+			if ( startline[0] < max(0,lines.Count()-maxlines[0]) ) MenuSound("menu/cursor");
+			startline[0] = min(max(0,lines.Count()-maxlines[0]),startline[0]+3);
+			return true;
+		}
+		return Super.OnUIEvent(ev);
+	}
+
+	override bool MenuEvent( int mkey, bool fromcontroller )
+	{
+		switch( mkey )
+		{
+		case MKEY_Enter:
+		case MKEY_Back:
+			if ( StatusBar is 'UnrealHUD' )
+				UnrealHUD(StatusBar).bTranslatorActive = false;
+			MenuSound(GetCurrentMenu()?"menu/backup":"menu/clear");
+			Close();
+			return true;
+		case MKEY_Up:
+			if ( startline[0] > 0 ) MenuSound("menu/cursor");
+			startline[0] = max(0,startline[0]-1);
+			return true;
+		case MKEY_Down:
+			if ( startline[0] < max(0,lines.Count()-maxlines[0]) ) MenuSound("menu/cursor");
+			startline[0] = min(max(0,lines.Count()-maxlines[0]),startline[0]+1);
+			return true;
+		case MKEY_PageDown:
+			if ( trns && (GetHint(entry).length() > 0) )
+			{
+				MenuSound("menu/cursor");
+				bShowHint = true;
+				SetText(StringTable.Localize(GetHint(entry)));
+			}
+			return true;
+		case MKEY_PageUp:
+			if ( trns && bShowHint )
+			{
+				MenuSound("menu/cursor");
+				bShowHint = false;
+				SetText(StringTable.Localize(GetMessage(entry)));
+			}
+			return true;
+		case MKEY_Left:
+			if ( trns && (entry < trns.OldMessages.Size()) )
+			{
+				MenuSound("menu/cursor");
+				bShowHint = false;
+				entry++;
+				SetText(StringTable.Localize(GetMessage(entry)));
+			}
+			return true;
+		case MKEY_Right:
+			if ( trns && (entry > 0) )
+			{
+				MenuSound("menu/cursor");
+				bShowHint = false;
+				entry--;
+				SetText(StringTable.Localize(GetMessage(entry)));
+			}
+			return true;
+		}
+		return false;
+	}
+
+	override void Drawer()
+	{
+		Super.Drawer();
+		if ( trns && trns.Owner && (trns.Owner.Health > 0) ) return;
+		double ClipX, ClipY, CurX, CurY;
+		if ( StatusBar is 'UnrealHUD' )
+		{
+			ClipX = UnrealHUD(StatusBar).ClipX;
+			ClipY = UnrealHUD(StatusBar).ClipY;
+		}
+		else
+		{
+			ClipX = CleanWidth_1;
+			ClipY = CleanHeight_1;
+		}
+		// The translator
+		CurX = ClipX/2-128;
+		CurY = ClipY/2-68;
+		Screen.DrawTexture(thud,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+		// The message text
+		CurX += 22;
+		CurY += 22;
+		int l = startline[0];
+		for ( int i=0; i<maxlines[0]; i++ )
+		{
+			if ( l >= lines.Count() ) break;
+			Screen.DrawText(tfnt,Font.CR_UNTRANSLATED,CurX,CurY,lines.StringAt(l),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+			l++;
+			CurY += th;
+		}
+		// Scrollbar
+		CurX = ClipX/2+100;
+		if ( lines.Count() > maxlines[0] )
+		{
+			CurY = ClipY/2-54;
+			Screen.DrawTexture(scroll[0],false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+			CurY += 8;
+			for ( int i=0; i<10; i++ )
+			{
+				Screen.DrawTexture(scroll[1],false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+				CurY += 8;
+			}
+			Screen.DrawTexture(scroll[2],false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+			CurY = (ClipY/2-46) + ((startline[0]*72)/max(1,lines.Count()-maxlines[0]));
+			Screen.DrawTexture(scroll[3],false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+		}
+		if ( !bShowHint && (GetHint(entry).length() > 0) )
+		{
+			CurY = ClipY/2+40;
+			Screen.DrawText(pfnt,Font.CR_GREEN,CurX,CurY,">>",DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_Alpha,(gametic%16)/16.);
+		}
+		CurX = ClipX/2-106;
+		CurY = ClipY/2+40;
+		if ( bShowHint ) Screen.DrawText(pfnt,Font.CR_GREEN,CurX,CurY,"<<",DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_Alpha,(gametic%16)/16.);
+		else if ( trns.OldMessages.Size() > 0 ) Screen.DrawText(pfnt,Font.CR_GREEN,CurX,CurY,String.Format("%s %d / %d %s",(entry<trns.OldMessages.Size())?"<":" ",trns.OldMessages.Size()+1-entry,trns.OldMessages.Size()+1,(entry>0)?">":" "),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
 	}
 }

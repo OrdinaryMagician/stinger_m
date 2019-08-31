@@ -1,7 +1,21 @@
 Class UMiniAmmo : Ammo
 {
+	Default
+	{
+		Tag "$T_MINIAMMO";
+		Inventory.PickupMessage "";
+		Inventory.Amount 50;
+		Inventory.MaxAmount 200;
+		Ammo.BackpackAmount 100;
+		Ammo.BackpackMaxAmount 400;
+		Ammo.DropAmount 20;
+	}
+	override String PickupMessage()
+	{
+		return String.Format("%s%d%s",StringTable.Localize("$I_MINIAMMOL"),Amount,StringTable.Localize("$I_MINIAMMOR"));
+	}
 }
 
-Class UMinigun : UTWeapon
+Class UMinigun : UnrealWeapon
 {
 }

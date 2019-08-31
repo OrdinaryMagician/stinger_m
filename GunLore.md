@@ -45,12 +45,12 @@ this the weapon will need a short time to load up ammunition again.
 
 As tarydium is highly volatile, any shards that remain attached to a target can
 be detonated with fire from other weapons, or sufficient kinetic force (e.g.
-blunt force or making them fall from a considerable height).
+making them fall from a considerable height).
 
 ## ASMD
 
 This energy weapon packs quite a punch with each shot. If the energy contained
-within its internal core were to be released all at once the resulting force
+within its internal core were to be released all at once the resulting blast
 would be enough to bring down a large building.
 
 Primary fire: A lightning-fast burst of energy with considerable knockback.
@@ -128,12 +128,14 @@ galaxy, this 5ft long carbine really packs a punch.
 Primary fire: Long range, highly accurate shots. Aim for the head for extra
 damage.
 
-Secondary fire: Toggles a retractable scope for easier long range aim.
+Secondary fire: Toggles a retractable scope for easier long range aim. The Zoom
+button can also be used for this.
 
 ### Extended behaviour
 
-Secondary fire is now replaced with a rapid fire mode, while pressing the
-reload button will toggle the weapon's integrated flashlight.
+Secondary fire is now replaced with a fast three shot burst, while pressing the
+reload button will toggle the weapon's integrated flashlight. The Zoom button
+will still have the original zoom behaviour.
 
 ## Minigun
 
@@ -159,11 +161,14 @@ complete opposite effect, causing targets to instead be pulled towards you.
 
 The secondary fire can be useful to pick up items that are way out of reach.
 
+Since the charge rod rapidly extends on shoot, both fire modes additionally
+deal considerable melee damage to anything that's too close.
+
 ## Razorclaw
 
 A rudimentary close combat weapon handcrafted by a fellow survivor of the
-Vortex Rikers crash, using a pneumatic drill and blades salvaged from stolen
-Skaarj Razorjacks.
+Vortex Rikers crash, using a drill and blades salvaged from stolen Skaarj
+Razorjacks.
 
 Primary fire: Spins up the blades, slicing and dicing anything that gets too
 close.
@@ -192,17 +197,17 @@ first-timers.
 
 You can use the secondary fire while both modules are still in your posession,
 however all this will do is allow you to show others what you think of them
-making fun of your "fanny pack".
+making fun of your "fanny pack". Reload also does this.
 
 ## Protomag
 
-This prototype handgun was discontinued due to its weight making it "not very
-portable". Not like that's going to stop you. Hell, you might as well use two
-at the same time.
+A very rare prototype handgun. Due to the difficulty of its manufacture, it was
+quickly discontinued and not many of these exist. You would have to be pretty
+lucky to come across one.
 
 Both of its fire modes work exactly like the Automag, although due to
-internal differences, bullets come out at a much higher velocity, resulting in
-increased damage.
+internal differences, it fires much slower, but bullets come out at a much
+higher velocity, resulting in increased damage.
 
 The special trait of this weapon comes into play when you realize that there's
 no need to reload. An experimental entanglement unit inside the gun's internal
@@ -212,7 +217,7 @@ Since there's no need to reload, pressing the reload button makes use of the
 gun's weight to beat the crap out of your enemies up close.
 
 As an added bonus, you can press the zoom button to spin the gun. This doesn't
-serve any purpose other than looking cool. Press again to stop spinning.
+serve any purpose other than looking cool.
 
 ## Quadshot
 

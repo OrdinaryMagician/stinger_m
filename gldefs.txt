@@ -54,51 +54,15 @@ Object UFlakBox
 {
 	Frame "FAMO" { light "FLAKAMMOLIGHT" }
 }
-PointLight STINGERLIGHT0
+PointLight STINGERLIGHT
 {
 	Color 0.1 0.4 1.0
 	Size 30
 	Attenuate 1
 }
-PointLight STINGERLIGHT1
-{
-	Color 0.1 0.3 0.8
-	Size 40
-	Attenuate 1
-}
-PointLight STINGERLIGHT2
-{
-	Color 0.1 0.2 0.6
-	Size 45
-	Attenuate 1
-}
-PointLight STINGERLIGHT3
-{
-	Color 0.08 0.15 0.5
-	Size 50
-	Attenuate 1
-}
-PointLight STINGERLIGHT4
-{
-	Color 0.05 0.12 0.4
-	Size 55
-	Attenuate 1
-}
-PointLight STINGERLIGHT5
-{
-	Color 0.0 0.03 0.2
-	Size 60
-	Attenuate 1
-}
 Object StingerProjectile
 {
-	Frame "TPRJA" { light "STINGERLIGHT0" }
-	Frame "TPRJB" { light "STINGERLIGHT1" }
-	Frame "TPRJC" { light "STINGERLIGHT1" }
-	Frame "TPRJD" { light "STINGERLIGHT2" }
-	Frame "TPRJE" { light "STINGERLIGHT3" }
-	Frame "TPRJF" { light "STINGERLIGHT4" }
-	Frame "TPRJG" { light "STINGERLIGHT5" }
+	Frame "TPRJA" { light "STINGERLIGHT" }
 }
 
 PointLight DAMPENERLIGHT0
@@ -171,6 +135,55 @@ Object ShieldBelt
 Object PowerShield
 {
 	Frame "BELT" { light "PBELTLIGHT" }
+}
+
+PointLight UINVISLIGHT
+{
+	Color 0.4 1.0 0.2
+	Size 12
+	Offset 0 15 0
+	Attenuate 1
+}
+Object UInvisibility
+{
+	Frame "INVS" { light "UINVISLIGHT" }
+}
+
+PointLight SUPERHEALTH
+{
+	Color 0.2 0.4 1.0
+	Size 12
+	Offset 0 6 0
+	Attenuate 1
+}
+Object SuperHealth
+{
+	Frame "SHTH" { light "SUPERHEALTH" }
+}
+
+PointLight WPOWERUP
+{
+	Color 0.1 0.1 0.8
+	Size 20
+	Offset 0 5 0
+	Attenuate 1
+}
+Object WeaponPowerUp
+{
+	Frame "WPOW" { light "WPOWERUP" }
+}
+
+FlickerLight2 FLARELIGHT
+{
+	Color 1.0 0.4 0.0
+	Size 112
+	SecondarySize 120
+	Interval 0.1
+	Offset 6 0 1
+}
+Object FlareThrownX
+{
+	frame "FLAR" { light "FLARELIGHT" }
 }
 
 // Shaders / Brightmaps
@@ -354,7 +367,7 @@ HardwareShader Texture "models/Jflak1_.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
 }
-HardwareShader Texture "models/ASMD11_.png"
+HardwareShader Texture "models/ASMD1_.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
 }
@@ -390,7 +403,7 @@ HardwareShader Texture "models/GunPick1_.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
 }
-HardwareShader Texture "models/JAmplifier.png"
+HardwareShader Texture "models/JAmplifier1.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
 }
@@ -450,7 +463,7 @@ HardwareShader Texture "models/Jband1.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
 }
-HardwareShader Texture "models/Jclip1.png"
+HardwareShader Texture "models/Jclip1_.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
 }
@@ -499,8 +512,44 @@ HardwareShader Texture "models/ShockSm.png"
 	Shader "shaders/glsl/ShockSm.fp"
 	Texture "smoketex" "models/ShockSm2.png"
 }
-HardwareShader Texture "textures/ForceFieldFX.png"
+HardwareShader Texture "models/ShockC.png"
+{
+	Shader "shaders/glsl/ShockCore.fp"
+	Texture "warptex" "textures/roughwarp.png"
+}
+HardwareShader Texture "models/ForceFieldFX.png"
 {
 	Shader "shaders/glsl/FizzDistortXY.fp"
 	Texture "warptex" "textures/warptex.png"
+}
+HardwareShader Texture "models/InvisFX.png"
+{
+	Shader "shaders/glsl/FizzDistortXY.fp"
+	Texture "warptex" "textures/warptex.png"
+}
+HardwareShader Texture "models/SHealthFX.png"
+{
+	Shader "shaders/glsl/FizzDistortXY.fp"
+	Texture "warptex" "textures/warptex.png"
+}
+HardwareShader Texture "models/PowerFX.png"
+{
+	Shader "shaders/glsl/PowerUp.fp"
+	Texture "warptex" "textures/roughwarp.png"
+}
+HardwareShader Texture "models/FireEffect8.png"
+{
+	Shader "shaders/glsl/FlareFX.fp"
+}
+HardwareShader Texture "models/AsmdBeam.png"
+{
+	Shader "shaders/glsl/AsmdBeam.fp"
+}
+HardwareShader Texture "models/AsmdSBeam.png"
+{
+	Shader "shaders/glsl/AsmdSBeam.fp"
+}
+HardwareShader Texture "models/AsmdPBeam.png"
+{
+	Shader "shaders/glsl/AsmdPBeam.fp"
 }

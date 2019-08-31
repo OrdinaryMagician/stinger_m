@@ -38,9 +38,18 @@ Model "UFlakCannon"
 	FrameIndex FPCK A 1 0
 }
 
+
 Model "UFlakCannon"
 {
 	Path "models"
+	Model 2 "Flat_d.3d"
+	Skin 2 "Flakmuz.png"
+	AngleOffset 90
+	Scale 0.06 0.06 0.06
+	Offset 11 -28 -9
+
+	FrameIndex FMUZ A 2 0
+/*	Path "models"
 	Model 2 "flak_d.3d"
 	SurfaceSkin 2 0 "FireEffect13.png"
 	Scale 0.1 -0.1 0.1
@@ -70,7 +79,7 @@ Model "UFlakCannon"
 	FrameIndex FLFA H 2 63
 	FrameIndex FLFA I 2 64
 	FrameIndex FLFA J 2 65
-	FrameIndex FLFA K 2 66
+	FrameIndex FLFA K 2 66*/
 }
 
 Model "UFlakCannon"

@@ -5,6 +5,7 @@ Class UPlayer : UTPlayer
 		Player.StartItem "Automag";
 		Player.StartItem "DispersionPistol";
 		Player.StartItem "UMiniAmmo", 30;
+		Player.StartItem "DispersionAmmo", 50;
 	}
 
 	// Have to modify the give cheat to handle UT armor
@@ -163,13 +164,21 @@ Class UPlayer : UTPlayer
 		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
 		// check weapon type
 		let psp = player.FindPSprite(PSP_WEAPON);
-		if ( (player.ReadyWeapon is 'Stinger') && psp
-			&& psp.CurState.InStateSequence(player.ReadyWeapon.FindState("Hold")) )
+		if ( ((player.ReadyWeapon is 'Stinger') && psp
+			&& psp.CurState.InStateSequence(player.ReadyWeapon.FindState("Hold")))
+			|| ((player.ReadyWeapon is 'DispersionPistol') && DispersionPistol(player.ReadyWeapon).bCharging) )
 		{
 			if ( !InStateSequence(CurState,FindState("MissileRep")) )
 				SetStateLabel("MissileRep");
 		}
 		else SetStateLabel("Missile");
+	}
+
+	override void PlayFootstep( double vol )
+	{
+		let boot = UJumpBoots(FindInventory("UJumpBoots"));
+		if ( boot && boot.bActive ) A_PlaySound("u1/metalfootstep",CHAN_5,min(1.,vol*2));
+		else A_PlaySound("ut/playerfootstep",CHAN_5,vol);
 	}
 }
 
@@ -391,7 +400,7 @@ Class UPlayerMale : UPlayer
 {
 	Default
 	{
-		Player.SoundClass "umale";
+		Player.SoundClass "umale1";
 		UTPlayer.VoiceType VOICE_MaleOne;
 	}
 
@@ -459,6 +468,7 @@ Class UPlayerMale2 : UPlayerMale
 {
 	Default
 	{
+		Player.SoundClass "umale2";
 		Player.DisplayName "$N_MALE2";
 		Player.Portrait "";
 		-NOMENU;
@@ -468,6 +478,7 @@ Class UPlayerMale3 : UPlayerMale
 {
 	Default
 	{
+		Player.SoundClass "umale3";
 		Player.DisplayName "$N_MALE3";
 		Player.Portrait "";
 		UTPlayer.VoiceType VOICE_MaleTwo;
@@ -488,7 +499,7 @@ Class UnrealInventory : Inventory
 	// Drawstuffs over HUD
 	virtual ui void PostRender( double lbottom ) {}
 
-	bool DrainCharge( int val )
+	virtual bool DrainCharge( int val )
 	{
 		Charge -= val;
 		if ( Charge > 0 ) return false;
@@ -499,7 +510,6 @@ Class UnrealInventory : Inventory
 			bActive = false;
 			return true;
 		}
-		DepleteOrDestroy();
 		return true;
 	}
 	override void AttachToOwner( Actor other )
@@ -570,6 +580,20 @@ Class UTeleportFog : Actor
 	Spawn:
 		TNT1 A 1;
 		Stop;
+	}
+}
+
+Class UnrealWeapon : UTWeapon
+{
+	override void FireEffect()
+	{
+		Super.FireEffect();
+		let invis = UInvisibility(Owner.FindInventory("UInvisibility"));
+		if ( invis && invis.bActive ) invis.special1 = -1;
+	}
+	override void PlayUpSound( Actor origin )
+	{
+		origin.A_PlaySound(upsound,CHAN_WEAPON,Dampener.Active(origin)?.1:1.);
 	}
 }
 
@@ -708,33 +732,19 @@ Class UnrealMainHandler : EventHandler
 		}
 		else if ( (e.Replacee == 'RocketLauncher') || (e.Replacee == 'PhoenixRod') )
 		{
-			switch ( Random[Replacements](0,2) )
+			if ( !Random[Replacements](0,3) )
 			{
-			case 0:
-				e.Replacement = 'FlameGun';
-				break;
-			case 1:
-				e.Replacement = 'UFlakCannon';
-				break;
-			case 2:
-				e.Replacement = 'Eightball';
-				break;
+				if ( !Random[Replacements](0,2) ) e.Replacement = 'UFlamethrower';
+				else e.Replacement = 'FlameGun';
 			}
+			else if ( Random[Replacements](0,1) ) e.Replacement = 'UFlakCannon';
+			else e.Replacement = 'Eightball';
 		}
 		else if ( (e.Replacee == 'PlasmaRifle') || (e.Replacee == 'SkullRod') )
 		{
-			switch ( Random[Replacements](0,2) )
-			{
-			case 0:
-				e.Replacement = 'UFlamethrower';
-				break;
-			case 1:
-				e.Replacement = 'URifle';
-				break;
-			case 2:
-				e.Replacement = 'UBioRifle';
-				break;
-			}
+			if ( !Random[Replacements](0,3) ) e.Replacement = 'Impaler';
+			else if ( Random[Replacements](0,1) ) e.Replacement = 'URifle';
+			else e.Replacement = 'UBioRifle';
 		}
 		else if ( (e.Replacee == 'BFG9000') || (e.Replacee == 'Mace') )
 		{
@@ -786,7 +796,8 @@ Class UnrealMainHandler : EventHandler
 		}
 		else if ( (e.Replacee == 'RocketAmmo') || (e.Replacee == 'PhoenixRodAmmo') || (e.Replacee == 'MaceAmmo') )
 		{
-			if ( Random[Replacements](0,1) )
+			if ( !Random[Replacements](0,4) ) e.Replacement = 'FlameAmmo';
+			else if ( Random[Replacements](0,1) )
 			{
 				if ( !Random[Replacements](0,3) ) e.Replacement = 'UFlakBox';
 				else e.Replacement = 'UFlakAmmo';
@@ -799,16 +810,22 @@ Class UnrealMainHandler : EventHandler
 		}
 		else if ( (e.Replacee == 'RocketBox') || (e.Replacee == 'PhoenixRodHefty') || (e.Replacee == 'MaceHefty') )
 		{
-			if ( Random[Replacements](0,1) ) e.Replacement = 'UFlakBox';
+			if ( !Random[Replacements](0,3) ) e.Replacement = 'FlameAmmo';
+			else if ( Random[Replacements](0,1) ) e.Replacement = 'UFlakBox';
 			else e.Replacement = 'URocketAmmo';
 		}
 		else if ( (e.Replacee == 'Cell') || (e.Replacee == 'SkullRodAmmo') )
 		{
 			if ( !Random[Replacements](0,4) ) e.Replacement = 'BigAmmo2';
-			else if ( Random[Replacements](0,1) )
+			else if ( !Random[Replacements](0,3) )
 			{
 				if ( !Random[Replacements](0,3) ) e.Replacement = 'ImpalerAmmo';
 				else e.Replacement = 'ImpalerAmmo2';
+			}
+			else if ( Random[Replacements](0,1) )
+			{
+				if ( !Random[Replacements](0,3) ) e.Replacement = 'UBioAmmo';
+				else e.Replacement = 'UBioAmmo2';
 			}
 			else
 			{
@@ -819,7 +836,8 @@ Class UnrealMainHandler : EventHandler
 		else if ( (e.Replacee == 'CellPack') || (e.Replacee == 'SkullRodHefty') )
 		{
 			if ( !Random[Replacements](0,4) ) e.Replacement = 'BigAmmo';
-			else if ( Random[Replacements](0,1) ) e.Replacement = 'ImpalerAmmo';
+			else if ( !Random[Replacements](0,3) ) e.Replacement = 'ImpalerAmmo';
+			else if ( Random[Replacements](0,1) ) e.Replacement = 'UBioAmmo';
 			else e.Replacement = 'URifleAmmo';
 		}
 		else if ( (e.Replacee == 'InvulnerabilitySphere') || (e.Replacee == 'ArtiInvulnerability') ) e.Replacement = 'PowerShield';
@@ -922,17 +940,25 @@ Class UnrealMainHandler : EventHandler
 	override void PlayerEntered( PlayerEvent e )
 	{
 		if ( flak_translocator )
-		{
 			players[e.playernumber].mo.TakeInventory("Translocator",1);
+		if ( sting_telegun )
 			players[e.playernumber].mo.GiveInventory("UTranslocator",1);
+		if ( sting_flares )
+		{
+			players[e.playernumber].mo.GiveInventory("LightFlare",1);
+			players[e.playernumber].mo.GiveInventory("DarkFlare",1);
 		}
 	}
 	override void PlayerRespawned( PlayerEvent e )
 	{
 		if ( flak_translocator )
-		{
 			players[e.playernumber].mo.TakeInventory("Translocator",1);
+		if ( sting_telegun )
 			players[e.playernumber].mo.GiveInventory("UTranslocator",1);
+		if ( sting_flares )
+		{
+			players[e.playernumber].mo.GiveInventory("LightFlare",1);
+			players[e.playernumber].mo.GiveInventory("DarkFlare",1);
 		}
 	}
 	override void NetworkProcess( ConsoleEvent e )
@@ -944,6 +970,12 @@ Class UnrealMainHandler : EventHandler
 				for ( int i=0; i<MAXPLAYERS; i++ ) if ( playeringame[i] )
 				{
 					players[i].mo.TakeInventory("Translocator",1);
+				}
+			}
+			if ( sting_telegun )
+			{
+				for ( int i=0; i<MAXPLAYERS; i++ ) if ( playeringame[i] )
+				{
 					players[i].mo.GiveInventory("UTranslocator",1);
 				}
 			}
@@ -954,6 +986,36 @@ Class UnrealMainHandler : EventHandler
 					players[i].mo.TakeInventory("UTranslocator",1);
 				}
 			}
+			if ( sting_flares )
+			{
+				for ( int i=0; i<MAXPLAYERS; i++ ) if ( playeringame[i] )
+				{
+					players[i].mo.GiveInventory("LightFlare",1);
+					players[i].mo.GiveInventory("DarkFlare",1);
+				}
+			}
+			else
+			{
+				for ( int i=0; i<MAXPLAYERS; i++ ) if ( playeringame[i] )
+				{
+					players[i].mo.TakeInventory("LightFlare",1);
+					players[i].mo.TakeInventory("DarkFlare",1);
+				}
+			}
+		}
+	}
+	override void WorldLoaded( WorldEvent e )
+	{
+		// More "authentic" Unreal flavor of these edits
+		if ( (level.GetChecksum() ~== "959A613006CC3AA912C4A22908B7566A") || (level.GetChecksum() ~== "0EADB2F82732A968B8513E4DC6138439") )
+		{
+			S_ChangeMusic("Cyrene");
+			TextureID sky95 = TexMan.CheckForTexture("95Bg",TexMan.Type_Any);
+			level.ChangeSky(sky95,sky95);
+			level.ReplaceTextures("rClfFlr0","C_flr19",0);
+			level.ReplaceTextures("rClfBas0","C_wal19k",0);
+			level.ReplaceTextures("uAlnWl2b","C_WAL19A",0);
+			level.ReplaceTextures("xAlnWl2b","C_WAL19F",0);
 		}
 	}
 }

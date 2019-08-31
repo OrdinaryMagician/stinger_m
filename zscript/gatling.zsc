@@ -2,6 +2,6 @@ Class SMiniAmmo : Ammo
 {
 }
 
-Class SMiniGun : UTWeapon
+Class SMiniGun : UnrealWeapon
 {
 }

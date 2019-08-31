@@ -1,5 +1,19 @@
 user int stinger_hudmode = 0;	// hud mode
-user int stinger_hudscale = 1;	// scale of hud (0 = fit to 480p)
 user int stinger_introtype = 0;	// 0 - standard
 				// 1 - unreal '97
 				// 2 - unreal '95
+server bool sting_telegun = false;	// enable teleport capsules
+server bool sting_flares = false;	// enable light/dark flares
+server bool sting_stinger = false;	// unreal bible stinger detonation
+server bool sting_rifle = false;	// old rifle burst altfire
+server bool sting_riflel = false;	// old rifle flashlight
+server bool sting_razor = false;	// razorjack blade charging
+server bool sting_flamet = false;	// use flamethrower model based on old
+					// design and texture rather than the
+					// modern redesign
+server bool sting_automags = false;	// automag dual wielding
+server bool sting_protomags = false;	// protomag dual wielding
+server bool sting_dpistol = false;	// d.pistol altfire always level 0
+server bool sting_pshield = false;	// p.shield does not drain over time
+user bool sting_transext = false;	// use an extended translator graphic
+					// to fit more text

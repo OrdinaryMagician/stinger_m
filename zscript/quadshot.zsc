@@ -6,6 +6,6 @@ Class UShells2 : UShells
 {
 }
 
-Class QuadShot : UTWeapon
+Class QuadShot : UnrealWeapon
 {
 }

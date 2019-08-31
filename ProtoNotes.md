@@ -58,7 +58,7 @@
    one from the Automag.
  - Barrel spin is still pump operated, but reload is break action because I
    felt like it.
- - Might smoothen some of the geometry on the fp mesh. Hexagonal barrels aren't
+ - Smoothed out some of the geometry on the fp mesh. Hexagonal barrels aren't
    exactly the best looking.
  - This damn thing has so many frames of animation now, whew. Also I sure blew
    the polycount budget on this, normally Unreal weapons have anywhere from
@@ -74,15 +74,13 @@
    beam alt-fire too. In addition, a stab is available when out of ammo.
  - Instead of little sparkies here and there I used a fattened copy of the gem
    with an electricity texture.
- - The weapon will use two ammo types. One for individual gems, and another for
-   the total charge of each gem (which will be used for the altfire).
  - This weapon is kind of OP, so it needs to be in the BFG replacement pool.
  - Supposedly meant to use the same ammo as the stinger, but... I'm giving it
-   a separate one.
+   a separate one, for balance reasons.
 
 ### Stunner
 
- - This one can be used as-is.
+ - This one can be used as-is (though I did fix some holes and stuff).
  - Made a separate pickup model with holes filled.
  - Has a similar regenerating ammo as the dispersion pistol.
 
@@ -100,10 +98,10 @@
 
 ### Sentry
 
- - The model clearly has frankenUVs, so I'm going to make actual textures for
-   it. Also it's pretty undetailed so I'll fix that too while I'm at it, and
-   give it nice anims and stuff, maybe make it multipart so it can rotate
-   and whatnot.
+ - The source model had frankenUVs and didn't really look any good. So I've
+   redone the whole thing. Since I didn't feel like making new textures this
+   thing now mixes and matches a couple weapon skins.
+ - It's composed of two models so the gun part can rotate independently.
 
 ### Peacemaker
 

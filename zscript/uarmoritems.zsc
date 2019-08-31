@@ -10,12 +10,6 @@ Class UnrealArmor : UTArmor
 		UnrealArmor.AbsorptionPriority 0;
 	}
 
-	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
-	{
-		Console.Printf("%s absorbs %d",GetTag(),damage);
-		Super.AbsorbDamage(damage,damageType,newdamage);
-	}
-
 	override void AttachToOwner( Actor other )
 	{
 		Super.AttachToOwner(other);
@@ -222,7 +216,7 @@ Class PowerShield : UnrealArmor
 			amount--;
 			gothit = false;
 		}
-		if ( !(level.maptime%15) ) amount--;
+		if ( !(level.maptime%15) && !sting_pshield ) amount--;
 		if ( amount <= 0 )
 		{
 			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_POWERSHIELD"));

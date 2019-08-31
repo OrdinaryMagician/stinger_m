@@ -2,6 +2,6 @@ Class StunnerAmmo : Ammo
 {
 }
 
-Class Stunner : UTWeapon
+Class Stunner : UnrealWeapon
 {
 }

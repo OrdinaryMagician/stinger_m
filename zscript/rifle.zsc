@@ -6,6 +6,6 @@ Class URifleAmmo2 : URifleAmmo
 {
 }
 
-Class URifle : UTWeapon
+Class URifle : UnrealWeapon
 {
 }

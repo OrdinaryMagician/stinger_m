@@ -128,46 +128,47 @@ Class UnrealBackpack : BackpackItem replaces Backpack
 
 Class UTranslator : UnrealInventory
 {
-	bool bCurrentlyActivated, bNewMessage, bNotNewMessage, bShowHint;
+	bool bNewMessage, bNotNewMessage;
 	string NewMessage, Hint;
-	ui TextureID thud;
-	ui Font tfnt;
-
-	ui void DrawTranslator( Vector2 scalev, double ClipX, double ClipY )
-	{
-		if ( thud.IsNull() ) thud = TexMan.CheckForTexture("TranHUD3",TexMan.Type_Any);
-		if ( !tfnt ) tfnt = Font.FindFont('UTahoma10');
-		double CurX, CurY;
-		CurX = ClipX/2-128;
-		CurY = ClipY/2-68;
-		Screen.DrawTexture(thud,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
-		String ttxt;
-		if ( bShowHint && (Hint.length() > 0) ) ttxt = String.Format("%s: %s",StringTable.Localize("$TR_HINT"),Hint);
-		else if ( NewMessage.length() > 0 ) ttxt = NewMessage;
-		else ttxt = StringTable.Localize("$TR_NOMSG");
-		BrokenLines lines = tfnt.BreakLines(ttxt,220);
-		int th = tfnt.GetHeight();
-		CurX += 20;
-		CurY += 18;
-		for ( int i=0; i<lines.Count() && i<(110/th); i++ )
-		{
-			Screen.DrawText(tfnt,Font.CR_GREEN,CurX,CurY,lines.StringAt(i),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
-			CurY += th-1;
-		}
-	}
+	Array<String> OldMessages, OldHints;
 
 	override void Travelled()
 	{
 		Super.Travelled();
 		NewMessage = Hint = "";
+		OldMessages.Clear();
+		OldHints.Clear();
 	}
 
 	override bool Use( bool pickup )
 	{
 		if ( pickup ) return false;
-		bActive = bCurrentlyActivated = !bCurrentlyActivated;
-		if ( !bActive ) bShowHint = bNewMessage = bNotNewmessage = false;
+		if ( Owner.player == players[consoleplayer] )
+			Menu.SetMenu('TranslatorMenu');
+		bNewMessage = bNotNewmessage = false;
 		return false;
+	}
+
+	void AddMessage( String msg, String hnt )
+	{
+		int found = -1;
+		for ( int i=0; i<OldMessages.Size(); i++ )
+		{
+			if ( OldMessages[i] != msg ) continue;
+			found = i;
+		}
+		if ( found != -1 )
+		{
+			OldMessages.Delete(found);
+			OldHints.Delete(found);
+		}
+		if ( (NewMessage != msg) && (NewMessage.Length() > 0) )
+		{
+			OldMessages.Push(NewMessage);
+			OldHints.Push(Hint);
+		}
+		NewMessage = msg;
+		Hint = hnt;
 	}
 
 	Default
@@ -176,6 +177,83 @@ Class UTranslator : UnrealInventory
 		Inventory.PickupMessage "$I_TRANSLATOR";
 		Inventory.Icon "I_Tran";
 		Inventory.MaxAmount 1;
+	}
+	States
+	{
+	Spawn:
+		TRNS A -1;
+		Stop;
+	}
+}
+
+// To be placed by mappers
+// Uses two UDMF-settable user strings
+// AMBUSH: only triggered by script activation, not touch
+Class TranslatorEvent : Actor
+{
+	String user_message, user_hint;
+	Array<Actor> Touchers;
+
+	Default
+	{
+		Radius 40;
+		Height 80;
+		+SPECIAL;
+		+NOGRAVITY;
+		+INVISIBLE;
+	}
+	virtual void TriggerMessage( Actor who )
+	{
+		if ( special1 > gametic ) return;
+		let Translator = UTranslator(who.FindInventory("UTranslator"));
+		if ( !Translator ) return;
+		special1 = gametic+8;
+		if ( who.CheckLocalView() )
+		{
+			if ( special2 ) Console.Printf(StringTable.Localize("$TR_MSG"));
+			else Console.Printf(StringTable.Localize("$TR_NEWMSG"));
+			S_Sound("translator/event",CHAN_VOICE|CHAN_UI);
+		}
+		Translator.AddMessage(user_message,user_hint);
+		if ( special2 ) Translator.bNotNewMessage = true;
+		else Translator.bNewMessage = true;
+		special2 = 1;
+	}
+	// GZDoom doesn't have Touch/UnTouch like UE1 so I have to improvise
+	override void Tick()
+	{
+		Super.Tick();
+		for ( int i=0; i<Touchers.Size(); i++ )
+		{
+			bool deletthis = false;
+			if ( Touchers[i].pos.x+Touchers[i].radius < pos.x-radius ) deletthis = true;
+			if ( Touchers[i].pos.x-Touchers[i].radius > pos.x+radius ) deletthis = true;
+			if ( Touchers[i].pos.y+Touchers[i].radius < pos.y-radius ) deletthis = true;
+			if ( Touchers[i].pos.y-Touchers[i].radius > pos.y+radius ) deletthis = true;
+			if ( Touchers[i].pos.z+Touchers[i].height < pos.z ) deletthis = true;
+			if ( Touchers[i].pos.z > pos.z+height ) deletthis = true;
+			if ( !deletthis ) continue;
+			Touchers.Delete(i);
+			i--;
+		}
+	}
+	override void Touch( Actor toucher )
+	{
+		if ( bAMBUSH || !toucher || !toucher.player ) return;
+		for ( int i=0; i<Touchers.Size(); i++ ) if ( Touchers[i] == toucher ) return;
+		Touchers.Push(toucher);
+		TriggerMessage(toucher);
+	}
+	override void Activate( Actor activator )
+	{
+		if ( !activator || !activator.player ) return;
+		TriggerMessage(activator);
+	}
+	States
+	{
+	Spawn:
+		SMSG A -1;
+		Stop;
 	}
 }
 
@@ -188,7 +266,7 @@ Class VoiceBox : UnrealInventory
 		Tag "$T_VOICEBOX";
 		Inventory.PickupMessage "$I_VOICEBOX";
 		Inventory.Icon "I_VoiceB";
-		Inventory.MaxAmount 5;
+		Inventory.MaxAmount 3;
 		UnrealInventory.Charge 600;
 	}
 	override void Tick()
@@ -209,18 +287,18 @@ Class VoiceBox : UnrealInventory
 	override bool Use( bool pickup )
 	{
 		if ( pickup || bActive ) return false;
-		bActive = true;
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(Owner.pitch,Owner.angle,Owner.roll);
 		Vector3 origin = Owner.Vec2OffsetZ(0,0,Owner.player.viewz);
 		origin = level.Vec3Offset(origin,x*20.-z*8.);
 		box = Spawn("VoiceBoxActive",origin);
 		box.ReactionTime = Charge;
-		box.vel = x*12.;
-		box.vel.z += 3.;
+		box.vel = x*9.;
+		box.vel.z += 1.;
 		box.target = Owner;
 		box.angle = Owner.angle;
 		box.pitch = Owner.pitch;
+		bActive = true;
 		return false;
 	}
 	States
@@ -266,13 +344,15 @@ Class VoiceBoxHitbox : Actor
 Class VoiceBoxActive : Actor
 {
 	Actor b;
-	bool alreadyhit;
+	double desiredangle, anglevel, oldangle;
 
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
 		b = Spawn("VoiceBoxHitbox",pos);
 		b.master = self;
+		desiredangle = FRandom[Junk](0,360);
+		anglevel = FRandom[Junk](5,15);
 	}
 	action void A_VoiceBoxPlay()
 	{
@@ -292,19 +372,30 @@ Class VoiceBoxActive : Actor
 		if ( invoker.b ) invoker.b.A_AlertMonsters(0,AMF_TARGETEMITTER);
 		for ( int i=0; i<10; i++ ) if ( !Random[Voicebox](0,30) ) A_PlaySound(BattleSounds[i],CHAN_AUTO,FRandom[Voicebox](0.5,1.0));
 	}
+	override void Tick()
+	{
+		oldangle = angle;
+		Super.Tick();
+		if ( deltaangle(angle,desiredangle) ~== 0 ) angle = desiredangle;
+		else angle += clamp(deltaangle(angle,desiredangle),-anglevel,anglevel);
+	}
 	Default
 	{
 		Radius 6;
 		Height 6;
 		PROJECTILE;
 		-NOGRAVITY;
-		+USEBOUNCESTATE;
 		+SKYEXPLODE;
 		+MOVEWITHSECTOR;
 		+CANBOUNCEWATER;
+		+BOUNCEAUTOOFF;
+		+BOUNCEAUTOOFFFLOORONLY;
+		+USEBOUNCESTATE;
+		+INTERPOLATEANGLES;
 		BounceType "Hexen";
-		BounceFactor 0.3;
-		WallBounceFactor 0.3;
+		BounceFactor 0.5;
+		BounceSound "transloc/bounce";
+		WallBounceFactor 0.5;
 		Gravity 0.35;
 		ReactionTime 200;
 	}
@@ -314,23 +405,14 @@ Class VoiceBoxActive : Actor
 		VBOX A -1;
 		Stop;
 	Bounce:
-		VBOX A 0
-		{
-			if ( alreadyhit )
-			{
-				ClearBounce();
-				ExplodeMissile();
-			}
-			else
-			{
-				A_SetPitch(0);
-				A_PlaySound("transloc/bounce");
-				if ( BlockingFloor ) alreadyhit = true;
-			}
-		}
+		VBOX A 0 { angle = invoker.oldangle; }
 		Goto Spawn;
 	Death:
-		VBOX A 30;
+		VBOX A 30
+		{
+			invoker.anglevel *= 0;
+			A_PlaySound("voice/activate");
+		}
 		VBOX ABCDEFGHIJ 1
 		{
 			A_VoiceBoxPlay();
@@ -339,13 +421,280 @@ Class VoiceBoxActive : Actor
 		}
 		Goto Death+1;
 	Death2:
-		TNT1 A 1 A_Log("// TODO explosion");
+		VBOX A 0
+		{
+			if ( invoker.b ) invoker.b.Destroy();
+			A_PlaySound("flare/explode",CHAN_VOICE);
+			A_NoGravity();
+			A_Stop();
+			A_SetRenderStyle(1.,STYLE_Add);
+			SetZ(pos.z+16);
+			Spawn("FlareXLight",pos);
+			bMOVEWITHSECTOR = false;
+			bFORCEXYBILLBOARD = true;
+			A_SetScale(FRandomPick[ExploS](-1.5,1.5),FRandomPick[ExploS](-1.5,1.5));
+			return A_Jump(256,"Explo1","Explo2","Explo3","Explo4","Explo5");
+		}
+	Explo1:
+		EXP1 ABCDEFGH 3 Bright;
+		Stop;
+	Explo2:
+		EXP2 ABCDEFGH 3 Bright;
+		Stop;
+	Explo3:
+		EXP3 ABCDEFGH 3 Bright;
+		Stop;
+	Explo4:
+		EXP4 ABCDEFGH 3 Bright;
+		Stop;
+	Explo5:
+		EXP5 ABCDEFGH 3 Bright;
 		Stop;
 	}
 }
 
 Class Flare : UnrealInventory
 {
+	Default
+	{
+		Tag "$T_FLARES";
+		Inventory.PickupMessage "$I_FLARES";
+		Inventory.Icon "I_Flare";
+		Inventory.MaxAmount 20;
+	}
+	override bool Use( bool pickup )
+	{
+		if ( pickup ) return false;
+		Vector3 x, y, z;
+		[x, y, z] = dt_CoordUtil.GetAxes(Owner.pitch,Owner.angle,Owner.roll);
+		Vector3 origin = level.Vec3Offset(Owner.Vec2OffsetZ(0,0,Owner.player.viewz),x*10.-z*8.);
+		let a = Spawn("FlareThrown",origin);
+		a.target = Owner;
+		a.angle = Owner.angle;
+		a.pitch = Owner.pitch;
+		a.vel += x*a.speed;
+		return true;
+	}
+	States
+	{
+	Spawn:
+		FLAR A -1;
+		Stop;
+	}
+}
+
+Class FlareThrown : Actor
+{
+	double pitchvel, anglevel, rollvel;
+	double desiredangle;
+	bool rotatetodesired;
+	double lastpitch, lastangle, lastroll;
+	Actor b;
+	Default
+	{
+		Radius 6;
+		Height 6;
+		+NOBLOCKMAP;
+		+MISSILE;
+		+MOVEWITHSECTOR;
+		+THRUACTORS;
+		+USEBOUNCESTATE;
+		+INTERPOLATEANGLES;
+		+BOUNCEAUTOOFF;
+		+BOUNCEAUTOOFFFLOORONLY;
+		+NOTELEPORT;
+		+FORCERADIUSDMG;
+		+NODAMAGETHRUST;
+		DamageType "Exploded";
+		Speed 12;
+		VSpeed 2;
+		Mass 1;
+		Gravity 0.35;
+		BounceType "Hexen";
+		WallBounceFactor 0.6;
+		BounceFactor 0.6;
+		ReactionTime 350;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		pitchvel = FRandom[Junk](5,15)*RandomPick[Junk](-1,1);
+		anglevel = FRandom[Junk](5,15)*RandomPick[Junk](-1,1);
+		rollvel = FRandom[Junk](5,15)*RandomPick[Junk](-1,1);
+	}
+	override void Tick()
+	{
+		lastpitch = pitch;
+		lastangle = angle;
+		lastroll = roll;
+		Super.Tick();
+		if ( rotatetodesired )
+		{
+			if ( deltaangle(pitch,0) ~== 0 ) pitch = 0;
+			else pitch += clamp(deltaangle(pitch,0),-pitchvel,pitchvel);
+			if ( deltaangle(angle,desiredangle) ~== 0 ) angle = desiredangle;
+			else angle += clamp(deltaangle(angle,desiredangle),-anglevel,anglevel);
+			if ( deltaangle(roll,0) ~== 0 ) roll = 0;
+			else roll += clamp(deltaangle(roll,0),-rollvel,rollvel);
+		}
+		else
+		{
+			angle += anglevel;
+			pitch += pitchvel;
+			roll += rollvel;
+		}
+		if ( ReactionTime <= 0 ) return;
+		if ( GetAge() < 9 ) return;
+		if ( waterlevel > 0 )
+		{
+			if ( tracer ) tracer.Destroy();
+			if ( b ) b.Destroy();
+			A_StopSound(CHAN_VOICE);
+			ReactionTime = 0;
+			return;
+		}
+		if ( !b )
+		{
+			A_PlaySound("flare/on");
+			A_PlaySound("flare/loop",CHAN_VOICE,.5,true);
+			tracer = Spawn("FlareThrownX",pos);
+			tracer.angle = angle;
+			tracer.pitch = pitch;
+			tracer.target = self;
+			b = Spawn("FlareHitbox",pos);
+			b.master = self;
+		}
+		b.A_AlertMonsters(0,AMF_TARGETEMITTER);
+		ReactionTime--;
+	}
+	States
+	{
+	Spawn:
+		FLAR A -1;
+		Stop;
+	Bounce:
+		FLAR A 0
+		{
+			pitch = lastpitch;
+			angle = lastangle;
+			roll = lastroll;
+			rotatetodesired = true;
+			desiredangle = FRandom[Junk](0,360);
+			pitchvel = abs(pitchvel)*0.75;
+			anglevel = abs(anglevel)*0.75;
+			rollvel = abs(rollvel)*0.75;
+		}
+		Goto Spawn;
+	Death:
+		FLAR A 0 { anglevel *= 0; }
+		FLAR A 1
+		{
+			if ( waterlevel > 0 )
+			{
+				if ( tracer ) tracer.Destroy();
+				if ( b ) b.Destroy();
+				A_StopSound(CHAN_VOICE);
+				return ResolveState("Fizz");
+			}
+			return A_JumpIf(ReactionTime<=0,1);
+		}
+		Wait;
+		FLAR A 0
+		{
+			if ( tracer ) tracer.Destroy();
+			if ( b ) b.Destroy();
+			if ( waterlevel > 0 )
+			{
+				return ResolveState("Fizz");
+			}
+			A_StopSound(CHAN_VOICE);
+			A_PlaySound("flare/explode");
+			A_Explode(50,50);
+			A_NoGravity();
+			A_Stop();
+			A_SetRenderStyle(1.,STYLE_Add);
+			SetZ(pos.z+9);
+			Spawn("FlareXLight",pos);
+			bMOVEWITHSECTOR = false;
+			bFORCEXYBILLBOARD = true;
+			A_SetScale(FRandomPick[ExploS](-1.5,1.5),FRandomPick[ExploS](-1.5,1.5));
+			return A_Jump(256,"Explo1","Explo2","Explo3","Explo4","Explo5");
+		}
+	Explo1:
+		EXP1 ABCDEFGH 3 Bright;
+		Stop;
+	Explo2:
+		EXP2 ABCDEFGH 3 Bright;
+		Stop;
+	Explo3:
+		EXP3 ABCDEFGH 3 Bright;
+		Stop;
+	Explo4:
+		EXP4 ABCDEFGH 3 Bright;
+		Stop;
+	Explo5:
+		EXP5 ABCDEFGH 3 Bright;
+		Stop;
+	Fizz:
+		FLAR A 1
+		{
+			special1++;
+			if ( special1 > 150 ) A_FadeOut();
+		}
+		Wait;
+	}
+}
+
+Class FlareXLight : PaletteLight
+{
+	Default
+	{
+		ReactionTime 25;
+		Args 0,0,0,80;
+	}
+}
+
+Class FlareHitbox : VoiceBoxHitbox
+{
+	Default
+	{
+		Tag "$T_FLARES";
+		Radius 4;
+		Height 6;
+		Health 1;
+	}
+}
+
+Class FlareThrownX : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		+NOGRAVITY;
+		+NOCLIP;
+		+DONTSPLASH;
+		+INTERPOLATEANGLES;
+		Radius 0.1;
+		Height 0;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target )
+		{
+			Destroy();
+			return;
+		}
+		SetOrigin(target.pos,true);
+		angle = target.angle;
+		pitch = target.pitch;
+	}
+	States
+	{
+	Spawn:
+		FLAR A -1 Bright;
+		Stop;
+	}
 }
 
 Class LightFlare : UnrealInventory
@@ -379,6 +728,7 @@ Class Dampener : UnrealInventory
 		{
 			Owner.A_PlaySound("dampener/off",CHAN_ITEM);
 			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_DAMPENER"));
+			if ( Amount <= 0 ) DepleteOrDestroy();
 		}
 	}
 	Default
@@ -386,7 +736,7 @@ Class Dampener : UnrealInventory
 		Tag "$T_DAMPENER";
 		Inventory.PickupMessage "$I_DAMPENER";
 		Inventory.Icon "I_Dampen";
-		Inventory.MaxAmount 5;
+		Inventory.MaxAmount 3;
 		UnrealInventory.Charge 1000;
 	}
 	States
@@ -450,28 +800,8 @@ Class Forcefield : UnrealInventory
 	}
 }
 
-Class ForcefieldX : Actor
+Class ForcefieldX : AsmdAmmoX
 {
-	Default
-	{
-		RenderStyle "Add";
-		+NOGRAVITY;
-		+NOCLIP;
-		+DONTSPLASH;
-		Radius 0.1;
-		Height 0;
-	}
-	override void Tick()
-	{
-		Super.Tick();
-		if ( !target )
-		{
-			Destroy();
-			return;
-		}
-		Warp(target,flags:WARPF_COPYINTERPOLATION|WARPF_NOCHECKPOSITION);
-		bInvisible = target.bInvisible||!target.InStateSequence(target.CurState,target.FindState("Spawn"));
-	}
 	States
 	{
 	Spawn:
@@ -514,6 +844,7 @@ Class ForceFieldLight : DynamicLight
 Class ForcefieldEffect : Actor
 {
 	double nvol;
+	int lct;
 
 	Default
 	{
@@ -544,13 +875,14 @@ Class ForcefieldEffect : Actor
 		A_PlaySound("ffield/active",CHAN_VOICE,0.6,true);
 		let tracer = Spawn("ForceFieldLight",pos);
 		tracer.target = self;
+		lct = 24;
 	}
 	States
 	{
 	Spawn:
-		FFLD ABCDEFGHI 3 Bright;
-		FFLD J 700 Bright;
-		FFLD J 35 Bright
+		FFLD ABCDEFGHIJ 3 Bright;
+		#### # 700 Bright;
+		#### # 35 Bright
 		{
 			A_UnsetShootable();
 			A_UnsetSolid();

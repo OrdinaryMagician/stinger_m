@@ -16,18 +16,21 @@ Class UnrealHUD : BaseStatusBar
 	int lastseentic, Count;
 
 	// Fonts
-	Font LargeFont, LargeRedFont, MedFont, WhiteFont, TinyFont, TinyWhiteFont, TinyRedFont;
+	Font LargeFont, LargeRedFont, UBigFont, MedFont, WhiteFont, TinyFont, TinyWhiteFont, TinyRedFont;
 	HUDFont mMapFont;
 
 	// Common Textures
 	TextureID HalfHud, HudLine, HudAmmo, IconHeal, IconSkul, IconSel, IconBase, KeyIcons[7];
 
-	// These can't be used yet
-	/*String PickupMsg;
+	// messaging stuff
+	String PickupMsg;
 	int PickupMsgTic;
 	String ShortMsg[4];
 	int ShortMsgTic[4];
-	int ShortMsgCol[4];*/
+	int ShortMsgCol[4];
+	String MidPrintStr;
+	int MidPrintTic;
+	bool MidPrintLarge;
 
 	// 0.83 HUD stuff
 	String OldAmmo[18];
@@ -36,9 +39,13 @@ Class UnrealHUD : BaseStatusBar
 	Class<Inventory> OldArmorType[6];
 	String OldKeys[7];
 	HUDFont mOldDigits;
+	Font OldLargeFont, OldSmallFont;
 
 	// Translations
 	int RedIcon;
+
+	// Translator menu interaction
+	transient bool bTranslatorActive;
 
 	override void Init()
 	{
@@ -51,14 +58,14 @@ Class UnrealHUD : BaseStatusBar
 		GreenColor = "00 FF 00";
 		BlackColor = "00 00 00";
 		DrawColor = "FF FF FF";
-		LargeFont = Font.FindFont('ULargeFont');
-		LargeRedFont = Font.FindFont('ULargeRedFont');
-		MedFont = Font.FindFont('UMedFont');
-		WhiteFont = Font.FindFont('UWhiteFont');
-		TinyFont = Font.FindFont('UTinyFont');
-		TinyWhiteFont = Font.FindFont('UTinyWhiteFont');
-		TinyRedFont = Font.FindFont('UTinyRedFont');
-		mMapFont = HUDFont.Create(WhiteFont);
+		LargeFont = Font.GetFont('ULargeFont');
+		LargeRedFont = Font.GetFont('ULargeRedFont');
+		UBigFont = Font.GetFont('UBigFont');
+		MedFont = Font.GetFont('UMedFont');
+		WhiteFont = Font.GetFont('UWhiteFont');
+		TinyFont = Font.GetFont('UTinyFont');
+		TinyWhiteFont = Font.GetFont('UTinyWhiteFont');
+		TinyRedFont = Font.GetFont('UTinyRedFont');
 		HalfHud = TexMan.CheckForTexture("HalfHud",TexMan.Type_Any);
 		HudLine = TexMan.CheckForTexture("HudLine",TexMan.Type_Any);
 		HudAmmo = TexMan.CheckForTexture("HudAmmo",TexMan.Type_Any);
@@ -74,7 +81,10 @@ Class UnrealHUD : BaseStatusBar
 		KeyIcons[4] = TexMan.CheckForTexture("I_SkullB",TexMan.Type_Any);
 		KeyIcons[5] = TexMan.CheckForTexture("I_SkullY",TexMan.Type_Any);
 		KeyIcons[6] = TexMan.CheckForTexture("I_KeyG",TexMan.Type_Any);
-		mOldDigits = HUDFont.Create(Font.FindFont('U083Digits'),26,Mono_CellLeft);
+		mOldDigits = HUDFont.Create(Font.GetFont('U083Digits'),26,Mono_CellLeft);
+		mMapFont = HUDFont.Create(WhiteFont);
+		OldLargeFont = Font.GetFont('UOldLargeFont');
+		OldSmallFont = Font.GetFont('UOldSmallFont');
 		OldAmmo[0] = "Disp083";
 		OldAmmo[1] = "Clip083";
 		OldAmmo[2] = "Tary083";
@@ -137,8 +147,13 @@ Class UnrealHUD : BaseStatusBar
 		Super.Draw(state,TicFrac);
 		FracTic = TicFrac;
 		HudMode = CVar.GetCVar('stinger_hudmode',players[consoleplayer]).GetInt();
-		scalev.x = scalev.y = Max(0,CVar.GetCVar('stinger_hudscale',players[consoleplayer]).GetInt());
-		if ( scalev.x == 0 ) scalev.x = scalev.y = max(1,min(Screen.GetWidth()/640.,Screen.GetHeight()/480.));
+		scalev.x = scalev.y = CVar.GetCVar('hud_scale',players[consoleplayer]).GetInt();
+		if ( scalev.x == 0 ) scalev.x = scalev.y = max(1,min(Screen.GetWidth()/640.,Screen.GetHeight()/480.));	// the typical behavior is scaling to 640x400 but we're expecting 4:3 here
+		else if ( scalev.x < 0 )
+		{
+			scalev.x = CleanXFac_1;
+			scalev.y = CleanYFac_1;
+		}
 		ClipX = Screen.GetWidth()/scalev.x;
 		ClipY = Screen.GetHeight()/scalev.y;
 		CurX = 0;
@@ -149,21 +164,22 @@ Class UnrealHUD : BaseStatusBar
 				UnrealInventory(i).PreRender(lbottom);
 		if ( CPlayer.ReadyWeapon is 'UTWeapon' )
 			UTWeapon(CPlayer.ReadyWeapon).PreRender(lbottom);
-		if ( state == HUD_StatusBar )
-		{
-			BeginStatusBar();
-			DrawUnrealBar();
-		}
-		else if ( state == HUD_Fullscreen )
+		if ( state == HUD_Fullscreen )
 		{
 			BeginHUD();
 			DrawUnrealHUD();
+		}
+		else if ( state == HUD_StatusBar )
+		{
+			BeginStatusBar();
+			DrawUnrealBar();
 		}
 		for ( Inventory i=CPlayer.mo.inv; i; i=i.inv )
 			if ( i is 'UnrealInventory' )
 				UnrealInventory(i).PostRender(lbottom);
 		if ( CPlayer.ReadyWeapon is 'UTWeapon' )
 			UTWeapon(CPlayer.ReadyWeapon).PostRender(lbottom);
+		DrawIdentifyInfo(state);
 		DrawMessages(state);
 	}
 
@@ -360,11 +376,7 @@ Class UnrealHUD : BaseStatusBar
 			}
 		}
 		// draw translator
-		if ( translator )
-		{
-			if ( translator.bCurrentlyActivated ) translator.DrawTranslator(scalev,ClipX,ClipY);
-			else bFlashTranslator = (translator.bNewMessage || translator.bNotNewMessage);
-		}
+		if ( translator ) bFlashTranslator = (translator.bNewMessage || translator.bNotNewMessage);
 		// draw the inventory bar
 		if ( (HUDMode == 5) || !SelectedItem ) return;
 		Count++;
@@ -375,7 +387,7 @@ Class UnrealHUD : BaseStatusBar
 			DrawHudIcon(x,y,Prev,bRed);
 			if ( Prev.MaxAmount > 1 ) DrawNumberOf(Prev,x,y);
 		}
-		bRed = ((SelectedItem is 'UnrealInventory') && UnrealInventory(SelectedItem).bActive) || (SelectedItem is 'Powerup') || ((SelectedItem is 'UTranslator') && bFlashTranslator);
+		bRed = ((SelectedItem is 'UnrealInventory') && UnrealInventory(SelectedItem).bActive) || (SelectedItem is 'Powerup') || ((SelectedItem is 'UTranslator') && ((bTranslatorActive) || (bFlashTranslator && ((gametic%8)<4))));
 		if ( !Next && !Prev && !bDrawOne ) DrawHudIcon(x+64,y,SelectedItem,bRed);
 		else DrawHudIcon(x+32,y,SelectedItem,bRed);
 		CurX = x+32;
@@ -485,7 +497,7 @@ Class UnrealHUD : BaseStatusBar
 			Screen.DrawTexture(HudLine,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_WindowRightF,Min(28.*(CPlayer.mo.Health/double(CPlayer.mo.SpawnHealth())),28.));
 	}
 
-	private void DrawIdentifyInfo()
+	private void DrawIdentifyInfo( int state )
 	{
 		double lalpha = 2.0-((gametic+fractic)-lastseentic)/Thinker.TICRATE;
 		if ( !lastseen || (lalpha <= 0) ) return;
@@ -496,14 +508,15 @@ Class UnrealHUD : BaseStatusBar
 			cl1 = String.Format("Dark%s",cl2);
 		}
 		String tname = String.Format("\c[%s]%s:\c[%s] %s",cl1,StringTable.Localize("$M_NAME"),cl2,lastseen.player.GetUserName());
-		CurX = (ClipX-WhiteFont.StringWidth(tname))/2;
+		let fnt = (state==HUD_Fullscreen)?WhiteFont:OldSmallFont;
+		CurX = (ClipX-fnt.StringWidth(tname))/2;
 		CurY = ClipY-54;
-		Screen.DrawText(WhiteFont,Font.CR_UNTRANSLATED,CurX,CurY,tname,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_Alpha,lalpha/2.);
+		Screen.DrawText(fnt,Font.CR_UNTRANSLATED,CurX,CurY,tname,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_Alpha,lalpha/2.);
 		if ( !deathmatch || (lastseen.IsTeammate(CPlayer.mo)) )
 		{
-			CurY += 1.2*WhiteFont.GetHeight();
+			CurY += 1.2*fnt.GetHeight();
 			tname = String.Format("\c[%s]%s:\c[%s] %d",cl1,StringTable.Localize("$M_HEALTH"),cl2,lastseen.Health);
-			Screen.DrawText(WhiteFont,Font.CR_UNTRANSLATED,CurX,CurY,tname,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_Alpha,lalpha/2.);
+			Screen.DrawText(fnt,Font.CR_UNTRANSLATED,CurX,CurY,tname,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_Alpha,lalpha/2.);
 		}
 	}
 
@@ -530,9 +543,27 @@ Class UnrealHUD : BaseStatusBar
 
 	private void DrawUnrealHUD()
 	{
-		if ( HudMode == 5 )
+		if ( HudMode >= 5 )
 		{
-			DrawInventory(ClipX-96,0);
+			// minimal hud
+			int ArmorAmount = 0;
+			for ( Inventory Inv=CPlayer.mo.Inv; Inv; Inv=Inv.Inv )
+			{
+				if ( !(Inv is 'UTArmor') ) continue;
+				ArmorAmount += Inv.Amount;
+			}
+			int AmmoAmount1 = 0, AmmoAmount2 = 0;
+			Ammo amo1, amo2;
+			[amo1, amo2] = GetCurrentAmmo();
+			if ( amo1 )
+			{
+				AmmoAmount1 = amo1.Amount;
+				if ( amo2 ) AmmoAmount2 = amo2.Amount;
+			}
+			String str;
+			if ( amo1 && amo2 && (amo2 != amo1) ) str = String.Format(StringTable.Localize("$S_MINHUD2"),CPlayer.Health,(deathmatch||teamplay)?CPlayer.fragcount:CPlayer.killcount,AmmoAmount2,AmmoAmount1);
+			else str = String.Format(StringTable.Localize("$S_MINHUD"),CPlayer.Health,(deathmatch||teamplay)?CPlayer.fragcount:CPlayer.killcount,AmmoAmount1);
+			Screen.DrawText(OldSmallFont,Font.CR_WHITE,(Screen.GetWidth()-OldSmallFont.StringWidth(str)*CleanXFac_1)/2,CleanYFac_1,str,DTA_CleanNoMove_1,true);
 			return;
 		}
 		if ( ClipX < 320 ) HudMode = 4;
@@ -566,14 +597,32 @@ Class UnrealHUD : BaseStatusBar
 			else if ( HudMode == 3 ) DrawKeys(deathmatch?32:0,ClipY-48,true);
 			else if ( HudMode == 4 ) DrawKeys(deathmatch?32:0,ClipY-16,true);
 		}
-		// Display Identification Info
-		DrawIdentifyInfo();
 	}
 
 	private void DrawUnrealBar()
 	{
 		// 0.83 status bar, just for funsies
 		DrawImage("Bar083",(0,336),DI_ITEM_OFFSETS);
+		// extra widescreen filler
+		bool first = true;
+		double base = -128;
+		double rx, dummy;
+		do
+		{
+			[rx, dummy, dummy] = StatusBarToRealCoords(base,0,HorizontalResolution);
+			DrawImage(first?"BarL083":"BarM083",(base,336),DI_ITEM_OFFSETS);
+			first = false;
+			base -= 128;
+		} while ( rx >= -128 );
+		first = true;
+		base = 640;
+		do
+		{
+			[rx, dummy, dummy] = StatusBarToRealCoords(base,0,HorizontalResolution);
+			DrawImage(first?"BarR083":"BarM083",(base,336),DI_ITEM_OFFSETS);
+			first = false;
+			base += 128;
+		} while ( rx < Screen.GetWidth() );
 		static const float slotofs[] = {525, 84, 128, 173, 216, 259, 349, 392, 436, 481};
 		static const float keyofs[] = {187, 211, 235, 379, 403, 427};
 		for ( int i=0; i<10; i++ )
@@ -626,23 +675,13 @@ Class UnrealHUD : BaseStatusBar
 		if ( HudMode > 5 ) return;
 		// Draw frags in DM
 		if ( deathmatch ) DrawFragCount(ClipX-32,0);
-		// Need to draw the inventory bar (and translator)
+		// Need to draw the inventory bar
 		DrawInventory(ClipX-(deathmatch?128:96),0,false,true);
-		// Display Identification Info
-		DrawIdentifyInfo();
 	}
 
 	override void Tick()
 	{
 		Super.Tick();
-		// prune expired short messages
-		/*for ( int i=0; i<3; i++ )
-		{
-			if ( (gametic-ShortMsgTic[i]) < 70 ) continue;
-			ShortMsg[i] = ShortMsg[i+1];
-			ShortMsgTic[i] = ShortMsgTic[i+1];
-			ShortMsgCol[i] = ShortMsgCol[i+1];
-		}*/
 		CPlayer.inventorytics = 0;
 		vtracer.ignore = CPlayer.mo;
 		vtracer.trace(CPlayer.mo.Vec2OffsetZ(0,0,CPlayer.viewz),CPlayer.mo.CurSector,(cos(CPlayer.mo.angle)*cos(CPlayer.mo.pitch),sin(CPlayer.mo.angle)*cos(CPlayer.mo.pitch),-sin(CPlayer.mo.pitch)),1000,0);
@@ -651,16 +690,17 @@ Class UnrealHUD : BaseStatusBar
 		lastseentic = gametic;
 	}
 
-	// all of this requires features that are not available yet
-	/*override void NewGame()
-	{
-		PickupMsg = "";
-	}
-
 	override void FlushNotify()
 	{
 		for ( int i=0; i<4; i++ )
+		{
 			ShortMsg[i] = "";
+			ShortMsgTic[i] = int.min;
+		}
+		PickupMsg = "";
+		PickupMsgTic = int.min;
+		MidPrintStr = "";
+		MidPrintTic = int.min;
 	}
 
 	override bool ProcessNotify( EPrintLevel printlevel, String outline )
@@ -669,7 +709,7 @@ Class UnrealHUD : BaseStatusBar
 		{
 			// set pickup message
 			PickupMsg = outline;
-			PickupMsgTic = gametic;
+			PickupMsgTic = gametic+50;
 			return true;
 		}
 		else
@@ -685,7 +725,26 @@ Class UnrealHUD : BaseStatusBar
 			else if ( (printlevel == PRINT_CHAT) || (printlevel == PRINT_TEAMCHAT) ) ShortMsgCol[0] = Font.CR_GREEN;
 			else ShortMsgCol[0] = Font.CR_WHITE;
 			ShortMsg[0] = outline;
-			ShortMsgTic[0] = gametic;
+			ShortMsgTic[0] = gametic+70;
+			return true;
+		}
+		return false;
+	}
+
+	override bool ProcessMidPrint( Font fnt, String msg, bool bold )
+	{
+		if ( !fnt || (fnt == SmallFont) || (fnt == OriginalSmallFont) || (fnt == NewSmallFont) )
+		{
+			MidPrintStr = msg;
+			MidPrintLarge = false;
+			MidPrintTic = gametic+70;
+			return true;
+		}
+		else if ( fnt == BigFont )
+		{
+			MidPrintStr = msg;
+			MidPrintLarge = true;
+			MidPrintTic = gametic+70;
 			return true;
 		}
 		return false;
@@ -702,19 +761,24 @@ Class UnrealHUD : BaseStatusBar
 			fullstr.Remove(7,1);
 		Screen.DrawText(WhiteFont,Font.CR_GREEN,xpos,ypos,fullstr,DTA_CleanNoMove_1,true);
 		return true;
-	}*/
+	}
 
 	private void DrawMessages( int state )
 	{
-		// TODO add map intro text like in Unreal
-		/*double malpha = 2.0-((gametic+fractic)-PickupMsgTic)/Thinker.TICRATE;
 		int xpos, ypos;
-		if ( PickupMsg.Length() > 0 && (malpha > 0) )
+		if ( (MidPrintStr.Length() > 0) && (MidPrintTic > gametic) )
+		{
+			let mfnt = MidPrintLarge?UBigFont:WhiteFont;
+			xpos = (Screen.GetWidth()-mfnt.StringWidth(MidPrintStr)*CleanXFac_1)/2;
+			ypos = 96*CleanYFac_1;
+			Screen.DrawText(mfnt,Font.FindFontColor('UTHudText'),xpos,ypos,MidPrintStr,DTA_CleanNoMove_1,true,DTA_Alpha,clamp((MidPrintTic-gametic+fractic)*0.05,0,1),DTA_LegacyRenderStyle,STYLE_Add);
+		}
+		if ( PickupMsgTic > gametic )
 		{
 			xpos = (Screen.GetWidth()-WhiteFont.StringWidth(PickupMsg)*CleanXFac_1)/2;
 			if ( state == HUD_Statusbar ) ypos = GetTopOfStatusBar()-21*CleanYFac_1;
 			else ypos = Screen.GetHeight()-41*CleanYFac_1;
-			Screen.DrawText(WhiteFont,Font.CR_WHITE,xpos,ypos,PickupMsg,DTA_CleanNoMove_1,true,DTA_Alpha,min(1.,malpha),DTA_LegacyRenderStyle,STYLE_Add);
+			Screen.DrawText(WhiteFont,Font.CR_WHITE,xpos,ypos,PickupMsg,DTA_CleanNoMove_1,true,DTA_Alpha,clamp((PickupMsgTic-gametic+fractic)*0.05,0,1),DTA_LegacyRenderStyle,STYLE_Add);
 		}
 		// draw messages
 		xpos = 4*CleanXFac_1;
@@ -722,21 +786,20 @@ Class UnrealHUD : BaseStatusBar
 		if ( (state == HUD_Fullscreen) && (HudMode < 2) && DrawArmor(0,0,false,true) ) ypos += int(32*scalev.y);
 		for ( int i=3; i>=0; i-- )
 		{
-			if ( (ShortMsg[i].Length() <= 0) || (gametic-ShortMsgTic[i] >= 70) ) continue;
+			if ( ShortMsgTic[i] < gametic ) continue;
 			let lines = WhiteFont.BreakLines(ShortMsg[i],CleanWidth_1/2);
 			for ( int j=0; j<lines.Count(); j++ )
 			{
 				Screen.DrawText(WhiteFont,ShortMsgCol[i],xpos,ypos,lines.StringAt(j),DTA_CleanNoMove_1,true);
 				ypos += (WhiteFont.GetHeight()+2)*CleanYFac_1;
 			}
-		}*/
+		}
 	}
 
 	override void DrawAutomapHUD( double ticFrac )
 	{
 		int crdefault = Font.CR_GREY;
 		int highlight = Font.CR_RED;
-		double cbottom = Screen.GetHeight()*0.99;
 		let scale = GetHUDScale();
 		double textdist = 8./scale.Y;
 		int height = WhiteFont.GetHeight();
@@ -751,6 +814,7 @@ Class UnrealHUD : BaseStatusBar
 		double ltop = 0, rtop = 0;
 		if ( (HudMode < 6) && CPlayer.mo.InvSel )
 			rtop += (32*scalev.y)/scale.Y;
+		double cbottom = GetTopOfStatusBar()-textdist;
 		int protrusion = GetProtrusion(swidth/hres);
 		[tmp,tmp,hres] = StatusbarToRealCoords(0,0,protrusion);
 		width += int((swidth-hres)/scale.X);

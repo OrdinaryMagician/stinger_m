@@ -5,6 +5,6 @@ Class URocketAmmo2 : URocketAmmo
 {
 }
 
-Class Eightball : UTWeapon
+Class Eightball : UnrealWeapon
 {
 }

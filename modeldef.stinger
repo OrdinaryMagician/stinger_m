@@ -66,11 +66,29 @@ Model "StingerProjectile"
 Model "Stinger"
 {
 	Path "models"
+	Model 2 "Flat_d.3d"
+	Skin 2 "StingMuz.png"
+	AngleOffset 90
+	PitchOffset 90
+	Scale 0.08 0.08 0.08
+	Offset 9 -35 -11
+
+	FrameIndex STFF A 2 0
+	Scale 0.09 0.09 0.09
+	PitchOffset 180
+	FrameIndex STFF B 2 0
+	Scale 0.07 0.07 0.07
+	PitchOffset 270
+	FrameIndex STFF C 2 0
+	Scale 0.06 0.06 0.06
+	PitchOffset 0
+	FrameIndex STFF D 2 0
+/*	Path "models"
 	Model 2 "StingerM_d.3d"
 	SurfaceSkin 2 0 "FireEffect18.png"
-	Scale 0.1 -0.1 0.1
+	Scale 0.05 -0.05 0.05
 	AngleOffset 90
-	Offset 9 -12.5 -12
+	Offset 4.5 -6.25 -6
 	DONTCULLBACKFACES
 
 	// Fire
@@ -84,7 +102,7 @@ Model "Stinger"
 	FrameIndex STFH D 2 39
 	FrameIndex STFH E 2 40
 	FrameIndex STFH F 2 41
-	FrameIndex STFH G 2 42
+	FrameIndex STFH G 2 42*/
 }
 
 Model "Stinger"
@@ -92,9 +110,9 @@ Model "Stinger"
 	Path "models"
 	Model 0 "StingerM_d.3d"
 	SurfaceSkin 0 1 "Sting1.png"
-	Scale 0.1 -0.1 0.1
+	Scale 0.05 -0.05 0.05
 	AngleOffset 90
-	Offset 9 -12.5 -12
+	Offset 4.5 -6.25 -6
 
 	// Select
 	FrameIndex STNS A 0 0

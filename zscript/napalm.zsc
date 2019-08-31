@@ -2,6 +2,6 @@ Class FlameAmmo : Ammo
 {
 }
 
-Class UFlamethrower : UTWeapon
+Class UFlamethrower : UnrealWeapon
 {
 }

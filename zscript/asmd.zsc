@@ -104,12 +104,538 @@ Class ASMDAmmo2 : ASMDAmmo
 	}
 }
 
-Class ASMD : UTWeapon
+Class ASMDLight : EnforcerLight
 {
-	override void PlayUpSound( Actor origin )
+	Default
 	{
-		origin.A_PlaySound(upsound,CHAN_WEAPON,Dampener.Active(origin)?.1:1.);
+		Args 64,32,255,70;
 	}
+}
+
+Class ASMDBeamRing : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		+NOGRAVITY;
+		+NOCLIP;
+		+DONTSPLASH;
+		Radius 0.1;
+		Height 0;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( isFrozen() ) return;
+		A_FadeOut(0.05,0);
+	}
+	States
+	{
+	Spawn:
+		RNGX ABCDEF 4 Bright;
+		Stop;
+	}
+}
+Class ASMDSBeamRing : ASMDBeamRing {}
+Class ASMDBlastRing : ASMDBeamRing
+{
+	override void Tick()
+	{
+		Actor.Tick();
+		if ( isFrozen() ) return;
+		A_FadeOut(0.028,0);
+	}
+	States
+	{
+	Spawn:
+		RNGX ABCDEF 7 Bright;
+		Stop;
+	}
+}
+
+Class ASMDRingTrail : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		+NOGRAVITY;
+		+NOCLIP;
+		+DONTSPLASH;
+		+INTERPOLATEANGLES;
+		Radius 0.1;
+		Height 0;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( isFrozen() ) return;
+		A_FadeOut(0.05,0);
+	}
+	States
+	{
+	Spawn:
+		RNGX ABCDEF 4 Bright;
+		Stop;
+	}
+}
+
+Class ASMDBeamLight : PaletteLight
+{
+	Default
+	{
+		Tag "Blue2";
+		Args 0,0,0,50;
+		ReactionTime 30;
+	}
+}
+
+Class ASMDSBeamLight : PaletteLight
+{
+	Default
+	{
+		Tag "Ampd";
+		Args 0,0,0,50;
+		ReactionTime 30;
+	}
+}
+
+Class ASMDBlastLight : PaletteLight
+{
+	Default
+	{
+		Tag "Purple";
+		ReactionTime 40;
+		Args 0,0,0,300;
+	}
+}
+
+Class ASMDSpark : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		Radius 2;
+		Height 2;
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+		+MISSILE;
+		+FORCEXYBILLBOARD;
+		+THRUACTORS;
+		+ROLLSPRITE;
+		+ROLLCENTER;
+		+NOTELEPORT;
+		+DONTSPLASH;
+		+CANBOUNCEWATER;
+		-BOUNCEAUTOOFF;
+		BounceType "Hexen";
+		BounceFactor 1.0;
+		WallBounceFactor 1.0;
+		Scale 0.1;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		roll = FRandom[ASMD](0,360);
+	}
+	States
+	{
+	Spawn:
+		AFLA A 1 Bright
+		{
+			A_FadeOut(FRandom[ASMD](0.0,0.1));
+			vel *= 0.98;
+		}
+		Wait;
+	}
+}
+
+Class ViewASMDSpark : ShockSpark
+{
+	Vector3 ofs, vvel;
+
+	override void PostBeginPlay()
+	{
+		Actor.PostBeginPlay();
+		scale *= FRandom[Puff](0.4,0.9);
+		alpha *= FRandom[Puff](0.5,2.0);
+		roll = FRandom[ASMD](0,360);
+	}
+
+	override void Tick()
+	{
+		Actor.Tick();
+		if ( !target || !target.player )
+		{
+			Destroy();
+			return;
+		}
+		Vector3 x, y, z;
+		[x, y, z] = dt_CoordUtil.GetAxes(target.pitch,target.angle,target.roll);
+		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
+		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
+		bInvisible = (players[consoleplayer].camera != target);
+		if ( isFrozen() ) return;
+		ofs += vvel;
+		vvel *= 0.9;
+		scale *= 0.8;
+		if ( scale.x <= 0.01 ) Destroy();
+	}
+
+	States
+	{
+	Spawn:
+		AFLA A 1 Bright A_FadeOut(FRandom[ASMD](0.0,0.1));
+		Wait;
+	}
+}
+
+Class ASMDHitbox : ShockHitbox
+{
+	Default
+	{
+		Health 1;
+		+SHOOTABLE;
+		+NOBLOOD;
+	}
+	override void Die( Actor source, Actor inflictor, int dmgflags, Name MeansOfDeath )
+	{
+		if ( target && target.InStateSequence(target.CurState,target.FindState("Spawn")) )
+		{
+			target.bAMBUSH = true;
+			target.ExplodeMissile();
+		}
+		Super.Die(source,inflictor,dmgflags,MeansOfDeath);
+	}
+}
+
+Class ASMDBall : Actor
+{
+	Actor b;
+	double mult;
+	double startangle, startpitch;
+
+	override int SpecialMissileHit( Actor victim )
+	{
+		if ( victim == b ) return 1;
+		return -1;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		b = Spawn("ASMDHitbox",pos);
+		b.target = self;
+		startpitch = pitch;
+		startangle = angle;
+	}
+	action void A_BallExplode()
+	{
+		if ( bAMBUSH ) return;
+		pitch = invoker.startpitch;
+		angle = invoker.startangle;
+		roll = 0;
+		UTMainHandler.DoBlast(self,70,70000);
+		int dmg = int(55*(1+invoker.mult));
+		A_Explode(dmg,70);
+		A_SprayDecal("ShockMarkBig",16);
+		Actor r;
+		if ( dmg > 60 )
+		{
+			SetStateLabel("AmpDeath");
+			A_SetScale(0.7);
+			let l = Spawn("ASMDSBeamLight",pos);
+			l.Args[3] = 120;
+			r = Spawn("ASMDSBeamRing",pos);
+		}
+		else
+		{
+			A_SetScale(1.3);
+			let l = Spawn("ASMDBeamLight",pos);
+			l.Args[3] = 120;
+			r = Spawn("ASMDBeamRing",pos);
+		}
+		Vector3 HitNormal = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		if ( BlockingLine ) HitNormal = (-BlockingLine.delta.y,BlockingLine.delta.x,0).unit();
+		else if ( BlockingFloor )
+		{
+			HitNormal = BlockingFloor.floorplane.Normal;
+			r.SetOrigin(r.Vec3Offset(0,0,2),false);
+		}
+		else if ( BlockingCeiling ) HitNormal = BlockingCeiling.ceilingplane.Normal;
+		r.angle = atan2(HitNormal.y,HitNormal.x);
+		r.pitch = asin(-HitNormal.z);
+		r.scale *= 1.5;
+		A_PlaySound("shock/hit",CHAN_VOICE);
+		A_PlaySound("shock/ball",CHAN_WEAPON,pitch:FRandom[ASMD](0.5,1.5));
+		A_QuakeEx(4,4,4,30,0,200,"",QF_RELATIVE|QF_SCALEDOWN,falloff:70,rollIntensity:0.15);
+		A_AlertMonsters();
+		int numpt = Random[ASMD](50,100);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](2,6);
+			let s = Spawn("ASMDSpark",pos);
+			s.vel = pvel;
+		}
+	}
+	action void A_BallSpin()
+	{
+		for ( int i=0; i<6; i++ )
+		{
+			Vector3 x, y, z;
+			[x,y,z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+			double a = FRandom[ASMD](0,360), s = FRandom[ASMD](0,0.15);
+			Vector3 dir;
+			switch (i)
+			{
+			case 0:
+				dir = (x+y*cos(a)*s+z*sin(a)*s).unit();
+				break;
+			case 1:
+				dir = (y+x*cos(a)*s+z*sin(a)*s).unit();
+				break;
+			case 2:
+				dir = (-x+y*cos(a)*s+z*sin(a)*s).unit();
+				break;
+			case 3:
+				dir = (-y+x*cos(a)*s+z*sin(a)*s).unit();
+				break;
+			case 4:
+				dir = (z+x*cos(a)*s+y*sin(a)*s).unit();
+				break;
+			case 5:
+				dir = (-z+x*cos(a)*s+y*sin(a)*s).unit();
+				break;
+			}
+			let p = Spawn("ASMDSpark",level.Vec3Offset(pos,-vel));
+			p.vel = vel*0.5+dir*FRandom[ASMD](1,3);
+		}
+		pitch += 7.12;
+		angle += 5.25;
+		roll += 9.96;
+	}
+	Default
+	{
+		Obituary "$O_ASMD";
+		RenderStyle "Add";
+		DamageType 'jolted';
+		Radius 4;
+		Height 4;
+		Speed 20;
+		PROJECTILE;
+		+FORCEXYBILLBOARD;
+		+SKYEXPLODE;
+		+EXPLODEONWATER;
+		+FORCERADIUSDMG;
+		+NODAMAGETHRUST;
+		+INTERPOLATEANGLES;
+	}
+	States
+	{
+	Spawn:
+		TAZB A 1 Bright A_BallSpin();
+		Wait;
+	Death:
+		TNT1 A 0 A_BallExplode();
+		AEXP ABCDEF 3 Bright;
+		Stop;
+	AmpDeath:
+		SSMX ABCDEFGHIJ 2 Bright;
+		Stop;
+	SuperDeath:
+		PSMX ABCDEFGHIJ 2 Bright;
+		Stop;
+	}
+}
+
+Class ASMDBeam : Actor
+{
+	ShockBeamTracer t;
+	Vector3 tracedir;
+	bool moving;
+	double totaldist;
+
+	Default
+	{
+		Obituary "$O_ASMD";
+		DamageType 'jolted';
+		RenderStyle "Add";
+		Radius 0.1;
+		Height 0;
+		Scale 1.8;
+		+NOGRAVITY;
+		+NOCLIP;
+		+DONTSPLASH;
+		+FORCERADIUSDMG;
+		+NODAMAGETHRUST;
+		+NOTELEPORT;
+		+FORCEXYBILLBOARD;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		t = new("ShockBeamTracer");
+		t.owner = target;
+		t.ignore = self;
+		moving = true;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( isFrozen() || !moving ) return;
+		// step trace
+		tracedir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		t.Trace(pos,cursector,tracedir,1000,0);
+		totaldist += t.Results.Distance;
+		// spawn particles
+		for ( int i=10; i<t.Results.Distance; i+=80 )
+			Spawn("ASMDBeamLight",Vec3Offset(tracedir.x*i,tracedir.y*i,tracedir.z*i));
+		for ( int i=0; i<t.Results.Distance; i+=4 )
+		{
+			Vector3 pofs = tracedir*FRandom[ASMD](0,2)+(FRandom[ASMD](-.5,.5),FRandom[ASMD](-.5,.5),FRandom[ASMD](-.5,.5));
+			let s = Spawn("ASMDSpark",Vec3Offset(tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z));
+			s.scale *= 0.2;
+			s.vel = (FRandom[ASMD](-.3,.3),FRandom[ASMD](-.3,.3),FRandom[ASMD](-.3,.3));
+		}
+		for ( int i=10; i<t.Results.Distance; i+=20 )
+		{
+			let s = Spawn("ASMDRingTrail",Vec3Offset(tracedir.x*i,tracedir.y*i,tracedir.z*i));
+			s.angle = angle;
+			s.pitch = pitch;
+		}
+		if ( totaldist >= 10000.0 )
+		{
+			// reposition and explode on air
+			SetOrigin(t.Results.HitPos-t.Results.HitVector*4,false);
+			double mult = Amplifier.GetMult(target,100);
+			BeamExplode(mult>1.5);
+			Actor r;
+			if ( mult > 1.5 ) r = Spawn("ASMDSBeamRing",pos);
+			else r = Spawn("ASMDBeamRing",pos);
+			r.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
+			r.pitch = asin(-t.Results.HitVector.z);
+		}
+		else if ( t.Results.HitType == TRACE_HitNone )
+		{
+			// reposition
+			SetOrigin(t.Results.HitPos+t.Results.HitVector,false);
+			angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
+			pitch = asin(-t.Results.HitVector.z);
+		}
+		else if ( t.Results.HitType == TRACE_HitActor )
+		{
+			// reposition and explode on actor
+			SetOrigin(t.Results.HitPos-t.Results.HitVector*4,false);
+			double mult = Amplifier.GetMult(target,100);
+			Actor r;
+			if ( t.Results.HitActor is 'ASMDHitbox' )
+			{
+				BeamExplode(true);
+				if ( target )
+				{
+					target.TakeInventory('ASMDAmmo',2);
+					UTMainHandler.DoSwing(target,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),10,-2,3,SWING_Spring,3,6);
+				}
+				let b = t.Results.HitActor.target;
+				b.pitch = 90;
+				b.angle = 0;
+				b.roll = 0;
+				UTMainHandler.DoBlast(b,240,140000);
+				b.A_Explode(int(55*3.9*mult),240);
+				b.A_SprayDecal("BigShockMark1",100);
+				b.A_SprayDecal("SBigShockMark2",100);
+				b.SetStateLabel("SuperDeath");
+				b.A_SetScale(1.8);
+				let l = Spawn("ASMDBlastLight",pos);
+				let r = Spawn("ASMDBlastRing",b.pos);
+				r.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
+				r.pitch = asin(-t.Results.HitVector.z);
+				A_PlaySound("shock/blast",CHAN_WEAPON,attenuation:0.5,pitch:0.6);
+				int numpt = Random[ASMD](200,300);
+				for ( int i=0; i<numpt; i++ )
+				{
+					Vector3 pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](1,32);
+					let s = Spawn("ASMDSpark",b.pos);
+					s.vel = pvel;
+				}
+			}
+			else
+			{
+				BeamExplode(mult>1.5);
+				t.Results.HitActor.DamageMobj(self,target,int(35*mult),'jolted',DMG_USEANGLE,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
+				UTMainHandler.DoKnockback(t.Results.HitActor,t.Results.HitVector,60000);
+				if ( mult > 1.5 ) r = Spawn("ASMDSBeamRing",pos);
+				else r = Spawn("ASMDBeamRing",pos);
+				r.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
+				r.pitch = asin(-t.Results.HitVector.z);
+			}
+		}
+		else
+		{
+			// reposition and explode on wall
+			SetOrigin(t.Results.HitPos-t.Results.HitVector*4,false);
+			A_SprayDecal("ShockMark",16);
+			moving = false;
+			Vector3 HitNormal = t.Results.HitVector;
+			if ( t.Results.HitType == TRACE_HitWall )
+			{
+				t.Results.HitLine.RemoteActivate(target,t.Results.Side,SPAC_Impact,pos);
+				// calculate normal
+				HitNormal = (-t.Results.HitLine.delta.y,t.Results.HitLine.delta.x,0).unit();
+				if ( t.Results.Side == 0 ) HitNormal *= -1;
+			}
+			else if ( t.Results.HitType == TRACE_HitFloor )
+				HitNormal = t.Results.HitSector.floorplane.Normal;
+			else if ( t.Results.HitType == TRACE_HitCeiling )
+				HitNormal = t.Results.HitSector.ceilingplane.Normal;
+			double mult = Amplifier.GetMult(target,100);
+			BeamExplode(mult>1.5);
+			Actor r;
+			if ( mult > 1.5 ) r = Spawn("ASMDSBeamRing",pos);
+			else r = Spawn("ASMDBeamRing",pos);
+			r.angle = atan2(HitNormal.y,HitNormal.x);
+			r.pitch = asin(-HitNormal.z);
+		}
+	}
+	void BeamExplode( bool amped = false )
+	{
+		moving = false;
+		if ( amped )
+		{
+			Scale *= 0.3;
+			SetStateLabel("AmpExplode");
+			Spawn("ASMDSBeamLight",pos);
+		}
+		else
+		{
+			SetStateLabel("Explode");
+			Spawn("ASMDBeamLight",pos);
+		}
+		A_QuakeEx(2,2,2,5,0,120,"",QF_RELATIVE|QF_SCALEDOWN,falloff:60,rollIntensity:0.1);
+		A_PlaySound("shock/hit",CHAN_VOICE);
+		A_AlertMonsters();
+		int numpt = Random[ASMD](20,50);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[ASMD](-1,1),FRandom[ASMD](-1,1),FRandom[ASMD](-1,1)).unit()*FRandom[ASMD](2,6);
+			let s = Spawn("ASMDSpark",pos);
+			s.vel = pvel;
+		}
+	}
+	States
+	{
+	Spawn:
+		TNT1 A -1;
+		Stop;
+	Explode:
+		AEXP ABCDEF 3 Bright;
+		Stop;
+	AmpExplode:
+		SSMX ABCDEFGHIJ 2 Bright;
+		Stop;
+	}
+}
+
+Class ASMD : UnrealWeapon
+{
 	action void A_ShockFire()
 	{
 		Weapon weap = Weapon(invoker);
@@ -118,10 +644,28 @@ Class ASMD : UTWeapon
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		A_PlaySound("shock/fire",CHAN_WEAPON,Dampener.Active(self)?.2:1.);
 		invoker.FireEffect();
+		A_Overlay(PSP_FLASH,"Flash");
+		A_OverlayFlags(PSP_FLASH,PSPF_RenderStyle,true);
+		A_OverlayRenderstyle(PSP_FLASH,STYLE_Add);
 		UTMainHandler.DoFlash(self,Color(80,64,32,255),1);
 		UTMainHandler.DoSwing(self,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),2,-0.3,3,SWING_Spring,0,4);
-		if ( !Dampener.Active(self) ) A_AlertMonsters();A_AlertMonsters();
-		A_QuakeEx(2,2,2,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
+		if ( !Dampener.Active(self) ) A_AlertMonsters();
+		A_QuakeEx(1,1,1,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
+		Vector3 x, y, z;
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10*x+2.9*y-2.5*z;
+		Actor p = Spawn("ASMDBeam",origin);
+		p.angle = angle;
+		p.pitch = BulletSlope();
+		p.target = self;
+		int numpt = Random[ASMD](20,40);
+		for ( int i=0; i<numpt; i++ )
+		{
+			let s = Spawn("ViewASMDSpark",origin);
+			ViewASMDSpark(s).ofs = (10,2.9,-2.5);
+			s.target = self;
+			ViewASMDSpark(s).vvel += (FRandom[ASMD](0.5,2.0),FRandom[ASMD](-1.5,1.5),FRandom[ASMD](-1.5,1.5));
+		}
 	}
 	action void A_ShockAlt()
 	{
@@ -130,11 +674,32 @@ Class ASMD : UTWeapon
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		A_PlaySound("shock/altfire",CHAN_WEAPON,Dampener.Active(self)?.2:1.);
+		double mult = Amplifier.GetMult(self,80);
 		invoker.FireEffect();
+		A_Overlay(PSP_FLASH,"Flash");
+		A_OverlayFlags(PSP_FLASH,PSPF_RenderStyle,true);
+		A_OverlayRenderstyle(PSP_FLASH,STYLE_Add);
 		UTMainHandler.DoFlash(self,Color(80,64,32,255),1);
 		UTMainHandler.DoSwing(self,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),3,-0.4,3,SWING_Spring,0,4);
-		if ( !Dampener.Active(self) ) A_AlertMonsters();A_AlertMonsters();
-		A_QuakeEx(2,2,2,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
+		if ( !Dampener.Active(self) ) A_AlertMonsters();
+		A_QuakeEx(1,1,1,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
+		Vector3 x, y, z;
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10*x+2.9*y-2.5*z;
+		Actor p = Spawn("ASMDBall",origin);
+		p.angle = angle;
+		p.pitch = BulletSlope();
+		p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed;
+		p.target = self;
+		ASMDBall(p).mult = mult-1;
+		int numpt = Random[ASMD](20,40);
+		for ( int i=0; i<numpt; i++ )
+		{
+			let s = Spawn("ViewASMDSpark",origin);
+			ViewASMDSpark(s).ofs = (10,2.9,-2.5);
+			s.target = self;
+			ViewASMDSpark(s).vvel += (FRandom[ASMD](0.5,2.0),FRandom[ASMD](-1.5,1.5),FRandom[ASMD](-1.5,1.5));
+		}
 	}
 	Default
 	{
@@ -168,13 +733,13 @@ Class ASMD : UTWeapon
 		{
 			A_CheckReload();
 			A_WeaponReady();
-			// that's a mouthful
+			// that's a long-ass if
 			if ( player.FindPSprite(PSP_WEAPON).CurState.InStateSequence(invoker.FindState("Idle")) && (player.cmd.forwardmove || player.cmd.sidemove) && (player.vel.length() > 0.5) )
 				player.SetPSPrite(PSP_WEAPON,invoker.FindState("Sway"));
 		}
 		Wait;
 	Vapour:
-		#### # 2 A_Overlay(-9999,"Dummy");
+		#### # 8 A_Overlay(-9999,"Dummy");
 		ASMI A 6
 		{
 			A_PlaySound("asmd/vapour",CHAN_6,0.5);
@@ -213,10 +778,8 @@ Class ASMD : UTWeapon
 			A_ShockFire();
 			A_Overlay(-9999,"Null");
 		}
-		ASMF ABCDEFGH 2;
-		ASMF I 5;
-		ASMI A 0 A_Refire();
-		ASMI A 0 A_Jump(48,"Vapour");
+		ASMF ABCDEFGH 3;
+		ASMF H 0 A_Jump(48,"Vapour");
 		Goto Idle;
 	AltFire:
 		#### # 1
@@ -224,10 +787,8 @@ Class ASMD : UTWeapon
 			A_ShockAlt();
 			A_Overlay(-9999,"Null");
 		}
-		ASMA ABCDFGHI 2;
-		ASMA J 1;
-		ASMA J 0 A_Refire();
-		ASMI A 0 A_Jump(48,"Vapour");
+		ASMA ABCDFGHIJ 2;
+		ASMA J 0 A_Jump(48,"Vapour");
 		Goto Idle;
 	Deselect:
 		ASMD A 1 A_Overlay(-9999,"Null");
@@ -237,5 +798,12 @@ Class ASMD : UTWeapon
 	Select:
 		ASMS A 1 A_Raise(int.max);
 		Wait;
+	Flash:
+		ASFF A 2 Bright
+		{
+			let l = Spawn("ASMDLight",pos);
+			l.target = self;
+		}
+		Stop;
 	}
 }

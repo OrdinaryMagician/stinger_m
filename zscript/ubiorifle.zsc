@@ -1,7 +1,10 @@
 Class UBioAmmo : Ammo
 {
 }
+Class UBioAmmo2 : UBioAmmo
+{
+}
 
-Class UBioRifle : UTWeapon
+Class UBioRifle : UnrealWeapon
 {
 }

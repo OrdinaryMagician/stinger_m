@@ -1,19 +1,242 @@
 Class Bandages : Health
 {
+	Default
+	{
+		Tag "$T_BANDAGES";
+		Inventory.Amount 5;
+		Inventory.PickupMessage "$I_BANDAGES";
+		Inventory.PickupSound "misc/u1heal";
+		Inventory.RespawnTics 700;
+	}
+	States
+	{
+	Spawn:
+		BAND A -1;
+		Stop;
+	}
 }
 
 Class UHealth : Health
 {
+	Default
+	{
+		Tag "$T_HEALTH";
+		Inventory.Amount 20;
+		Inventory.PickupMessage "$I_HEALTH";
+		Inventory.PickupSound "misc/u1heal";
+		Inventory.RespawnTics 700;
+	}
+	States
+	{
+	Spawn:
+		HLTH A -1;
+		Stop;
+	}
 }
 
 Class NaliFruit : Health
 {
+	int cnt;
+	Default
+	{
+		Tag "$T_FRUIT";
+		Scale 0.05;
+		Inventory.Amount 0;
+		Inventory.PickupMessage "$I_FRUIT";
+		Inventory.PickupSound "misc/u1heal";
+		Inventory.RespawnTics 175;
+	}
+	override bool TryPickup( in out Actor toucher )
+	{
+		if ( Amount < 2 ) return false;
+		return Super.TryPickup(toucher);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !InStateSequence(CurState,FindState("Spawn")) ) return;
+		if ( frame > 25 ) return;
+		cnt++;
+		if ( cnt < 300 ) return;
+		if ( !(cnt%17) ) Amount = min(29,Amount+1);
+	}
+	States
+	{
+	Spawn:
+		FRUT A 0 NoDelay
+		{
+			invoker.Amount = 0;
+			invoker.cnt = 0;
+		}
+		FRUT A 1 A_SetScale(Scale.x+1./35.);
+		FRUT A 0 A_JumpIf(Scale.x<1.0,"Spawn");
+		FRUT A 35
+		{
+			A_SetScale(1.);
+			A_SetTics(Random[Fruit](1,3)*35);
+		}
+		FRUT BCDEFGHIJKLMNOPQRSTUVWXYZ 32;
+		FRUT \[ 12;
+		Goto Spawn+29;
+	}
+}
+
+Class SeedProj : Actor
+{
+	double pitchvel, anglevel, rollvel;
+	double desiredangle;
+	bool rotatetodesired;
+	double lastpitch, lastangle, lastroll;
+	Default
+	{
+		Radius 6;
+		Height 6;
+		+NOBLOCKMAP;
+		+MISSILE;
+		+MOVEWITHSECTOR;
+		+THRUACTORS;
+		+USEBOUNCESTATE;
+		+INTERPOLATEANGLES;
+		+NOTELEPORT;
+		+BOUNCEAUTOOFF;
+		+BOUNCEAUTOOFFFLOORONLY;
+		Speed 5;
+		VSpeed 2;
+		Mass 1;
+		Gravity 0.35;
+		BounceType "Hexen";
+		WallBounceFactor 0.6;
+		BounceFactor 0.6;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		pitchvel = FRandom[Junk](5,15)*RandomPick[Junk](-1,1);
+		anglevel = FRandom[Junk](5,15)*RandomPick[Junk](-1,1);
+		rollvel = FRandom[Junk](5,15)*RandomPick[Junk](-1,1);
+	}
+	override void Tick()
+	{
+		lastpitch = pitch;
+		lastangle = angle;
+		lastroll = roll;
+		Super.Tick();
+		if ( rotatetodesired )
+		{
+			if ( deltaangle(pitch,0) ~== 0 ) pitch = 0;
+			else pitch += clamp(deltaangle(pitch,0),-pitchvel,pitchvel);
+			if ( deltaangle(angle,desiredangle) ~== 0 ) angle = desiredangle;
+			else angle += clamp(deltaangle(angle,desiredangle),-anglevel,anglevel);
+			if ( deltaangle(roll,0) ~== 0 ) roll = 0;
+			else roll += clamp(deltaangle(roll,0),-rollvel,rollvel);
+		}
+		else
+		{
+			angle += anglevel;
+			pitch += pitchvel;
+			roll += rollvel;
+		}
+	}
+	States
+	{
+	Spawn:
+		SEED A -1;
+		Stop;
+	Bounce:
+		SEED A 0
+		{
+			pitch = lastpitch;
+			angle = lastangle;
+			roll = lastroll;
+			rotatetodesired = true;
+			desiredangle = FRandom[Junk](0,360);
+			pitchvel = abs(pitchvel)*0.75;
+			anglevel = abs(anglevel)*0.75;
+			rollvel = abs(rollvel)*0.75;
+		}
+		Goto Spawn;
+	Death:
+		SEED A 20 { anglevel *= 0; }
+		SEED A 1
+		{
+			A_SetScale(Scale.x-1./35.);
+			if ( Scale.x <= 0.05 )
+			{
+				let f = Spawn("NaliFruit",pos);
+				f.angle = Random[Fruit](0,359);
+				Destroy();
+			}
+		}
+		Wait;
+	}
 }
 
 Class Seeds : UnrealInventory
 {
+	Default
+	{
+		Tag "$T_SEEDS";
+		Inventory.PickupMessage "$I_SEEDS";
+		Inventory.Icon "I_Seed";
+		Inventory.MaxAmount 20;
+	}
+	override bool Use( bool pickup )
+	{
+		if ( pickup ) return false;
+		Vector3 x, y, z;
+		[x, y, z] = dt_CoordUtil.GetAxes(Owner.pitch,Owner.angle,Owner.roll);
+		Vector3 origin = level.Vec3Offset(Owner.Vec2OffsetZ(0,0,Owner.player.viewz),x*10.-z*8.);
+		let a = Spawn("SeedProj",origin);
+		a.target = Owner;
+		a.angle = Owner.angle;
+		a.pitch = Owner.pitch;
+		a.vel += x*a.speed;
+		return true;
+	}
+	States
+	{
+	Spawn:
+		SEED A -1;
+		Stop;
+	}
 }
 
 Class SuperHealth : Health
 {
+	Default
+	{
+		Tag "$T_SHEALTH";
+		+COUNTITEM;
+		+INVENTORY.AUTOACTIVATE;
+		+INVENTORY.ALWAYSPICKUP;
+		+INVENTORY.FANCYPICKUPSOUND;
+		Inventory.Amount 100;
+		Inventory.MaxAmount 200;
+		Inventory.PickupMessage "$I_SHEALTH";
+		Inventory.PickupSound "misc/u1heal";
+		Inventory.RespawnTics 3500;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		tracer = Spawn("SuperHealthX",pos);
+		tracer.angle = angle;
+		tracer.target = self;
+	}
+	States
+	{
+	Spawn:
+		SHTH A -1;
+		Stop;
+	}
+}
+
+Class SuperHealthX : AsmdAmmoX
+{
+	States
+	{
+	Spawn:
+		SHTH A -1 Bright;
+		Stop;
+	}
 }

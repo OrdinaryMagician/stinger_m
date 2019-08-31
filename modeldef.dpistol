@@ -1,0 +1,249 @@
+Model "WeaponPowerUp"
+{
+	Path "models"
+	Model 0 "WeaponPowerUpMesh_d.3d"
+	SurfaceSkin 0 1 "aPower1.png"
+	Scale 0.1 -0.1 0.12
+	ZOffset 20
+
+	FrameIndex WPOW A 0 0
+}
+
+Model "WeaponPowerUpX"
+{
+	Path "models"
+	Model 0 "WeaponPowerUpMesh_d.3d"
+	SurfaceSkin 0 0 "PowerFX.png"
+	Scale 0.1 -0.1 0.12
+	ZOffset 20
+	DONTCULLBACKFACES
+
+	FrameIndex WPOW A 0 0
+	FrameIndex WPOW B 0 1
+	FrameIndex WPOW C 0 2
+	FrameIndex WPOW D 0 3
+	FrameIndex WPOW E 0 4
+	FrameIndex WPOW F 0 5
+	FrameIndex WPOW G 0 6
+	FrameIndex WPOW H 0 7
+	FrameIndex WPOW I 0 8
+	FrameIndex WPOW J 0 9
+	FrameIndex WPOW K 0 10
+	FrameIndex WPOW L 0 11
+	FrameIndex WPOW M 0 12
+	FrameIndex WPOW N 0 13
+	FrameIndex WPOW O 0 14
+	FrameIndex WPOW P 0 15
+	FrameIndex WPOW Q 0 16
+	FrameIndex WPOW R 0 17
+	FrameIndex WPOW S 0 18
+	FrameIndex WPOW T 0 19
+}
+
+Model "DispersionPistol"
+{
+	Path "models"
+	Model 1 "DPistolPick_d.3d"
+	Skin 1 "DPistol1_.png"
+	ZOffset 8
+	AngleOffset 90
+	Scale 0.08 0.08 0.096
+
+	FrameIndex DPIP B 1 0
+
+	ZOffset 12
+	ROTATING
+	FrameIndex DPIP A 1 0
+}
+
+Model "DispersionPistol"
+{
+	Path "models"
+	Model 2 "Flat_d.3d"
+	AngleOffset 90
+	PitchOffset 90
+	Scale 0.08 0.08 0.08
+	Offset 13 -35 -11
+
+	Skin 2 "DMuzB.png"
+	FrameIndex DPFF A 2 0
+	Skin 2 "DMuzG.png"
+	FrameIndex DPFF B 2 0
+	Skin 2 "DMuzY.png"
+	FrameIndex DPFF C 2 0
+	Skin 2 "DMuzO.png"
+	FrameIndex DPFF D 2 0
+	Skin 2 "DMuzR.png"
+	FrameIndex DPFF E 2 0
+}
+
+Model "DispersionPistol"
+{
+	Path "models"
+	Model 0 "DPistol_d.3d"
+	SurfaceSkin 0 1 "DPistol1.png"
+	AngleOffset -90
+	Scale 0.05 -0.05 0.05
+	Offset 5.5 -10 -5.5
+
+	// Select1
+	FrameIndex DPS1 A 0 0
+	FrameIndex DPS1 B 0 1
+	FrameIndex DPS1 C 0 2
+	FrameIndex DPS1 D 0 3
+	FrameIndex DPS1 E 0 4
+	FrameIndex DPS1 F 0 5
+	FrameIndex DPS1 G 0 6
+	FrameIndex DPS1 H 0 7
+	FrameIndex DPS1 I 0 8
+	FrameIndex DPS1 J 0 9
+	FrameIndex DPS1 K 0 10
+	// Select2
+	FrameIndex DPS2 A 0 30
+	FrameIndex DPS2 B 0 31
+	FrameIndex DPS2 C 0 32
+	FrameIndex DPS2 D 0 33
+	FrameIndex DPS2 E 0 34
+	FrameIndex DPS2 F 0 35
+	FrameIndex DPS2 G 0 36
+	FrameIndex DPS2 H 0 37
+	FrameIndex DPS2 I 0 38
+	FrameIndex DPS2 J 0 39
+	FrameIndex DPS2 K 0 40
+	// Select3
+	FrameIndex DPS3 A 0 60
+	FrameIndex DPS3 B 0 61
+	FrameIndex DPS3 C 0 62
+	FrameIndex DPS3 D 0 63
+	FrameIndex DPS3 E 0 64
+	FrameIndex DPS3 F 0 65
+	FrameIndex DPS3 G 0 66
+	FrameIndex DPS3 H 0 67
+	FrameIndex DPS3 I 0 68
+	FrameIndex DPS3 J 0 69
+	FrameIndex DPS3 K 0 70
+	// Select4
+	FrameIndex DPS4 A 0 90
+	FrameIndex DPS4 B 0 91
+	FrameIndex DPS4 C 0 92
+	FrameIndex DPS4 D 0 93
+	FrameIndex DPS4 E 0 94
+	FrameIndex DPS4 F 0 95
+	FrameIndex DPS4 G 0 96
+	FrameIndex DPS4 H 0 97
+	FrameIndex DPS4 I 0 98
+	FrameIndex DPS4 J 0 99
+	FrameIndex DPS4 K 0 100
+	// Select5
+	FrameIndex DPS5 A 0 120
+	FrameIndex DPS5 B 0 121
+	FrameIndex DPS5 C 0 122
+	FrameIndex DPS5 D 0 123
+	FrameIndex DPS5 E 0 124
+	FrameIndex DPS5 F 0 125
+	FrameIndex DPS5 G 0 126
+	FrameIndex DPS5 H 0 127
+	FrameIndex DPS5 I 0 128
+	FrameIndex DPS5 J 0 129
+	FrameIndex DPS5 K 0 130
+	// Deselect1
+	FrameIndex DPD1 A 0 16
+	FrameIndex DPD1 B 0 17
+	FrameIndex DPD1 C 0 18
+	FrameIndex DPD1 D 0 19
+	FrameIndex DPD1 E 0 20
+	// Deselect2
+	FrameIndex DPD2 A 0 46
+	FrameIndex DPD2 B 0 47
+	FrameIndex DPD2 C 0 48
+	FrameIndex DPD2 D 0 49
+	FrameIndex DPD2 E 0 50
+	// Deselect3
+	FrameIndex DPD3 A 0 76
+	FrameIndex DPD3 B 0 77
+	FrameIndex DPD3 C 0 78
+	FrameIndex DPD3 D 0 79
+	FrameIndex DPD3 E 0 80
+	// Deselect4
+	FrameIndex DPD4 A 0 106
+	FrameIndex DPD4 B 0 107
+	FrameIndex DPD4 C 0 108
+	FrameIndex DPD4 D 0 109
+	FrameIndex DPD4 E 0 110
+	// Deselect5
+	FrameIndex DPD5 A 0 136
+	FrameIndex DPD5 B 0 137
+	FrameIndex DPD5 C 0 138
+	FrameIndex DPD5 D 0 139
+	FrameIndex DPD5 E 0 140
+	// Idle1
+	FrameIndex DPI1 A 0 14
+	FrameIndex DPI1 B 0 15
+	// Idle2
+	FrameIndex DPI2 A 0 44
+	FrameIndex DPI2 B 0 45
+	// Idle3
+	FrameIndex DPI3 A 0 74
+	FrameIndex DPI3 B 0 75
+	// Idle4
+	FrameIndex DPI4 A 0 104
+	FrameIndex DPI4 B 0 105
+	// Idle5
+	FrameIndex DPI5 A 0 134
+	FrameIndex DPI5 B 0 135
+	// Fire1
+	FrameIndex DPF1 A 0 11
+	FrameIndex DPF1 B 0 12
+	FrameIndex DPF1 C 0 13
+	// Fire2
+	FrameIndex DPF2 A 0 41
+	FrameIndex DPF2 B 0 42
+	FrameIndex DPF2 C 0 43
+	// Fire3
+	FrameIndex DPF3 A 0 71
+	FrameIndex DPF3 B 0 72
+	FrameIndex DPF3 C 0 73
+	// Fire4
+	FrameIndex DPF4 A 0 101
+	FrameIndex DPF4 B 0 102
+	FrameIndex DPF4 C 0 103
+	// Fire5
+	FrameIndex DPF5 A 0 131
+	FrameIndex DPF5 B 0 132
+	FrameIndex DPF5 C 0 133
+	// Upgrade1
+	FrameIndex DPU1 A 0 21
+	FrameIndex DPU1 B 0 22
+	FrameIndex DPU1 C 0 23
+	FrameIndex DPU1 D 0 24
+	// Upgrade2
+	FrameIndex DPU2 A 0 51
+	FrameIndex DPU2 B 0 52
+	FrameIndex DPU2 C 0 53
+	FrameIndex DPU2 D 0 54
+	FrameIndex DPU2 E 0 55
+	FrameIndex DPU2 F 0 56
+	FrameIndex DPU2 G 0 57
+	FrameIndex DPU2 H 0 58
+	FrameIndex DPU2 I 0 59
+	// Upgrade3
+	FrameIndex DPU3 A 0 81
+	FrameIndex DPU3 B 0 82
+	FrameIndex DPU3 C 0 83
+	FrameIndex DPU3 D 0 84
+	FrameIndex DPU3 E 0 85
+	FrameIndex DPU3 F 0 86
+	FrameIndex DPU3 G 0 87
+	FrameIndex DPU3 H 0 88
+	FrameIndex DPU3 I 0 89
+	// Upgrade4
+	FrameIndex DPU4 A 0 111
+	FrameIndex DPU4 B 0 112
+	FrameIndex DPU4 C 0 113
+	FrameIndex DPU4 D 0 114
+	FrameIndex DPU4 E 0 115
+	FrameIndex DPU4 F 0 116
+	FrameIndex DPU4 G 0 117
+	FrameIndex DPU4 H 0 118
+	FrameIndex DPU4 I 0 119
+}

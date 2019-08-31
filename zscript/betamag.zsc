@@ -1,3 +1,3 @@
-Class Betamag : UTWeapon
+Class Betamag : UnrealWeapon
 {
 }

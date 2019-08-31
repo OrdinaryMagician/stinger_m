@@ -2,6 +2,6 @@ Class UTranslocatorAmmo : Ammo
 {
 }
 
-Class UTranslocator : UTWeapon
+Class UTranslocator : UnrealWeapon
 {
 }

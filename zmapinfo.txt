@@ -4,7 +4,7 @@ GameInfo
 	PlayerClasses = "UPlayerFemale1", "UPlayerFemale2", "UPlayerMale1", "UPlayerMale2", "UPlayerMale3"
 	StatusBarClass = "UnrealHud"
 	BorderFlat = "Border"
-	Border = 17, 17, "BordTR", "BordT", "BordTL", "BordR", "BordL", "BordBR", "BordB", "BordBL"
+	Border = 3, 3, "BordTR", "BordT", "BordTL", "BordR", "BordL", "BordBR", "BordB", "BordBL"
 	BackpackType = "UnrealBackpack"
 	menufontcolor_title = "Gold"
 	menufontcolor_label = "Green"
@@ -15,4 +15,10 @@ GameInfo
 	menufontcolor_selection = "White"
 	MenuSliderColor = "Red"
 	MessageBoxClass = "GreenMessageBox"
+}
+
+DoomEdNums
+{
+	4510 = UTranslator
+	4511 = TranslatorEvent
 }

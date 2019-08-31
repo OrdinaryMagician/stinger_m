@@ -12,6 +12,17 @@ Model "UnrealBackpack"
 	FrameIndex BPAK A 0 0
 }
 
+Model "UTranslator"
+{
+	Path "models"
+	Model 0 "TranslatorMesh_d.3d"
+	Skin 0 "JTranslator1.png"
+	Scale 0.08 0.08 0.096
+	ZOffset 4
+
+	FrameIndex TRNS A 0 0
+}
+
 Model "UArmor"
 {
 	Path "models"
@@ -163,7 +174,7 @@ Model "ForcefieldEffect"
 {
 	Path "models"
 	Model 0 "ForceFieldM_d.3d"
-	Skin 0 "textures/ForceFieldFX.png"
+	Skin 0 "ForceFieldFX.png"
 	ZOffset 22
 	Scale 0.16 -0.16 0.16
 	DONTCULLBACKFACES
@@ -178,4 +189,195 @@ Model "ForcefieldEffect"
 	FrameIndex FFLD H 0 7
 	FrameIndex FFLD I 0 8
 	FrameIndex FFLD J 0 9
+}
+
+Model "UInvisibility"
+{
+	Path "models"
+	Model 0 "InvisibilityMesh_d.3d"
+	SurfaceSkin 0 1 "JInvisibility1.png"
+	ZOffset 8
+	Scale 0.1 -0.1 0.12
+
+	FrameIndex INVS A 0 0
+}
+
+Model "UInvisibilityX"
+{
+	Path "models"
+	Model 0 "InvisibilityMesh_d.3d"
+	SurfaceSkin 0 0 "InvisFX.png"
+	ZOffset 8
+	Scale 0.1 -0.1 0.12
+	DONTCULLBACKFACES
+
+	FrameIndex INVS A 0 0
+}
+
+Model "Amplifier"
+{
+	Path "models"
+	Model 0 "AmplifierM_d.3d"
+	Skin 0 "JAmplifier1.png"
+	ZOffset 3
+	AngleOffset 90
+	Scale 0.16 -0.16 0.192
+
+	FrameIndex AMPP A 0 0
+}
+
+Model "UHealth"
+{
+	Path "models"
+	Model 0 "HealthM_d.3d"
+	Skin 0 "Jhealth1.png"
+	ZOffset 3
+	Scale 0.04 -0.04 0.048
+
+	FrameIndex HLTH A 0 0
+}
+
+Model "Bandages"
+{
+	Path "models"
+	Model 0 "bandage_d.3d"
+	Skin 0 "Jband1.png"
+	ZOffset 2.2
+	Scale 0.06 -0.06 0.072
+
+	FrameIndex BAND A 0 0
+}
+
+Model "SuperHealth"
+{
+	Path "models"
+	Model 0 "SuperHealthMesh_d.3d"
+	SurfaceSkin 0 1 "Jshealth1.png"
+	ZOffset 10
+	RollOffset 180
+	Scale 0.08 -0.08 0.096
+
+	FrameIndex SHTH A 0 0
+}
+
+Model "SuperHealthX"
+{
+	Path "models"
+	Model 0 "SuperHealthMesh_d.3d"
+	SurfaceSkin 0 0 "SHealthFX.png"
+	ZOffset 10
+	RollOffset 180
+	Scale 0.08 -0.08 0.096
+
+	FrameIndex SHTH A 0 0
+}
+
+Model "NaliFruit"
+{
+	Path "models"
+	Model 0 "NaliFruitMesh_d.3d"
+	Skin 0 "JNaliFruit1.png"
+	ZOffset 0
+	Scale 0.3 -0.3 0.36
+
+	// root
+	FrameIndex FRUT A 0 1
+	// grow
+	FrameIndex FRUT B 0 2
+	FrameIndex FRUT C 0 3
+	FrameIndex FRUT D 0 4
+	FrameIndex FRUT E 0 5
+	FrameIndex FRUT F 0 6
+	FrameIndex FRUT G 0 7
+	FrameIndex FRUT H 0 8
+	FrameIndex FRUT I 0 9
+	FrameIndex FRUT J 0 10
+	FrameIndex FRUT K 0 11
+	FrameIndex FRUT L 0 12
+	FrameIndex FRUT M 0 13
+	FrameIndex FRUT N 0 14
+	FrameIndex FRUT O 0 15
+	FrameIndex FRUT P 0 16
+	FrameIndex FRUT Q 0 17
+	FrameIndex FRUT R 0 18
+	FrameIndex FRUT S 0 19
+	FrameIndex FRUT T 0 20
+	FrameIndex FRUT U 0 21
+	FrameIndex FRUT V 0 22
+	FrameIndex FRUT W 0 23
+	FrameIndex FRUT X 0 24
+	FrameIndex FRUT Y 0 25
+	FrameIndex FRUT Z 0 26
+	// waver
+	FrameIndex FRUT [ 0 27
+	FrameIndex FRUT \ 0 28
+}
+
+Model "Seeds"
+{
+	Path "models"
+	Model 0 "Seed_d.3d"
+	Skin 0 "Jseed1.png"
+	ZOffset 1
+	Scale 0.08 -0.08 0.096
+
+	FrameIndex SEED A 0 0
+}
+
+Model "SeedProj"
+{
+	Path "models"
+	Model 0 "Seed_d.3d"
+	Skin 0 "Jseed1.png"
+	ZOffset 1
+	Scale 0.08 -0.08 0.096
+	USEACTORPITCH
+
+	FrameIndex SEED A 0 0
+}
+
+Model "Flare"
+{
+	Path "models"
+	Model 0 "FlareM_d.3d"
+	SurfaceSkin 0 1 "Jmisc1_.png"
+	Offset 4 0 2
+	PitchOffset 90
+	AngleOffset 180
+	Scale 0.04 -0.048 0.04
+
+	FrameIndex FLAR A 0 0
+}
+
+Model "FlareThrown"
+{
+	Path "models"
+	Model 0 "FlareM_d.3d"
+	SurfaceSkin 0 1 "Jmisc1.png"
+	Offset 4 0 2
+	PitchOffset 90
+	AngleOffset 180
+	Scale 0.04 -0.048 0.04
+	USEACTORPITCH
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1
+
+	FrameIndex FLAR A 0 0
+}
+
+Model "FlareThrownX"
+{
+	Path "models"
+	Model 0 "FlareM_d.3d"
+	SurfaceSkin 0 0 "FireEffect8.png"
+	Offset 3.5 0 2
+	PitchOffset 90
+	AngleOffset 180
+	Scale 0.08 -0.048 0.04
+	USEACTORPITCH
+	DONTCULLBACKFACES
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1
+
+	FrameIndex FLAR A 0 1
 }
