@@ -4,6 +4,7 @@ The Unreal 1 counterpart to Doom Tournament. Adds Unreal 1 weapons and items
 (including dummied out stuff and others).
 
 This mod requires a recent GZDoom devbuild, and runs on top of Doom Tournament.
+(The xdevel branch of Doom Tournament is required, specifically)
 
 ## Currently Implemented
 
