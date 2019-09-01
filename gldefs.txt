@@ -199,6 +199,10 @@ HardwareShader Texture "graphics/95Bg.png"
 {
 	Shader "shaders/glsl/95Bg.fp"
 }
+HardwareShader Texture "graphics/96Bg.png"
+{
+	Shader "shaders/glsl/96Bg.fp"
+}
 HardwareShader Texture "graphics/97Bg.png"
 {
 	Shader "shaders/glsl/97Bg.fp"

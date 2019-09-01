@@ -13,6 +13,7 @@ Class UFlakBox : Ammo
 	}
 	override String PickupMessage()
 	{
+		if ( PickupMsg.Length() > 0 ) return Super.PickupMessage();
 		return String.Format("%s%d%s",StringTable.Localize("$I_FLAKAMMOL"),Amount,StringTable.Localize("$I_FLAKAMMOR"));
 	}
 	States

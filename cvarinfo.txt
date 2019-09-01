@@ -1,7 +1,8 @@
 user int stinger_hudmode = 0;	// hud mode
-user int stinger_introtype = 0;	// 0 - standard
+user int stinger_introtype = 0;	// 0 - unreal '98
 				// 1 - unreal '97
-				// 2 - unreal '95
+				// 2 - unreal '96
+				// 3 - unreal '95
 server bool sting_telegun = false;	// enable teleport capsules
 server bool sting_flares = false;	// enable light/dark flares
 server bool sting_stinger = false;	// unreal bible stinger detonation

@@ -166,18 +166,21 @@ Class GreenMessageBox : MessageBoxMenu
 	}
 }
 
+// TODO BONUS: Code input menu, like those in various oldskool SP campaigns
+// except it's somewhat prettier looking and supports alphanumeric input
+Class CodeEntryMenu : GenericMenu {}
+
 // Translator display as a menu, allows for more interactivity
-// TODO:
-//  - additional mouse input options
-//  - support for extended menu graphic
 Class TranslatorMenu : GenericMenu
 {
 	bool bShowHint;
 	UTranslator trns;
-	TextureID thud, scroll[4];
+	TextureID thud[2], scroll[4];
 	Font tfnt, mfnt, pfnt;
 	BrokenLines lines;
-	int th, startline[0], maxlines[2], entry;
+	int th, startline[2], maxlines[2], entry;
+	CVar ext;
+	bool drag;
 
 	private void SetText( String txt )
 	{
@@ -187,7 +190,8 @@ Class TranslatorMenu : GenericMenu
 		th = tfnt.GetHeight();
 		startline[0] = 0;
 		startline[1] = 0;
-		maxlines[0] = 88/th;
+		maxlines[0] = 81/th;
+		maxlines[1] = 201/th;
 	}
 
 	override void Init( Menu parent )
@@ -196,13 +200,15 @@ Class TranslatorMenu : GenericMenu
 		trns = UTranslator(players[consoleplayer].mo.FindInventory('UTranslator'));
 		mfnt = Font.GetFont('UMedFont');
 		pfnt = Font.GetFont('UOldTinyFont');
+		ext = CVar.GetCVar('sting_transext',players[consoleplayer]);
 		if ( !trns || !trns.Owner || (trns.Owner.Health <= 0) )
 		{
 			// don't do anything, will get killed in the next tick
 			return;
 		}
 		MenuSound("menu/activate");
-		thud = TexMan.CheckForTexture("TranHUD3",TexMan.Type_Any);
+		thud[0] = TexMan.CheckForTexture("TranHUD3",TexMan.Type_Any);
+		thud[1] = TexMan.CheckForTexture("TranHUDX",TexMan.Type_Any);
 		scroll[0] = TexMan.CheckForTexture("VSldT",TexMan.Type_Any);
 		scroll[1] = TexMan.CheckForTexture("VSldM",TexMan.Type_Any);
 		scroll[2] = TexMan.CheckForTexture("VSldB",TexMan.Type_Any);
@@ -239,15 +245,97 @@ Class TranslatorMenu : GenericMenu
 		switch ( ev.type )
 		{
 		case UIEvent.Type_WheelUp:
-			if ( startline[0] > 0 ) MenuSound("menu/cursor");
-			startline[0] = max(0,startline[0]-3);
+			if ( startline[ext.GetInt()] > 0 ) MenuSound("menu/cursor");
+			startline[ext.GetInt()] = max(0,startline[ext.GetInt()]-1);
 			return true;
 		case UIEvent.Type_WheelDown:
-			if ( startline[0] < max(0,lines.Count()-maxlines[0]) ) MenuSound("menu/cursor");
-			startline[0] = min(max(0,lines.Count()-maxlines[0]),startline[0]+3);
+			if ( startline[ext.GetInt()] < max(0,lines.Count()-maxlines[ext.GetInt()]) ) MenuSound("menu/cursor");
+			startline[ext.GetInt()] = min(max(0,lines.Count()-maxlines[ext.GetInt()]),startline[ext.GetInt()]+1);
 			return true;
 		}
 		return Super.OnUIEvent(ev);
+	}
+
+	protected bool InBox( Vector2 p, Vector2 a, Vector2 b )
+	{
+		// pad to make input easier w/ small scales
+		a -= (8,8);
+		b += (8,8);
+		return ((p.x >= a.x) && (p.x < b.x) && (p.y >= a.y) && (p.y < b.y));
+	}
+
+	override bool MouseEvent( int type, int mx, int my )
+	{
+		bool res = Super.MouseEvent(type,mx,my);
+		// box locations for various elements
+		Vector2 validarea[2], prevmsg[2], nextmsg[2], openhint[2], closehint[2], scrollbar[2];
+		double ClipX, ClipY, CurX, CurY;
+		Vector2 vpos;
+		if ( StatusBar is 'UnrealHUD' )
+		{
+			ClipX = UnrealHUD(StatusBar).ClipX;
+			ClipY = UnrealHUD(StatusBar).ClipY;
+			vpos.x = mx/UnrealHUD(StatusBar).scalev.x;
+			vpos.y = my/UnrealHUD(StatusBar).scalev.y;
+		}
+		else
+		{
+			ClipX = CleanWidth_1;
+			ClipY = CleanHeight_1;
+			vpos.x = mx/double(CleanXFac_1);
+			vpos.y = my/double(CleanYFac_1);
+		}
+		if ( ext.GetBool() )
+		{
+			validarea[0] = (ClipX/2-112,ClipY/2-112);
+			validarea[1] = validarea[0]+(224,224);
+			prevmsg[0] = (ClipX/2-106,ClipY/2+100);
+			prevmsg[1] = prevmsg[0]+(4,6);
+			String pagestr = String.Format("< %d / %d ",trns.OldMessages.Size()+1-entry,trns.OldMessages.Size()+1);
+			int strl = pfnt.StringWidth(pagestr);
+			nextmsg[0] = prevmsg[0]+(strl,0);
+			nextmsg[1] = nextmsg[0]+(4,6);
+			openhint[0] = (ClipX/2+100,ClipY/2+100);
+			openhint[1] = openhint[0]+(8,6);
+			closehint[0] = (ClipX/2-106,ClipY/2+100);
+			closehint[1] = closehint[0]+(8,6);
+			scrollbar[0] = (ClipX/2+100,ClipY/2-110);
+			scrollbar[1] = scrollbar[0]+(7,208);
+		}
+		else
+		{
+			validarea[0] = (ClipX/2-112,ClipY/2-52);
+			validarea[1] = validarea[0]+(224,104);
+			prevmsg[0] = (ClipX/2-106,ClipY/2+40);
+			prevmsg[1] = prevmsg[0]+(4,6);
+			String pagestr = String.Format("< %d / %d ",trns.OldMessages.Size()+1-entry,trns.OldMessages.Size()+1);
+			int strl = pfnt.StringWidth(pagestr);
+			nextmsg[0] = prevmsg[0]+(strl,0);
+			nextmsg[1] = nextmsg[0]+(4,6);
+			openhint[0] = (ClipX/2+100,ClipY/2+40);
+			openhint[1] = openhint[0]+(8,6);
+			closehint[0] = (ClipX/2-106,ClipY/2+50);
+			closehint[1] = closehint[0]+(8,6);
+			scrollbar[0] = (ClipX/2+100,ClipY/2-50);
+			scrollbar[1] = scrollbar[0]+(7,88);
+		}
+		if ( type == MOUSE_Click )
+		{
+			if ( !InBox(vpos,validarea[0],validarea[1]) ) MenuEvent(MKEY_Back,true);
+			else if ( !bShowHint && InBox(vpos,prevmsg[0],prevmsg[1]) ) MenuEvent(MKEY_Left,true);
+			else if ( !bShowHint && InBox(vpos,nextmsg[0],nextmsg[1]) ) MenuEvent(MKEY_Right,true);
+			else if ( !bShowHint && InBox(vpos,openhint[0],openhint[1]) ) MenuEvent(MKEY_PageDown,true);
+			else if ( bShowHint && InBox(vpos,closehint[0],closehint[1]) ) MenuEvent(MKEY_PageUp,true);
+			else if ( InBox(vpos,scrollbar[0],scrollbar[1]) ) drag = true;
+		}
+		else if ( type == MOUSE_Release ) drag = false;
+		if ( drag )
+		{
+			double scl = (ext.GetInt()?192:72)/max(1,lines.Count()-maxlines[ext.GetInt()]);
+			int vclamp = int((clamp(vpos.y,scrollbar[0].y+4,scrollbar[1].y-4)-(scrollbar[0].y+4))/scl);
+			startline[ext.GetInt()] = clamp(vclamp,0,max(0,lines.Count()-maxlines[ext.GetInt()]));
+		}
+		return res;
 	}
 
 	override bool MenuEvent( int mkey, bool fromcontroller )
@@ -262,12 +350,12 @@ Class TranslatorMenu : GenericMenu
 			Close();
 			return true;
 		case MKEY_Up:
-			if ( startline[0] > 0 ) MenuSound("menu/cursor");
-			startline[0] = max(0,startline[0]-1);
+			if ( startline[ext.GetInt()] > 0 ) MenuSound("menu/cursor");
+			startline[ext.GetInt()] = max(0,startline[ext.GetInt()]-1);
 			return true;
 		case MKEY_Down:
-			if ( startline[0] < max(0,lines.Count()-maxlines[0]) ) MenuSound("menu/cursor");
-			startline[0] = min(max(0,lines.Count()-maxlines[0]),startline[0]+1);
+			if ( startline[ext.GetInt()] < max(0,lines.Count()-maxlines[ext.GetInt()]) ) MenuSound("menu/cursor");
+			startline[ext.GetInt()] = min(max(0,lines.Count()-maxlines[ext.GetInt()]),startline[ext.GetInt()]+1);
 			return true;
 		case MKEY_PageDown:
 			if ( trns && (GetHint(entry).length() > 0) )
@@ -310,7 +398,7 @@ Class TranslatorMenu : GenericMenu
 	override void Drawer()
 	{
 		Super.Drawer();
-		if ( trns && trns.Owner && (trns.Owner.Health > 0) ) return;
+		if ( !trns || !trns.Owner || (trns.Owner.Health <= 0) ) return;
 		double ClipX, ClipY, CurX, CurY;
 		if ( StatusBar is 'UnrealHUD' )
 		{
@@ -324,13 +412,13 @@ Class TranslatorMenu : GenericMenu
 		}
 		// The translator
 		CurX = ClipX/2-128;
-		CurY = ClipY/2-68;
-		Screen.DrawTexture(thud,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+		CurY = ClipY/2-(ext.GetInt()?128:68);
+		Screen.DrawTexture(thud[ext.GetInt()],false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
 		// The message text
 		CurX += 22;
 		CurY += 22;
-		int l = startline[0];
-		for ( int i=0; i<maxlines[0]; i++ )
+		int l = startline[ext.GetInt()];
+		for ( int i=0; i<maxlines[ext.GetInt()]; i++ )
 		{
 			if ( l >= lines.Count() ) break;
 			Screen.DrawText(tfnt,Font.CR_UNTRANSLATED,CurX,CurY,lines.StringAt(l),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
@@ -339,28 +427,29 @@ Class TranslatorMenu : GenericMenu
 		}
 		// Scrollbar
 		CurX = ClipX/2+100;
-		if ( lines.Count() > maxlines[0] )
+		if ( lines.Count() > maxlines[ext.GetInt()] )
 		{
-			CurY = ClipY/2-54;
+			CurY = ClipY/2-(ext.GetInt()?114:54);
 			Screen.DrawTexture(scroll[0],false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
 			CurY += 8;
-			for ( int i=0; i<10; i++ )
+			int cnt = ext.GetInt()?25:10;
+			for ( int i=0; i<cnt; i++ )
 			{
 				Screen.DrawTexture(scroll[1],false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
 				CurY += 8;
 			}
 			Screen.DrawTexture(scroll[2],false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
-			CurY = (ClipY/2-46) + ((startline[0]*72)/max(1,lines.Count()-maxlines[0]));
+			CurY = (ClipY/2-(ext.GetInt()?106:46)) + ((startline[ext.GetInt()]*(ext.GetInt()?192:72))/max(1,lines.Count()-maxlines[ext.GetInt()]));
 			Screen.DrawTexture(scroll[3],false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
 		}
 		if ( !bShowHint && (GetHint(entry).length() > 0) )
 		{
-			CurY = ClipY/2+40;
-			Screen.DrawText(pfnt,Font.CR_GREEN,CurX,CurY,">>",DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_Alpha,(gametic%16)/16.);
+			CurY = ClipY/2+(ext.GetInt()?100:40);
+			Screen.DrawText(pfnt,Font.CR_GREEN,CurX,CurY,">>",DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_Alpha,(MenuTime()%16)/16.);
 		}
 		CurX = ClipX/2-106;
-		CurY = ClipY/2+40;
-		if ( bShowHint ) Screen.DrawText(pfnt,Font.CR_GREEN,CurX,CurY,"<<",DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_Alpha,(gametic%16)/16.);
+		CurY = ClipY/2+(ext.GetInt()?100:40);
+		if ( bShowHint ) Screen.DrawText(pfnt,Font.CR_GREEN,CurX,CurY,"<<",DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_Alpha,(MenuTime()%16)/16.);
 		else if ( trns.OldMessages.Size() > 0 ) Screen.DrawText(pfnt,Font.CR_GREEN,CurX,CurY,String.Format("%s %d / %d %s",(entry<trns.OldMessages.Size())?"<":" ",trns.OldMessages.Size()+1-entry,trns.OldMessages.Size()+1,(entry>0)?">":" "),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
 	}
 }

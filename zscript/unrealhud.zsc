@@ -3,6 +3,9 @@ Class UnrealHUD : BaseStatusBar
 {
 	double FracTic;
 
+	// for easy access to ammo slots
+	UnrealMainHandler hnd;
+
 	// Unreal HUD variables
 	Color RedColor, GreenColor, BlackColor;
 	int HudMode;
@@ -301,36 +304,23 @@ Class UnrealHUD : BaseStatusBar
 		let pw = CPlayer.PendingWeapon;
 		int pwslot = -1;
 		if ( pw && (pw != WP_NOCHANGE) && (pw.SlotNumber != -1) ) pwslot = pw.SlotNumber;
-		Array<Weapon> wslots[10];
+		Array<Ammo> aslots[10];
 		// clear the arrays before work
-		for ( int i=0; i<10; i++ ) wslots[i].Clear();
-		// first run, populate the full array of weapons
-		for ( int i=0; i<10; i++ )
+		for ( int i=0; i<10; i++ ) aslots[i].Clear();
+		// we need the ammo slots array, if it isn't accessible then we're fucked
+		if ( !hnd ) hnd = UnrealMainHandler(EventHandler.Find("UnrealMainHandler"));
+		if ( hnd )
 		{
-			for ( Inv = CPlayer.mo.Inv; Inv; Inv=Inv.Inv )
+			// populate the array
+			for ( int i=0; i<hnd.AmmoSlots.Size(); i++ )
 			{
-				if ( !(Inv is 'Weapon') ) continue;
-				let w = Weapon(Inv);
-				if ( w.SlotNumber != i ) continue;
-				int slot = w.SlotNumber;
-				wslots[slot].Push(w);
-			}
-		}
-		// second run, sort the slot arrays
-		for ( int i=0; i<10; i++ )
-		{
-			int j = 1;
-			while ( j < wslots[i].Size() )
-			{
-				int k = j;
-				while ( (k > 0) && (wslots[i][k-1].SelectionOrder >= wslots[i][k].SelectionOrder) )
+				let a = Ammo(CPlayer.mo.FindInventory(hnd.AmmoSlots[i].AmmoType));
+				if ( !a ) continue;
+				for ( int j=0; j<10; j++ )
 				{
-					Weapon tmp = wslots[i][k];
-					wslots[i][k] = wslots[i][k-1];
-					wslots[i][k-1] = tmp;
-					k--;
+					if ( !hnd.AmmoSlots[i].UsedInSlot[j] ) continue;
+					aslots[j].Push(a);
 				}
-				j++;
 			}
 		}
 		// draw the slots
@@ -338,22 +328,21 @@ Class UnrealHUD : BaseStatusBar
 		{
 			for ( int i=0; i<10; i++ )
 			{
-				if ( wslots[i].Size() <= 0 ) continue;
 				Font cfont = TinyFont;
 				if ( cwslot == i ) cfont = TinyWhiteFont;
 				int realslot = i?i:10;
 				CurX = HalfHUDX-3+realslot*6;
 				CurY = HalfHUDY+4;
-				Screen.DrawText(cfont,Font.CR_UNTRANSLATED,CurX,CurY,String.Format("%d",i),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+				if ( CPlayer.HasWeaponsInSlot(i) )
+					Screen.DrawText(cfont,Font.CR_UNTRANSLATED,CurX,CurY,String.Format("%d",i),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
 				// Draw ammo bar(s)
 				int nammo = 0;
-				for ( int j=0; j<wslots[i].Size(); j++ ) if ( wslots[i][j].Ammo1 ) nammo++;
+				for ( int j=0; j<aslots[i].Size(); j++ ) if ( aslots[i][j].Amount ) nammo++;
 				if ( nammo <= 0 ) continue;
 				int cbar = 0;
-				for ( int j=0; j<wslots[i].Size(); j++ )
+				for ( int j=0; j<aslots[i].Size(); j++ )
 				{
-					let amo = wslots[i][j].Ammo1;
-					if ( !amo ) continue;
+					let amo = aslots[i][j];
 					AmmoBarSize = 16*min(1.0,amo.Amount/double(amo.MaxAmount));
 					CurX = HalfHUDX-3+realslot*6+(4./nammo)*cbar;
 					CurY = HalfHUDY+29-AmmoBarSize;
@@ -365,7 +354,7 @@ Class UnrealHUD : BaseStatusBar
 					}
 					DrawColor = Color(0,255,0);
 					if ( AmmoBarSize < 8 ) DrawColor = Color(255-int(AmmoBarSize)*30,int(AmmoBarSize)*30+40,0);
-					if ( wslots[i][j] != cw ) DrawColor = Color(DrawColor.r/2,DrawColor.g/2,DrawColor.b/2);
+					if ( !cw || (cw.Ammo1 != amo) ) DrawColor = Color(DrawColor.r/2,DrawColor.g/2,DrawColor.b/2);
 					if ( amo.Amount > 0 )
 					{
 						Screen.DrawTexture(HudAmmo,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_FillColor,BlackColor,DTA_DestWidthF,4./nammo,DTA_DestHeightF,AmmoBarSize);
@@ -375,7 +364,7 @@ Class UnrealHUD : BaseStatusBar
 				}
 			}
 		}
-		// draw translator
+		// flash translator icon
 		if ( translator ) bFlashTranslator = (translator.bNewMessage || translator.bNotNewMessage);
 		// draw the inventory bar
 		if ( (HUDMode == 5) || !SelectedItem ) return;

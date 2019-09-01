@@ -12,6 +12,7 @@ Class UMiniAmmo : Ammo
 	}
 	override String PickupMessage()
 	{
+		if ( PickupMsg.Length() > 0 ) return Super.PickupMessage();
 		return String.Format("%s%d%s",StringTable.Localize("$I_MINIAMMOL"),Amount,StringTable.Localize("$I_MINIAMMOR"));
 	}
 }

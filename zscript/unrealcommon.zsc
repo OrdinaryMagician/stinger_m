@@ -334,6 +334,12 @@ Class UPlayerFemale1 : UPlayerFemale
 		UTPlayer.VoiceType VOICE_FemaleTwo;
 		-NOMENU;
 	}
+	States
+	{
+	See:
+		GINA A -1;
+		Stop;
+	}
 }
 Class UPlayerFemale2 : UPlayerFemale
 {
@@ -343,6 +349,12 @@ Class UPlayerFemale2 : UPlayerFemale
 		Player.DisplayName "$N_FEMALE2";
 		Player.Portrait "";
 		-NOMENU;
+	}
+	States
+	{
+	See:
+		SONY A -1;
+		Stop;
 	}
 }
 
@@ -463,6 +475,12 @@ Class UPlayerMale1 : UPlayerMale
 		Player.Portrait "";
 		-NOMENU;
 	}
+	States
+	{
+	See:
+		KURG A -1;
+		Stop;
+	}
 }
 Class UPlayerMale2 : UPlayerMale
 {
@@ -472,6 +490,12 @@ Class UPlayerMale2 : UPlayerMale
 		Player.DisplayName "$N_MALE2";
 		Player.Portrait "";
 		-NOMENU;
+	}
+	States
+	{
+	See:
+		ASH_ A -1;
+		Stop;
 	}
 }
 Class UPlayerMale3 : UPlayerMale
@@ -483,6 +507,12 @@ Class UPlayerMale3 : UPlayerMale
 		Player.Portrait "";
 		UTPlayer.VoiceType VOICE_MaleTwo;
 		-NOMENU;
+	}
+	States
+	{
+	See:
+		DANT A -1;
+		Stop;
 	}
 }
 
@@ -599,7 +629,7 @@ Class UnrealWeapon : UTWeapon
 
 Class UnrealStaticHandler : StaticEventHandler
 {
-	ui TextureID tex[6];
+	ui TextureID tex[8];
 	ui int mtics, cur;
 	ui String lastmusic;
 
@@ -610,11 +640,14 @@ Class UnrealStaticHandler : StaticEventHandler
 		int proto = protomenu.GetInt();
 		tex[0] = TexMan.CheckForTexture("graphics/UnLogo0.png",TexMan.Type_Any);
 		tex[1] = TexMan.CheckForTexture("graphics/UnLogo1.png",TexMan.Type_Any);
-		tex[2] = TexMan.CheckForTexture("graphics/UnLogo2.png",TexMan.Type_Any);
-		tex[3] = TexMan.CheckForTexture("graphics/UnBg.png",TexMan.Type_Any);
-		tex[4] = TexMan.CheckForTexture("graphics/97Bg.png",TexMan.Type_Any);
-		tex[5] = TexMan.CheckForTexture("graphics/95Bg.png",TexMan.Type_Any);
-		if ( proto > 1 ) S_ChangeMusic("Unreal");
+		tex[2] = TexMan.CheckForTexture("graphics/UnLogo3.png",TexMan.Type_Any);
+		tex[3] = TexMan.CheckForTexture("graphics/UnLogo2.png",TexMan.Type_Any);
+		tex[4] = TexMan.CheckForTexture("graphics/UnBg.png",TexMan.Type_Any);
+		tex[5] = TexMan.CheckForTexture("graphics/97Bg.png",TexMan.Type_Any);
+		tex[6] = TexMan.CheckForTexture("graphics/96Bg.png",TexMan.Type_Any);
+		tex[7] = TexMan.CheckForTexture("graphics/95Bg.png",TexMan.Type_Any);
+		if ( proto > 2 ) S_ChangeMusic("Unreal");
+		else if ( proto == 2 ) S_ChangeMusic("Isotox96");
 		else if ( proto == 1 ) S_ChangeMusic("Unreal2");
 		else S_ChangeMusic("FlyBy");
 		cur = proto;
@@ -649,13 +682,13 @@ Class UnrealStaticHandler : StaticEventHandler
 	{
 		if ( gamestate != GS_TITLELEVEL ) return;
 		double ar = Screen.GetAspectRatio();
-		Vector2 tsize = TexMan.GetScaledSize(tex[cur+3]);
+		Vector2 tsize = TexMan.GetScaledSize(tex[cur+4]);
 		double sar = tsize.x/tsize.y;
 		Vector2 vsize;
 		if ( sar > ar ) vsize = (tsize.y*ar,tsize.y);
 		else if ( sar < ar ) vsize = (tsize.x,tsize.x/ar);
 		else vsize = tsize;
-		Screen.DrawTexture(tex[cur+3],false,(vsize.x-tsize.x)/2,(vsize.y-tsize.y)/2,DTA_VirtualWidthF,vsize.x,DTA_VirtualHeightF,vsize.y,DTA_KeepRatio,true);
+		Screen.DrawTexture(tex[cur+4],false,(vsize.x-tsize.x)/2,(vsize.y-tsize.y)/2,DTA_VirtualWidthF,vsize.x,DTA_VirtualHeightF,vsize.y,DTA_KeepRatio,true);
 		Screen.Dim("Black",clamp(1.-((mtics+e.FracTic)/Thinker.TICRATE)*.2,0.,1.),0,0,Screen.GetWidth(),Screen.GetHeight());
 		if ( menuactive ) return;
 		tsize = TexMan.GetScaledSize(tex[cur]);
@@ -676,8 +709,16 @@ Class UnrealStaticHandler : StaticEventHandler
 	}
 }
 
+Class AmmoUsedInSlot
+{
+	Class<Ammo> AmmoType;
+	bool UsedInSlot[10];
+}
+
 Class UnrealMainHandler : EventHandler
 {
+	Array<AmmoUsedInSlot> AmmoSlots;
+
 	override void CheckReplacement( ReplaceEvent e )
 	{
 		if ( (e.Replacee == 'Chainsaw') || (e.Replacee == 'Gauntlets') )
@@ -1016,6 +1057,33 @@ Class UnrealMainHandler : EventHandler
 			level.ReplaceTextures("rClfBas0","C_wal19k",0);
 			level.ReplaceTextures("uAlnWl2b","C_WAL19A",0);
 			level.ReplaceTextures("xAlnWl2b","C_WAL19F",0);
+		}
+		// populate ammo-by-slot array
+		AmmoSlots.Clear();
+		for ( int i=0; i<AllActorClasses.Size(); i++ )
+		{
+			let type = (class<Weapon>)(AllActorClasses[i]);
+			if ( !type || (type == "Weapon") ) continue;
+			let rep = Actor.GetReplacement(type);
+			if ( (rep != type) && !(rep is "DehackedPickup") ) continue;
+			readonly<Weapon> def = GetDefaultByType(type);
+			int wslot = def.SlotNumber;
+			if ( wslot == -1 ) continue;
+			if ( !def.AmmoType1 ) continue;
+			int found = -1;
+			for ( int j=0; j<AmmoSlots.Size(); j++ )
+			{
+				if ( AmmoSlots[j].AmmoType != def.AmmoType1 ) continue;
+				found = j;
+			}
+			if ( found == -1 )
+			{
+				let asl = new("AmmoUsedInSlot");
+				asl.AmmoType = def.AmmoType1;
+				asl.UsedInSlot[wslot] = true;
+				AmmoSlots.Push(asl);
+			}
+			else AmmoSlots[found].UsedInSlot[wslot] = true;
 		}
 	}
 }

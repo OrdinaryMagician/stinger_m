@@ -1,8 +1,9 @@
 OptionValue "IntroTypeMenu"
 {
-	0, "$STING_UNREAL99"
+	0, "$STING_UNREAL98"
 	1, "$STING_UNREAL97"
-	2, "$STING_UNREAL95"
+	2, "$STING_UNREAL96"
+	3, "$STING_UNREAL95"
 }
 
 OptionMenu "UnrealOptionMenu"
