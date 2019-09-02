@@ -4,4 +4,9 @@ Class UTranslocatorAmmo : Ammo
 
 Class UTranslocator : UnrealWeapon
 {
+	override bool TryPickup( in out Actor toucher )
+	{
+		if ( !sting_telegun ) return false;	// not allowed
+		return Super.TryPickup(toucher);
+	}
 }

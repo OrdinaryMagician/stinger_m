@@ -186,6 +186,62 @@ Object FlareThrownX
 	frame "FLAR" { light "FLARELIGHT" }
 }
 
+FlickerLight2 DAMMOLIGHT1
+{
+	Color 0.2 0.2 1.0
+	Size 72
+	SecondarySize 80
+	Interval 0.1
+}
+FlickerLight2 DAMMOLIGHT2
+{
+	Color 0.2 1.0 0.2
+	Size 72
+	SecondarySize 80
+	Interval 0.1
+}
+FlickerLight2 DAMMOLIGHT3
+{
+	Color 1.0 1.0 0.2
+	Size 72
+	SecondarySize 80
+	Interval 0.1
+}
+FlickerLight2 DAMMOLIGHT4
+{
+	Color 1.0 0.6 0.2
+	Size 72
+	SecondarySize 80
+	Interval 0.1
+}
+FlickerLight2 DAMMOLIGHT5
+{
+	Color 1.0 0.2 0.2
+	Size 72
+	SecondarySize 80
+	Interval 0.1
+}
+Object DispersionAmmo
+{
+	Frame "DISM" { light "DAMMOLIGHT1" }
+}
+Object DAmmo2
+{
+	Frame "DISM" { light "DAMMOLIGHT2" }
+}
+Object DAmmo3
+{
+	Frame "DISM" { light "DAMMOLIGHT3" }
+}
+Object DAmmo4
+{
+	Frame "DISM" { light "DAMMOLIGHT4" }
+}
+Object DAmmo5
+{
+	Frame "DISM" { light "DAMMOLIGHT5" }
+}
+
 // Shaders / Brightmaps
 HardwareShader Texture "graphics/MenuBarr.png"
 {

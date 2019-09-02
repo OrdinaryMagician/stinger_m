@@ -8,6 +8,7 @@ Doom Tournament (currently the devel branch is required).
 
 ## Currently Implemented
 
+ - Dispersion Pistol (slot 1) (replaces fist)
  - Automag (slot 2) (replaces pistol)
    - Dual Automags
  - Stinger (slot 3) (replaces shotguns)
@@ -37,7 +38,6 @@ Doom Tournament (currently the devel branch is required).
 ## In progress
 
  - Flak Cannon (slot 6) (replaces rocket launcher)
- - Dispersion Pistol (slot 1) (replaces fist)
 
  - Flashlight (replaces light amplifier)
    - Searchlight (must be placed manually for balance reasons)
@@ -71,6 +71,7 @@ Doom Tournament (currently the devel branch is required).
  - Autocannon (slot 0) (replaces bfg9000)
 
  - Motion Detector (replaces computer map)
+ - Light & Dark Flares
  - Minigun Sentry (rare spawn in backpacks)
 
 ## Known bugs

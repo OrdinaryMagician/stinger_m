@@ -135,6 +135,11 @@ u1/metalfootstep2	metwalk2
 u1/metalfootstep3	metwalk3
 $random u1/metalfootstep { u1/metalfootstep1 u1/metalfootstep2 u1/metalfootstep3 }
 
+u1/bootfootstep1	lbootwk1
+u1/bootfootstep2	lbootwk2
+u1/bootfootstep3	lbootwk3
+$random u1/bootfootstep { u1/bootfootstep1 u1/bootfootstep2 u1/bootfootstep3 }
+
 misc/secret	secret
 misc/i_pkup	ammosnd
 misc/p_pkup	genpicks

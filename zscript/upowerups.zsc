@@ -186,6 +186,49 @@ Class AmpSound : Actor
 
 Class UJumpBoots : UnrealInventory
 {
+	int draincnt;
+	Default
+	{
+		Tag "$T_JUMPBOOTS";
+		+COUNTITEM;
+		+INVENTORY.BIGPOWERUP;
+		+INVENTORY.ALWAYSPICKUP;
+		Inventory.MaxAmount 3;
+		Inventory.Icon "I_Boots";
+		Inventory.PickupMessage "$I_JUMPBOOTS";
+		Inventory.RespawnTics 1050;
+		UnrealInventory.Charge 3;
+	}
+	override bool Use( bool pickup )
+	{
+		if ( pickup ) return false;
+		bActive = !bActive;
+		Owner.A_PlaySound("boot/pickup",CHAN_ITEM);
+		if ( bActive ) Owner.GiveInventory("PowerJumpBoots_HighJump",1);
+		else Owner.TakeInventory("PowerJumpBoots_HighJump",1);
+		return false;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !Owner || !Owner.player ) return;
+		draincnt++;
+		if ( (draincnt >= 700) || (bActive && (owner.player.jumptics == -1)) )
+		{
+			draincnt = 0;
+			charge--;
+			Owner.A_PlaySound("boot/jump",CHAN_BODY);
+		}
+		else if ( (charge <= 0) && owner.player.onground )
+		{
+			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_JUMPBOOTS"));
+			Amount--;
+			Owner.TakeInventory("PowerJumpBoots_HighJump",1);
+			charge = defaultcharge;
+			bActive = false;
+			if ( Amount <= 0 ) DepleteOrDestroy();
+		}
+	}
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
@@ -205,6 +248,23 @@ Class UJumpBoots : UnrealInventory
 			else if ( s.DamageType == 'Fire' ) foundlava = true;
 		}
 		// TODO replace self with asbestos/toxin suits or scuba
+	}
+	override void AttachToOwner( Actor Other )
+	{
+		Super.AttachToOwner(Other);
+		Other.GiveInventory("PowerJumpBoots_IronFeet",1);
+	}
+	override void DetachFromOwner()
+	{
+		Super.DetachFromOwner();
+		Owner.TakeInventory("PowerJumpBoots_HighJump",1);
+		Owner.TakeInventory("PowerJumpBoots_IronFeet",1);
+	}
+	States
+	{
+	Spawn:
+		JBUT A -1;
+		Stop;
 	}
 }
 

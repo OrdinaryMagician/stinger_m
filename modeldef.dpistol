@@ -40,6 +40,187 @@ Model "WeaponPowerUpX"
 	FrameIndex WPOW T 0 19
 }
 
+Model "DispersionAmmo"
+{
+	Path "models"
+	Model 0 "DispM1_d.3d"
+	Scale 0.3 0.18 0.096
+	Offset 8 0 0
+	AngleOffset 90
+
+	PITCHFROMMOMENTUM
+	DONTCULLBACKFACES
+
+	SurfaceSkin 0 0 "sprites/dpistol/DETBA0.png"
+	SurfaceSkin 0 1 "ArcB1.png"
+	FrameIndex DISM A 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETBB0.png"
+	SurfaceSkin 0 1 "ArcB2.png"
+	FrameIndex DISM B 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETBC0.png"
+	SurfaceSkin 0 1 "ArcB3.png"
+	FrameIndex DISM C 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETBD0.png"
+	SurfaceSkin 0 1 "ArcB4.png"
+	FrameIndex DISM D 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETBE0.png"
+	SurfaceSkin 0 1 "ArcB5.png"
+	FrameIndex DISM E 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETBD0.png"
+	SurfaceSkin 0 1 "ArcB6.png"
+	FrameIndex DISM F 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETBC0.png"
+	SurfaceSkin 0 1 "ArcB7.png"
+	FrameIndex DISM G 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETBB0.png"
+	SurfaceSkin 0 1 "ArcB8.png"
+	FrameIndex DISM H 0 0
+}
+Model "DAmmo2"
+{
+	Path "models"
+	Model 0 "DispM1_d.3d"
+	Scale 0.3 0.18 0.096
+	Offset 8 0 0
+	AngleOffset 90
+
+	PITCHFROMMOMENTUM
+	DONTCULLBACKFACES
+
+	SurfaceSkin 0 0 "sprites/dpistol/DETGA0.png"
+	SurfaceSkin 0 1 "ArcG1.png"
+	FrameIndex DISM A 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETGB0.png"
+	SurfaceSkin 0 1 "ArcG2.png"
+	FrameIndex DISM B 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETGC0.png"
+	SurfaceSkin 0 1 "ArcG3.png"
+	FrameIndex DISM C 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETGD0.png"
+	SurfaceSkin 0 1 "ArcG4.png"
+	FrameIndex DISM D 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETGE0.png"
+	SurfaceSkin 0 1 "ArcG5.png"
+	FrameIndex DISM E 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETGD0.png"
+	SurfaceSkin 0 1 "ArcG6.png"
+	FrameIndex DISM F 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETGC0.png"
+	SurfaceSkin 0 1 "ArcG7.png"
+	FrameIndex DISM G 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETGB0.png"
+	SurfaceSkin 0 1 "ArcG8.png"
+	FrameIndex DISM H 0 0
+}
+Model "DAmmo3"
+{
+	Path "models"
+	Model 0 "DispM1_d.3d"
+	Scale 0.3 0.18 0.096
+	Offset 8 0 0
+	AngleOffset 90
+
+	PITCHFROMMOMENTUM
+	DONTCULLBACKFACES
+
+	SurfaceSkin 0 0 "sprites/dpistol/DETYA0.png"
+	SurfaceSkin 0 1 "ArcY1.png"
+	FrameIndex DISM A 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETYB0.png"
+	SurfaceSkin 0 1 "ArcY2.png"
+	FrameIndex DISM B 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETYC0.png"
+	SurfaceSkin 0 1 "ArcY3.png"
+	FrameIndex DISM C 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETYD0.png"
+	SurfaceSkin 0 1 "ArcY4.png"
+	FrameIndex DISM D 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETYE0.png"
+	SurfaceSkin 0 1 "ArcY5.png"
+	FrameIndex DISM E 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETYD0.png"
+	SurfaceSkin 0 1 "ArcY6.png"
+	FrameIndex DISM F 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETYC0.png"
+	SurfaceSkin 0 1 "ArcY7.png"
+	FrameIndex DISM G 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETYB0.png"
+	SurfaceSkin 0 1 "ArcY8.png"
+	FrameIndex DISM H 0 0
+}
+Model "DAmmo4"
+{
+	Path "models"
+	Model 0 "DispM1_d.3d"
+	Scale 0.3 0.18 0.096
+	Offset 8 0 0
+	AngleOffset 90
+
+	PITCHFROMMOMENTUM
+	DONTCULLBACKFACES
+
+	SurfaceSkin 0 0 "sprites/dpistol/DETOA0.png"
+	SurfaceSkin 0 1 "ArcO1.png"
+	FrameIndex DISM A 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETOB0.png"
+	SurfaceSkin 0 1 "ArcO2.png"
+	FrameIndex DISM B 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETOC0.png"
+	SurfaceSkin 0 1 "ArcO3.png"
+	FrameIndex DISM C 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETOD0.png"
+	SurfaceSkin 0 1 "ArcO4.png"
+	FrameIndex DISM D 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETOE0.png"
+	SurfaceSkin 0 1 "ArcO5.png"
+	FrameIndex DISM E 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETOD0.png"
+	SurfaceSkin 0 1 "ArcO6.png"
+	FrameIndex DISM F 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETOC0.png"
+	SurfaceSkin 0 1 "ArcO7.png"
+	FrameIndex DISM G 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETOB0.png"
+	SurfaceSkin 0 1 "ArcO8.png"
+	FrameIndex DISM H 0 0
+}
+Model "DAmmo5"
+{
+	Path "models"
+	Model 0 "DispM1_d.3d"
+	Scale 0.3 0.18 0.096
+	Offset 8 0 0
+	AngleOffset 90
+
+	PITCHFROMMOMENTUM
+	DONTCULLBACKFACES
+
+	SurfaceSkin 0 0 "sprites/dpistol/DETRA0.png"
+	SurfaceSkin 0 1 "ArcR1.png"
+	FrameIndex DISM A 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETRB0.png"
+	SurfaceSkin 0 1 "ArcR2.png"
+	FrameIndex DISM B 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETRC0.png"
+	SurfaceSkin 0 1 "ArcR3.png"
+	FrameIndex DISM C 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETRD0.png"
+	SurfaceSkin 0 1 "ArcR4.png"
+	FrameIndex DISM D 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETRE0.png"
+	SurfaceSkin 0 1 "ArcR5.png"
+	FrameIndex DISM E 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETRD0.png"
+	SurfaceSkin 0 1 "ArcR6.png"
+	FrameIndex DISM F 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETRC0.png"
+	SurfaceSkin 0 1 "ArcR7.png"
+	FrameIndex DISM G 0 0
+	SurfaceSkin 0 0 "sprites/dpistol/DETRB0.png"
+	SurfaceSkin 0 1 "ArcR8.png"
+	FrameIndex DISM H 0 0
+}
+
 Model "DispersionPistol"
 {
 	Path "models"

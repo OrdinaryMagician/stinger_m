@@ -152,7 +152,7 @@ Class StingerProjectile : Actor
 	Default
 	{
 		Obituary "$O_STINGER";
-		DamageType 'shot';
+		DamageType 'Stinger';
 		DamageFunction Random[Stinger](15,25);
 		Speed 40;
 		Radius 2;

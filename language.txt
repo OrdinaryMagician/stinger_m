@@ -1,4 +1,14 @@
 [default eng enc ena enz eni ens enj enb enl ent enw]
+/* DamNums support */
+DAMNUM_TYPECOLOR_DAMMO1 = "DamBlue";
+DAMNUM_TYPECOLOR_DAMMO2 = "DamGreen";
+DAMNUM_TYPECOLOR_DAMMO3 = "DamYellow";
+DAMNUM_TYPECOLOR_DAMMO4 = "DamOrange";
+DAMNUM_TYPECOLOR_DAMMO5 = "DamRed";
+DAMNUM_TYPECOLOR_STINGER = "DamTeal";
+DAMNUM_TYPECOLOR_EXPLODED = "DamGold";
+DAMNUM_TYPECOLOR_STUNNED = "DamLightBlue";
+DAMNUM_TYPECOLOR_IMPALER = "DamMagenta";
 /* Obituaries */
 O_DPISTOL = "%o was killed by %k's Dispersion Pistol. What a loser!";
 O_AUTOMAG = "%o got gatted by %k's Automag.";

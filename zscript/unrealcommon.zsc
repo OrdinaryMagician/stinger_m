@@ -5,7 +5,7 @@ Class UPlayer : UTPlayer
 		Player.StartItem "Automag";
 		Player.StartItem "DispersionPistol";
 		Player.StartItem "UMiniAmmo", 30;
-		Player.StartItem "DispersionAmmo", 50;
+		Player.StartItem "DefaultAmmo", 50;
 	}
 
 	// Have to modify the give cheat to handle UT armor
@@ -124,7 +124,7 @@ Class UPlayer : UTPlayer
 				let type = (class<Inventory>)(AllActorClasses[i]);
 				if ( !type ) continue;
 				let def = GetDefaultByType (type);
-				if ( def.Icon.isValid() && (def.MaxAmount > 1) &&
+				if ( def.Icon.isValid() && ((def.MaxAmount > 1) || (type is 'UnrealInventory')) &&
 					!(type is "PuzzleItem") && !(type is "Powerup") && !(type is "Ammo") &&	!(type is "Armor") )
 				{
 					// Do not give replaced items unless using "give everything"
@@ -177,7 +177,7 @@ Class UPlayer : UTPlayer
 	override void PlayFootstep( double vol )
 	{
 		let boot = UJumpBoots(FindInventory("UJumpBoots"));
-		if ( boot && boot.bActive ) A_PlaySound("u1/metalfootstep",CHAN_5,min(1.,vol*2));
+		if ( boot ) A_PlaySound("u1/bootfootstep",CHAN_5,min(1.,vol*2));
 		else A_PlaySound("ut/playerfootstep",CHAN_5,vol);
 	}
 }
@@ -467,6 +467,17 @@ Class UPlayerMale : UPlayer
 }
 Class UPlayerMale1 : UPlayerMale
 {
+	override void PlayFootstep( double vol )
+	{
+		let boot = UJumpBoots(FindInventory("UJumpBoots"));
+		if ( boot ) A_PlaySound("u1/bootfootstep",CHAN_5,min(1.,vol*2));
+		else
+		{
+			double ang = level.time/(20*TICRATE/35.)*360.;
+			if ( sin(ang) > 0 ) A_PlaySound("u1/metalfootstep",CHAN_5,min(1.,vol*2));
+			else A_PlaySound("ut/playerfootstep",CHAN_5,vol);
+		}
+	}
 	Default
 	{
 		Player.DisplayName "$N_MALE1";
@@ -541,6 +552,7 @@ Class UnrealInventory : Inventory
 	{
 		Super.AttachToOwner(other);
 		Charge = DefaultCharge;
+		InterHubAmount = MaxAmount;	// it's annoying to set this per-subclass
 	}
 	override bool HandlePickup( Inventory item )
 	{
@@ -560,11 +572,15 @@ Class UnrealInventory : Inventory
 		if ( bDROPPED && (pos.z <= floorz) )
 			vel.xy *= 0;
 	}
+	override void DetachFromOwner()
+	{
+		Super.DetachFromOwner();
+		// deactivate
+		bActive = false;
+	}
 	override void OnDrop( Actor dropper )
 	{
 		Super.OnDrop(dropper);
-		// deactivate
-		bActive = false;
 		// drop like weapons
 		Vector2 hofs = RotateVector((dropper.radius,0),dropper.angle);
 		SetOrigin(dropper.Vec3Offset(hofs.x,hofs.y,dropper.height*0.5),false);

@@ -570,8 +570,8 @@ Class FlareThrown : Actor
 	States
 	{
 	Spawn:
-		FLAR A -1;
-		Stop;
+		FLAR A 1 A_JumpIf(ReactionTime<=0,"Death");
+		Wait;
 	Bounce:
 		FLAR A 0
 		{
@@ -697,11 +697,24 @@ Class FlareThrownX : Actor
 	}
 }
 
-Class LightFlare : UnrealInventory
+Class BetaFlare : UnrealInventory
+{
+	Class<Actor> ThrownClass;
+
+	Property ThrownClass : ThrownClass;
+
+	override bool TryPickup( in out Actor toucher )
+	{
+		if ( !sting_flares ) return false;	// not allowed
+		return Super.TryPickup(toucher);
+	}
+}
+
+Class LightFlare : BetaFlare
 {
 }
 
-Class DarkFlare : UnrealInventory
+Class DarkFlare : BetaFlare
 {
 }
 

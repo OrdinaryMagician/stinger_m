@@ -172,6 +172,7 @@ Class ShieldBelt : UnrealArmor
 		Tag "$T_SHIELDBELT";
 		+COUNTITEM;
 		+INVENTORY.BIGPOWERUP;
+		+INVENTORY.ALWAYSPICKUP;
 		Inventory.Amount 100;
 		Inventory.MaxAmount 100;
 		Inventory.InterHubAmount 100;
@@ -228,6 +229,7 @@ Class PowerShield : UnrealArmor
 		Tag "$T_POWERSHIELD";
 		+COUNTITEM;
 		+INVENTORY.BIGPOWERUP;
+		+INVENTORY.ALWAYSPICKUP;
 		Inventory.Amount 200;
 		Inventory.MaxAmount 200;
 		Inventory.InterHubAmount 200;
