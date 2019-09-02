@@ -43,9 +43,107 @@ Class StingerBurstLight : PaletteLight
 {
 	Default
 	{
-		Tag "Blue3";
+		Tag "Blue4";
 		Args 0,0,0,30;
-		ReactionTime 10;
+		ReactionTime 12;
+	}
+}
+
+Class StingerChunk : Actor
+{
+	int deadtimer;
+	double rollvel, anglevel, pitchvel;
+
+	Default
+	{
+		Radius 2;
+		Height 2;
+		+NOBLOCKMAP;
+		+MISSILE;
+		+MOVEWITHSECTOR;
+		+THRUACTORS;
+		+NOTELEPORT;
+		+DONTSPLASH;
+		+INTERPOLATEANGLES;
+		BounceType "Doom";
+		BounceFactor 0.4;
+		Gravity 0.35;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		deadtimer = 0;
+		anglevel = FRandom[Junk](10,30)*RandomPick[Junk](-1,1);
+		pitchvel = FRandom[Junk](10,30)*RandomPick[Junk](-1,1);
+		rollvel = FRandom[Junk](10,30)*RandomPick[Junk](-1,1);
+		frame = Random[Junk](0,8);
+		scale *= Frandom[Junk](0.4,0.8);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( isFrozen() ) return;
+		if ( InStateSequence(CurState,ResolveState("Death")) )
+		{
+			deadtimer++;
+			if ( deadtimer > 60 ) A_FadeOut(0.05);
+			return;
+		}
+	}
+	States
+	{
+	Spawn:
+		CHIP # 1
+		{
+			angle += anglevel;
+			pitch += pitchvel;
+			roll += rollvel;
+		}
+		Loop;
+	Bounce:
+		CHIP # 0
+		{
+			anglevel = FRandom[Junk](10,30)*RandomPick[Junk](-1,1);
+			pitchvel = FRandom[Junk](10,30)*RandomPick[Junk](-1,1);
+			rollvel = FRandom[Junk](10,30)*RandomPick[Junk](-1,1);
+		}
+		Goto Spawn;
+	Death:
+		CHIP # -1;
+		Stop;
+	Dummy:
+		CHIP ABCDEFGHI -1;
+		Stop;
+	}
+}
+
+Class ViewStingerChunk : StingerChunk
+{
+	Vector3 ofs, vvel;
+	Default
+	{
+		+NOCLIP;
+		+NOGRAVITY;
+		-MISSILE;
+		BounceType "None";
+	}
+	override void Tick()
+	{
+		Actor.Tick();
+		if ( !target || !target.player )
+		{
+			Destroy();
+			return;
+		}
+		Vector3 x, y, z;
+		[x, y, z] = dt_CoordUtil.GetAxes(target.pitch,target.angle,target.roll);
+		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
+		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
+		bInvisible = (players[consoleplayer].camera != target);
+		if ( isFrozen() ) return;
+		ofs += vvel;
+		scale *= 0.75;
+		if ( scale.x <= 0.01 ) Destroy();
 	}
 }
 
@@ -72,6 +170,35 @@ Class StingerProjectile : Actor
 		}
 		return damage;
 	}
+	action void A_StingerHit()
+	{
+		if ( !Random[Stinger](0,2) ) A_PlaySound("stinger/hit2",CHAN_BODY,0.5,pitch:FRandom[Stinger](0.5,1.5));
+		else A_PlaySound("stinger/hit",CHAN_BODY,0.6);
+		A_SprayDecal("WallCrack",20);
+		A_AlertMonsters();
+		Spawn("StingerBurstLight",pos);
+		double ang, pt;
+		int numpt = Random[Stinger](4,8);
+		for ( int i=0; i<numpt; i++ )
+		{
+			ang = FRandom[Stinger](0,360);
+			pt = FRandom[Stinger](-90,90);
+			let c = Spawn("StingerChunk",pos);
+			c.angle = ang;
+			c.pitch = pt;
+			c.vel = (cos(ang)*cos(pt),sin(ang)*cos(pt),-sin(pt))*FRandom[Stinger](3,9);
+		}
+		numpt = Random[Stinger](6,12);
+		for ( int i=0; i<numpt; i++ )
+		{
+			ang = FRandom[Stinger](0,360);
+			pt = FRandom[Stinger](-90,90);
+			let c = Spawn("UTSmoke",pos);
+			c.vel = (cos(ang)*cos(pt),sin(ang)*cos(pt),-sin(pt))*FRandom[Stinger](0.3,0.8);
+			c.SetShade(Color(1,3,4)*Random[Stinger](48,63));
+			c.alpha *= 0.5;
+		}
+	}
 	States
 	{
 	Spawn:
@@ -79,14 +206,7 @@ Class StingerProjectile : Actor
 		Stop;
 	Death:
 	Crash:
-		TNT1 A 0
-		{
-			if ( !Random[Stinger](0,2) ) A_PlaySound("stinger/hit2",CHAN_BODY,0.5,pitch:FRandom[Stinger](0.5,1.5));
-			else A_PlaySound("stinger/hit",CHAN_BODY,0.6);
-			A_AlertMonsters();
-			Spawn("StingerBurstLight",pos);
-		}
-		TPRJ BCDEFG 2 Bright;
+		TNT1 A 1 A_StingerHit();
 		Stop;
 	XDeath:
 		TNT1 A 1;
@@ -145,12 +265,34 @@ Class Stinger : UnrealWeapon
 		A_QuakeEx(1,1,1,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
 		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+5.0*x+8.0*y-8.0*z;
+		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+5.0*x+8.0*y-8.0*z;
 		Actor p = Spawn("StingerProjectile",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();
+		p.roll = FRandom[Stinger](0,360);
 		p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed;
 		p.target = self;
+		int numpt = Random[Stinger](5,9);
+		double ang;
+		for ( int i=0; i<numpt; i++ )
+		{
+			let s = Spawn("ViewStingerChunk",origin);
+			ViewStingerChunk(s).ofs = (8,2,-2);
+			ang = FRandom[Stinger](0,360);
+			ViewStingerChunk(s).vvel = (FRandom[Stinger](0.2,1.2),0,0)+(0,cos(ang),sin(ang))*FRandom[Stinger](0.3,0.9);
+			s.target = self;
+		}
+		for ( int i=0; i<12; i++ )
+		{
+			let s = Spawn("UTViewSmoke",origin);
+			UTViewSmoke(s).ofs = (16,4,-4);
+			ang = FRandom[Stinger](0,360);
+			UTViewSmoke(s).vvel = (FRandom[Stinger](0,0.4),0,0)+(0,cos(ang),sin(ang))*FRandom[Stinger](0.2,0.5);
+			s.target = self;
+			s.scale *= 1.5;
+			s.alpha *= 0.3;
+			s.SetShade(Color(1,3,4)*Random[Stinger](31,63));
+		}
 	}
 	action void A_StingerAltFire()
 	{
@@ -183,8 +325,30 @@ Class Stinger : UnrealWeapon
 			p = Spawn("StingerProjectile",origin);
 			p.angle = atan2(dir.y,dir.x);
 			p.pitch = asin(-dir.z);
+			p.roll = FRandom[Stinger](0,360);
 			p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed;
 			p.target = self;
+			int numpt = Random[Stinger](5,9);
+			double ang;
+			for ( int i=0; i<numpt; i++ )
+			{
+				let s = Spawn("ViewStingerChunk",origin);
+				ViewStingerChunk(s).ofs = (8,2,-2);
+				ang = FRandom[Stinger](0,360);
+				ViewStingerChunk(s).vvel = (FRandom[Stinger](0.2,1.2),0,0)+(0,cos(ang),sin(ang))*FRandom[Stinger](0.3,0.9);
+				s.target = self;
+			}
+			for ( int i=0; i<12; i++ )
+			{
+				let s = Spawn("UTViewSmoke",origin);
+				UTViewSmoke(s).ofs = (16,4,-4);
+				ang = FRandom[Stinger](0,360);
+				UTViewSmoke(s).vvel = (FRandom[Stinger](0,0.4),0,0)+(0,cos(ang),sin(ang))*FRandom[Stinger](0.2,0.5);
+				s.target = self;
+				s.scale *= 1.5;
+				s.alpha *= 0.3;
+				s.SetShade(Color(1,3,4)*Random[Stinger](48,63));
+			}
 		}
 	}
 	States

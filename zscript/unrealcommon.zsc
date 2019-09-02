@@ -330,7 +330,6 @@ Class UPlayerFemale1 : UPlayerFemale
 	Default
 	{
 		Player.DisplayName "$N_FEMALE1";
-		Player.Portrait "";
 		UTPlayer.VoiceType VOICE_FemaleTwo;
 		-NOMENU;
 	}
@@ -347,7 +346,6 @@ Class UPlayerFemale2 : UPlayerFemale
 	{
 		Player.SoundClass "ufemale";
 		Player.DisplayName "$N_FEMALE2";
-		Player.Portrait "";
 		-NOMENU;
 	}
 	States
@@ -472,7 +470,6 @@ Class UPlayerMale1 : UPlayerMale
 	Default
 	{
 		Player.DisplayName "$N_MALE1";
-		Player.Portrait "";
 		-NOMENU;
 	}
 	States
@@ -488,7 +485,6 @@ Class UPlayerMale2 : UPlayerMale
 	{
 		Player.SoundClass "umale2";
 		Player.DisplayName "$N_MALE2";
-		Player.Portrait "";
 		-NOMENU;
 	}
 	States
@@ -504,7 +500,6 @@ Class UPlayerMale3 : UPlayerMale
 	{
 		Player.SoundClass "umale3";
 		Player.DisplayName "$N_MALE3";
-		Player.Portrait "";
 		UTPlayer.VoiceType VOICE_MaleTwo;
 		-NOMENU;
 	}

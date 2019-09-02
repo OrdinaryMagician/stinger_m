@@ -44,23 +44,48 @@ Model "StingerProjectile"
 	Scale 0.03 0.03 0.036
 	AngleOffset -90
 	PITCHFROMMOMENTUM
+	USEACTORROLL
 
 	FrameIndex TPRJ A 0 0
 }
-Model "StingerProjectile"
+
+Model "StingerChunk"
 {
 	Path "models"
-	Model 1 "burst_d.3d"
-	Skin 1 "Jburst1.png"
-	Scale 0.4 0.4 0.48
-	AngleOffset 90
+	Model 0 "burstx_d.3d"
+	Skin 0 "JBurst1.png"
+	Scale 0.2 0.2 0.24
+	USEACTORPITCH
+	USEACTORROLL
 
-	FrameIndex TPRJ B 1 0
-	FrameIndex TPRJ C 1 1
-	FrameIndex TPRJ D 1 2
-	FrameIndex TPRJ E 1 3
-	FrameIndex TPRJ F 1 4
-	FrameIndex TPRJ G 1 5
+	FrameIndex CHIP A 0 0
+	FrameIndex CHIP B 0 1
+	FrameIndex CHIP C 0 2
+	FrameIndex CHIP D 0 3
+	FrameIndex CHIP E 0 4
+	FrameIndex CHIP F 0 5
+	FrameIndex CHIP G 0 6
+	FrameIndex CHIP H 0 7
+	FrameIndex CHIP I 0 8
+}
+Model "ViewStingerChunk"
+{
+	Path "models"
+	Model 0 "burstx_d.3d"
+	Skin 0 "JBurst1.png"
+	Scale 0.08 0.08 0.096
+	USEACTORPITCH
+	USEACTORROLL
+
+	FrameIndex CHIP A 0 0
+	FrameIndex CHIP B 0 1
+	FrameIndex CHIP C 0 2
+	FrameIndex CHIP D 0 3
+	FrameIndex CHIP E 0 4
+	FrameIndex CHIP F 0 5
+	FrameIndex CHIP G 0 6
+	FrameIndex CHIP H 0 7
+	FrameIndex CHIP I 0 8
 }
 
 Model "Stinger"
