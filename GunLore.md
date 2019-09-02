@@ -104,9 +104,8 @@ users only.
 
 ### Extended behaviour
 
-Holding down the trigger for either fire mode will gradually increase the
-initial spin of the blade, resulting in much faster projectile speed and
-damage. This will make the secondary fire harder to control, though.
+Holding down the trigger for the primary fire will gradually increase the
+initial spin of the blade, resulting in a faster, more damaging projectile.
 
 ## GES Biorifle
 
@@ -123,7 +122,7 @@ of a normal shot.
 ## Rifle
 
 Nicknamed "Pocket Howitzer" by big game hunters in the farthest reaches of the
-galaxy, this 5ft long carbine really packs a punch.
+galaxy, this 5ft long carbine packs an incredible wallop.
 
 Primary fire: Long range, highly accurate shots. Aim for the head for extra
 damage.
@@ -164,6 +163,9 @@ The secondary fire can be useful to pick up items that are way out of reach.
 Since the charge rod rapidly extends on shoot, both fire modes additionally
 deal considerable melee damage to anything that's too close.
 
+Its energy supply regenerates much quicker than the Dispersion Pistol, thanks
+to superior Skaarj engineering.
+
 ## Razorclaw
 
 A rudimentary close combat weapon handcrafted by a fellow survivor of the
@@ -176,6 +178,9 @@ close.
 Secondary fire: Activates a mechanism in the drill head that pulls the blades
 together, clamping down into a single point. The force of this attack is akin
 to the bite of a large alligator, if it had rusty metal teeth.
+
+Due to its simple operation, it's so efficient on battery life that in practice
+it would never run dry.
 
 ## Teleport Capsules
 
@@ -267,21 +272,20 @@ If no crystal is loaded, both fire modes will be replaced with a stab.
 A Mercenary weapon built through reverse engineering of scavenged human
 technology.
 
-Primary fire: Ejects a stream of fire up to a range of 40ft. Buit-in cooling
+Primary fire: Ejects a stream of fire up to a range of 40ft. Built-in cooling
 prevents the weapon from overheating, so you can keep spraying for as long as
 you want.
 
 Secondary fire: Charges up and shoots a blob of unignited napalm. It will stick
-to anything it touches, and ignite immediately upon in contact with fire or
+to anything it touches, and ignite immediately when in contact with fire or
 explosives.
 
 The weapon is completely useless if the user or target are underwater.
 
 ## Fireblaster
 
-Another product of Mercenary engineering, and a direct evolution of the
-previously listed Flamethrower. Shoots balls of flaming napalm stabilized by
-microgravity.
+Another Mercenary invention, and a direct evolution of the previously listed
+Flamethrower. Shoots balls of flaming napalm stabilized by microgravity.
 
 Primary fire: Single, steady shots.
 
@@ -307,8 +311,8 @@ against its recoil.
 
 A barely portable weapon. Usually these are mounted on ships, you know...
 
-Primary fire: Shoots each barrel one at a time. A direct hit is usually not
-survivable by unarmored targets.
+Primary fire: Shoots each barrel one at a time. A direct hit is pretty much
+lethal for unarmored targets.
 
 Secondary fire: Fires four barrels simultaneously. Watch out for the massive
 recoil.

@@ -15,9 +15,9 @@ recreate Unreal 1 maps.
 
 This mod's version of the Translator has additional features:
 - Vertical scrolling for long messages, just use the up/down arrow keys
-- Toggling hint display, press right if there's a glowing icon on the bottom
-  right. Press left to return to the message.
-- Going through previous messages, by pressing page up / page down.
+- Toggling hint display, press page down if there's a glowing icon on the
+  bottom right. Press page up to return to the message.
+- Going through previous messages, by pressing left / right.
 
 ## Amplifier
 
