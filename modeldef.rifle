@@ -1,0 +1,37 @@
+Model "URifleAmmo"
+{
+	Path "models"
+	Model 0 "RifleBullets_d.3d"
+	Skin 0 "RifleBul1.png"
+	Scale 0.05 0.05 0.06
+	ZOffset 9.5
+
+	FrameIndex SBOX A 0 0
+}
+
+Model "URifleAmmo2"
+{
+	Path "models"
+	Model 0 "RifleRoundM_d.3d"
+	Skin 0 "RifleR1.png"
+	Scale 0.04 0.04 0.048
+	ZOffset 8
+
+	FrameIndex SRND A 0 0
+}
+
+Model "URifle"
+{
+	Path "models"
+	Model 1 "RiPick_d.3d"
+	Skin 1 "JRifle1_.png"
+	Scale 0.12 0.12 0.144
+	AngleOffset 90
+	ZOffset 6
+
+	FrameIndex SRFP B 1 0
+
+	ZOffset 12
+	ROTATING
+	FrameIndex SRFP A 1 0
+}

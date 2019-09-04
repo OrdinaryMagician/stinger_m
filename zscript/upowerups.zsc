@@ -270,8 +270,41 @@ Class UJumpBoots : UnrealInventory
 
 Class MotionDetector : UnrealInventory
 {
+	Default
+	{
+		Tag "$T_DETECTOR";
+		+COUNTITEM;
+		+INVENTORY.BIGPOWERUP;
+		+INVENTORY.ALWAYSPICKUP;
+		Inventory.MaxAmount 1;
+		Inventory.Icon "I_Detect";
+		Inventory.PickupMessage "$I_DETECTOR";
+		Inventory.RespawnTics 1050;
+		UnrealInventory.Charge 3500;
+	}
+	States
+	{
+	Spawn:
+		MDET A -1;
+		Stop;
+	}
 }
 
 Class SCUBAGear : UnrealInventory
 {
+	Default
+	{
+		Tag "$T_SCUBA";
+		Inventory.MaxAmount 1;
+		Inventory.Icon "I_Scuba";
+		Inventory.PickupMessage "$I_SCUBA";
+		Inventory.RespawnTics 700;
+		UnrealInventory.Charge 4200;
+	}
+	States
+	{
+	Spawn:
+		SCUB A -1;
+		Stop;
+	}
 }

@@ -1,11 +1,69 @@
 Class URifleAmmo : Ammo
 {
+	Default
+	{
+		Tag "$T_RIFLEAMMO";
+		Inventory.PickupMessage "";
+		Inventory.Amount 8;
+		Inventory.MaxAmount 50;
+		Ammo.BackpackAmount 12;
+		Ammo.BackpackMaxAmount 100;
+		Ammo.DropAmount 8;
+		+INVENTORY.IGNORESKILL;
+	}
+	override String PickupMessage()
+	{
+		if ( PickupMsg.Length() > 0 ) return Super.PickupMessage();
+		return String.Format("%s%d%s",StringTable.Localize("$I_RIFLEAMMOL"),Amount,StringTable.Localize("$I_RIFLEAMMOR"));
+	}
+	States
+	{
+	Spawn:
+		SBOX A -1;
+		Stop;
+	}
 }
 
 Class URifleAmmo2 : URifleAmmo
 {
+	Default
+	{
+		Tag "$T_RIFLEAMMO2";
+		Inventory.PickupMessage "$I_RIFLEAMMO2";
+		Inventory.Amount 1;
+		Ammo.DropAmount 1;
+		+INVENTORY.IGNORESKILL;
+	}
+	States
+	{
+	Spawn:
+		SRND A -1;
+		Stop;
+	}
 }
 
 Class URifle : UnrealWeapon
 {
+	Default
+	{
+		Tag "$T_RIFLE";
+		Inventory.PickupMessage "$I_RIFLE";
+		Weapon.UpSound "rifle/select";
+		Weapon.SlotNumber 9;
+		Weapon.SelectionOrder 9;
+		Weapon.AmmoType "URifleAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "URifleAmmo";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 8;
+		UTWeapon.DropAmmo 4;
+	}
+	States
+	{
+	Spawn:
+		SRFP A -1;
+		Stop;
+		SRFP B -1;
+		Stop;
+	}
 }

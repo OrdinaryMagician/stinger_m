@@ -22,6 +22,36 @@ Model "UFlakAmmo"
 	FrameIndex FAMO B 0 0
 }
 
+Model "UFlakChunk"
+{
+	Path "models"
+	Model 0 "ChnkX_d.3d"
+	Skin 0 "Jflakshel1.png"
+	Scale 0.05 0.05 0.06
+	ZOffset 2
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 2
+
+	FrameIndex FCH1 A 0 0
+	FrameIndex FCH2 A 0 1
+	FrameIndex FCH3 A 0 2
+	FrameIndex FCH4 A 0 3
+}
+
+Model "UFlakSlug"
+{
+	Path "models"
+	Model 0 "FlakSh_d.3d"
+	Skin 0 "Jflakshel1.png"
+	Scale 0.2 0.2 0.24
+	AngleOffset 90
+	USEACTORPITCH
+
+	FrameIndex FSLG A 0 0
+}
+
 Model "UFlakCannon"
 {
 	Path "models"
@@ -33,11 +63,10 @@ Model "UFlakCannon"
 
 	FrameIndex FPCK B 1 0
 
-	ZOffset 12
+	ZOffset 13
 	ROTATING
 	FrameIndex FPCK A 1 0
 }
-
 
 Model "UFlakCannon"
 {

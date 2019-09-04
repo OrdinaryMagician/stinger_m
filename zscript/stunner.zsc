@@ -1,7 +1,50 @@
 Class StunnerAmmo : Ammo
 {
+	double rechargephase, rechargespeed;
+
+	Default
+	{
+		Inventory.Icon "I_Stun";
+		Inventory.Amount 10;
+		Inventory.MaxAmount 50;
+		Ammo.BackpackAmount 0;
+		Ammo.BackpackMaxAmount 50;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !Owner ) return;
+		if ( Amount < 10 ) rechargespeed = 1.1;
+		else rechargespeed = 0.11*Amount;
+		rechargephase += 1./rechargespeed;
+		if ( rechargephase < 7 ) return;
+		rechargephase = 0;
+		Amount = min(Amount+1,MaxAmount);
+	}
 }
 
 Class Stunner : UnrealWeapon
 {
+	Default
+	{
+		Tag "$T_STUNNER";
+		Inventory.PickupMessage "$I_STUNNER";
+		Weapon.UpSound "stun/select";
+		Weapon.SlotNumber 4;
+		Weapon.SelectionOrder 9;
+		Weapon.AmmoType "StunnerAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "StunnerAmmo";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 50;
+		UTWeapon.DropAmmo 50;
+	}
+	States
+	{
+	Spawn:
+		STNP A -1;
+		Stop;
+		STNP B -1;
+		Stop;
+	}
 }

@@ -1,0 +1,15 @@
+Model "UTranslocator"
+{
+	Path "models"
+	Model 1 "TelePickup_d.3d"
+	Skin 1 "Ahand1_.png"
+	Scale 0.04 -0.04 0.048
+	AngleOffset 90
+	ZOffset 6
+
+	FrameIndex TLCP B 1 0
+
+	ZOffset 12
+	ROTATING
+	FrameIndex TLCP A 1 0
+}

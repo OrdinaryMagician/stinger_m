@@ -1,0 +1,45 @@
+Model "FlameAmmo"
+{
+	Path "models"
+	Model 0 "steelbarrelM_d.3d"
+	Skin 0 "JNapalmAm1.png"
+	Scale -0.04 0.04 0.048
+	AngleOffset 90
+	RollOffset 180
+	ZOffset 6
+
+	FrameIndex FLMA A 0 0
+}
+
+Model "UFlamethrower"
+{
+	Path "models"
+	Model 1 "FlameTPick_d.3d"
+	Skin 1 "JNapalm1_.png"
+	ZOffset 10
+	AngleOffset -90
+	Scale 0.1 0.1 0.12
+
+	FrameIndex FLMP B 1 0
+
+	ZOffset 12
+	ROTATING
+	FrameIndex FLMP A 1 0
+}
+
+Model "UFlamethrower"
+{
+	Path "models"
+	Model 3 "FlameTOldPick_d.3d"
+	SurfaceSkin 3 0 "JNapalm1_.png"
+	SurfaceSkin 3 1 "Flamet_.png"
+	ZOffset 10
+	AngleOffset -90
+	Scale 0.1 0.1 0.12
+
+	FrameIndex OFLP B 3 0
+
+	ZOffset 12
+	ROTATING
+	FrameIndex OFLP A 3 0
+}

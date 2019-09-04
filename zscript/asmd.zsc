@@ -290,20 +290,25 @@ Class ViewASMDSpark : ShockSpark
 
 Class ASMDHitbox : ShockHitbox
 {
-	Default
+	override void Tick()
 	{
-		Health 1;
-		+SHOOTABLE;
-		+NOBLOOD;
-	}
-	override void Die( Actor source, Actor inflictor, int dmgflags, Name MeansOfDeath )
-	{
-		if ( target && target.InStateSequence(target.CurState,target.FindState("Spawn")) )
+		Super.Tick();
+		if ( !target ) return;
+		let t = ThinkerIterator.Create("ASMDHitbox");
+		Actor a;
+		while ( a = Actor(t.Next()) )
 		{
-			target.bAMBUSH = true;
-			target.ExplodeMissile();
+			if ( (a == self) || !(a is 'ASMDHitbox') || a.bAMBUSH || (Distance3D(a) > radius*2) ) continue;
+			a.bAMBUSH = true;
+			if ( a.target && a.target.InStateSequence(a.target.CurState,a.target.FindState("Spawn")) )
+				a.target.ExplodeMissile();
+			if ( !bAMBUSH )
+			{
+				bAMBUSH = true;
+				if ( target && target.InStateSequence(target.CurState,target.FindState("Spawn")) )
+					target.ExplodeMissile();
+			}
 		}
-		Super.Die(source,inflictor,dmgflags,MeansOfDeath);
 	}
 }
 
@@ -534,6 +539,8 @@ Class ASMDBeam : Actor
 					UTMainHandler.DoSwing(target,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),10,-2,3,SWING_Spring,3,6);
 				}
 				let b = t.Results.HitActor.target;
+				b.bAMBUSH = true;
+				b.ExplodeMissile();
 				b.pitch = 90;
 				b.angle = 0;
 				b.roll = 0;

@@ -1,11 +1,79 @@
 Class BigAmmo : Ammo
 {
+	Default
+	{
+		Tag "$T_BIGAMMO";
+		Inventory.Icon "I_BigM";
+		Inventory.PickupMessage "";
+		Inventory.Amount 10;
+		Inventory.MaxAmount 30;
+		Ammo.BackpackAmount 0;
+		Ammo.BackpackMaxAmount 60;
+		Ammo.DropAmount 10;
+		Inventory.RespawnTics 2100;
+		+INVENTORY.IGNORESKILL;
+	}
+	override String PickupMessage()
+	{
+		if ( PickupMsg.Length() > 0 ) return Super.PickupMessage();
+		return String.Format("%s%d%s",StringTable.Localize("$I_BIGAMMOL"),Amount,StringTable.Localize("$I_BIGAMMOR"));
+	}
+	States
+	{
+	Spawn:
+		BIGA A -1;
+		Stop;
+	}
 }
 
 Class BigAmmo2 : BigAmmo
 {
+	Default
+	{
+		Tag "$T_BIGAMMO2";
+		Inventory.Amount 3;
+		Ammo.DropAmount 3;
+		+INVENTORY.IGNORESKILL;
+	}
+}
+
+Class BigAmmo3 : BigAmmo
+{
+	Default
+	{
+		Tag "$T_BIGAMMO3";
+		Inventory.PickupMessage "$I_BIGAMMO3";
+		Inventory.Amount 1;
+		Ammo.DropAmount 1;
+		+INVENTORY.IGNORESKILL;
+	}
 }
 
 Class BigGun : UnrealWeapon
 {
+	Default
+	{
+		Tag "$T_BIGGUN";
+		Inventory.PickupMessage "$I_BIGGUN";
+		Weapon.UpSound "big/select";
+		Weapon.SlotNumber 0;
+		Weapon.SelectionOrder 0;
+		Weapon.AmmoType "BigAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "BigAmmo";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 10;
+		Inventory.RespawnTics 2100;
+		+INVENTORY.IGNORESKILL;
+		+WEAPON.NOAUTOFIRE;
+		UTWeapon.DropAmmo 5;
+	}
+	States
+	{
+	Spawn:
+		BIGP A -1;
+		Stop;
+		BIGP B -1;
+		Stop;
+	}
 }

@@ -1,0 +1,28 @@
+Model "RazorAmmo"
+{
+	Path "models"
+	Model 0 "RazorAmmoMesh_d.3d"
+	Skin 0 "JPickup21.png"
+	ZOffset 8
+	Scale 0.1 0.1 0.12
+
+	FrameIndex BHOP A 0 0
+	FrameIndex BHOP B 0 1
+}
+
+Model "Razorjack"
+{
+	Path "models"
+	Model 1 "RazPick_d.3d"
+	Skin 1 "JRazor1_.png"
+	RollOffset -8
+	AngleOffset 90
+	ZOffset 2
+	Scale 0.05 -0.05 0.06
+
+	FrameIndex RZRP B 1 0
+
+	ZOffset 13
+	ROTATING
+	FrameIndex RZRP A 1 0
+}

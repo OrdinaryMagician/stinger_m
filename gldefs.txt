@@ -43,6 +43,28 @@ Object StingerAmmo2
 {
 	Frame "SAMO" { light "STINGERAMMOLIGHT2" }
 }
+PointLight IMPAMMOLIGHT
+{
+	Color 0.9 0.2 1.0
+	Size 28
+	Offset 0 6 0
+	Attenuate 1
+}
+PointLight IMPAMMOLIGHT2
+{
+	Color 0.9 0.2 1.0
+	Size 12
+	Offset 0 3 0
+	Attenuate 1
+}
+Object ImpalerAmmo
+{
+	Frame "IAMO" { light "IMPAMMOLIGHT" }
+}
+Object ImpalerAmmo2
+{
+	Frame "IAMO" { light "IMPAMMOLIGHT2" }
+}
 PointLight FLAKAMMOLIGHT
 {
 	Color 0.1 0.4 0.0
@@ -63,6 +85,29 @@ PointLight STINGERLIGHT
 Object StingerProjectile
 {
 	Frame "TPRJA" { light "STINGERLIGHT" }
+}
+PointLight UBIOAMMOLIGHT
+{
+	Color 0.3 1.0 0.1
+	Size 12
+	Offset 0 12 8
+	Attenuate 1
+}
+PointLight UBIOAMMOLIGHT2
+{
+	Color 0.3 1.0 0.1
+	Size 9
+	Offset 0 8 0
+	Attenuate 1
+}
+Object UBioAmmo
+{
+	Frame "BIOA" { light "UBIOAMMOLIGHT" }
+	Frame "BIA2" { light "UBIOAMMOLIGHT" }
+}
+Object UBioAmmo2
+{
+	Frame "BIOA" { light "UBIOAMMOLIGHT2" }
 }
 
 PointLight DAMPENERLIGHT0
@@ -240,6 +285,18 @@ Object DAmmo4
 Object DAmmo5
 {
 	Frame "DISM" { light "DAMMOLIGHT5" }
+}
+
+FlickerLight2 ASMDBALLLIGHT
+{
+	Color 0.3 0.7 1.0
+	Size 72
+	SecondarySize 80
+	Interval 0.1
+}
+Object AsmdBall
+{
+	Frame "TAZB" { light "ASMDBALLLIGHT" }
 }
 
 // Shaders / Brightmaps
@@ -491,9 +548,9 @@ HardwareShader Texture "models/JInvisibility1.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
 }
-HardwareShader Texture "models/JNaliFruit1.png"
+Brightmap Texture "models/JNaliFruit1.png"
 {
-	Shader "shaders/glsl/AmbientGlow.fp"
+	Map "brightmaps/JNaliFruit1.png"
 }
 HardwareShader Texture "models/JNapalm1_.png"
 {

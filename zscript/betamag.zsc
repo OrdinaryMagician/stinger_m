@@ -1,3 +1,29 @@
 Class Betamag : UnrealWeapon
 {
+	Default
+	{
+		Tag "$T_BETAMAG";
+		Inventory.Icon "I_ClipAm";
+		Inventory.PickupMessage "$I_BETAMAG";
+		Inventory.MaxAmount 1;
+		Inventory.InterHubAmount 2;
+		Weapon.UpSound "betamag/select";
+		Weapon.SlotNumber 2;
+		Weapon.SelectionOrder 1;
+		Weapon.AmmoType "UMiniAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "UMiniAmmo";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 20;
+		Weapon.Kickback 320;
+		UTWeapon.DropAmmo 10;
+	}
+	States
+	{
+	Spawn:
+		AUTP A -1;
+		Stop;
+		AUTP B -1;
+		Stop;
+	}
 }

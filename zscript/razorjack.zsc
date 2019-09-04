@@ -1,7 +1,51 @@
 Class RazorAmmo : Ammo
 {
+	Default
+	{
+		Tag "$T_RIPPERAMMO";
+		Inventory.Icon "I_RazorA";
+		Inventory.PickupMessage "$I_RIPPERAMMO";
+		Inventory.Amount 25;
+		Inventory.MaxAmount 75;
+		Ammo.BackpackAmount 20;
+		Ammo.BackpackMaxAmount 150;
+		Ammo.DropAmount 15;
+	}
+	States
+	{
+	Spawn:
+		BHOP A 8 A_CheckProximity(1,"PlayerPawn",80,1,CPXF_ANCESTOR|CPXF_CHECKSIGHT);
+		Wait;
+		BHOP AA 16;
+		BHOP B 8 A_CheckProximity(1,"PlayerPawn",80,0,CPXF_ANCESTOR|CPXF_CHECKSIGHT|CPXF_EXACT);
+		Goto Spawn+3;
+		BHOP BB 16;
+		Goto Spawn;
+	}
 }
 
 Class Razorjack : UnrealWeapon
 {
+	Default
+	{
+		Tag "$T_RAZORJACK";
+		Inventory.PickupMessage "$I_RAZORJACK";
+		Weapon.UpSound "razorjack/select";
+		Weapon.SlotNumber 7;
+		Weapon.SelectionOrder 7;
+		Weapon.AmmoType "RazorAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "RazorAmmo";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 15;
+		UTWeapon.DropAmmo 10;
+	}
+	States
+	{
+	Spawn:
+		RZRP A -1;
+		Stop;
+		RZRP B -1;
+		Stop;
+	}
 }

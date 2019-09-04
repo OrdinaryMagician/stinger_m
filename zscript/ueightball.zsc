@@ -1,10 +1,78 @@
 Class URocketAmmo : Ammo
 {
+	Default
+	{
+		Tag "$T_ROCKETCAN";
+		Inventory.Icon "I_Rocket";
+		Inventory.PickupMessage "";
+		Inventory.Amount 12;
+		Inventory.MaxAmount 48;
+		Ammo.BackpackAmount 9;
+		Ammo.BackpackMaxAmount 96;
+		Ammo.DropAmount 6;
+		+INVENTORY.IGNORESKILL;
+	}
+	override String PickupMessage()
+	{
+		if ( PickupMsg.Length() > 0 ) return Super.PickupMessage();
+		return String.Format("%s%d%s",StringTable.Localize("$I_ROCKETCANL"),Amount,StringTable.Localize("$I_ROCKETCANR"));
+	}
+	States
+	{
+	Spawn:
+		RPAK A 8 A_CheckProximity(1,"PlayerPawn",80,1,CPXF_ANCESTOR|CPXF_CHECKSIGHT);
+		Wait;
+		RPAK AABCDEFGHIJ 8;
+		RPAK J 8 A_CheckProximity(1,"PlayerPawn",80,0,CPXF_ANCESTOR|CPXF_CHECKSIGHT|CPXF_EXACT);
+		Goto Spawn+12;
+		RPAK JJIHGFEDCBA 8;
+		Goto Spawn;
+	}
 }
 Class URocketAmmo2 : URocketAmmo
 {
+	Default
+	{
+		Tag "$T_ROCKETCAN2";
+		Inventory.Amount 2;
+		Ammo.DropAmount 2;
+		+INVENTORY.IGNORESKILL;
+	}
+	States
+	{
+	Spawn:
+		RCKT A 8 A_CheckProximity(1,"PlayerPawn",80,1,CPXF_ANCESTOR|CPXF_CHECKSIGHT);
+		Wait;
+		RCKT AA 8;
+		RCKT B 8 A_CheckProximity(1,"PlayerPawn",80,0,CPXF_ANCESTOR|CPXF_CHECKSIGHT|CPXF_EXACT);
+		Goto Spawn+3;
+		RCKT BB 8;
+		Goto Spawn;
+	}
 }
 
 Class Eightball : UnrealWeapon
 {
+	Default
+	{
+		Tag "$T_EIGHTBALL";
+		Inventory.PickupMessage "$I_EIGHTBALL";
+		Weapon.UpSound "eightball/select";
+		Weapon.SlotNumber 5;
+		Weapon.SelectionOrder 5;
+		Weapon.AmmoType "URocketAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "URocketAmmo";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 6;
+		UTWeapon.DropAmmo 3;
+	}
+	States
+	{
+	Spawn:
+		EBLP A -1;
+		Stop;
+		EBLP B -1;
+		Stop;
+	}
 }

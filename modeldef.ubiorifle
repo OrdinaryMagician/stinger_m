@@ -1,0 +1,76 @@
+Model "UBioAmmo"
+{
+	Path "models"
+	Model 0 "sludgemesh_d.3d"
+	Skin 0 "JPickup1.png"
+	Scale 0.08 -0.08 0.096
+	ZOffset 7
+
+	FrameIndex BIOA A 0 0
+	FrameIndex BIOA B 0 1
+	FrameIndex BIOA C 0 2
+	FrameIndex BIOA D 0 3
+	FrameIndex BIOA E 0 4
+	FrameIndex BIOA F 0 5
+	FrameIndex BIOA G 0 6
+	FrameIndex BIOA H 0 7
+	FrameIndex BIOA I 0 8
+	FrameIndex BIOA J 0 9
+	FrameIndex BIOA K 0 10
+	FrameIndex BIOA L 0 11
+	FrameIndex BIOA M 0 12
+	FrameIndex BIOA N 0 13
+	FrameIndex BIOA O 0 14
+	FrameIndex BIOA P 0 15
+	FrameIndex BIOA Q 0 16
+	FrameIndex BIOA R 0 17
+	FrameIndex BIOA S 0 18
+	FrameIndex BIOA T 0 19
+	FrameIndex BIOA U 0 20
+	FrameIndex BIOA V 0 21
+	FrameIndex BIOA W 0 22
+	FrameIndex BIOA X 0 23
+	FrameIndex BIOA Y 0 24
+	FrameIndex BIOA Z 0 25
+	FrameIndex BIA2 A 0 26
+	FrameIndex BIA2 B 0 27
+	FrameIndex BIA2 C 0 28
+	FrameIndex BIA2 D 0 29
+}
+Model "UBioAmmo2"
+{
+	Path "models"
+	Model 0 "sludgemeshsmall_d.3d"
+	Skin 0 "JPickup1.png"
+	Scale 0.04 0.04 0.048
+	ZOffset 1
+
+	FrameIndex BIOA A 0 0
+	FrameIndex BIOA B 0 1
+	FrameIndex BIOA C 0 2
+	FrameIndex BIOA D 0 3
+	FrameIndex BIOA E 0 4
+	FrameIndex BIOA F 0 5
+	FrameIndex BIOA G 0 6
+	FrameIndex BIOA H 0 7
+	FrameIndex BIOA I 0 8
+	FrameIndex BIOA J 0 9
+	FrameIndex BIOA K 0 10
+	FrameIndex BIOA L 0 11
+}
+
+Model "UBioRifle"
+{
+	Path "models"
+	Model 1 "BRiflePick_d.3d"
+	Skin 1 "JBRifle1_.png"
+	Scale 0.2 -0.2 0.24
+	AngleOffset 180
+	ZOffset 0
+
+	FrameIndex BIOP B 1 0
+
+	ZOffset 6
+	ROTATING
+	FrameIndex BIOP A 1 0
+}

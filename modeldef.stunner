@@ -1,0 +1,14 @@
+Model "Stunner"
+{
+	Path "models"
+	Model 1 "StunnerPickup_d.3d"
+	Skin 1 "Stunner_.png"
+	Scale -0.04 0.04 0.048
+	ZOffset 1.5
+
+	FrameIndex STNP B 1 0
+
+	ZOffset 4
+	ROTATING
+	FrameIndex STNP A 1 0
+}

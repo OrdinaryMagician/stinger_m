@@ -1,3 +1,5 @@
 Models, textures and audio (C)1995-1999 Epic Games.
 
+Additional audio (C) id Software and/or Bethesda, depending on what.
+
 Porting and adjustments by Marisa Kirisame.

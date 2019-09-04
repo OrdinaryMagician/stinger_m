@@ -1,10 +1,67 @@
 Class UBioAmmo : Ammo
 {
+	Default
+	{
+		Tag "$T_SLUDGE";
+		Inventory.Icon "I_Sludge";
+		Inventory.PickupMessage "";
+		Inventory.Amount 25;
+		Inventory.MaxAmount 100;
+		Ammo.BackpackAmount 50;
+		Ammo.BackpackMaxAmount 200;
+		Ammo.DropAmount 10;
+	}
+	override String PickupMessage()
+	{
+		if ( PickupMsg.Length() > 0 ) return Super.PickupMessage();
+		return String.Format("%s%d%s",StringTable.Localize("$I_SLUDGEL"),Amount,StringTable.Localize("$I_SLUDGER"));
+	}
+	States
+	{
+	Spawn:
+		BIOA ABCDEFGHIJKLMNOPQRSTUVWYZ 1;
+		BIA2 ABCD 1;
+		Loop;
+	}
 }
 Class UBioAmmo2 : UBioAmmo
 {
+	Default
+	{
+		Tag "$T_SLUDGE2";
+		Inventory.Amount 10;
+		Ammo.DropAmount 5;
+	}
+	States
+	{
+	Spawn:
+		BIOA ABCDEFGHIJKL 2;
+		Loop;
+	}
 }
 
 Class UBioRifle : UnrealWeapon
 {
+	Default
+	{
+		Tag "$T_BIORIFLE";
+		Inventory.PickupMessage "$I_BIORIFLE";
+		Weapon.UpSound "ges/select";
+		Weapon.SlotNumber 8;
+		Weapon.SelectionOrder 8;
+		Weapon.AmmoType "UBioAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "UBioAmmo";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 25;
+		UTWeapon.DropAmmo 5;
+	}
+	States
+	{
+	Spawn:
+		BIOP A -1;
+		Stop;
+		BIOP B -1;
+		Stop;
+	}
 }

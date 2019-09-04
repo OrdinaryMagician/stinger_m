@@ -38,6 +38,11 @@ Class Automag : UnrealWeapon
 		}
 		return Super.HandlePickup(item);
 	}
+	override String PickupMessage()
+	{
+		if ( Owner ) return Super.PickupMessage();
+		return StringTable.Localize("$I_AUTOMAG2");
+	}
 	override Inventory CreateTossable( int amt )
 	{
 		Inventory inv = Super.CreateTossable(amt);

@@ -1,3 +1,22 @@
 Class Bonesaw : UnrealWeapon
 {
+	Default
+	{
+		Tag "$T_BONESAW";
+		Inventory.PickupMessage "$I_BONESAW";
+		Weapon.UpSound "bonesaw/select";
+		Weapon.SlotNumber 1;
+		Weapon.SelectionOrder 9;
+		+WEAPON.MELEEWEAPON;
+		+FORCEPAIN;
+		+NOEXTREMEDEATH;
+	}
+	States
+	{
+	Spawn:
+		CSWP A -1;
+		Stop;
+		CSWP B -1;
+		Stop;
+	}
 }

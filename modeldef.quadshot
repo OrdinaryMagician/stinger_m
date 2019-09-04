@@ -1,0 +1,39 @@
+Model "UShells"
+{
+	Path "models"
+	Model 0 "ShellsM_d.3d"
+	Skin 0 "JQuadAm1_.png"
+	Scale 0.03 0.03 0.036
+	AngleOffset 90
+	ZOffset 3
+
+	FrameIndex QAMO A 0 0
+}
+
+Model "UShells2"
+{
+	Path "models"
+	Model 0 "ShellsSmallM_d.3d"
+	Skin 0 "JQuadAm1_.png"
+	Scale 0.03 0.03 0.036
+	AngleOffset 90
+	ZOffset 1.5
+
+	FrameIndex QAMO A 0 0
+}
+
+Model "Quadshot"
+{
+	Path "models"
+	Model 1 "QuadShotPickup_d.3d"
+	Skin 1 "GunPick1_.png"
+	ZOffset 6
+	AngleOffset -90
+	Scale 0.08 -0.08 0.096
+
+	FrameIndex QUAP B 1 0
+
+	ZOffset 12
+	ROTATING
+	FrameIndex QUAP A 1 0
+}

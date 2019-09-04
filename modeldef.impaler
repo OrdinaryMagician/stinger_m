@@ -1,0 +1,43 @@
+Model "ImpalerAmmo"
+{
+	Path "models"
+	Model 0 "ImpalerAmmo_d.3d"
+	Skin 0 "JImpale1_.png"
+	Scale 0.25 0.25 0.3
+	AngleOffset 90
+	ZOffset 4
+
+	FrameIndex IAMO A 0 0
+}
+Model "ImpalerAmmo2"
+{
+	Path "models"
+	Model 0 "ImpalerProj_d.3d"
+	Skin 0 "JImpale1_.png"
+	Scale 0.25 0.25 0.3
+	AngleOffset 90
+	ZOffset 2
+
+	FrameIndex IAMO A 0 0
+}
+
+Model "Impaler"
+{
+	Path "models"
+	Model 1 "ImpalerPickup_d.3d"
+	Skin 1 "JImpale1_.png"
+	Offset 8 0 6
+	PitchOffset -5
+	RollOffset 45
+	AngleOffset 180
+	Scale 0.2 -0.24 0.24
+
+	FrameIndex IMPP B 1 0
+
+	PitchOffset 0
+	RollOffset 0
+	Scale 0.2 -0.2 0.24
+	Offset 8 0 12
+	ROTATING
+	FrameIndex IMPP A 1 0
+}

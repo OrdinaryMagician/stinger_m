@@ -3,6 +3,7 @@ Class UMiniAmmo : Ammo
 	Default
 	{
 		Tag "$T_MINIAMMO";
+		Inventory.Icon "I_ShellA";
 		Inventory.PickupMessage "";
 		Inventory.Amount 50;
 		Inventory.MaxAmount 200;
@@ -15,8 +16,36 @@ Class UMiniAmmo : Ammo
 		if ( PickupMsg.Length() > 0 ) return Super.PickupMessage();
 		return String.Format("%s%d%s",StringTable.Localize("$I_MINIAMMOL"),Amount,StringTable.Localize("$I_MINIAMMOR"));
 	}
+	States
+	{
+	Spawn:
+		MAMO A -1;
+		Stop;
+	}
 }
 
 Class UMinigun : UnrealWeapon
 {
+	Default
+	{
+		Tag "$T_MINIGUN";
+		Inventory.PickupMessage "$I_MINIGUN";
+		Weapon.UpSound "minigun/select";
+		Weapon.SlotNumber 0;
+		Weapon.SelectionOrder 10;
+		Weapon.AmmoType "UMiniAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "UMiniAmmo";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 50;
+		UTWeapon.DropAmmo 25;
+	}
+	States
+	{
+	Spawn:
+		MGNP A -1;
+		Stop;
+		MGNP B -1;
+		Stop;
+	}
 }

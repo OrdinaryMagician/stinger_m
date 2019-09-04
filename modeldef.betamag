@@ -1,0 +1,15 @@
+Model "Betamag"
+{
+	Path "models"
+	Model 1 "OldAutoMagPick_d.3d"
+	Skin 1 "AutoHand1_.png"
+	Scale 0.05 -0.05 0.06
+	AngleOffset -90
+	ZOffset 9
+
+	FrameIndex AUTP B 1 0
+
+	ZOffset 13
+	ROTATING
+	FrameIndex AUTP A 1 0
+}

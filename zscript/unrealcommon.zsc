@@ -78,6 +78,7 @@ Class UPlayer : UTPlayer
 			{
 				if ( !(AllActorClasses[i].GetParentClass() is "UnrealArmor") ) continue;
 				let item = Inventory(Spawn(AllActorClasses[i]));
+				item.ClearCounters();	// don't increase item counts
 				if ( !item.CallTryPickup(self) ) item.Destroy();
 			}
 			if ( !giveall ) return;
@@ -735,21 +736,13 @@ Class UnrealMainHandler : EventHandler
 		if ( (e.Replacee == 'Chainsaw') || (e.Replacee == 'Gauntlets') )
 		{
 			if ( !Random[Replacements](0,3) ) e.Replacement = 'WeaponPowerUp';
-			else switch ( Random[Replacements](0,3) )
+			else if ( Random[Replacements](0,2) )
 			{
-			case 0:
-				e.Replacement = 'Bonesaw';
-				break;
-			case 1:
-				e.Replacement = 'Stunner';
-				break;
-			case 2:
-				e.Replacement = 'Betamag';
-				break;
-			case 3:
-				e.Replacement = 'Automag';
-				break;
+				if ( Random[Replacements](0,1) ) e.Replacement = 'Bonesaw';
+				else e.Replacement = 'Stunner';
 			}
+			else if ( !Random[Replacements](0,2) ) e.Replacement = 'Betamag';
+			else e.Replacement = 'Automag';
 		}
 		else if ( (e.Replacee == 'Fist') || (e.Replacee == 'Staff') ) e.Replacement = 'DispersionPistol';
 		else if ( (e.Replacee == 'Pistol') || (e.Replacee == 'GoldWand') )
@@ -794,7 +787,7 @@ Class UnrealMainHandler : EventHandler
 		}
 		else if ( (e.Replacee == 'PlasmaRifle') || (e.Replacee == 'SkullRod') )
 		{
-			if ( !Random[Replacements](0,3) ) e.Replacement = 'Impaler';
+			if ( !Random[Replacements](0,2) ) e.Replacement = 'Impaler';
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'URifle';
 			else e.Replacement = 'UBioRifle';
 		}
@@ -868,7 +861,11 @@ Class UnrealMainHandler : EventHandler
 		}
 		else if ( (e.Replacee == 'Cell') || (e.Replacee == 'SkullRodAmmo') )
 		{
-			if ( !Random[Replacements](0,4) ) e.Replacement = 'BigAmmo2';
+			if ( !Random[Replacements](0,4) )
+			{
+				if ( !Random[Replacements](0,2) ) e.Replacement = 'BigAmmo2';
+				else e.Replacement = 'BigAmmo3';
+			}
 			else if ( !Random[Replacements](0,3) )
 			{
 				if ( !Random[Replacements](0,3) ) e.Replacement = 'ImpalerAmmo';
@@ -887,7 +884,11 @@ Class UnrealMainHandler : EventHandler
 		}
 		else if ( (e.Replacee == 'CellPack') || (e.Replacee == 'SkullRodHefty') )
 		{
-			if ( !Random[Replacements](0,4) ) e.Replacement = 'BigAmmo';
+			if ( !Random[Replacements](0,4) )
+			{
+				if ( !Random[Replacements](0,2) ) e.Replacement = 'BigAmmo';
+				else e.Replacement = 'BigAmmo2';
+			}
 			else if ( !Random[Replacements](0,3) ) e.Replacement = 'ImpalerAmmo';
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'UBioAmmo';
 			else e.Replacement = 'URifleAmmo';

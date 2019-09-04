@@ -1,0 +1,15 @@
+Model "Bonesaw"
+{
+	Path "models"
+	Model 1 "Bonesaw_d.3d"
+	Skin 1 "JBoneSw1_.png"
+	Scale 0.096 -0.08 0.096
+	AngleOffset 180
+	Offset 8 0 6
+
+	FrameIndex CSWP B 1 0
+
+	Offset 8 0 15
+	ROTATING
+	FrameIndex CSWP A 1 0
+}

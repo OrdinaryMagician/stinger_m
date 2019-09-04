@@ -1,0 +1,27 @@
+Model "UMiniAmmo"
+{
+	Path "models"
+	Model 0 "ShellBoxMesh_d.3d"
+	Skin 0 "JPickup21.png"
+	ZOffset 6
+	AngleOffset 180
+	Scale 0.2 0.2 0.24
+
+	FrameIndex MAMO A 0 0
+}
+
+Model "UMinigun"
+{
+	Path "models"
+	Model 1 "minipick_d.3d"
+	Skin 1 "minigun1_.png"
+	ZOffset 6
+	AngleOffset -90
+	Scale 0.08 0.08 0.096
+
+	FrameIndex MGNP B 1 0
+
+	ZOffset 12
+	ROTATING
+	FrameIndex MGNP A 1 0
+}

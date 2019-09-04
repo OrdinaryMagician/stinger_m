@@ -1,0 +1,15 @@
+Model "Peacemaker"
+{
+	Path "models"
+	Model 1 "peacepick_d.3d"
+	Skin 1 "Jpeacehand1_.png"
+	RollOffset 90	// normally upright, but it's easier to tell apart from a deployed one this way
+	ZOffset 5
+	Scale 0.16 0.192 0.16
+
+	FrameIndex PEAP B 1 0
+
+	ZOffset 9
+	ROTATING
+	FrameIndex PEAP A 1 0
+}

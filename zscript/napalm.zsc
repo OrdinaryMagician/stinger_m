@@ -1,7 +1,50 @@
 Class FlameAmmo : Ammo
 {
+	Default
+	{
+		Tag "$T_FLAMEAMMO";
+		Inventory.Icon "I_Napalm";
+		Inventory.PickupMessage "$I_FLAMEAMMO";
+		Inventory.Amount 75;
+		Inventory.MaxAmount 450;
+		Ammo.BackpackAmount 0;
+		Ammo.BackpackMaxAmount 900;
+		Ammo.DropAmount 30;
+	}
+	States
+	{
+	Spawn:
+		FLMA A -1;
+		Stop;
+	}
 }
 
 Class UFlamethrower : UnrealWeapon
 {
+	Default
+	{
+		Tag "$T_FLAMETHROWER";
+		Inventory.PickupMessage "$I_FLAMETHROWER";
+		Weapon.UpSound "flamet/select";
+		Weapon.SlotNumber 6;
+		Weapon.SelectionOrder 4;
+		Weapon.AmmoType "FlameAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "FlameAmmo";
+		Weapon.AmmoUse2 30;
+		Weapon.AmmoGive 100;
+		UTWeapon.DropAmmo 50;
+	}
+	States
+	{
+	Spawn:
+		FLMP A 1 A_JumpIf(sting_flamet,2);
+		Wait;
+		FLMP B 1 A_JumpIf(sting_flamet,2);
+		Wait;
+		OFLP A 1 A_JumpIf(!sting_flamet,"Spawn");
+		Wait;
+		OFLP B 1 A_JumpIf(!sting_flamet,"Spawn+1");
+		Wait;
+	}
 }

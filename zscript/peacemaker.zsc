@@ -1,7 +1,35 @@
 Class PeaceAmmo : Ammo
 {
+	Default
+	{
+		Inventory.Icon "I_Peace";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 8;
+		Ammo.BackpackAmount 0;
+		Ammo.BackpackMaxAmount 16;
+	}
 }
 
 Class Peacemaker : UnrealWeapon
 {
+	Default
+	{
+		Tag "$T_PEACE";
+		Inventory.PickupMessage "$I_PEACE";
+		Weapon.UpSound "peace/select";
+		Weapon.SlotNumber 8;
+		Weapon.SelectionOrder 1;
+		Weapon.AmmoType "PeaceAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoGive 1;
+		UTWeapon.DropAmmo 1;
+	}
+	States
+	{
+	Spawn:
+		PEAP A -1;
+		Stop;
+		PEAP B -1;
+		Stop;
+	}
 }

@@ -388,7 +388,245 @@ Model "UJumpBoots"
 	Model 0 "lboot_d.3d"
 	Skin 0 "Jlboot1.png"
 	Scale 0.06 0.06 0.072
+	AngleOffset 180
 	ZOffset 6
 
 	FrameIndex JBUT A 0 0
+}
+
+Model "UFlashlight"
+{
+	Path "models"
+	Model 0 "Flashl_d.3d"
+	Skin 0 "JFlashl1.png"
+	Scale 0.04 0.04 0.048
+	AngleOffset 180
+	ZOffset 2
+
+	FrameIndex SLIT A 0 0
+}
+
+Model "USearchlight"
+{
+	Path "models"
+	Model 0 "BigFlash_d.3d"
+	Skin 0 "JBigFlash1.png"
+	Scale 0.07 0.07 0.084
+	AngleOffset -90
+	ZOffset 9
+
+	FrameIndex SLIT A 0 0
+}
+
+Model "SentryItem"
+{
+	Path "models"
+	Model 0 "SentryPick_d.3d"
+	SurfaceSkin 0 0 "Minigun_.png"
+	SurfaceSkin 0 1 "minigun1_.png"
+	SurfaceSkin 0 2 "JRifle1_.png"
+	Scale 0.15 0.15 0.18
+	ZOffset 38
+
+	FrameIndex SENT A 0 0
+}
+
+Model "MinigunSentry"
+{
+	Path "models"
+	Model 0 "SentryGun_d.3d"
+	SurfaceSkin 0 1 "Minigun_.png"
+	SurfaceSkin 0 2 "minigun1_.png"
+	Scale 0.15 0.15 0.18
+
+	// down
+	FrameIndex SENT A 0 0
+	// raise
+	FrameIndex SENR A 0 0
+	FrameIndex SENR B 0 1
+	FrameIndex SENR C 0 2
+	FrameIndex SENR D 0 3
+	FrameIndex SENR E 0 4
+	FrameIndex SENR F 0 5
+	FrameIndex SENR G 0 6
+	FrameIndex SENR H 0 7
+	FrameIndex SENR I 0 8
+	FrameIndex SENR J 0 9
+	FrameIndex SENR K 0 10
+	FrameIndex SENR L 0 11
+	FrameIndex SENR M 0 12
+	FrameIndex SENR N 0 13
+	FrameIndex SENR O 0 14
+	// idle
+	FrameIndex SENI A 0 14
+	// windup
+	FrameIndex SENW A 0 14
+	FrameIndex SENW B 0 15
+	FrameIndex SENW C 0 16
+	FrameIndex SENW D 0 17
+	FrameIndex SENW E 0 18
+	FrameIndex SENW F 0 19
+	FrameIndex SENW G 0 20
+	FrameIndex SENW H 0 21
+	FrameIndex SENW I 0 22
+	FrameIndex SENW J 0 23
+	FrameIndex SENW K 0 24
+	FrameIndex SENW L 0 25
+	FrameIndex SENW M 0 26
+	FrameIndex SENW N 0 27
+	FrameIndex SENW O 0 28
+	FrameIndex SENW P 0 29
+	FrameIndex SENW Q 0 30
+	FrameIndex SENW R 0 31
+	// fire
+	FrameIndex SENF A 0 32 // shoot
+	FrameIndex SENF B 0 33
+	FrameIndex SENF C 0 34
+	FrameIndex SENF D 0 35 // shoot
+	FrameIndex SENF E 0 36
+	FrameIndex SENF F 0 37
+	FrameIndex SENF G 0 38 // shoot
+	FrameIndex SENF H 0 39
+	FrameIndex SENF I 0 40
+	FrameIndex SENF J 0 41 // shoot
+	FrameIndex SENF K 0 42
+	FrameIndex SENF L 0 43
+	FrameIndex SENF M 0 44 // shoot
+	FrameIndex SENF N 0 45
+	FrameIndex SENF O 0 46
+	FrameIndex SENF P 0 47 // shoot
+	FrameIndex SENF Q 0 48
+	FrameIndex SENF R 0 49
+	// unwind
+	FrameIndex SENU A 0 50
+	FrameIndex SENU B 0 51
+	FrameIndex SENU C 0 52
+	FrameIndex SENU D 0 53
+	FrameIndex SENU E 0 54
+	FrameIndex SENU F 0 55
+	FrameIndex SENU G 0 56
+	FrameIndex SENU H 0 57
+	FrameIndex SENU I 0 58
+	FrameIndex SENU J 0 59
+	FrameIndex SENU K 0 60
+	FrameIndex SENU L 0 61
+	FrameIndex SENU M 0 62
+	FrameIndex SENU N 0 63
+	FrameIndex SENU O 0 64
+	FrameIndex SENU P 0 65
+	FrameIndex SENU Q 0 66
+	FrameIndex SENU R 0 67
+}
+
+Model "MinigunSentryBase"
+{
+	Path "models"
+	Model 0 "SentryBase_d.3d"
+	SurfaceSkin 0 0 "Minigun_.png"
+	SurfaceSkin 0 1 "minigun1_.png"
+	SurfaceSkin 0 2 "JRifle1_.png"
+	Scale 0.15 0.15 0.18
+	ZOffset 38
+
+	// down
+	FrameIndex SENT A 0 0
+	// raise
+	FrameIndex SENR A 0 0
+	FrameIndex SENR B 0 1
+	FrameIndex SENR C 0 2
+	FrameIndex SENR D 0 3
+	FrameIndex SENR E 0 4
+	FrameIndex SENR F 0 5
+	FrameIndex SENR G 0 6
+	FrameIndex SENR H 0 7
+	FrameIndex SENR I 0 8
+	FrameIndex SENR J 0 9
+	FrameIndex SENR K 0 10
+	FrameIndex SENR L 0 11
+	FrameIndex SENR M 0 12
+	FrameIndex SENR N 0 13
+	FrameIndex SENR O 0 14
+	// idle
+	FrameIndex SENI A 0 14
+	// windup
+	FrameIndex SENW A 0 14
+	FrameIndex SENW B 0 15
+	FrameIndex SENW C 0 16
+	FrameIndex SENW D 0 17
+	FrameIndex SENW E 0 18
+	FrameIndex SENW F 0 19
+	FrameIndex SENW G 0 20
+	FrameIndex SENW H 0 21
+	FrameIndex SENW I 0 22
+	FrameIndex SENW J 0 23
+	FrameIndex SENW K 0 24
+	FrameIndex SENW L 0 25
+	FrameIndex SENW M 0 26
+	FrameIndex SENW N 0 27
+	FrameIndex SENW O 0 28
+	FrameIndex SENW P 0 29
+	FrameIndex SENW Q 0 30
+	FrameIndex SENW R 0 31
+	// fire
+	FrameIndex SENF A 0 32
+	FrameIndex SENF B 0 33
+	FrameIndex SENF C 0 34
+	FrameIndex SENF D 0 35
+	FrameIndex SENF E 0 36
+	FrameIndex SENF F 0 37
+	FrameIndex SENF G 0 38
+	FrameIndex SENF H 0 39
+	FrameIndex SENF I 0 40
+	FrameIndex SENF J 0 41
+	FrameIndex SENF K 0 42
+	FrameIndex SENF L 0 43
+	FrameIndex SENF M 0 44
+	FrameIndex SENF N 0 45
+	FrameIndex SENF O 0 46
+	FrameIndex SENF P 0 47
+	FrameIndex SENF Q 0 48
+	FrameIndex SENF R 0 49
+	// unwind
+	FrameIndex SENU A 0 50
+	FrameIndex SENU B 0 51
+	FrameIndex SENU C 0 52
+	FrameIndex SENU D 0 53
+	FrameIndex SENU E 0 54
+	FrameIndex SENU F 0 55
+	FrameIndex SENU G 0 56
+	FrameIndex SENU H 0 57
+	FrameIndex SENU I 0 58
+	FrameIndex SENU J 0 59
+	FrameIndex SENU K 0 60
+	FrameIndex SENU L 0 61
+	FrameIndex SENU M 0 62
+	FrameIndex SENU N 0 63
+	FrameIndex SENU O 0 64
+	FrameIndex SENU P 0 65
+	FrameIndex SENU Q 0 66
+	FrameIndex SENU R 0 67
+}
+
+Model "MotionDetector"
+{
+	Path "models"
+	Model 0 "DetectorMesh_d.3d"
+	Skin 0 "JDetector.png"
+	Scale 0.08 -0.08 0.096
+	PitchOffset 3
+	ZOffset 4
+
+	FrameIndex MDET A 0 0
+}
+
+Model "SCUBAGear"
+{
+	Path "models"
+	Model 0 "Scuba_d.3d"
+	Skin 0 "ASC1.png"
+	Scale 0.08 0.08 0.096
+	AngleOffset -90
+	ZOffset 11
+
+	FrameIndex SCUB A 0 0
 }

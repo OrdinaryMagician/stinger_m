@@ -233,7 +233,7 @@ Class UnrealHUD : BaseStatusBar
 			Screen.DrawTexture(IconBase,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
 			Screen.DrawTexture(i.Icon,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_TopOffset,0,DTA_LeftOffset,0);
 		}
-		if ( (i is 'UnrealInventory') && (UnrealInventory(i).DefaultCharge > 0) )
+		if ( (i is 'UnrealInventory') && (UnrealInventory(i).DefaultCharge > 0) && (UnrealInventory(i).bActive || (UnrealInventory(i).Charge < UnrealInventory(i).DefaultCharge)) )
 			Screen.DrawTexture(HudLine,false,CurX+2,CurY+29,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_WindowRightF,Min(28.*(UnrealInventory(i).Charge/double(UnrealInventory(i).DefaultCharge)),28.));
 		else if ( (i is 'UTArmor') && !HudMode )
 			Screen.DrawTexture(HudLine,false,CurX+2,CurY+29,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_WindowRightF,Min(28.*(i.Amount/double(i.MaxAmount)),28.));

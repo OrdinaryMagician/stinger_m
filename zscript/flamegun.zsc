@@ -1,3 +1,25 @@
 Class FlameGun : UnrealWeapon
 {
+	Default
+	{
+		Tag "$T_FLAMEGUN";
+		Inventory.PickupMessage "$I_FLAMEGUN";
+		Weapon.UpSound "flamegun/select";
+		Weapon.SlotNumber 5;
+		Weapon.SelectionOrder 2;
+		Weapon.AmmoType "FlameAmmo";
+		Weapon.AmmoUse 10;
+		Weapon.AmmoType2 "FlameAmmo";
+		Weapon.AmmoUse2 20;
+		Weapon.AmmoGive 100;
+		UTWeapon.DropAmmo 25;
+	}
+	States
+	{
+	Spawn:
+		FGNP A -1;
+		Stop;
+		FGNP B -1;
+		Stop;
+	}
 }

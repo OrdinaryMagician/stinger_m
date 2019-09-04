@@ -18,19 +18,16 @@ Class WeaponPowerUp : Inventory
 			damo.Amount = min(damo.MaxAmount,damo.Amount+10);
 		}
 		let dpis = DispersionPistol(toucher.FindInventory("DispersionPistol"));
-		if ( dpis && (dpis.upgradelevel < 4) )
+		if ( dpis && (dpis.pendingupgrade < 4) )
 		{
+			dpis.pendingupgrade++;
 			if ( toucher.player && (toucher.player.ReadyWeapon == dpis) && (toucher.player.PendingWeapon == WP_NOCHANGE) )
 			{
-				dpis.upgradelevel++;
 				let psp = toucher.player.FindPSprite(PSP_Weapon);
-				psp.SetState(dpis.FindState("Upgrade"));
+				if ( toucher.player.WeaponState&WF_WEAPONREADY )
+					psp.SetState(dpis.FindState("Upgrade"));
 			}
-			else
-			{
-				dpis.pendingupgrade = true;
-				ScriptUtil.SetWeapon(toucher,"DispersionPistol");
-			}
+			else ScriptUtil.SetWeapon(toucher,"DispersionPistol");
 		}
 		GoAwayAndDie();
 		return true;
@@ -478,8 +475,7 @@ Class DispLight5 : EnforcerLight
 
 Class DispersionPistol : UnrealWeapon
 {
-	int upgradelevel;
-	bool pendingupgrade;
+	int upgradelevel, pendingupgrade;
 	double chargesize, count;
 	bool bCharging;
 	int MainUse, ChargeUse;
@@ -725,12 +721,8 @@ Class DispersionPistol : UnrealWeapon
 	Idle:
 		#### # 0
 		{
-			if ( invoker.pendingupgrade )
-			{
-				invoker.pendingupgrade = false;
-				invoker.upgradelevel++;
+			if ( invoker.pendingupgrade > invoker.upgradelevel )
 				return ResolveState("Upgrade");
-			}
 			A_Overlay(-9999,"Dummy");
 			if ( invoker.upgradelevel == 0 ) return ResolveState("Idle1");
 			else if ( invoker.upgradelevel == 1 ) return ResolveState("Idle2");
@@ -845,10 +837,11 @@ Class DispersionPistol : UnrealWeapon
 		DPI5 A 6;
 		Goto Idle;
 	Upgrade:
-		#### # 0
+		#### # 1
 		{
 			A_Overlay(-9999,"Null");
 			invoker.MainUse = min(6,invoker.upgradelevel+1);
+			invoker.upgradelevel++;
 			if ( invoker.upgradelevel == 0 ) return ResolveState("Idle");
 			else if ( invoker.upgradelevel == 1 ) return ResolveState("Upgrade1");
 			else if ( invoker.upgradelevel == 2 ) return ResolveState("Upgrade2");

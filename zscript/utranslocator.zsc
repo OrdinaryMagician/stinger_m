@@ -1,5 +1,14 @@
 Class UTranslocatorAmmo : Ammo
 {
+	Default
+	{
+		Inventory.Icon "I_Tele";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 2;
+		Ammo.BackpackAmount 0;
+		Ammo.BackpackMaxAmount 2;
+		+INVENTORY.IGNORESKILL;
+	}
 }
 
 Class UTranslocator : UnrealWeapon
@@ -8,5 +17,28 @@ Class UTranslocator : UnrealWeapon
 	{
 		if ( !sting_telegun ) return false;	// not allowed
 		return Super.TryPickup(toucher);
+	}
+	Default
+	{
+		Tag "$T_TELEGUN";
+		Inventory.PickupMessage "$I_TELEGUN";
+		Weapon.SlotNumber 9;
+		Weapon.SelectionOrder 10;
+		Weapon.AmmoType1 "UTranslocatorAmmo";
+		Weapon.AmmoUse1 1;
+		Weapon.AmmoType2 "UTranslocatorAmmo";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 2;
+		UTWeapon.DropAmmo 2;
+		+WEAPON.NO_AUTO_SWITCH;
+		+WEAPON.CHEATNOTWEAPON;
+	}
+	States
+	{
+	Spawn:
+		TLCP A -1;
+		Stop;
+		TLCP B -1;
+		Stop;
 	}
 }

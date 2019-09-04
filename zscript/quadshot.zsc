@@ -1,11 +1,63 @@
 Class UShells : Ammo
 {
+	Default
+	{
+		Tag "$T_SHELLS";
+		Inventory.Icon "I_ShotSh";
+		Inventory.PickupMessage "";
+		Inventory.Amount 12;
+		Inventory.MaxAmount 60;
+		Ammo.BackpackAmount 12;
+		Ammo.BackpackMaxAmount 120;
+		Ammo.DropAmount 6;
+	}
+	override String PickupMessage()
+	{
+		if ( PickupMsg.Length() > 0 ) return Super.PickupMessage();
+		return String.Format("%s%d%s",StringTable.Localize("$I_SHELLSL"),Amount,StringTable.Localize("$I_SHELLSR"));
+	}
+	States
+	{
+	Spawn:
+		QAMO A -1;
+		Stop;
+	}
 }
 
 Class UShells2 : UShells
 {
+	Default
+	{
+		Tag "$T_SHELLS2";
+		Inventory.Amount 4;
+		Ammo.DropAmount 4;
+		+INVENTORY.IGNORESKILL;
+	}
 }
 
 Class QuadShot : UnrealWeapon
 {
+	Default
+	{
+		Tag "$T_QUADSHOT";
+		Inventory.PickupMessage "$I_QUADSHOT";
+		Weapon.UpSound "quadshot/select";
+		Weapon.SlotNumber 3;
+		Weapon.SelectionOrder 2;
+		Weapon.AmmoType "UShells";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "UShells";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive 20;
+		Weapon.Kickback 320;
+		UTWeapon.DropAmmo 10;
+	}
+	States
+	{
+	Spawn:
+		QUAP A -1;
+		Stop;
+		QUAP B -1;
+		Stop;
+	}
 }

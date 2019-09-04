@@ -1,10 +1,73 @@
 Class ImpalerAmmo : Ammo
 {
+	Default
+	{
+		Tag "$T_IMPAMMO";
+		Inventory.Icon "I_Impale";
+		Inventory.PickupMessage "$T_IMPAMMO";
+		Inventory.Amount 3;
+		Inventory.MaxAmount 15;
+		Ammo.BackpackAmount 3;
+		Ammo.BackpackMaxAmount 30;
+		Ammo.DropAmount 3;
+		+INVENTORY.IGNORESKILL;
+	}
+	States
+	{
+	Spawn:
+		IAMO A -1;
+		Stop;
+	}
 }
 Class ImpalerAmmo2 : ImpalerAmmo
 {
+	Default
+	{
+		Tag "$T_IMPAMMO2";
+		Inventory.PickupMessage "$T_IMPAMMO2";
+		Inventory.Amount 1;
+		Ammo.DropAmount 1;
+		+INVENTORY.IGNORESKILL;
+	}
+}
+
+Class ImpalerCharge : Ammo
+{
+	Default
+	{
+		Inventory.Amount 100;
+		Inventory.MaxAmount 100;
+		Ammo.BackpackAmount 0;
+		Ammo.BackpackMaxAmount 100;
+		+INVENTORY.IGNORESKILL;
+	}
 }
 
 Class Impaler : UnrealWeapon
 {
+	Default
+	{
+		Tag "$T_IMPALER";
+		Inventory.PickupMessage "$I_IMPALER";
+		Weapon.UpSound "impaler/select";
+		Weapon.SlotNumber 7;
+		Weapon.SelectionOrder 0;
+		Weapon.AmmoType "ImpalerAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "ImpalerCharge";
+		Weapon.AmmoUse2 1;
+		Weapon.AmmoGive1 60;
+		Weapon.AmmoGive2 0;
+		UTWeapon.DropAmmo 30;
+		+WEAPON.AMMO_OPTIONAL;
+		+WEAPON.ALT_AMMO_OPTIONAL;
+	}
+	States
+	{
+	Spawn:
+		IMPP A -1;
+		Stop;
+		IMPP B -1;
+		Stop;
+	}
 }

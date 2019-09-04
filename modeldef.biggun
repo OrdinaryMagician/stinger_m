@@ -1,0 +1,44 @@
+Model "BigAmmo"
+{
+	Path "models"
+	Model 0 "BigGAmmoBox_d.3d"
+	SurfaceSkin 0 0 "Jclip1_.png"
+	SurfaceSkin 0 1 "RifleBul1.png"
+	Scale 0.15 0.15 0.18
+
+	FrameIndex BIGA A 0 0
+}
+Model "BigAmmo2"
+{
+	Path "models"
+	Model 0 "BigGAmmo_d.3d"
+	Skin 0 "Jclip1_.png"
+	Scale 0.15 0.15 0.18
+
+	FrameIndex BIGA A 0 0
+}
+Model "BigAmmo3"
+{
+	Path "models"
+	Model 0 "BigGAmmoSingle_d.3d"
+	Skin 0 "Jclip1_.png"
+	Scale 0.15 0.15 0.18
+
+	FrameIndex BIGA A 0 0
+}
+
+Model "BigGun"
+{
+	Path "models"
+	Model 1 "BigGPick_d.3d"
+	Skin 1 "JBigGun1_.png"
+	ZOffset 18
+	AngleOffset 90
+	Scale 0.12 0.12 0.144
+
+	FrameIndex BIGP B 1 0
+
+	ZOffset 20
+	ROTATING
+	FrameIndex BIGP A 1 0
+}

@@ -1,7 +1,40 @@
 Class SMiniAmmo : Ammo
 {
+	Default
+	{
+		Inventory.Icon "I_SMini";
+		Inventory.Amount 4;
+		Inventory.MaxAmount 16;
+		Ammo.BackpackAmount 0;
+		Ammo.BackpackMaxAmount 32;
+	}
 }
 
 Class SMiniGun : UnrealWeapon
 {
+	Default
+	{
+		Tag "$T_SMINI";
+		Inventory.PickupMessage "$I_SMINI";
+		Weapon.UpSound "smini/select";
+		Weapon.SlotNumber 0;
+		Weapon.SelectionOrder 1;
+		Weapon.AmmoType "SMiniAmmo";
+		Weapon.AmmoUse 1;
+		Weapon.AmmoType2 "SMiniAmmo";
+		Weapon.AmmoUse2 4;
+		Weapon.AmmoGive 8;
+		Inventory.RespawnTics 2100;
+		+INVENTORY.IGNORESKILL;
+		+WEAPON.NOAUTOFIRE;
+		UTWeapon.DropAmmo 4;
+	}
+	States
+	{
+	Spawn:
+		SMIP A -1;
+		Stop;
+		SMIP B -1;
+		Stop;
+	}
 }

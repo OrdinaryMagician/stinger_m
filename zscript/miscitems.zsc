@@ -708,14 +708,31 @@ Class BetaFlare : UnrealInventory
 		if ( !sting_flares ) return false;	// not allowed
 		return Super.TryPickup(toucher);
 	}
+	Default
+	{
+		Inventory.MaxAmount 1;
+		UnrealInventory.Charge 100;
+		+INVENTORY.UNDROPPABLE;
+		+INVENTORY.UNTOSSABLE;
+	}
 }
 
 Class LightFlare : BetaFlare
 {
+	Default
+	{
+		Tag "$T_LFLARES";
+		Inventory.Icon "I_FlarBL";
+	}
 }
 
 Class DarkFlare : BetaFlare
 {
+	Default
+	{
+		Tag "$T_DFLARES";
+		Inventory.Icon "I_FlarBD";
+	}
 }
 
 Class Dampener : UnrealInventory
@@ -907,16 +924,101 @@ Class ForcefieldEffect : Actor
 
 Class UFlashlight : UnrealInventory
 {
+	Actor lt[3];
+
+	Default
+	{
+		Tag "$T_FLASHLIGHT";
+		Inventory.Icon "I_Flashl";
+		Inventory.MaxAmount 3;
+		Inventory.PickupMessage "$I_FLASHLIGHT";
+		UnrealInventory.Charge 2800;
+	}
+	States
+	{
+	Spawn:
+		SLIT A -1;
+		Stop;
+	}
 }
 
-Class USearchlight : UnrealInventory
+Class USearchlight : UFlashlight
 {
+	Default
+	{
+		Tag "$T_SEARCHLIGHT";
+		Inventory.Icon "I_BigFl";
+		Inventory.MaxAmount 1;
+		Inventory.PickupMessage "$I_SEARCHLIGHT";
+		Inventory.RespawnTics 1050;
+		UnrealInventory.Charge 70000;
+	}
 }
 
 Class SentryItem : UnrealInventory
 {
+	Default
+	{
+		Tag "$T_SENTRY";
+		Inventory.Icon "I_Sentry";
+		Inventory.MaxAmount 1;
+		Inventory.PickupMessage "$I_SENTRY";
+		Inventory.RespawnTics 1050;
+		UnrealInventory.Charge 300;
+	}
+	States
+	{
+	Spawn:
+		SENT A -1;
+		Stop;
+	}
 }
 
+// The "head" of the sentry, attaches to the body
 Class MinigunSentry : Actor
 {
+	States
+	{
+	Spawn:
+		SENT A 15;
+		SENT A 0 A_PlaySound("sentry/raise");
+		SENR ABCDEFGHIJKLMNO 3;
+		Goto Idle;
+	Idle:
+		SENI A 1;
+		Wait;
+	Fire:
+		SENW ABCDEFGHIJKLMNOPQR 1;
+		Goto FireLoop;
+	FireLoop:
+		SENF ABCDEFGHIJKLMNOPQR 1;
+		Loop;
+	FireEnd:
+		SENU ABCDEFGHIJKLMNOPQR 1;
+		Goto Idle;
+	}
+}
+
+// The body of the sentry
+Class MinigunSentryBase : Actor
+{
+	States
+	{
+	Spawn:
+		SENT A 15;
+		SENR ABCDEFGHIJKLMNO 3;
+		Goto Idle;
+	Idle:
+		SENI A 1;
+		Wait;
+	Fire:
+		SENW ABCDEFGHIJKLMNOPQR 1;
+		Goto FireLoop;
+	FireLoop:
+		SENF ABCDEFGHIJKLMNOPQR 1;
+		Loop;
+	FireEnd:
+		SENU ABCDEFGHIJKLMNOPQR 1;
+		Goto Idle;
+	}
 }

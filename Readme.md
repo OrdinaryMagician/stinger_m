@@ -13,6 +13,7 @@ Doom Tournament (currently the devel branch is required).
    - Dual Automags
  - Stinger (slot 3) (replaces shotguns)
  - ASMD (slot 4) (replaces shotguns)
+ - Flak Cannon (slot 6) (replaces rocket launcher)
  - Backpack (replaces backpack, identical to Doom Tournament version)
  - Unreal 1 HUD
  - Translator (has to be spawned in, since it would only be useful for mappers)
@@ -37,7 +38,11 @@ Doom Tournament (currently the devel branch is required).
 
 ## In progress
 
- - Flak Cannon (slot 6) (replaces rocket launcher)
+ - Eightball (slot 5) (replaces rocket launcher)
+ - Razorjack (slot 7) (replaces chaingun)
+ - GES Bio Rifle (slot 8) (replaces plasma rifle)
+ - Rifle (slot 9) (replaces plasma rifle)
+ - Minigun (slot 0) (replaces chaingun)
 
  - Flashlight (replaces light amplifier)
    - Searchlight (must be placed manually for balance reasons)
@@ -46,28 +51,28 @@ Doom Tournament (currently the devel branch is required).
 
 ## Planned
 
- - Implement Stinger behavior described in the Unreal Bible
- - Eightball (slot 5) (replaces rocket launcher)
- - Razorjack (slot 7) (replaces chaingun)
-   - Make altfire actually seek where player is aiming
-   - Unreal Bible spin speed behavior
- - GES Bio Rifle (slot 8) (replaces plasma rifle)
- - Rifle (slot 9) (replaces plasma rifle)
-   - Restored rapid fire
-   - Restored flashlight
- - Minigun (slot 0) (replaces chaingun)
+ - Unreal Bible & prototype build behaviour restoration
+   - Stinger projectile remanence & explosion
+   - Razorjack hold fire to increase blade speed
+   - Rifle restored rapid fire
+   - Rifle restored flashlight
 
- - Stunner (slot 1) (replaces chainsaw)
+ - QOL improvements
+   - Make Razorjack altfire actually seek where player is aiming
+   - Biorifle splashes like UT (toggleable)
+   - Single rocket mode for Eightball
+
+ - Stunner (slot 4) (replaces chainsaw)
  - Razorclaw (slot 1) (replaces chainsaw)
- - Teleport Capsule (slot 1)
- - Proto Automag (slot 2) (replaces pistol)
+ - Teleport Capsules (slot 9)
+ - Protomag (slot 2) (replaces pistol)
    - Dual Protomags
  - Quadshot (slot 3) (replaces shotguns)
- - Peacemaker (slot 5) (rare spawn in backpacks)
- - Impaler (slot 4) (replaces plasma rifle)
- - Flamethrower (slot 8) (replaces plasma rifle)
- - Fireblaster (slot 7) (replaces rocket launcher)
- - Demolisher (slot 9) (replaces bfg9000)
+ - Peacemaker (slot 8) (rare spawn in backpacks)
+ - Impaler (slot 7) (replaces plasma rifle)
+ - Flamethrower (slot 6) (replaces plasma rifle)
+ - Fireblaster (slot 5) (replaces rocket launcher)
+ - Demolisher (slot 0) (replaces bfg9000)
  - Autocannon (slot 0) (replaces bfg9000)
 
  - Motion Detector (replaces computer map)
