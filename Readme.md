@@ -43,6 +43,7 @@ Doom Tournament (currently the devel branch is required).
  - GES Bio Rifle (slot 8) (replaces plasma rifle)
  - Rifle (slot 9) (replaces plasma rifle)
  - Minigun (slot 0) (replaces chaingun)
+ - SMP 7243 (slot 0) (replaces bfg9000)
 
  - Flashlight (replaces light amplifier)
    - Searchlight (must be placed manually for balance reasons)

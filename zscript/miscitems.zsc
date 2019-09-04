@@ -708,6 +708,13 @@ Class BetaFlare : UnrealInventory
 		if ( !sting_flares ) return false;	// not allowed
 		return Super.TryPickup(toucher);
 	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( sting_flares ) return;
+		if ( Owner ) Owner.RemoveInventory(self);
+		Destroy();
+	}
 	Default
 	{
 		Inventory.MaxAmount 1;

@@ -15,8 +15,8 @@ until the end of time.
 
 ## Automag
 
-A very reliable gunpowder-based firearm, chambered in 9mm. Uses two 10-round
-clips in tandem.
+A very reliable gunpowder-based firearm, chambered in 9mm. Magazine feeds off
+two 10-round clips in tandem.
 
 Primary fire: The typical. Hold for automatic fire.
 
@@ -145,6 +145,15 @@ Primary fire: A rapid barrage of bullets.
 
 Secondary fire: A much faster, but less accurate rain of pain.
 
+## SMP 7243
+
+A limited edition, gold-plated rapid fire Automag. Magazine holds 100 rounds,
+but believe it or not, they won't last very long.
+
+Primary fire: Full auto, semi-accurate. Empties mag in 9 seconds.
+
+Secondary fire: Fuller auto, extremely inaccurate. Empties mag in 3 seconds.
+
 # Prototype weapons
 
 ## Stunner
@@ -216,7 +225,7 @@ higher velocity, resulting in increased damage.
 
 The special trait of this weapon comes into play when you realize that there's
 no need to reload. An experimental entanglement unit inside the gun's internal
-clip locates spare ammunition carried by the user and automatically loads it.
+mag locates spare ammunition carried by the user and automatically loads it.
 
 Since there's no need to reload, pressing the reload button makes use of the
 gun's weight to beat the crap out of your enemies up close.

@@ -9,6 +9,13 @@ Class UTranslocatorAmmo : Ammo
 		Ammo.BackpackMaxAmount 2;
 		+INVENTORY.IGNORESKILL;
 	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( sting_telegun ) return;
+		if ( Owner ) Owner.RemoveInventory(self);
+		Destroy();
+	}
 }
 
 Class UTranslocator : UnrealWeapon
@@ -17,6 +24,13 @@ Class UTranslocator : UnrealWeapon
 	{
 		if ( !sting_telegun ) return false;	// not allowed
 		return Super.TryPickup(toucher);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( sting_telegun ) return;
+		if ( Owner ) Owner.RemoveInventory(self);
+		Destroy();
 	}
 	Default
 	{

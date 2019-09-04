@@ -18,3 +18,5 @@ server bool sting_dpistol = false;	// d.pistol altfire always level 0
 server bool sting_pshield = false;	// p.shield does not drain over time
 user bool sting_transext = false;	// use an extended translator graphic
 					// to fit more text
+server bool sting_olsmp = false;	// adds the stupid oldskool SMP 7243 to
+					// the BFG/Redeemer replacement pool

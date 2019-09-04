@@ -1,0 +1,183 @@
+Model "OLSMPAmmo"
+{
+	Path "models"
+	Model 0 "OLSMPAmmo_d.3d"
+	Skin 0 "OLSMP_.png"
+	Scale 0.08 -0.08 0.096
+	ZOffset 1
+
+	FrameIndex UCLP A 0 0
+}
+
+Model "OLSMP"
+{
+	Path "models"
+	Model 1 "OLSMPPick_d.3d"
+	Skin 1 "OLSMP_.png"
+	Scale 0.08 -0.08 0.096
+	AngleOffset -90
+	ZOffset 19
+
+	FrameIndex AUTP B 1 0
+
+	ZOffset 21
+	ROTATING
+	FrameIndex AUTP A 1 0
+}
+
+Model "OLSMP"
+{
+	Path "models"
+	Model 2 "Flat_d.3d"
+	AngleOffset 90
+	Scale 0.04 0.04 0.04
+	Offset 12.4 -30.0 -3.9
+
+	Skin 2 "Muz1.png"
+	FrameIndex AMUZ A 2 0
+	Skin 2 "Muz2.png"
+	FrameIndex AMUZ B 2 0
+	Skin 2 "Muz3.png"
+	FrameIndex AMUZ C 2 0
+	Skin 2 "Muz4.png"
+	FrameIndex AMUZ D 2 0
+	Skin 2 "Muz5.png"
+	FrameIndex AMUZ E 2 0
+	Skin 2 "Muz6.png"
+	FrameIndex AMUZ F 2 0
+	Skin 2 "Muz7.png"
+	FrameIndex AMUZ G 2 0
+	Skin 2 "Muz8.png"
+	FrameIndex AMUZ H 2 0
+	Skin 2 "Muz9.png"
+	FrameIndex AMUZ I 2 0
+}
+
+Model "OLSMP"
+{
+	Path "models"
+	Model 0 "OLSMPR_d.3d"
+	SurfaceSkin 0 1 "OLSMP.png"
+	Scale 0.12 -0.06 0.084
+	Offset 6.9 -16.8 -11.1
+	AngleOffset 90
+	RollOffset -90
+
+	// Fire
+	FrameIndex AUTF A 0 1
+	FrameIndex AUTF B 0 1
+	FrameIndex AUTF C 0 2
+	FrameIndex AUTF D 0 3
+	// Fire0
+	FrameIndex AUTF E 0 4
+	FrameIndex AUTF F 0 5
+	FrameIndex AUTF G 0 6
+	// Fire1
+	FrameIndex AUTF H 0 7
+	FrameIndex AUTF I 0 8
+	FrameIndex AUTF J 0 9
+	// Fire2
+	FrameIndex AUTF K 0 10
+	FrameIndex AUTF L 0 11
+	FrameIndex AUTF M 0 12
+	// Release
+	FrameIndex AUTF N 0 13
+	FrameIndex AUTF O 0 14
+	FrameIndex AUTF P 0 15
+	FrameIndex AUTF Q 0 16
+	FrameIndex AUTF R 0 17
+	FrameIndex AUTF S 0 18
+	FrameIndex AUTF T 0 19
+	// Twiddle
+	FrameIndex AUTT A 0 20
+	FrameIndex AUTT B 0 21
+	FrameIndex AUTT C 0 22
+	FrameIndex AUTT D 0 23
+	FrameIndex AUTT E 0 24
+	FrameIndex AUTT F 0 25
+	FrameIndex AUTT G 0 26
+	FrameIndex AUTT H 0 27
+	FrameIndex AUTT I 0 28
+	FrameIndex AUTT J 0 29
+	FrameIndex AUTT K 0 30
+	FrameIndex AUTT L 0 31
+	FrameIndex AUTT M 0 32
+	FrameIndex AUTT N 0 33
+	FrameIndex AUTT O 0 34
+	FrameIndex AUTT P 0 35
+	FrameIndex AUTT Q 0 36
+	FrameIndex AUTT R 0 37
+	FrameIndex AUTT S 0 38
+	FrameIndex AUTT T 0 39
+	FrameIndex AUTT U 0 40
+	FrameIndex AUTT V 0 41
+	FrameIndex AUTT W 0 42
+	FrameIndex AUTT X 0 43
+	FrameIndex AUTT Y 0 44
+	// Sway
+	FrameIndex AUTI A 0 20
+	FrameIndex AUTI B 0 21
+	// Eject
+	FrameIndex AUTR A 0 45
+	FrameIndex AUTR B 0 46
+	FrameIndex AUTR C 0 47
+	FrameIndex AUTR D 0 48
+	FrameIndex AUTR E 0 49
+	FrameIndex AUTR F 0 50
+	FrameIndex AUTR G 0 51
+	FrameIndex AUTR H 0 52
+	FrameIndex AUTR I 0 53
+	FrameIndex AUTR J 0 54
+	FrameIndex AUTR K 0 55
+	FrameIndex AUTR L 0 56
+	FrameIndex AUTR M 0 57
+	FrameIndex AUTR N 0 58
+	FrameIndex AUTR O 0 59
+	FrameIndex AUTR P 0 60
+	FrameIndex AUTR Q 0 61
+	FrameIndex AUTR R 0 62
+	FrameIndex AUTR S 0 63
+	FrameIndex AUTR T 0 64
+	FrameIndex AUTR U 0 65
+	FrameIndex AUTR V 0 66
+	FrameIndex AUTR W 0 67
+	FrameIndex AUTR X 0 68
+	FrameIndex AUTR Y 0 69
+	// Down
+	FrameIndex AUTD A 0 70
+	FrameIndex AUTD B 0 71
+	FrameIndex AUTD C 0 72
+	FrameIndex AUTD D 0 73
+	FrameIndex AUTD E 0 74
+	// Select
+	FrameIndex AUTS A 0 75
+	FrameIndex AUTS B 0 76
+	FrameIndex AUTS C 0 77
+	FrameIndex AUTS D 0 78
+	FrameIndex AUTS E 0 79
+	FrameIndex AUTS F 0 80
+	FrameIndex AUTS G 0 81
+	FrameIndex AUTS H 0 82
+	FrameIndex AUTS I 0 83
+	FrameIndex AUTS J 0 84
+	FrameIndex AUTS K 0 85
+	FrameIndex AUTS L 0 86
+	FrameIndex AUTS M 0 87
+	FrameIndex AUTS N 0 88
+	FrameIndex AUTS O 0 89
+	FrameIndex AUTS P 0 90
+	FrameIndex AUTS Q 0 91
+	FrameIndex AUTS R 0 92
+	FrameIndex AUTS S 0 93
+	FrameIndex AUTS T 0 94
+	FrameIndex AUTS U 0 95
+	FrameIndex AUTS V 0 96
+	FrameIndex AUTS W 0 97
+	FrameIndex AUTS X 0 98
+	FrameIndex AUTS Y 0 99
+	FrameIndex AUTS Z 0 100
+	FrameIndex AUS2 A 0 101
+	FrameIndex AUS2 B 0 102
+	FrameIndex AUS2 C 0 103
+	FrameIndex AUS2 D 0 104
+}

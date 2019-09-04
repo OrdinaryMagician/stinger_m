@@ -670,3 +670,15 @@ HardwareShader Texture "models/AsmdPBeam.png"
 {
 	Shader "shaders/glsl/AsmdPBeam.fp"
 }
+HardwareShader Texture "models/OLSMP.png"
+{
+	Shader "shaders/glsl/MeshEnviroMapMasked.fp"
+	Texture "masktex" "models/OLSMP_m.png"
+	texture "envtex" "models/OLSMP_env.png"
+}
+HardwareShader Texture "models/OLSMP_.png"
+{
+	Shader "shaders/glsl/MeshEnviroMapMasked_AmbientGlow.fp"
+	Texture "masktex" "models/OLSMP_m.png"
+	texture "envtex" "models/OLSMP_env.png"
+}

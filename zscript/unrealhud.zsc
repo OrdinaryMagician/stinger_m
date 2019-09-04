@@ -36,8 +36,8 @@ Class UnrealHUD : BaseStatusBar
 	bool MidPrintLarge;
 
 	// 0.83 HUD stuff
-	String OldAmmo[18];
-	Class<Inventory> OldAmmoType[18];
+	String OldAmmo[19];
+	Class<Inventory> OldAmmoType[19];
 	String OldArmor[6];
 	Class<Inventory> OldArmorType[6];
 	String OldKeys[7];
@@ -106,6 +106,7 @@ Class UnrealHUD : BaseStatusBar
 		OldAmmo[15] = "Big083";
 		OldAmmo[16] = "Smini083";
 		OldAmmo[17] = "Peace083";
+		OldAmmo[18] = "OLSMP083";
 		OldAmmoType[0] = "DefaultAmmo";
 		OldAmmoType[1] = "UMiniAmmo";
 		OldAmmoType[2] = "StingerAmmo";
@@ -124,6 +125,7 @@ Class UnrealHUD : BaseStatusBar
 		OldAmmoType[15] = "BigAmmo";
 		OldAmmoType[16] = "SMiniAmmo";
 		OldAmmoType[17] = "PeaceAmmo";
+		OldAmmoType[18] = "OLSMPAmmo";
 		OldArmor[0] = "Armor083";
 		OldArmor[1] = "Kev083";
 		OldArmor[2] = "Asb083";
@@ -646,7 +648,7 @@ Class UnrealHUD : BaseStatusBar
 		if ( Ammo1 )
 		{
 			if ( Ammo1.Amount ) DrawString(mOldDigits,FormatNumber(Ammo1.Amount,3),(549,366),DI_TEXT_ALIGN_RIGHT);
-			for ( int i=0; i<18; i++ )
+			for ( int i=0; i<19; i++ )
 			{
 				// match by ammo
 				if ( (OldAmmoType[i] is 'Ammo') && !(Ammo1 is OldAmmoType[i]) ) continue;

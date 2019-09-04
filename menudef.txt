@@ -39,6 +39,7 @@ OptionMenu "UnrealOptionMenu"
 	StaticText "$STING_UOPTS", "Gold"
 	Option "$STING_DPISTOL", "sting_dpistol", "YesNo"
 	Option "$STING_PSHIELD", "sting_pshield", "YesNo"
+	Option "$STING_OLSMP", "sting_olsmp", "YesNo"
 }
 
 AddOptionMenu "OptionsMenu"

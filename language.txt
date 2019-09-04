@@ -34,6 +34,7 @@ O_BIGGUN = "%k blew a hole through %o with the Demolisher.";
 O_SMINI = "%o got blasted into steaming chunks by %k's Autocannon.";
 O_SENTRY = "%o shouldn't have walked into the sights of %k's Sentry.";
 O_STINGERX = "%o ate flaming Tarydium death thanks to %k.";
+O_OLSMP = "%o didn't stand a chance against %k's SMP 7243.";
 /* Pickup messages */
 I_WPOWERUP = "You got a Dispersion Pistol Powerup.";
 I_STINGERAMMOL = "You picked up ";
@@ -95,6 +96,8 @@ I_SHEALTH = "You picked up the Super Health Pack.";
 I_FLASHLIGHT = "You picked up a Flashlight.";
 I_DETECTOR = "You got the Motion Detector.";
 I_SCUBA = "You picked up the SCUBA Gear.";
+I_OLSMP = "You got the SMP 7243. Time to kick ass!";
+I_OLSMPAMMO = "You picked up a SMP 7243 Magazine.";
 /* Tags */
 T_WPOWERUP = "Dispersion Pistol Powerup";
 T_STINGERAMMO = "Tarydium Shards";
@@ -156,6 +159,8 @@ T_LFLARES = "Light Flare";
 T_DFLARES = "Darkness Flare";
 T_DETECTOR = "Motion Detector";
 T_SCUBA = "SCUBA Gear";
+T_OLSMP = "SMP 7243";
+T_OLSMPAMMO = "SMP 7243 Magazine";
 /* Miscellaneous */
 TR_NOMSG = "No new messages";
 TR_NEWMSG = "New Translator message";
@@ -200,6 +205,7 @@ STING_PROTODUAL = "Protomags";
 STING_UOPTS = "Compatibility options";
 STING_DPISTOL = "Dispersion Pistol altfire isn't upgraded";
 STING_PSHIELD = "Power Shield does not drain over time";
+STING_OLSMP = "Enable SMP 7243 from Oldskool Amp'd";
 STING_MCREDS = "Unreal Credits";
 STING_CDR = "Doomreal";
 STING_CLEAD = "Development Lead:";
@@ -243,6 +249,7 @@ O_BIGGUN = "%k abrió un hoyo a través de %o con el Demoledor.";
 O_SMINI = "%o fue reventad@[ao_esp] en pedazos humeantes por el Autocañón de %k.";
 O_SENTRY = "%o no debería haberse metido en el punto de mira de la Torreta de %k.";
 O_STINGERX = "%o tragó muerte ardiente de Tarydium gracias a %k.";
+O_OLSMP = "%o no tenía ninguna oportunidad contra el SMP 7243 de %k.";
 /* Pickup messages */
 I_WPOWERUP = "Has obtenido una Mejora para la Pistola de Dispersión.";
 I_STINGERAMMOL = "Has recogido ";
@@ -304,6 +311,8 @@ I_SHEALTH = "Has recogido el Paquete de Supersalud.";
 I_FLASHLIGHT = "Has recogido una Linterna.";
 I_DETECTOR = "Has obtenido el Detector de Movimiento.";
 I_SCUBA = "Has recogido el Kit de Buceo.";
+I_OLSMP = "Has obtenido el SMP 7243. ¡Hora de patear traseros!";
+I_OLSMPAMMO = "Has recogido un Cargador de SMP 7243.";
 /* Tags */
 T_WPOWERUP = "Mejora para Pistola de Dispersión";
 T_STINGERAMMO = "Fragmentos de Tarydium";
@@ -361,6 +370,7 @@ T_LFLARES = "Bengala Luminosa";
 T_DFLARES = "Bengala Oscura";
 T_DETECTOR = "Detector de Movimiento";
 T_SCUBA = "Kit de Buceo";
+T_OLSMPAMMO = "Cargador de SMP 7243";
 /* Miscellaneous */
 TR_NOMSG = "No hay mensajes nuevos";
 TR_NEWMSG = "Nuevo mensaje de Traductor";
@@ -392,6 +402,7 @@ STING_PROTODUAL = "Protoarmas";
 STING_UOPTS = "Opciones de compatibilidad";
 STING_DPISTOL = "El fuego alternativo de la Pistola de Dispersión no es mejorado";
 STING_PSHIELD = "El Escudo de Fuerza no pierde carga con el tiempo";
+STING_OLSMP = "Habilitar SMP 7243 de Oldskool Amp'd";
 STING_MCREDS = "Créditos de Unreal";
 STING_CDR = "Doomreal";
 STING_CLEAD = "Desarrolladora Jefe:";

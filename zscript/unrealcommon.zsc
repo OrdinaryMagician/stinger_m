@@ -793,7 +793,8 @@ Class UnrealMainHandler : EventHandler
 		}
 		else if ( (e.Replacee == 'BFG9000') || (e.Replacee == 'Mace') )
 		{
-			if ( Random[Replacements](0,1) ) e.Replacement = 'SMiniGun';
+			if ( sting_olsmp && Random[Replacements](0,1) ) e.Replacement = 'OLSMP';
+			else if ( Random[Replacements](0,1) ) e.Replacement = 'SMiniGun';
 			else e.Replacement = 'BigGun';
 		}
 		else if ( (e.Replacee == 'Clip') || (e.Replacee == 'GoldWandAmmo') || (e.Replacee == 'GoldWandHefty') ) e.Replacement = 'UClip';
@@ -890,6 +891,7 @@ Class UnrealMainHandler : EventHandler
 				else e.Replacement = 'BigAmmo2';
 			}
 			else if ( !Random[Replacements](0,3) ) e.Replacement = 'ImpalerAmmo';
+			else if ( sting_olsmp && !Random[Replacements](0,2) ) e.Replacement = 'OLSMPAmmo';
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'UBioAmmo';
 			else e.Replacement = 'URifleAmmo';
 		}
@@ -1004,15 +1006,7 @@ Class UnrealMainHandler : EventHandler
 	}
 	override void PlayerRespawned( PlayerEvent e )
 	{
-		if ( flak_translocator )
-			players[e.playernumber].mo.TakeInventory("Translocator",1);
-		if ( sting_telegun )
-			players[e.playernumber].mo.GiveInventory("UTranslocator",1);
-		if ( sting_flares )
-		{
-			players[e.playernumber].mo.GiveInventory("LightFlare",1);
-			players[e.playernumber].mo.GiveInventory("DarkFlare",1);
-		}
+		PlayerEntered(e);
 	}
 	override void NetworkProcess( ConsoleEvent e )
 	{
@@ -1032,27 +1026,12 @@ Class UnrealMainHandler : EventHandler
 					players[i].mo.GiveInventory("UTranslocator",1);
 				}
 			}
-			else
-			{
-				for ( int i=0; i<MAXPLAYERS; i++ ) if ( playeringame[i] )
-				{
-					players[i].mo.TakeInventory("UTranslocator",1);
-				}
-			}
 			if ( sting_flares )
 			{
 				for ( int i=0; i<MAXPLAYERS; i++ ) if ( playeringame[i] )
 				{
 					players[i].mo.GiveInventory("LightFlare",1);
 					players[i].mo.GiveInventory("DarkFlare",1);
-				}
-			}
-			else
-			{
-				for ( int i=0; i<MAXPLAYERS; i++ ) if ( playeringame[i] )
-				{
-					players[i].mo.TakeInventory("LightFlare",1);
-					players[i].mo.TakeInventory("DarkFlare",1);
 				}
 			}
 		}
