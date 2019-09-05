@@ -44,6 +44,7 @@ Doom Tournament (currently the devel branch is required).
  - SCUBA Gear (replaces radsuit if map has swimmable water)
  - Motion Detector (replaces computer map)
  - Light & Dark Flares
+ - Minigun Sentry (rare spawn in backpacks)
 
 ## In progress
 
@@ -52,7 +53,6 @@ Doom Tournament (currently the devel branch is required).
  - Rifle (slot 9) (replaces plasma rifle)
  - Minigun (slot 0) (replaces chaingun)
 
- - Minigun Sentry (rare spawn in backpacks)
 
 ## Planned
 

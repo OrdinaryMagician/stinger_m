@@ -1367,6 +1367,11 @@ Class SentryItem : UnrealInventory
 		Inventory.RespawnTics 1050;
 		UnrealInventory.Charge 300;
 	}
+	override void AttachToOwner( Actor other )
+	{
+		Super.AttachToOwner(other);
+		special1 = MinigunSentryBase.sentryammo;
+	}
 	override bool Use( bool pickup )
 	{
 		if ( pickup ) return false;
@@ -1388,8 +1393,12 @@ Class SentryItem : UnrealInventory
 			return false;
 		}
 		bActive = true;
+		bUNTOSSABLE = true;
+		bUNDROPPABLE = true;
 		tracer = a;
-		a.target = Owner;
+		a.Health = Charge;
+		a.special1 = special1;
+		a.master = Owner;
 		a.angle = Owner.angle;
 		a.pitch = 0;
 		a.roll = 0;
@@ -1402,10 +1411,12 @@ Class SentryItem : UnrealInventory
 		if ( !tracer )
 		{
 			bActive = false;
-			DepleteOrDestroy();
+			bUNTOSSABLE = false;
+			bUNDROPPABLE = false;
 			return;
 		}
 		Charge = tracer.Health;
+		if ( Charge <= 0 ) DepleteOrDestroy();
 	}
 	States
 	{
@@ -1503,8 +1514,8 @@ Class MinigunSentry : Actor
 		if ( !TargetVisible() ) return;
 		double angledelta = DeltaAngle(angle,AngleTo(target));
 		double pitchdelta = DeltaAngle(pitch,_PitchTo(target));
-		double angleturn = clamp(abs(angledelta)*0.1,2,15);
-		double pitchturn = clamp(abs(pitchdelta)*0.1,2,15);
+		double angleturn = clamp(abs(angledelta)*0.1,1,5);
+		double pitchturn = clamp(abs(pitchdelta)*0.1,1,5);
 		angle = clamp(angle+clamp(angledelta,-angleturn,angleturn),master.angle-maxangle,master.angle+maxangle);
 		pitch = clamp(pitch+clamp(pitchdelta,-pitchturn,pitchturn),master.pitch-maxpitch,master.pitch+maxpitch);
 	}
@@ -1527,11 +1538,55 @@ Class MinigunSentry : Actor
 		special1 = max(0,special1-1);
 		if ( (special1 <= 0) && master.master && master.master.CheckLocalView() ) Console.Printf(StringTable.Localize("$M_SENTRYDRY"));
 		A_SentryFaceTarget();
+		master.A_AlertMonsters();
 		A_PlaySound("sentry/fire",CHAN_WEAPON);
-		Vector3 x, y, z;
+		Vector3 x, y, z, origin;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		// TODO actually fire bullets
-		let c = Spawn("UCasing",level.Vec3Offset(pos,-x*7+y*2+z*2));
+		origin = level.Vec3Offset(pos,x*24+z*8);
+		double a = FRandom[Sentry](0,360), s = FRandom[Sentry](0,0.15);
+		Vector3 dir = (x+y*cos(a)*s+z*sin(a)*s).unit();
+		FLineTraceData d;
+		master.LineTrace(atan2(dir.y,dir.x),10000,asin(-dir.z),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
+		if ( d.HitType == TRACE_HitActor )
+		{
+			int dmg = 17;
+			dmg = d.HitActor.DamageMobj(self,master,dmg,'shot',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
+			double mm = 3000;
+			if ( FRandom[Sentry](0,1) < 0.2 ) mm *= 5;
+			UTMainHandler.DoKnockback(d.HitActor,d.HitDir,mm);
+			if ( d.HitActor.bNOBLOOD )
+			{
+				let p = Spawn("BulletImpact",d.HitLocation);
+				p.angle = atan2(d.HitDir.y,d.HitDir.x)+180;
+				p.pitch = asin(d.HitDir.z);
+			}
+			else
+			{
+				d.HitActor.TraceBleed(dmg,self);
+				d.HitActor.SpawnBlood(d.HitLocation,atan2(d.HitDir.y,d.HitDir.x)+180,dmg);
+			}
+		}
+		else if ( d.HitType != TRACE_HitNone )
+		{
+			Vector3 hitnormal = -d.HitDir;
+			if ( d.HitType == TRACE_HitFloor ) hitnormal = d.HitSector.floorplane.Normal;
+			else if ( d.HitType == TRACE_HitCeiling ) hitnormal = d.HitSector.ceilingplane.Normal;
+			else if ( d.HitType == TRACE_HitWall )
+			{
+				hitnormal = (-d.HitLine.delta.y,d.HitLine.delta.x,0).unit();
+				if ( !d.LineSide ) hitnormal *= -1;
+			}
+			let p = Spawn("BulletImpact",d.HitLocation+hitnormal*0.01);
+			p.angle = atan2(hitnormal.y,hitnormal.x);
+			p.pitch = asin(-hitnormal.z);
+			if ( d.HitLine ) d.HitLine.RemoteActivate(self,d.LineSide,SPAC_Impact,d.HitLocation);
+		}
+		for ( int i=0; i<3; i++ )
+		{
+			let s = Spawn("UTSmoke",origin);
+			s.alpha *= 0.5;
+		}
+		let c = Spawn("UCasing",level.Vec3Offset(pos,-x*3+y*2+z*1.5));
 		c.vel = x*FRandom[Junk](-1.5,1.5)+y*FRandom[Junk](2,4)+z*FRandom[Junk](2,3);
 	}
 	States
@@ -1577,8 +1632,8 @@ Class MinigunSentry : Actor
 				A_ClearTarget();
 				return ResolveState("Idle");
 			}
+			if ( special1 > 0 ) A_Chase(null,"Missile",flags:CHF_DONTMOVE|CHF_NODIRECTIONTURN|CHF_DONTTURN);
 			A_SentryFaceTarget();
-			if ( special1 > 0 ) A_Chase(null,"Missile",flags:CHF_DONTMOVE|CHF_DONTTURN);
 			return ResolveState(null);
 		}
 		Wait;
@@ -1586,6 +1641,7 @@ Class MinigunSentry : Actor
 		SENW A 0
 		{
 			A_PlaySound("sentry/wind",looping:true);
+			master.A_AlertMonsters();
 			master.SetStateLabel("Missile");
 		}
 		SENW ABCDEFGHIJKLMNOPQR 1 A_SentryFaceTarget();
@@ -1621,18 +1677,41 @@ Class MinigunSentry : Actor
 	MissileEnd:
 		SENU A 0
 		{
+			A_LookEx(LOF_NOSOUNDCHECK|LOF_NOJUMP);
+			if ( TargetVisible() ) return ResolveState("MissileLoop");
 			A_PlaySound("sentry/unwind");
 			master.SetStateLabel("MissileEnd");
+			return ResolveState(null);
 		}
 		SENU ABCDEFGHIJKLMNOPQR 1 A_SentryFaceTarget();
-		Goto See;
+		SENI A 0 A_JumpIf(TargetVisible(),"See");
+		Goto Idle;
+	PackUp:
+		SENI A 1 A_SentryFaceDir(0,1);
+		Wait;
+		SENI A 0
+		{
+			A_PlaySound("sentry/raise");
+			master.SetStateLabel("DoPackUp");
+		}
+		SENR ONMLKJIHGFEDCBA 3;
+		Stop;
 	}
+}
+
+Class SentryFragment : Actor
+{
+}
+
+Class SentryBoom : Actor
+{
 }
 
 // The body of the sentry
 Class MinigunSentryBase : Actor
 {
 	const sentryammo = 200;
+	int rememberedplayer;
 
 	Default
 	{
@@ -1644,12 +1723,37 @@ Class MinigunSentryBase : Actor
 		+SHOOTABLE;
 		+NOBLOOD;
 		+DONTTHRUST;
+		+SPECIAL;
+	}
+	override bool Used( Actor user )
+	{
+		Super.Used(user);
+		if ( !user.player || !bSPECIAL ) return false;
+		if ( deathmatch )
+		{
+			if ( master && (user != user) && user.CheckLocalView() )
+				Console.Printf(StringTable.Localize("$M_SENTRYHIJACK"));
+			SetTag(String.Format(StringTable.Localize("$T_OWNEDSENTRY"),user.player.GetUserName()));
+		}
+		master = user;
+		bSHOOTABLE = false;
+		bSPECIAL = false;
+		SetStateLabel("PackUp");
+		return true;
 	}
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		if ( master && master.player ) SetTag(String.Format(StringTable.Localize("$T_OWNEDSENTRY"),master.player.GetUserName()));
-		else SetTag(StringTable.Localize("$T_SENTRY"));
+		if ( master && master.player )
+		{
+			SetTag(String.Format(StringTable.Localize("$T_OWNEDSENTRY"),master.player.GetUserName()));
+			rememberedplayer = master.playernumber();
+		}
+		else
+		{
+			SetTag(StringTable.Localize("$T_SENTRY"));
+			rememberedplayer = -1;
+		}
 		tracer = Spawn("MinigunSentry",pos);
 		tracer.special1 = sentryammo;
 		tracer.master = self;
@@ -1663,6 +1767,28 @@ Class MinigunSentryBase : Actor
 		if ( master && master.player ) tracer.SetFriendPlayer(master.player);
 		else tracer.bFRIENDLY = false;
 	}
+	override void Tick()
+	{
+		Super.Tick();
+		// hub return support
+		if ( !master && (rememberedplayer != -1) && playeringame[rememberedplayer] )
+		{
+			master = players[rememberedplayer].mo;
+			let si = SentryItem(master.FindInventory("SentryItem"));
+			if ( si )
+			{
+				si.bActive = true;
+				si.tracer = self;
+			}
+			else
+			{
+				master.GiveInventory("SentryItem",1);
+				si = SentryItem(master.FindInventory("SentryItem"));
+				si.bActive = true;
+				si.tracer = self;
+			}
+		}
+	}
 	override string GetObituary( Actor victim, Actor inflictor, Name mod, bool playerattack )
 	{
 		if ( victim == master ) return String.Format(StringTable.Localize("$O_OWNSENTRY"),GetTag());
@@ -1670,7 +1796,7 @@ Class MinigunSentryBase : Actor
 	}
 	override void Touch( Actor toucher )
 	{
-		if ( !toucher.player ) return;
+		if ( !toucher.player || !bSPECIAL ) return;
 		if ( deathmatch )
 		{
 			if ( master && (toucher != master) && master.CheckLocalView() )
@@ -1689,15 +1815,19 @@ Class MinigunSentryBase : Actor
 	}
 	override int DamageMobj( Actor inflictor, Actor source, int damage, Name mod, int flags, double angle )
 	{
+		if ( Health-damage <= 0 )
+		{
+			if ( master && master.CheckLocalView() )
+				Console.Printf(StringTable.Localize("$M_SENTRYDOWN"));
+			if ( master ) master.TakeInventory("SentryItem",1);
+			if ( tracer ) tracer.Destroy();
+		}
 		int dmg = Super.DamageMobj(inflictor,source,damage,mod,flags,angle);
-		if ( !tracer.target ) tracer.target = target;
+		if ( tracer && !tracer.target ) tracer.target = target;
 		return dmg;
 	}
 	override void Die( Actor source, Actor inflictor, int dmgflags, Name MeansOfDeath )
 	{
-		if ( master && master.CheckLocalView() )
-			Console.Printf(StringTable.Localize("$M_SENTRYDOWN"));
-		if ( tracer ) tracer.Destroy();
 		Super.Die(source,inflictor,dmgflags,MeansOfDeath);
 	}
 	States
@@ -1718,5 +1848,35 @@ Class MinigunSentryBase : Actor
 	MissileEnd:
 		SENU ABCDEFGHIJKLMNOPQR 1;
 		Goto Idle;
+	PackUp:
+		SENI A -1
+		{
+			tracer.SetStateLabel("PackUp");
+		}
+		Stop;
+	DoPackUp:
+		SENR ONMLKJIHGFEDCBA 3;
+		TNT1 A 1
+		{
+			if ( !master ) return ResolveState(null);
+			let si = SentryItem(master.FindInventory("SentryItem"));
+			if ( si )
+			{
+				si.charge = Health;
+				si.special1 = special1;
+			}
+			else
+			{
+				master.GiveInventory("SentryItem",1);
+				let si = SentryItem(master.FindInventory("SentryItem"));
+				si.charge = Health;
+				si.special1 = special1;
+			}
+			return ResolveState(null);
+		}
+		Stop;
+	Death:
+		TNT1 A 1 Spawn("SentryBoom",pos);
+		Stop;
 	}
 }
