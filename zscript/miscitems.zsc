@@ -1648,7 +1648,7 @@ Class MinigunSentryBase : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		if ( master && master.player ) SetTag(String.Format(StringTable.Localize("$T_OWNEDSENTRY"),master.player.GetUserName());
+		if ( master && master.player ) SetTag(String.Format(StringTable.Localize("$T_OWNEDSENTRY"),master.player.GetUserName()));
 		else SetTag(StringTable.Localize("$T_SENTRY"));
 		tracer = Spawn("MinigunSentry",pos);
 		tracer.special1 = sentryammo;
@@ -1676,7 +1676,7 @@ Class MinigunSentryBase : Actor
 			if ( master && (toucher != master) && master.CheckLocalView() )
 				Console.Printf(StringTable.Localize("$M_SENTRYHIJACK"));
 			master = toucher;
-			SetTag(String.Format(StringTable.Localize("$T_OWNEDSENTRY"),toucher.player.GetUserName());
+			SetTag(String.Format(StringTable.Localize("$T_OWNEDSENTRY"),toucher.player.GetUserName()));
 			tracer.A_ClearTarget();
 			tracer.SetFriendPlayer(toucher.player);
 		}
