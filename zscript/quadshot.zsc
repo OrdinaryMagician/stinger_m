@@ -35,6 +35,10 @@ Class UShells2 : UShells
 	}
 }
 
+Class QCasing : UCasing
+{
+}
+
 Class QuadShot : UnrealWeapon
 {
 	Default

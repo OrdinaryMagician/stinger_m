@@ -40,6 +40,18 @@ Class UBioAmmo2 : UBioAmmo
 	}
 }
 
+Class UBioGel : Actor
+{
+}
+
+Class UBioGlob : UBioGel
+{
+}
+
+Class UBioSplash : UBioGel
+{
+}
+
 Class UBioRifle : UnrealWeapon
 {
 	Default

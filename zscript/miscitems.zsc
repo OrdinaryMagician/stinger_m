@@ -269,19 +269,17 @@ Class VoiceBox : UnrealInventory
 		Inventory.MaxAmount 3;
 		UnrealInventory.Charge 600;
 	}
-	override void Tick()
+	override void DoEffect()
 	{
-		Super.Tick();
-		if ( bActive )
+		Super.DoEffect();
+		if ( !bActive ) return;
+		if ( box ) Charge = box.ReactionTime;
+		else
 		{
-			if ( box ) Charge = box.ReactionTime;
-			else
-			{
-				Charge = DefaultCharge;
-				bActive = false;
-				Amount--;
-				if ( Amount <= 0 ) DepleteOrDestroy();
-			}
+			Charge = DefaultCharge;
+			bActive = false;
+			Amount--;
+			if ( Amount <= 0 ) DepleteOrDestroy();
 		}
 	}
 	override bool Use( bool pickup )
@@ -742,6 +740,18 @@ Class DarkFlare : BetaFlare
 	}
 }
 
+Class BetaFlareThrown
+{
+}
+
+Class LightFlareThrown : BetaFlareThrown
+{
+}
+
+Class DarkFlareThrown : BetaFlareThrown
+{
+}
+
 Class Dampener : UnrealInventory
 {
 	static bool Active( Actor Owner )
@@ -757,9 +767,9 @@ Class Dampener : UnrealInventory
 		Owner.A_PlaySound(bActive?"dampener/on":"dampener/off",CHAN_ITEM);
 		return false;
 	}
-	override void Tick()
+	override void DoEffect()
 	{
-		Super.Tick();
+		Super.DoEffect();
 		if ( !bActive ) return;
 		if ( DrainCharge(1) )
 		{
@@ -929,9 +939,64 @@ Class ForcefieldEffect : Actor
 	}
 }
 
+Class UFlashLight1 : DynamicLight
+{
+	int basecolor[3];
+	Default
+	{
+		DynamicLight.Type "Point";
+		+DynamicLight.SPOT;
+		+DynamicLight.ATTENUATE;
+		+DynamicLight.DONTLIGHTSELF;
+		args 0,0,0,560;
+		DynamicLight.SpotInnerAngle 3;
+		DynamicLight.SpotOuterAngle 10;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target || !UnrealInventory(master) )
+		{
+			Destroy();
+			return;
+		}
+		if ( target.player ) SetOrigin((target.pos.x,target.pos.y,target.player.viewz),true);
+		else SetOrigin(target.vec3Offset(0,0,target.height*0.75),true);
+		A_SetAngle(target.angle,SPF_INTERPOLATE);
+		A_SetPitch(target.pitch,SPF_INTERPOLATE);
+		args[LIGHT_RED] = int(basecolor[0]*clamp(UnrealInventory(master).charge/1400.,0.,1.));
+		args[LIGHT_GREEN] = int(basecolor[1]*clamp(UnrealInventory(master).charge/1400.,0.,1.));
+		args[LIGHT_BLUE] = int(basecolor[2]*clamp(UnrealInventory(master).charge/1400.,0.,1.));
+		bDORMANT = (target.health <= 0);
+		if ( Inventory(target) && target.bInvisible ) bDORMANT = true;
+		// alert monsters hit by the light
+		if ( GetClass() != "UFlashLight1" ) return;
+		if ( !bDORMANT && target.player && (target.health > 0) )
+		{
+			BlockThingsIterator bt = BlockThingsIterator.Create(target,args[LIGHT_INTENSITY]);
+			while ( bt.Next() )
+			{
+				if ( !bt.Thing || (Distance3D(bt.Thing) > args[LIGHT_INTENSITY]) ) continue;
+				Vector3 aimdir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+				Vector3 reldir = Vec3To(bt.Thing).unit();
+				if ( (acos(aimdir dot reldir) < SpotOuterAngle+5) && bt.Thing.CheckSight(target) ) bt.Thing.LastHeard = target;
+			}
+		}
+	}
+}
+Class UFlashLight2 : UFlashLight1
+{
+	Default
+	{
+		args 0,0,0,600;
+		DynamicLight.SpotInnerAngle 0;
+		DynamicLight.SpotOuterAngle 20;
+	}
+}
+
 Class UFlashlight : UnrealInventory
 {
-	Actor lt[3];
+	UFlashLight1 lt[2];
 
 	Default
 	{
@@ -940,6 +1005,66 @@ Class UFlashlight : UnrealInventory
 		Inventory.MaxAmount 3;
 		Inventory.PickupMessage "$I_FLASHLIGHT";
 		UnrealInventory.Charge 2800;
+	}
+	virtual void SetupLights()
+	{
+		lt[0].basecolor[0] = 255;
+		lt[0].basecolor[1] = 240;
+		lt[0].basecolor[2] = 224;
+		lt[1].basecolor[0] = 128;
+		lt[1].basecolor[1] = 120;
+		lt[1].basecolor[2] = 112;
+	}
+	override bool Use( bool pickup )
+	{
+		if ( pickup ) return false;
+		bActive = !bActive;
+		Owner.A_PlaySound(bActive?"lite/pickup":"lite/off",CHAN_ITEM);
+		if ( bActive )
+		{
+			if ( !lt[0] ) lt[0] = UFlashLight1(Spawn("UFlashLight1",owner.pos));
+			lt[0].target = owner;
+			lt[0].master = self;
+			if ( !lt[1] ) lt[1] = UFlashLight1(Spawn("UFlashLight2",owner.pos));
+			lt[1].target = owner;
+			lt[1].master = self;
+			SetupLights();
+		}
+		else
+		{
+			if ( lt[0] ) lt[0].Destroy();
+			if ( lt[1] ) lt[1].Destroy();
+		}
+		return false;
+	}
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		if ( !bActive ) return;
+		if ( DrainCharge(1) )
+		{
+			Owner.A_PlaySound("lite/off",CHAN_ITEM);
+			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_FLASHLIGHT"));
+			if ( Amount <= 0 ) DepleteOrDestroy();
+		}
+	}
+	override void DetachFromOwner()
+	{
+		Super.DetachFromOwner();
+		if ( lt[0] ) lt[0].Destroy();
+		if ( lt[1] ) lt[1].Destroy();
+	}
+	override void Travelled()
+	{
+		Super.Travelled();
+		if ( !bActive ) return;
+		if ( !lt[0] ) lt[0] = UFlashLight1(Spawn("UFlashLight1",owner.pos));
+		lt[0].target = owner;
+		lt[0].master = self;
+		if ( !lt[1] ) lt[1] = UFlashLight1(Spawn("UFlashLight2",owner.pos));
+		lt[1].target = owner;
+		lt[1].master = self;
+		SetupLights();
 	}
 	States
 	{
@@ -959,6 +1084,31 @@ Class USearchlight : UFlashlight
 		Inventory.PickupMessage "$I_SEARCHLIGHT";
 		Inventory.RespawnTics 1050;
 		UnrealInventory.Charge 70000;
+	}
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		if ( !bActive ) return;
+		if ( DrainCharge(1) )
+		{
+			Owner.A_PlaySound("lite/off",CHAN_ITEM);
+			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_SEARCHLIGHT"));
+			if ( Amount <= 0 ) DepleteOrDestroy();
+		}
+	}
+	override void SetupLights()
+	{
+		lt[0].basecolor[0] = 255;
+		lt[0].basecolor[1] = 224;
+		lt[0].basecolor[2] = 192;
+		lt[0].SpotInnerAngle = 20;
+		lt[0].SpotOuterAngle = 35;
+		lt[0].args[3] = 750;
+		lt[1].basecolor[0] = 128;
+		lt[1].basecolor[1] = 112;
+		lt[1].basecolor[2] = 96;
+		lt[1].SpotOuterAngle = 50;
+		lt[1].args[3] = 780;
 	}
 }
 

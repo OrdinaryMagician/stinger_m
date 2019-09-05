@@ -1,3 +1,11 @@
+Class UFireball : Actor
+{
+}
+
+Class UFireball2 : UFireball
+{
+}
+
 Class FlameGun : UnrealWeapon
 {
 	Default

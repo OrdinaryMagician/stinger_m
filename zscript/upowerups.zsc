@@ -24,9 +24,9 @@ Class UInvisibility : UnrealInventory
 		else Owner.TakeInventory("PowerUInvisibility",1);
 		return false;
 	}
-	override void Tick()
+	override void DoEffect()
 	{
-		Super.Tick();
+		Super.DoEffect();
 		if ( !bActive ) return;
 		if ( special1 == -1 )
 		{
@@ -116,9 +116,9 @@ Class Amplifier : UnrealInventory
 		Owner.A_PlaySound("amplifier/set",CHAN_ITEM);
 		return false;
 	}
-	override void Tick()
+	override void DoEffect()
 	{
-		Super.Tick();
+		Super.DoEffect();
 		if ( bActive && !tracer )
 		{
 			tracer = Spawn("AmpSound",Owner.pos);
@@ -208,9 +208,9 @@ Class UJumpBoots : UnrealInventory
 		else Owner.TakeInventory("PowerJumpBoots_HighJump",1);
 		return false;
 	}
-	override void Tick()
+	override void DoEffect()
 	{
-		Super.Tick();
+		Super.DoEffect();
 		if ( !Owner || !Owner.player ) return;
 		draincnt++;
 		if ( (draincnt >= 700) || (bActive && (owner.player.jumptics == -1)) )

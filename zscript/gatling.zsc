@@ -10,6 +10,10 @@ Class SMiniAmmo : Ammo
 	}
 }
 
+Class SMiniBlast : Actor
+{
+}
+
 Class SMiniGun : UnrealWeapon
 {
 	Default

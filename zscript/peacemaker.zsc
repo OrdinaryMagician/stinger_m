@@ -10,6 +10,14 @@ Class PeaceAmmo : Ammo
 	}
 }
 
+Class PeaceRocket : Actor
+{
+}
+
+Class PeaceProj : Actor
+{
+}
+
 Class Peacemaker : UnrealWeapon
 {
 	Default

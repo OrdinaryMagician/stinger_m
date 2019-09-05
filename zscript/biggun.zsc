@@ -49,6 +49,22 @@ Class BigAmmo3 : BigAmmo
 	}
 }
 
+Class BigBlast : Actor
+{
+}
+
+Class HitListEntry
+{
+	Actor hitactor;
+	Vector3 hitlocation, x;
+}
+
+Class BigTracer : LineTracer
+{
+	Array<HitListEntry> hitlist;
+	double penetration;	// please don't laugh
+}
+
 Class BigGun : UnrealWeapon
 {
 	Default

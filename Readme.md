@@ -37,6 +37,8 @@ Doom Tournament (currently the devel branch is required).
  - Super Health (replaces soulsphere)
  - Nali Fruit Seed (replaces health bonus)
  - Flare (replaces armor bonus)
+ - Flashlight (replaces light amplifier)
+   - Searchlight (must be placed manually for balance reasons)
 
 ## In progress
 
@@ -46,8 +48,6 @@ Doom Tournament (currently the devel branch is required).
  - Minigun (slot 0) (replaces chaingun)
  - SMP 7243 (slot 0) (replaces bfg9000)
 
- - Flashlight (replaces light amplifier)
-   - Searchlight (must be placed manually for balance reasons)
  - Jump Boots (replaces radsuit)
  - SCUBA Gear (replaces radsuit if map has swimmable water)
 

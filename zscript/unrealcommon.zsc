@@ -616,14 +616,28 @@ Class UnrealInventory : Inventory
 	override void AttachToOwner( Actor other )
 	{
 		Super.AttachToOwner(other);
-		Charge = DefaultCharge;
+		if ( !Charge ) Charge = DefaultCharge;
 		InterHubAmount = MaxAmount;	// it's annoying to set this per-subclass
 	}
 	override bool HandlePickup( Inventory item )
 	{
 		if ( (item.GetClass() == GetClass()) && ((MaxAmount > 1) || (DefaultCharge > 0)) )
 		{
-			if ( MaxAmount > 1 ) Amount = min(MaxAmount,Amount+item.Amount);
+			if ( MaxAmount > 1 )
+			{
+				if ( UnrealInventory(item).Charge ) // redistribute charge among copies
+				{
+					int addcharge = Charge+UnrealInventory(item).Charge;
+					charge = min(DefaultCharge,addcharge);
+					// if there's charge to spare, increase amount
+					if ( addcharge > charge )
+					{
+						Amount = min(MaxAmount,Amount+item.Amount);
+						charge = addcharge-charge;
+					}
+				}
+				else Amount = min(MaxAmount,Amount+item.Amount);	// fully charged new copy, just increase
+			}
 			else Charge = DefaultCharge;	// reset charge
 			item.bPickupGood = true;
 			return true;

@@ -24,6 +24,14 @@ Class RazorAmmo : Ammo
 	}
 }
 
+Class RazorBlade : Actor
+{
+}
+
+Class RazorBladeAlt : RazorBlade
+{
+}
+
 Class Razorjack : UnrealWeapon
 {
 	Default

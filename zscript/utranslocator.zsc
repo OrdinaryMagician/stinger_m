@@ -18,6 +18,10 @@ Class UTranslocatorAmmo : Ammo
 	}
 }
 
+Class UTranslocatorModule : Actor
+{
+}
+
 Class UTranslocator : UnrealWeapon
 {
 	override bool TryPickup( in out Actor toucher )

@@ -19,6 +19,14 @@ Class FlameAmmo : Ammo
 	}
 }
 
+Class UFlame : Actor
+{
+}
+
+Class UNapalm : Actor
+{
+}
+
 Class UFlamethrower : UnrealWeapon
 {
 	Default

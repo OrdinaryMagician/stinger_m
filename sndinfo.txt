@@ -204,6 +204,8 @@ voice/activate	voicesnd
 
 univis/toggle	invisibl
 
+lite/off	fshlite2
+
 automag/select	cocking
 automag/fire	shot
 automag/click	click
