@@ -81,7 +81,7 @@ Class BigGun : UnrealWeapon
 		Tag "$T_BIGGUN";
 		Inventory.PickupMessage "$I_BIGGUN";
 		Weapon.UpSound "big/select";
-		Weapon.SlotNumber 0;
+		Weapon.SlotNumber 9;
 		Weapon.SelectionOrder 0;
 		Weapon.AmmoType "BigAmmo";
 		Weapon.AmmoUse 1;

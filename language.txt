@@ -32,7 +32,8 @@ O_FLAMEGUN = "%o was charred by %k's Fireblaster.";
 O_FLAMETHROWER = "%o was thoroughly roasted by %k's Flamethrower.";
 O_BIGGUN = "%k blew a hole through %o with the Demolisher.";
 O_SMINI = "%o got blasted into steaming chunks by %k's Autocannon.";
-O_SENTRY = "%o shouldn't have walked into the sights of %k's Sentry.";
+O_SENTRY = "%%o shouldn't have walked into the sights of %s.";
+O_OWNSENTRY = "%o was gunned down by %p own Sentry.";
 O_STINGERX = "%o ate flaming Tarydium death thanks to %k.";
 O_OLSMP = "%o didn't stand a chance against %k's SMP 7243.";
 /* Pickup messages */
@@ -137,6 +138,7 @@ T_FLAMETHROWER = "Flamethrower";
 T_BIGGUN = "Demolisher";
 T_SMINI = "Autocannon";
 T_SENTRY = "Sentry";
+T_OWNEDSENTRY = "%s's Sentry";
 T_TRANSLATOR = "Translator";
 T_UARMOR = "Assault Vest";
 T_KEVSUIT = "Kevlar Suit";
@@ -178,6 +180,13 @@ D_POWERSHIELD = "The Power Shield has depleted.";
 D_DAMPENER = "Acoustic Dampener has run out.";
 D_AMPLIFIER = "Energy Amplifier is out of power.";
 D_SCUBA = "SCUBA Gear oxygen supply has run out.";
+D_FLASHLIGHT = "The Flashlight batteries have died.";
+D_SEARCHLIGHT = "The Searchlight has run out of battery.";
+D_DETECTOR = "The Detector has run out of battery.";
+M_SENTRYDOWN = "Your Sentry has been destroyed.";
+M_SENTRYDRY = "Your Sentry has run out of ammo.";
+M_SENTRYHIJACK = "Your Sentry has been hijacked.";
+M_MSNOROOM = "No room to deploy Sentry.";
 M_FFNOROOM = "No room to activate Force Field.";
 S_MINHUD = "Health %d Score %d Ammo %d";
 S_MINHUD2 = "Health %d Score %d Ammo %d/%d";
@@ -227,6 +236,8 @@ STING_CMUS = "Music:";
 STING_CSND = "Sound Effects:";
 STING_CGT = "Producer for GT:";
 STING_CBIZ = "Biz:";
+STING_KEYS = "Doomreal";
+STING_USETRANS = "Use Translator";
 
 [es esm esn esg esc esa esd esv eso esr ess esf esl esy esz esb ese esh esi esu]
 /* Obituaries */
@@ -251,7 +262,8 @@ O_FLAMEGUN = "%o fue carbonizad@[ao_esp] por el Bláster de Fuego de %k.";
 O_FLAMETHROWER = "%o fue asad@[ao_esp] a conciencia por el Lanzallamas de %k.";
 O_BIGGUN = "%k abrió un hoyo a través de %o con el Demoledor.";
 O_SMINI = "%o fue reventad@[ao_esp] en pedazos humeantes por el Autocañón de %k.";
-O_SENTRY = "%o no debería haberse metido en el punto de mira de la Torreta de %k.";
+O_SENTRY = "%%o no debería haberse metido en el punto de mira de la %s.";
+O_OWNSENTRY = "%o fue abatid@[ao_esp] por su propi@[ao_esp] Torreta.";
 O_STINGERX = "%o tragó muerte ardiente de Tarydium gracias a %k.";
 O_OLSMP = "%o no tenía ninguna oportunidad contra el SMP 7243 de %k.";
 /* Pickup messages */
@@ -352,6 +364,7 @@ T_FLAMETHROWER = "Lanzallamas";
 T_BIGGUN = "Demoledor";
 T_SMINI = "Autocañón";
 T_SENTRY = "Torreta";
+T_OWNEDSENTRY = "Torreta de %s";
 T_TRANSLATOR = "Traductor";
 T_UARMOR = "Coraza de Asalto";
 T_KEVSUIT = "Traje de Kevlar";
@@ -383,6 +396,13 @@ D_POWERSHIELD = "El Escudo de Fuerza se ha agotado.";
 D_DAMPENER = "El Amortiguador Acústico se ha agotado.";
 D_AMPLIFIER = "El Amplificador de Energía se ha agotado.";
 D_SCUBA = "La reserva de oxígeno del Kit de Buceo se ha agotado.";
+D_FLASHLIGHT = "Las pilas de la Linterna se han agotado.";
+D_SEARCHLIGHT = "El Faro se ha quedado sin energía.";
+D_DETECTOR = "El Detector se ha quedado sin energía.";
+M_SENTRYDOWN = "Tu Torreta ha sido destruida.";
+M_SENTRYDRY = "Tu Torreta se ha quedado sin munición.";
+M_SENTRYHIJACK = "Tu Torreta ha sido hackeada.";
+M_MSNOROOM = "No hay espacio para colocar la Torreta.";
 M_FFNOROOM = "No hay espacio para activar el Campo de Fuerza.";
 S_MINHUD = "Salud %d Puntuación %d Munición %d";
 S_MINHUD2 = "Salud %d Puntuación %d Munición %d/%d";
@@ -428,6 +448,7 @@ STING_CMUS = "Música:";
 STING_CSND = "Efectos de Sonido:";
 STING_CGT = "Productor para GT:";
 STING_CBIZ = "Negocios:";
+STING_USETRANS = "Usar Traductor";
 
 [fr]
 

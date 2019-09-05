@@ -1,0 +1,4 @@
+addkeysection "$STING_KEYS" Doomreal
+addmenukey "$STING_USETRANS" usetrans
+alias usetrans "netevent usetranslator"
+defaultbind F2 usetrans

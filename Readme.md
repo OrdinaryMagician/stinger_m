@@ -16,6 +16,7 @@ Doom Tournament (currently the devel branch is required).
  - Eightball (slot 5) (replaces rocket launcher)
    - Single rocket mode for Eightball
  - Flak Cannon (slot 6) (replaces rocket launcher)
+ - SMP 7243 (slot 0) (replaces bfg9000)
  - Backpack (replaces backpack, identical to Doom Tournament version)
  - Unreal 1 HUD
  - Translator (has to be spawned in, since it would only be useful for mappers)
@@ -41,6 +42,8 @@ Doom Tournament (currently the devel branch is required).
    - Searchlight (must be placed manually for balance reasons)
  - Jump Boots (replaces radsuit)
  - SCUBA Gear (replaces radsuit if map has swimmable water)
+ - Motion Detector (replaces computer map)
+ - Light & Dark Flares
 
 ## In progress
 
@@ -48,7 +51,8 @@ Doom Tournament (currently the devel branch is required).
  - GES Bio Rifle (slot 8) (replaces plasma rifle)
  - Rifle (slot 9) (replaces plasma rifle)
  - Minigun (slot 0) (replaces chaingun)
- - SMP 7243 (slot 0) (replaces bfg9000)
+
+ - Minigun Sentry (rare spawn in backpacks)
 
 ## Planned
 
@@ -65,7 +69,7 @@ Doom Tournament (currently the devel branch is required).
 
  - Stunner (slot 4) (replaces chainsaw)
  - Razorclaw (slot 1) (replaces chainsaw)
- - Teleport Capsules (slot 9)
+ - Teleport Capsules (slot 1)
  - Protomag (slot 2) (replaces pistol)
    - Dual Protomags
  - Quadshot (slot 3) (replaces shotguns)
@@ -73,12 +77,8 @@ Doom Tournament (currently the devel branch is required).
  - Impaler (slot 7) (replaces plasma rifle)
  - Flamethrower (slot 6) (replaces plasma rifle)
  - Fireblaster (slot 5) (replaces rocket launcher)
- - Demolisher (slot 0) (replaces bfg9000)
+ - Demolisher (slot 9) (replaces bfg9000)
  - Autocannon (slot 0) (replaces bfg9000)
-
- - Motion Detector (replaces computer map)
- - Light & Dark Flares
- - Minigun Sentry (rare spawn in backpacks)
 
 ## Known bugs
 

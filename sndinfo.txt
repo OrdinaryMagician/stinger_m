@@ -216,3 +216,12 @@ automag/click	click
 automag/reload	reload
 
 translator/event	transa3
+
+detector/start	detact
+detector/stop	detend
+detector/active	detscan
+
+sentry/raise	sentup
+sentry/wind	sentwind
+sentry/fire	sentfire
+sentry/unwind	sentuwnd

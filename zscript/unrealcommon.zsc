@@ -1113,6 +1113,11 @@ Class UnrealMainHandler : EventHandler
 				}
 			}
 		}
+		else if ( (e.Name ~== "usetranslator") && (e.player != -1) && playeringame[e.player] && !menuactive )
+		{
+			let t = players[e.player].mo.FindInventory("UTranslator");
+			if ( t ) t.Use(false);
+		}
 	}
 	override void WorldLoaded( WorldEvent e )
 	{

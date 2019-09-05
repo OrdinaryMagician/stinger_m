@@ -375,7 +375,7 @@ Class UnrealHUD : BaseStatusBar
 		if ( Prev && !Next && !bDrawOne ) x += 32;	// this was missing from the original, causing a gap when there's only two items in the inventory
 		if ( Prev )
 		{
-			bRed = ((Prev is 'UnrealInventory') && UnrealInventory(Prev).bActive) || (Prev is 'Powerup') || ((Prev is 'UTranslator') && bFlashTranslator);
+			bRed = ((Prev is 'UnrealInventory') && UnrealInventory(Prev).bActive) || (Prev is 'Powerup') || ((Prev is 'UTranslator') && ((bTranslatorActive) || (bFlashTranslator && ((gametic%8)<4))));
 			DrawHudIcon(x,y,Prev,bRed);
 			if ( Prev.MaxAmount > 1 ) DrawNumberOf(Prev,x,y);
 		}
@@ -389,7 +389,7 @@ Class UnrealHUD : BaseStatusBar
 		if ( SelectedItem.MaxAmount > 1 ) DrawNumberOf(SelectedItem,CurX,y);
 		if ( Next )
 		{
-			bRed = ((Next is 'UnrealInventory') && UnrealInventory(Next).bActive) || (Next is 'Powerup') || ((Next is 'UTranslator') && bFlashTranslator);
+			bRed = ((Next is 'UnrealInventory') && UnrealInventory(Next).bActive) || (Next is 'Powerup') || ((Next is 'UTranslator') && ((bTranslatorActive) || (bFlashTranslator && ((gametic%8)<4))));
 			DrawHudIcon(x+64,y,Next,bRed);
 			if ( Next.MaxAmount > 1 ) DrawNumberOf(Next,x+64,y);
 		}

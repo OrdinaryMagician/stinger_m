@@ -40,7 +40,7 @@ Class UTranslocator : UnrealWeapon
 	{
 		Tag "$T_TELEGUN";
 		Inventory.PickupMessage "$I_TELEGUN";
-		Weapon.SlotNumber 9;
+		Weapon.SlotNumber 1;
 		Weapon.SelectionOrder 10;
 		Weapon.AmmoType1 "UTranslocatorAmmo";
 		Weapon.AmmoUse1 1;

@@ -517,9 +517,9 @@ Class Eightball : UnrealWeapon
 	Ready2:
 		EBLS O 0 A_CheckReload();
 		EBLL A 0 A_PlaySound("utrl/load",CHAN_ITEM,Dampener.Active(self)?.1:1.);
-		EBLL ABCDEFGHIJK 2 A_WeaponReady(WRF_NOFIRE);
+		EBLL ABCDEFGHIJK 2;
 		EBLL L 0 A_PlaySound("utrl/rotate",CHAN_ITEM,Dampener.Active(self)?.01:.1);
-		EBLL LMNOPQRSTUVWXYZ[ 1 A_WeaponReady(WRF_NOFIRE);
+		EBLL LMNOPQRSTUVWXYZ[ 1;
 		EBLL Z 0;	// force no tweening
 		EBLI A 0;
 		Goto Idle;

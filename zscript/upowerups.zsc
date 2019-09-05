@@ -322,6 +322,9 @@ Class UJumpBoots : UnrealInventory
 
 Class MotionDetector : UnrealInventory
 {
+	ui TextureID DetHud, DetSpot[2];
+	Array<Actor> nearscan;
+
 	Default
 	{
 		Tag "$T_DETECTOR";
@@ -332,13 +335,114 @@ Class MotionDetector : UnrealInventory
 		Inventory.Icon "I_Detect";
 		Inventory.PickupMessage "$I_DETECTOR";
 		Inventory.RespawnTics 1050;
-		UnrealInventory.Charge 3500;
+		UnrealInventory.Charge 7000;
 	}
+	override bool TryPickup( in out Actor toucher )
+	{
+		bool valid = Super.TryPickup(toucher);
+		if ( valid ) level.allmap = true;
+		return valid;
+	}
+	override void PostRender( double lbottom )
+	{
+		if ( !bActive ) return;
+		double xpos = UnrealHUD(StatusBar).ClipX-96;
+		double ypos = 0;
+		// offset if inventory display present on top right
+		if ( UnrealHUD(StatusBar).HudMode < 2 ) ypos += 32;
+		if ( DetHud.IsNull() ) DetHud = TexMan.CheckForTexture("DetHud",TexMan.Type_Any);
+		if ( DetSpot[0].IsNull() ) DetSpot[0] = TexMan.CheckForTexture("DetSpot0",TexMan.Type_Any);
+		if ( DetSpot[1].IsNull() ) DetSpot[1] = TexMan.CheckForTexture("DetSpot1",TexMan.Type_Any);
+		Screen.DrawTexture(DetHud,false,xpos,ypos,DTA_VirtualWidthF,UnrealHUD(StatusBar).ClipX,DTA_VirtualHeightF,UnrealHUD(StatusBar).ClipY,DTA_KeepRatio,true);
+		double alph = max(0.,0.25+0.75*sin((gametic+UnrealHUD(StatusBar).fractic)*6.));
+		Screen.Dim(Color("FF 40 00"),alph*.25,int((xpos+3)*UnrealHUD(StatusBar).scalev.x),int((ypos+3)*UnrealHUD(StatusBar).scalev.y),int(90*UnrealHUD(StatusBar).scalev.x),int(90*UnrealHUD(StatusBar).scalev.y));
+		Screen.DrawTexture(DetSpot[0],false,xpos+48,ypos+48,DTA_VirtualWidthF,UnrealHUD(StatusBar).ClipX,DTA_VirtualHeightF,UnrealHUD(StatusBar).ClipY,DTA_KeepRatio,true);
+		alph = max(0.,0.5+0.5*sin((gametic+UnrealHUD(StatusBar).fractic-10)*6.));
+		for ( int i=0; i<nearscan.Size(); i++ )
+		{
+			Vector2 absofs = level.Vec2Diff(Owner.pos.xy,nearscan[i].pos.xy);
+			absofs *= (96./2048.);
+			double ang = Owner.angle-90;
+			Vector2 relofs = (absofs.x*cos(ang)+absofs.y*sin(ang),-absofs.y*cos(ang)+absofs.x*sin(ang));
+			if ( max(abs(relofs.x),abs(relofs.y)) > 48. ) continue;
+			// this is a long line, but it's not the longest I've ever seen
+			// oh I have seen things... php code that would make you want to stab your eyes with forks...
+			Screen.DrawTexture(DetSpot[1],false,xpos+48+relofs.x,ypos+48+relofs.y,DTA_VirtualWidthF,UnrealHUD(StatusBar).ClipX,DTA_VirtualHeightF,UnrealHUD(StatusBar).ClipY,DTA_KeepRatio,true,DTA_Alpha,alph,DTA_ClipLeft,int((xpos+3)*UnrealHUD(StatusBar).scalev.x),DTA_ClipTop,int((ypos+3)*UnrealHUD(StatusBar).scalev.y),DTA_ClipRight,int((xpos+93)*UnrealHUD(StatusBar).scalev.x),DTA_ClipBottom,int((ypos+93)*UnrealHUD(StatusBar).scalev.y));
+		}
+	}
+	override bool Use( bool pickup )
+	{
+		if ( pickup ) return false;
+		bActive = !bActive;
+		if ( bActive ) Owner.A_PlaySound("detector/start",CHAN_ITEM);
+		else Owner.A_PlaySound("detector/stop",CHAN_ITEM,0.1,false,3.);
+		return false;
+	}
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		if ( bActive && !tracer )
+		{
+			tracer = Spawn("DetectorSound",Owner.pos);
+			tracer.target = Owner;
+			tracer.master = self;
+		}
+		else if ( !bActive && tracer ) tracer.Destroy();
+		if ( !bActive ) return;
+		nearscan.Clear();
+		let bi = BlockThingsIterator.Create(Owner,2048);
+		while ( bi.Next() )
+		{
+			if ( !bi.Thing || (bi.Thing == Owner) || !bi.Thing.bISMONSTER || bi.Thing.Health <= 0 ) continue;
+			nearscan.Push(bi.Thing);
+		}
+		if ( (Charge <= 0) || DrainCharge(1) )
+		{
+			Owner.A_PlaySound("detector/stop",CHAN_ITEM,0.1,false,3.);
+			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_DETECTOR"));
+			if ( tracer ) tracer.Destroy();
+			DepleteOrDestroy();
+		}
+	}
+
 	States
 	{
 	Spawn:
 		MDET A -1;
 		Stop;
+	}
+}
+
+Class DetectorSound : Actor
+{
+	Default
+	{
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target || !master )
+		{
+			Destroy();
+			return;
+		}
+		SetOrigin(target.pos,true);
+		A_SoundVolume(CHAN_VOICE,target.CheckLocalView()?0.1:0.0);
+		A_SoundVolume(CHAN_7,!target.CheckLocalView()?0.1:0.0);
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		A_PlaySound("detector/active",CHAN_VOICE,0.1,true,ATTN_NONE);
+		A_PlaySound("detector/active",CHAN_7,0.1,true,3.);
+	}
+	override void OnDestroy()
+	{
+		Super.OnDestroy();
+		A_StopSound(CHAN_VOICE);
+		A_StopSound(CHAN_7);
 	}
 }
 

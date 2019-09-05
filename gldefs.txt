@@ -224,11 +224,29 @@ FlickerLight2 FLARELIGHT
 	Size 112
 	SecondarySize 120
 	Interval 0.1
-	Offset 6 0 1
+	Offset 0 1 6
 }
 Object FlareThrownX
 {
 	frame "FLAR" { light "FLARELIGHT" }
+}
+
+FlickerLight2 LIGHTFLARE
+{
+	Color 1.0 1.0 1.0
+	Size 112
+	SecondarySize 120
+	Interval 0.1
+	Offset 0 1 6
+}
+FlickerLight2 DARKFLARE
+{
+	Color 0.6 0.6 0.6
+	Size 112
+	SecondarySize 120
+	Interval 0.1
+	Subtractive 1
+	Offset 0 1 6
 }
 
 FlickerLight2 DAMMOLIGHT1
@@ -297,6 +315,39 @@ FlickerLight2 ASMDBALLLIGHT
 Object AsmdBall
 {
 	Frame "TAZB" { light "ASMDBALLLIGHT" }
+}
+
+FlickerLight2 SENTRYLIGHT1
+{
+	Color 1.0 0.6 0.0
+	Size 80
+	SecondarySize 96
+	Interval 0.1
+	Offset 0 4 15
+}
+FlickerLight2 SENTRYLIGHT2
+{
+	Color 0.4 0.2 0.0
+	Size 80
+	SecondarySize 96
+	Interval 0.1
+	Offset 0 4 15
+}
+
+Object MinigunSentry
+{
+	Frame "SENFA" { light "SENTRYLIGHT1" }
+	Frame "SENFB" { light "SENTRYLIGHT2" }
+	Frame "SENFD" { light "SENTRYLIGHT1" }
+	Frame "SENFE" { light "SENTRYLIGHT2" }
+	Frame "SENFG" { light "SENTRYLIGHT1" }
+	Frame "SENFH" { light "SENTRYLIGHT2" }
+	Frame "SENFJ" { light "SENTRYLIGHT1" }
+	Frame "SENFK" { light "SENTRYLIGHT2" }
+	Frame "SENFM" { light "SENTRYLIGHT1" }
+	Frame "SENFN" { light "SENTRYLIGHT2" }
+	Frame "SENFP" { light "SENTRYLIGHT1" }
+	Frame "SENFQ" { light "SENTRYLIGHT2" }
 }
 
 // Shaders / Brightmaps

@@ -382,6 +382,35 @@ Model "FlareThrownX"
 	FrameIndex FLAR A 0 1
 }
 
+Model "LightFlareThrown"
+{
+	Path "models"
+	Model 0 "LightFlareM_d.3d"
+	SurfaceSkin 0 0 "Jflare.png"
+	AngleOffset -90
+	Offset 4 0 1
+	Scale 0.1 -0.1 0.12
+	USEACTORPITCH
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1
+
+	FrameIndex FLAR A 0 0
+}
+Model "DarkFlareThrown"
+{
+	Path "models"
+	Model 0 "LightFlareM_d.3d"
+	SurfaceSkin 0 0 "Jflare.png"
+	AngleOffset -90
+	Offset 4 0 1
+	Scale 0.1 -0.1 0.12
+	USEACTORPITCH
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1
+
+	FrameIndex FLAR A 0 0
+}
+
 Model "UJumpBoots"
 {
 	Path "models"
@@ -435,9 +464,11 @@ Model "MinigunSentry"
 {
 	Path "models"
 	Model 0 "SentryGun_d.3d"
-	SurfaceSkin 0 1 "Minigun_.png"
-	SurfaceSkin 0 2 "minigun1_.png"
+	SurfaceSkin 0 1 "Minigun.png"
+	SurfaceSkin 0 2 "minigun1.png"
 	Scale 0.15 0.15 0.18
+	USEACTORPITCH
+	USEACTORROLL
 
 	// down
 	FrameIndex SENT A 0 0
@@ -517,16 +548,34 @@ Model "MinigunSentry"
 	FrameIndex SENU Q 0 66
 	FrameIndex SENU R 0 67
 }
+Model "MinigunSentryX"
+{
+	Path "models"
+	Model 0 "SentryGun_d.3d"
+	SurfaceSkin 0 0 "JRifle1.png"
+	Scale 0.15 0.15 0.18
+	USEACTORPITCH
+	USEACTORROLL
+
+	FrameIndex SENF A 0 32 // shoot
+	FrameIndex SENF D 0 35 // shoot
+	FrameIndex SENF G 0 38 // shoot
+	FrameIndex SENF J 0 41 // shoot
+	FrameIndex SENF M 0 44 // shoot
+	FrameIndex SENF P 0 47 // shoot
+}
 
 Model "MinigunSentryBase"
 {
 	Path "models"
 	Model 0 "SentryBase_d.3d"
-	SurfaceSkin 0 0 "Minigun_.png"
-	SurfaceSkin 0 1 "minigun1_.png"
-	SurfaceSkin 0 2 "JRifle1_.png"
+	SurfaceSkin 0 0 "Minigun.png"
+	SurfaceSkin 0 1 "minigun1.png"
+	SurfaceSkin 0 2 "JRifle1.png"
 	Scale 0.15 0.15 0.18
 	ZOffset 38
+	USEACTORPITCH
+	USEACTORROLL
 
 	// down
 	FrameIndex SENT A 0 0

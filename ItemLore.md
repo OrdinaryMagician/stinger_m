@@ -14,10 +14,13 @@ this item isn't really given to players. It may get use if I or someone else
 recreate Unreal 1 maps.
 
 This mod's version of the Translator has additional features:
-- Vertical scrolling for long messages, just use the up/down arrow keys
-- Toggling hint display, press page down if there's a glowing icon on the
-  bottom right. Press page up to return to the message.
-- Going through previous messages, by pressing left / right.
+- Vertical scrolling for long messages, just use the up/down arrow keys,
+  mouse wheel or drag along the bar.
+- Toggling hint display, if there's a glowing icon on the bottom right, press
+  page down or click on it. Press page up / click on the bottom left to return
+  to the message.
+- Going through previous messages, by pressing left / right or clicking the
+  arrows next to the page numbers.
 
 ## Amplifier
 
@@ -28,7 +31,8 @@ When active, dramatically enhances the power of the Dispersion Pistol and ASMD.
 Deadens the sound of emitted from your weapons, making it much easier to launch
 sneak attacks.
 
-In the original game this item was pretty much useless, but here it works.
+This item was pretty much useless in the original game, but here it really does
+have a considerable effect.
 
 ## Flare
 
@@ -67,17 +71,16 @@ Activating the boots enables you to jump much higher than normal. Once picked
 up the Boots only last for a short period of time, so take advantage of them
 while you can.
 
-In addition, the boots can provide resistance to damaging floors.
+In addition, the Boots can provide resistance to damaging floors.
 
 ## Scuba Gear
 
-Gives you the ability to breathe while underwater.
-
-Lasts around 2 minutes.
+Gives you the ability to breathe while underwater. Lasts around 2 minutes.
 
 ## Searchlight
 
-Functions like a flashlight, but has a nearly inexhaustible power supply.
+Provides considerably more light than a flashlight and has around half an hour
+of battery life. Definitely worth keeping around.
 
 ## Nali Fruit Seed
 
@@ -87,10 +90,8 @@ is fully grown, your health gain will be less substantial.
 
 ## Voice Box
 
-Creates a sound diversion to distract your enemies.
-
-In the original this had no effect, but here enemies will actually be alerted
-by voice boxes, and will attempt to get rid of the annoying noise.
+Creates a sound diversion to distract your enemies, so you can make your
+escape while they attempt to get rid of the annoying noise this device emits.
 
 ## Bandages
 
