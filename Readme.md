@@ -14,6 +14,7 @@ Doom Tournament (currently the devel branch is required).
  - Stinger (slot 3) (replaces shotguns)
  - ASMD (slot 4) (replaces shotguns)
  - Eightball (slot 5) (replaces rocket launcher)
+   - Single rocket mode for Eightball
  - Flak Cannon (slot 6) (replaces rocket launcher)
  - Backpack (replaces backpack, identical to Doom Tournament version)
  - Unreal 1 HUD
@@ -61,7 +62,6 @@ Doom Tournament (currently the devel branch is required).
  - QOL improvements
    - Make Razorjack altfire actually seek where player is aiming
    - Biorifle splashes like UT (toggleable)
-   - Single rocket mode for Eightball
 
  - Stunner (slot 4) (replaces chainsaw)
  - Razorclaw (slot 1) (replaces chainsaw)
