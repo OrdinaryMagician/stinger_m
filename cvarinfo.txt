@@ -1,22 +1,76 @@
 user int stinger_hudmode = 0;	// hud mode
+				// 0 - full, large numbers, cummulative armor
+				// 1 - full, small numbers, individial armor
+				// 2 - all on bottom
+				// 3 - bottom corners only, no numbers
+				// 4 - minimal display on bottom right corner
+				// 5 - minimalistic top hud from 0.871 and up
 user int stinger_introtype = 0;	// 0 - unreal '98
 				// 1 - unreal '97
 				// 2 - unreal '96
 				// 3 - unreal '95
 server bool sting_telegun = false;	// enable teleport capsules
+					// basically this game's own
+					// translocator before the translocator
+					// even existed
 server bool sting_flares = false;	// enable light/dark flares
+					// only one can be active at a time
+					// for balance and performance reasons
 server bool sting_stinger = false;	// unreal bible stinger detonation
+					// (projectiles attach to target and
+					// explode when hurt by splash damage
+					// or when target moves at high speed
+					// then comes to a sudden stop)
+server bool sting_stingerb = false;	// stinger projectiles bounce up to
+					// three times if they don't hit a
+					// surface straight on. this was a
+					// thing all the way until 0.86
+					// strangely, the bBounce flag still
+					// remained on the projectile but since
+					// then it was hardcoded to explode
+					// when it hit a wall anyway
 server bool sting_rifle = false;	// old rifle burst altfire
+					// three rapid shots
 server bool sting_riflel = false;	// old rifle flashlight
+					// it's independent from the scope
+					// since that mesh part already is...
+					// you know... a scope
 server bool sting_razor = false;	// razorjack blade charging
+					// hold primary fire to increase the
+					// spin up to 3x
 server bool sting_flamet = false;	// use flamethrower model based on old
 					// design and texture rather than the
 					// modern redesign
 server bool sting_automags = false;	// automag dual wielding
+					// oldskool did this, and you'll come
+					// to realize that it wasn't a good
+					// idea balance-wise
 server bool sting_protomags = false;	// protomag dual wielding
+					// just for the sake of completion
+					// plus the off-hand mag will use the
+					// alternate skin
 server bool sting_dpistol = false;	// d.pistol altfire always level 0
+					// I always found this thing odd about
+					// the weapon, but it's very likely
+					// that this was kept like this for
+					// the sake of balance
 server bool sting_pshield = false;	// p.shield does not drain over time
+					// this is unbalanced as all hell and
+					// it's not recommended to enable the
+					// compatibility option unless you are
+					// a die-hard purist who despises the
+					// change
+server bool sting_nopstart = false;	// players start only with the
+					// dispersion pistol, otherwise they
+					// also get an automag for the sake
+					// of consistency with doom defaults
 user bool sting_transext = false;	// use an extended translator graphic
 					// to fit more text
+					// thanks Kynikoss for this, it's much
+					// better than the trash garbage mods
+					// use
 server bool sting_olsmp = false;	// adds the stupid oldskool SMP 7243 to
 					// the BFG/Redeemer replacement pool
+					// this weapon is dumb, but just for
+					// the sake of completion it's there as
+					// an option

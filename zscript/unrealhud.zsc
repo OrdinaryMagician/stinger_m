@@ -153,8 +153,8 @@ Class UnrealHUD : BaseStatusBar
 		FracTic = TicFrac;
 		HudMode = CVar.GetCVar('stinger_hudmode',players[consoleplayer]).GetInt();
 		scalev.x = scalev.y = CVar.GetCVar('hud_scale',players[consoleplayer]).GetInt();
-		if ( scalev.x == 0 ) scalev.x = scalev.y = max(1,min(Screen.GetWidth()/640.,Screen.GetHeight()/480.));	// the typical behavior is scaling to 640x400 but we're expecting 4:3 here
-		else if ( scalev.x < 0 )
+		if ( scalev.x < 0 ) scalev.x = scalev.y = max(1,min(Screen.GetWidth()/640.,Screen.GetHeight()/480.));	// the typical behavior is scaling to 640x400 but we're expecting 4:3 here
+		else if ( scalev.x == 0 )
 		{
 			scalev.x = CleanXFac_1;
 			scalev.y = CleanYFac_1;
@@ -201,7 +201,7 @@ Class UnrealHUD : BaseStatusBar
 		CurY = TempY;
 	}
 
-	private void DrawIconValue( int n )
+	private void DrawIconValue( int n, bool bIsArmor = false )
 	{
 		if ( !HudMode || (HudMode == 3) ) return;
 		double TempX = CurX, TempY = CurY;
@@ -237,7 +237,7 @@ Class UnrealHUD : BaseStatusBar
 		}
 		if ( (i is 'UnrealInventory') && (UnrealInventory(i).DefaultCharge > 0) && (UnrealInventory(i).bActive || (UnrealInventory(i).Charge < UnrealInventory(i).DefaultCharge)) )
 			Screen.DrawTexture(HudLine,false,CurX+2,CurY+29,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_WindowRightF,Min(28.*(UnrealInventory(i).Charge/double(UnrealInventory(i).DefaultCharge)),28.));
-		else if ( (i is 'UTArmor') && !HudMode )
+		else if ( (i is 'UTArmor') && ((HudMode == 0) || (HudMode == 3)) )
 			Screen.DrawTexture(HudLine,false,CurX+2,CurY+29,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_WindowRightF,Min(28.*(i.Amount/double(i.MaxAmount)),28.));
 	}
 
@@ -372,6 +372,7 @@ Class UnrealHUD : BaseStatusBar
 		if ( (HUDMode == 5) || !SelectedItem ) return;
 		Count++;
 		if ( Count > 20 ) Count = 0;
+		if ( !Next && !bDrawOne ) x += 32;	// this was missing from the original, causing a gap when there's only two items in the inventory
 		if ( Prev )
 		{
 			bRed = ((Prev is 'UnrealInventory') && UnrealInventory(Prev).bActive) || (Prev is 'Powerup') || ((Prev is 'UTranslator') && bFlashTranslator);
@@ -579,14 +580,14 @@ Class UnrealHUD : BaseStatusBar
 			// Display Frag count
 			if ( HudMode < 3 ) DrawFragCount(ClipX-32,ClipY-64);
 			else if ( HudMode == 3 ) DrawFragCount(0,ClipY-64);
-			else if ( HudMode == 4 ) DrawFragCount(0,ClipY-32);
+			else if ( HudMode == 4 ) DrawFragCount(ClipX-96,ClipY-32);
 		}
 		else
 		{
 			// Display Keys
-			if ( HudMode < 3 ) DrawKeys(ClipX-(deathmatch?48:16),ClipY-48);
-			else if ( HudMode == 3 ) DrawKeys(deathmatch?32:0,ClipY-48,true);
-			else if ( HudMode == 4 ) DrawKeys(deathmatch?32:0,ClipY-16,true);
+			if ( HudMode < 3 ) DrawKeys(ClipX-16,ClipY-48);
+			else if ( HudMode == 3 ) DrawKeys(0,ClipY-48,true);
+			else if ( HudMode == 4 ) DrawKeys(ClipX-80,ClipY-16);
 		}
 	}
 
@@ -744,7 +745,7 @@ Class UnrealHUD : BaseStatusBar
 	override bool DrawChat( String txt )
 	{
 		int xpos = 4*CleanXFac_1;
-		int ypos = (screenblocks<=10)?GetTopOfStatusBar():(Screen.GetHeight()-((screenblocks>11)?0:int(32*scalev.y)));
+		int ypos = ((screenblocks<=10)||automapactive)?GetTopOfStatusBar():(Screen.GetHeight()-((screenblocks>11)?0:int(32*scalev.y)));
 		ypos -= (WhiteFont.GetHeight()+4)*CleanYFac_1;
 		String fullstr = String.Format("(> Say %s%s",txt,WhiteFont.GetCursor());
 		// cut out until it fits
@@ -803,7 +804,7 @@ Class UnrealHUD : BaseStatusBar
 		[tmp,tmp,hres] = StatusbarToRealCoords(0,0,HorizontalResolution);
 		double swidth = 0;
 		double ltop = 0, rtop = 0;
-		if ( (HudMode < 6) && CPlayer.mo.InvSel )
+		if ( (HudMode < 5) && CPlayer.mo.InvSel )
 			rtop += (32*scalev.y)/scale.Y;
 		double cbottom = GetTopOfStatusBar()-textdist;
 		int protrusion = GetProtrusion(swidth/hres);

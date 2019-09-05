@@ -55,6 +55,7 @@ Doom Tournament (currently the devel branch is required).
 
  - Unreal Bible & prototype build behaviour restoration
    - Stinger projectile remanence & explosion
+   - Stinger projectile bouncing
    - Razorjack hold fire to increase blade speed
    - Rifle restored rapid fire
    - Rifle restored flashlight
