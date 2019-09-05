@@ -1418,6 +1418,16 @@ Class SentryItem : UnrealInventory
 		Charge = tracer.Health;
 		if ( Charge <= 0 ) DepleteOrDestroy();
 	}
+	override void Travelled()
+	{
+		Super.Travelled();
+		if ( bActive && !tracer )
+		{
+			bUNTOSSABLE = false;
+			bUNDROPPABLE = false;
+			DepleteOrDestroy();
+		}
+	}
 	States
 	{
 	Spawn:
@@ -1538,7 +1548,7 @@ Class MinigunSentry : Actor
 		special1 = max(0,special1-1);
 		if ( (special1 <= 0) && master.master && master.master.CheckLocalView() ) Console.Printf(StringTable.Localize("$M_SENTRYDRY"));
 		A_SentryFaceTarget();
-		master.A_AlertMonsters();
+		master.A_AlertMonsters(0,AMF_TARGETEMITTER);
 		A_PlaySound("sentry/fire",CHAN_WEAPON);
 		Vector3 x, y, z, origin;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
@@ -1593,7 +1603,11 @@ Class MinigunSentry : Actor
 	{
 	Spawn:
 		SENT A 15;
-		SENT A 0 A_PlaySound("sentry/raise");
+		SENT A 0
+		{
+			A_PlaySound("sentry/raise");
+			master.A_AlertMonsters(0,AMF_TARGETEMITTER);
+		}
 		SENR ABCDEFGHIJKLMNO 3;
 		Goto Idle;
 	Idle:
@@ -1641,7 +1655,7 @@ Class MinigunSentry : Actor
 		SENW A 0
 		{
 			A_PlaySound("sentry/wind",looping:true);
-			master.A_AlertMonsters();
+			master.A_AlertMonsters(0,AMF_TARGETEMITTER);
 			master.SetStateLabel("Missile");
 		}
 		SENW ABCDEFGHIJKLMNOPQR 1 A_SentryFaceTarget();
@@ -1692,6 +1706,7 @@ Class MinigunSentry : Actor
 		SENI A 0
 		{
 			A_PlaySound("sentry/raise");
+			master.A_AlertMonsters(0,AMF_TARGETEMITTER);
 			master.SetStateLabel("DoPackUp");
 		}
 		SENR ONMLKJIHGFEDCBA 3;

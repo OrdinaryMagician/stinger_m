@@ -53,7 +53,6 @@ Doom Tournament (currently the devel branch is required).
  - Rifle (slot 9) (replaces plasma rifle)
  - Minigun (slot 0) (replaces chaingun)
 
-
 ## Planned
 
  - Unreal Bible & prototype build behaviour restoration
