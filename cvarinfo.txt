@@ -74,3 +74,5 @@ server bool sting_olsmp = false;	// adds the stupid oldskool SMP 7243 to
 					// this weapon is dumb, but just for
 					// the sake of completion it's there as
 					// an option
+server bool sting_autoscuba = false;	// SCUBA gear toggles automatically
+					// when needed

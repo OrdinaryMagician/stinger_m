@@ -206,6 +206,10 @@ univis/toggle	invisibl
 
 lite/off	fshlite2
 
+scuba/stop	scubada1
+scuba/water	scubal1
+scuba/air	scubal2
+
 automag/select	cocking
 automag/fire	shot
 automag/click	click

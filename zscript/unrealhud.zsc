@@ -372,7 +372,7 @@ Class UnrealHUD : BaseStatusBar
 		if ( (HUDMode == 5) || !SelectedItem ) return;
 		Count++;
 		if ( Count > 20 ) Count = 0;
-		if ( !Next && !bDrawOne ) x += 32;	// this was missing from the original, causing a gap when there's only two items in the inventory
+		if ( Prev && !Next && !bDrawOne ) x += 32;	// this was missing from the original, causing a gap when there's only two items in the inventory
 		if ( Prev )
 		{
 			bRed = ((Prev is 'UnrealInventory') && UnrealInventory(Prev).bActive) || (Prev is 'Powerup') || ((Prev is 'UTranslator') && bFlashTranslator);

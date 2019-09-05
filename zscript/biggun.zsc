@@ -57,12 +57,21 @@ Class HitListEntry
 {
 	Actor hitactor;
 	Vector3 hitlocation, x;
+	int hitdamage;
 }
 
 Class BigTracer : LineTracer
 {
 	Array<HitListEntry> hitlist;
 	double penetration;	// please don't laugh
+}
+
+Class BigCasing : UTCasing
+{
+	Default
+	{
+		BounceSound "flak/bounce";	// much heavier sound
+	}
 }
 
 Class BigGun : UnrealWeapon

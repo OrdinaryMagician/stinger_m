@@ -42,6 +42,9 @@ OptionMenu "UnrealOptionMenu"
 	Option "$STING_PSHIELD", "sting_pshield", "YesNo"
 	Option "$STING_NOPSTART", "sting_nopstart", "YesNo"
 	Option "$STING_OLSMP", "sting_olsmp", "YesNo"
+	StaticText " "
+	StaticText "$STING_QOPTS", "Gold"
+	Option "$STING_AUTOSCUBA", "sting_autoscuba", "YesNo"
 }
 
 AddOptionMenu "OptionsMenu"

@@ -8,7 +8,7 @@ Model "FlameGun"
 
 	FrameIndex FGNP B 1 0
 
-	ZOffset 9
+	ZOffset 12
 	ROTATING
 	FrameIndex FGNP A 1 0
 }

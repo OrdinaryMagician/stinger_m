@@ -39,6 +39,8 @@ Doom Tournament (currently the devel branch is required).
  - Flare (replaces armor bonus)
  - Flashlight (replaces light amplifier)
    - Searchlight (must be placed manually for balance reasons)
+ - Jump Boots (replaces radsuit)
+ - SCUBA Gear (replaces radsuit if map has swimmable water)
 
 ## In progress
 
@@ -47,9 +49,6 @@ Doom Tournament (currently the devel branch is required).
  - Rifle (slot 9) (replaces plasma rifle)
  - Minigun (slot 0) (replaces chaingun)
  - SMP 7243 (slot 0) (replaces bfg9000)
-
- - Jump Boots (replaces radsuit)
- - SCUBA Gear (replaces radsuit if map has swimmable water)
 
 ## Planned
 

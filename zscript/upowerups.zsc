@@ -187,6 +187,7 @@ Class AmpSound : Actor
 Class UJumpBoots : UnrealInventory
 {
 	int draincnt;
+
 	Default
 	{
 		Tag "$T_JUMPBOOTS";
@@ -242,12 +243,63 @@ Class UJumpBoots : UnrealInventory
 		for ( int i=0; i<level.Sectors.Size(); i++ )
 		{
 			Sector s = level.Sectors[i];
-			if ( s.MoreFlags&Sector.SECMF_UNDERWATER ) foundswim = true;
+			if ( s.MoreFlags&(Sector.SECMF_UNDERWATER|Sector.SECMF_FORCEDUNDERWATER) ) foundswim = true;
 			if ( !s.DamageInterval || !s.DamageAmount ) continue;
 			if ( s.DamageType == 'Slime' ) foundslime = true;
 			else if ( s.DamageType == 'Fire' ) foundlava = true;
+			// 3d floors don't set the underwater flags or anything so we're completely screwed until Graf merges my goddamn PR
+			//for ( int i=0; i<s.Get3DFloorCount(); i++ )
+			//	if ( s.Get3DFloor(i).flags&F3DFloor.FF_SWIMMABLE ) foundswim = true;
 		}
-		// TODO replace self with asbestos/toxin suits or scuba
+		// random chance to ignore if a replacement already was made
+		let ti = ThinkerIterator.Create("Inventory");
+		Inventory a;
+		while ( a = Inventory(ti.Next()) )
+		{
+			// exclude owned items
+			if ( a.Owner ) continue;
+			if ( (a is "ToxinSuit") && Random[LBootRep](0,2) )
+				foundslime = false;
+			if ( (a is "AsbestosSuit") && Random[LBootRep](0,2) )
+				foundlava = false;
+			if ( (a is "SCUBAGear") && Random[LBootRep](0,2) )
+				foundswim = false;
+		}
+		// replace self with asbestos/toxin suits or scuba
+		// this is extremely naive and doesn't check proximity to the
+		// hurtfloor/swimmable, but it's better than nothing
+		Array<String> replacements;
+		replacements.Clear();
+		if ( foundslime ) replacements.Push("ToxinSuit");
+		if ( foundlava ) replacements.Push("AsbestosSuit");
+		if ( foundswim ) replacements.Push("SCUBAGear");
+		if ( replacements.Size() > 0 )
+		{
+			int rslot = Random[LBootRep](0,replacements.Size()-1);
+			let r = Spawn(replacements[rslot],pos,ALLOW_REPLACE);
+			r.spawnangle = spawnangle;
+			r.spawnpoint = spawnpoint;
+			r.angle = angle;
+			r.pitch = pitch;
+			r.roll = roll;
+			r.special = special;
+			r.args[0] = args[0];
+			r.args[1] = args[1];
+			r.args[2] = args[2];
+			r.args[3] = args[3];
+			r.args[4] = args[4];
+			r.ChangeTid(tid);
+			r.SpawnFlags = SpawnFlags&~MTF_SECRET;
+			r.HandleSpawnFlags();
+			r.SpawnFlags = SpawnFlags;
+			r.bCountSecret = SpawnFlags&MTF_SECRET;
+			r.vel = vel;
+			r.master = master;
+			r.target = target;
+			r.tracer = tracer;
+			r.bDropped = bDropped;
+			Destroy();
+		}
 	}
 	override void AttachToOwner( Actor Other )
 	{
@@ -301,10 +353,93 @@ Class SCUBAGear : UnrealInventory
 		Inventory.RespawnTics 700;
 		UnrealInventory.Charge 4200;
 	}
+	override bool Use( bool pickup )
+	{
+		if ( pickup ) return false;
+		bActive = !bActive;
+		if ( !bActive ) Owner.A_PlaySound("scuba/stop",CHAN_ITEM);
+		return false;
+	}
+	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
+	{
+		if ( bActive && (damageType == 'Drowning') )
+			newdamage = 0;
+	}
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		if ( sting_autoscuba && ((bActive && (Owner.waterlevel < 2)) || (!bActive && (Owner.waterlevel > 2))) )
+			Use(false);
+		if ( bActive && !tracer )
+		{
+			tracer = Spawn("SCUBASound",Owner.pos);
+			tracer.target = Owner;
+			tracer.master = self;
+		}
+		else if ( !bActive && tracer ) tracer.Destroy();
+		if ( !bActive ) return;
+		if ( PlayerPawn(Owner) ) PlayerPawn(Owner).ResetAirSupply();
+		if ( (Charge <= 0) || DrainCharge(1) )
+		{
+			Owner.A_PlaySound("scuba/stop",CHAN_ITEM);
+			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_SCUBA"));
+			if ( tracer ) tracer.Destroy();
+			DepleteOrDestroy();
+		}
+	}
 	States
 	{
 	Spawn:
 		SCUB A -1;
 		Stop;
+	}
+}
+
+Class SCUBASound : Actor
+{
+	Default
+	{
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target || !master )
+		{
+			Destroy();
+			return;
+		}
+		SetOrigin(target.pos,true);
+		if ( target.CheckLocalView() )
+		{
+			A_SoundVolume(CHAN_VOICE,0.0);
+			A_SoundVolume(CHAN_5,0.0);
+			A_SoundVolume(CHAN_6,(target.waterlevel<3)?1.0:0.0);
+			A_SoundVolume(CHAN_7,(target.waterlevel>=3)?1.0:0.0);
+		}
+		else
+		{
+			A_SoundVolume(CHAN_VOICE,(target.waterlevel<3)?0.25:0.0);
+			A_SoundVolume(CHAN_5,(target.waterlevel>=3)?0.25:0.0);
+			A_SoundVolume(CHAN_6,0.0);
+			A_SoundVolume(CHAN_7,0.0);
+		}
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		A_PlaySound("scuba/air",CHAN_VOICE,0.25,true,1.5);
+		A_PlaySound("scuba/water",CHAN_5,0.25,true,1.5);
+		A_PlaySound("scuba/air",CHAN_6,1.0,true,ATTN_NONE);
+		A_PlaySound("scuba/water",CHAN_7,1.0,true,ATTN_NONE);
+	}
+	override void OnDestroy()
+	{
+		Super.OnDestroy();
+		A_StopSound(CHAN_VOICE);
+		A_StopSound(CHAN_5);
+		A_StopSound(CHAN_6);
+		A_StopSound(CHAN_7);
 	}
 }
