@@ -13,6 +13,7 @@ Doom Tournament (currently the devel branch is required).
    - Dual Automags
  - Stinger (slot 3) (replaces shotguns)
  - ASMD (slot 4) (replaces shotguns)
+ - Eightball (slot 5) (replaces rocket launcher)
  - Flak Cannon (slot 6) (replaces rocket launcher)
  - Backpack (replaces backpack, identical to Doom Tournament version)
  - Unreal 1 HUD
@@ -38,7 +39,6 @@ Doom Tournament (currently the devel branch is required).
 
 ## In progress
 
- - Eightball (slot 5) (replaces rocket launcher)
  - Razorjack (slot 7) (replaces chaingun)
  - GES Bio Rifle (slot 8) (replaces plasma rifle)
  - Rifle (slot 9) (replaces plasma rifle)

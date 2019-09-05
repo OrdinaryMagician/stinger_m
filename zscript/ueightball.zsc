@@ -51,13 +51,448 @@ Class URocketAmmo2 : URocketAmmo
 	}
 }
 
+Class URocketTrail : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		Radius 0.1;
+		Height 0;
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+		+DONTSPLASH;
+		+FORCEXYBILLBOARD;
+		+NOTELEPORT;
+		Scale 0.4;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		let l = Spawn("RocketLight",pos);
+		l.target = self;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target || target.InStateSequence(target.CurState,target.FindState("Death")) )
+		{
+			Destroy();
+			return;
+		}
+		SetOrigin(target.pos,true);
+	}
+	States
+	{
+	Spawn:
+		MFLA A -1 Bright;
+		Stop;
+	}
+}
+
+Class URocket : Actor
+{
+	Vector3 InitialDir, Acceleration;
+	int ticcnt;
+	Default
+	{
+		Obituary "$O_EIGHTBALL";
+		DamageType 'RocketDeath';
+		Radius 2;
+		Height 2;
+		Speed 15;
+		PROJECTILE;
+		+SKYEXPLODE;
+		+EXPLODEONWATER;
+		+SEEKERMISSILE;
+		+FORCERADIUSDMG;
+		+NODAMAGETHRUST;
+		+INTERPOLATEANGLES;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		let l = Spawn("URocketTrail",pos);
+		l.target = self;
+		A_PlaySound("eightball/fly",CHAN_VOICE,1.0,true,2.5);
+		if ( tracer ) vel *= 0.9;
+		Acceleration = vel.unit()*50;
+	}
+	action void A_RocketExplode( int dmg, int rad )
+	{
+		bFORCEXYBILLBOARD = true;
+		A_SetRenderStyle(1.0,STYLE_Add);
+		A_SprayDecal("RocketBlast",50);
+		A_NoGravity();
+		A_SetScale(FRandomPick[ExploS](-1.5,1.5),FRandomPick[ExploS](-1.5,1.5));
+		UTMainHandler.DoBlast(self,rad,80000);
+		A_Explode(dmg,rad);
+		A_QuakeEx(3,3,3,8,0,rad+50,"",QF_RELATIVE|QF_SCALEDOWN,falloff:rad,rollIntensity:0.2);
+		A_PlaySound("utrl/explode",CHAN_VOICE);
+		A_AlertMonsters();
+		Spawn("RocketExplLight",pos);
+		int numpt = Random[Eightball](15,30);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[Eightball](-1,1),FRandom[Eightball](-1,1),FRandom[Eightball](-1,1)).unit()*FRandom[Eightball](1,3);
+			let s = Spawn("UTSmoke",pos);
+			s.vel = pvel;
+		}
+		numpt = Random[Eightball](10,20);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[Eightball](-1,1),FRandom[Eightball](-1,1),FRandom[Eightball](-1,1)).unit()*FRandom[Eightball](2,6);
+			let s = Spawn("UTSpark",pos);
+			s.vel = pvel;
+		}
+		numpt = Random[Eightball](35,70);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[Eightball](-1,1),FRandom[Eightball](-1,1),FRandom[Eightball](-1,1)).unit()*FRandom[Eightball](2,12);
+			let s = Spawn("UTChip",pos);
+			s.vel = pvel;
+			s.scale *= FRandom[Eightball](0.9,2.7);
+		}
+	}
+	action void A_RocketSeek()
+	{
+		if ( invoker.InitialDir.length() < double.epsilon ) invoker.InitialDir = vel.unit();
+		if ( tracer && (tracer != target) )
+		{
+			Vector3 SeekingDir = level.Vec3Diff(pos,tracer.Vec3Offset(0,0,tracer.height/2)).unit();
+			if ( SeekingDir dot invoker.InitialDir > 0 )
+			{
+				double MagnitudeVel = Vel.length();
+				SeekingDir = (SeekingDir*0.5*MagnitudeVel+Vel).unit();
+				Vel = MagnitudeVel * SeekingDir;
+				invoker.Acceleration = 25 * SeekingDir;
+			}
+		}
+	}
+	States
+	{
+	Spawn:
+		RCKT ABC 1
+		{
+			roll += 30;
+			if ( invoker.ticcnt++ > 3 )
+			{
+				invoker.ticcnt = 0;
+				A_RocketSeek();
+			}
+			vel += invoker.Acceleration/TICRATE;
+			if ( vel.length() > 30. ) vel = Vel.unit()*30.;
+			Vector3 dir = vel.unit();
+			if ( waterlevel <= 0 ) vel = dir*min(vel.length()+1,24);
+			angle = atan2(dir.y,dir.x);
+			pitch = asin(-dir.z);
+			for ( int i=0; i<3; i++ )
+			{
+				let s = Spawn("UTSmoke",pos);
+				s.vel = (FRandom[Eightball](-0.2,0.2),FRandom[Eightball](-0.2,0.2),FRandom[Eightball](-0.2,0.2));
+				s.vel += vel*0.1;
+			}
+		}
+		Wait;
+	Death:
+		TNT1 A 0
+		{
+			A_RocketExplode(100,200);
+			return A_Jump(256,"Explo1","Explo2","Explo3","Explo4","Explo5");
+		}
+	Explo1:
+		EXP1 ABCDEFGH 3 Bright;
+		Stop;
+	Explo2:
+		EXP2 ABCDEFGH 3 Bright;
+		Stop;
+	Explo3:
+		EXP3 ABCDEFGH 3 Bright;
+		Stop;
+	Explo4:
+		EXP4 ABCDEFGH 3 Bright;
+		Stop;
+	Explo5:
+		EXP5 ABCDEFGH 3 Bright;
+		Stop;
+	}
+}
+
+Class UGrenade : URocket
+{
+	double rollvel, pitchvel, anglevel;
+
+	Default
+	{
+		DamageType 'GrenadeDeath';
+		-NOGRAVITY;
+		+USEBOUNCESTATE;
+		-EXPLODEONWATER;
+		+CANBOUNCEWATER;
+		+NOEXPLODEFLOOR;
+		+DONTBOUNCEONSHOOTABLES;
+		BounceType "Hexen";
+		WallBounceFactor 0.75;
+		BounceFactor 0.75;
+		ReactionTime 85;
+		Speed 15;
+		Gravity 0.35;
+	}
+	override void PostBeginPlay()
+	{
+		Actor.PostBeginPlay();
+		rollvel = FRandom[Eightball](-8,8);
+		pitchvel = FRandom[Eightball](-8,8);
+		anglevel = FRandom[Eightball](-8,8);
+		ReactionTime += Random[Eightball](0,20);
+	}
+	States
+	{
+	Spawn:
+		RCKT A 1
+		{
+			if ( !bNOGRAVITY )
+			{
+				angle += anglevel;
+				pitch += pitchvel;
+				roll += rollvel;
+			}
+			let s = Spawn("UTSmoke",pos);
+			s.scale *= 2.0;
+			s.alpha *= 0.6;
+			s.vel = (FRandom[Eightball](-0.1,0.1),FRandom[Eightball](-0.1,0.1),FRandom[Eightball](-0.1,0.3));
+			s.vel += vel*0.05;
+			s.SetShade("000000");
+			A_Countdown();
+		}
+		Wait;
+	Bounce:
+		RCKT A 0
+		{
+			bHITOWNER = true;
+			A_PlaySound("utrl/bounce");
+			rollvel = FRandom[Eightball](-16,16);
+			pitchvel = FRandom[Eightball](-16,16);
+			anglevel = FRandom[Eightball](-16,16);
+			if ( vel.z > 10 ) vel.z = 0.5*(10+vel.z);
+			else if ( BlockingFloor && (vel.xy.length() < 0.5) )
+			{
+				vel *= 0;
+				bNOGRAVITY = true;
+				bMOVEWITHSECTOR = true;
+				ClearBounce();
+			}
+		}
+		Goto Spawn;
+	Death:
+		TNT1 A 0 A_RocketExplode(120,200);
+		Goto Super::Death+1;
+	}
+}
+
 Class Eightball : UnrealWeapon
 {
+	bool LockedOn;
+	Actor LockedTarget;
+	TextureID lockontex;
+	int locktics;
+	bool bSingleRocket;
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		lockontex = TexMan.CheckForTexture("Crosshr6",TexMan.Type_Any);
+	}
+
+	override void PreRender( double lbottom )
+	{
+		if ( LockedTarget ) Screen.DrawTexture(lockontex,false,Screen.GetWidth()*0.5,Screen.GetHeight()*0.5);
+	}
+
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !Owner ) return;
+		if ( Owner.Health <= 0 )
+		{
+			LockedTarget = null;
+			LockedOn = false;
+			crosshair = 0;
+			return;
+		}
+		if ( LockedOn && (!LockedTarget || (LockedTarget.Health <= 0) || !LockedTarget.bIsMonster || LockedTarget.bKilled || LockedTarget.bCorpse || !LockedTarget.bShootable || (Owner.player.ReadyWeapon != self)) )
+		{
+			LockedTarget = null;
+			LockedOn = false;
+			if ( Owner.player.ReadyWeapon == self )
+			{
+				Owner.A_PlaySound("utrl/seeklost",CHAN_WEAPON,Dampener.Active(Owner)?.1:1.);
+				if ( !Dampener.Active(Owner) ) Owner.A_AlertMonsters();
+			}
+		}
+		if ( LockedTarget ) crosshair = 99;
+		else crosshair = 0;
+	}
+
+	// consumes 1 ammo
+	action void A_LoadRocket( bool checktarget = true )
+	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		if ( weap.Ammo1.Amount <= 0 ) return;
+		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
+		if ( weap.bAltFire )
+		{
+			invoker.LockedTarget = null;
+			invoker.LockedOn = false;
+		}
+		if ( checktarget && !weap.bAltFire ) A_CheckTarget();
+		invoker.special1++;
+	}
+
+	// refire that is ignored if there's no ammo
+	action void A_LoadedRefire( statelabel flash = null )
+	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		if ( weap.Ammo1.Amount <= 0 ) return;
+		A_Refire(flash);
+	}
+
+	// fire all the rockets (or grenades)
+	action void A_FireRockets( int num )
+	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		invoker.special1 = 0;
+		if ( weap.bAltFire )
+		{
+			A_PlaySound("utrl/altfire",CHAN_WEAPON,Dampener.Active(self)?.3:3.);
+			if ( !Dampener.Active(self) ) A_AlertMonsters();
+		}
+		else
+		{
+			A_PlaySound("utrl/fire",CHAN_WEAPON);
+			A_AlertMonsters();
+		}
+		invoker.FireEffect();
+		UTMainHandler.DoFlash(self,Color(64,255,0,0),1);
+		if ( self is 'UTPlayer' )
+			UTPlayer(self).PlayAttacking3();
+		A_QuakeEx(2+num,2+num,2+num,6+num,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1+num*0.05);
+		for ( int i=0; i<num; i++ )
+			UTMainHandler.DoSwing(self,(FRandom[Eightball](-0.8,-0.8),FRandom[Eightball](-0.5,0.5)),1,-0.2,Random[Eightball](3,4),SWING_Spring,Random[Eightball](2,5),Random[Eightball](2,4));
+		Vector3 x, y, z, x2, y2, z2;
+		double a, s;
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10*x-2*z;
+		[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
+		Actor p;
+		if ( weap.bAltFire )
+		{
+			// grenades
+			for ( int i=0; i<num; i++ )
+			{
+				a = FRandom[Eightball](0,360);
+				s = FRandom[Eightball](0,(num>1)?12:0);
+				Vector3 dir = (x2+cos(a)*y2*s*0.004+sin(a)*z2*s*0.004).unit();
+				p = Spawn("UGrenade",origin+cos(a)*y*s+sin(a)*z*s);
+				p.vel = x*(vel dot x)*0.4 + dir*p.speed*FRandom[Eightball](1.0,1.2);
+				p.vel.z += 3.5;
+				p.target = self;
+			}
+		}
+		else if ( num <= 1 )
+		{
+			// single rocket
+			p = Spawn("URocket",origin+cos(a)*y*s+sin(a)*z*s);
+			p.vel = x2*p.speed;
+			p.target = self;
+			p.tracer = invoker.LockedTarget;
+		}
+		else if ( player.cmd.buttons&BT_ALTATTACK )
+		{
+			// rockets ("tight wad" as UT calls it)
+			double step = 360/num;
+			a = 90;
+			s = (num>1)?6:0;
+			for ( int i=0; i<num; i++ )
+			{
+				p = Spawn("URocket",origin+cos(a)*y*s+sin(a)*z*s);
+				p.vel = x2*p.speed;
+				p.target = self;
+				p.tracer = invoker.LockedTarget;
+				a += step;
+			}
+		}
+		else
+		{
+			// rockets (wide spread)
+			double range = 3.6*(num-1);
+			double step = range/(num-1);
+			s = -range*0.5;
+			for ( int i=0; i<num; i++ )
+			{
+				p = Spawn("URocket",origin+sin(s)*y);
+				p.vel = (x2+sin(s)*y2).unit()*p.speed;
+				p.target = self;
+				p.tracer = invoker.LockedTarget;
+				s += step;
+			}
+		}
+		// lose lock-on
+		if ( invoker.LockedOn ) A_PlaySound("utrl/seeklost",CHAN_6);
+		invoker.LockedTarget = null;
+		invoker.LockedOn = false;
+		for ( int i=0; i<12; i++ )
+		{
+			let s = Spawn("UTViewSmoke",origin);
+			UTViewSmoke(s).ofs = (10,0,-2);
+			UTViewSmoke(s).vvel = (FRandom[Eightball](0,1.2),FRandom[Eightball](-.4,.4),FRandom[Eightball](-.4,.4));
+			s.target = self;
+			s.scale *= 1.8;
+			s.alpha *= 0.8;
+		}
+	}
+
+	// lock-on check
+	action void A_CheckTarget()
+	{
+		let t = ThinkerIterator.Create("Actor");
+		Actor a;
+		double closest = double.max;
+		invoker.LockedTarget = null;
+		while ( a = Actor(t.Next()) )
+		{
+			if ( !a.bSHOOTABLE || (a.Health <= 0) || a.bKilled || !a.bIsMonster || a.bCorpse || (a == self) || isTeammate(a) || !CheckSight(a) ) continue;
+			Vector3 viewdir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+			Vector3 reldir = level.Vec3Diff(Vec2OffsetZ(0,0,player.viewz),a.Vec2OffsetZ(0,0,a.pos.z+a.height*0.5));
+			double reldist = reldir.length();
+			if ( reldist > 2000 ) continue;
+			if ( reldir.unit() dot viewdir < 0.99 ) continue;
+			if ( reldist < closest )
+			{
+				closest = reldist;
+				invoker.LockedTarget = a;
+			}
+		}
+		if ( invoker.LockedTarget )
+		{
+			A_PlaySound("utrl/seeklock",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+			if ( !Dampener.Active(self) ) A_AlertMonsters();
+		}
+		else if ( invoker.LockedOn )
+		{
+			A_PlaySound("utrl/seeklost",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+			if ( !Dampener.Active(self) ) A_AlertMonsters();
+		}
+		if ( invoker.LockedTarget ) invoker.LockedOn = true;
+	}
+
 	Default
 	{
 		Tag "$T_EIGHTBALL";
 		Inventory.PickupMessage "$I_EIGHTBALL";
-		Weapon.UpSound "eightball/select";
+		Weapon.UpSound "utrl/select";
 		Weapon.SlotNumber 5;
 		Weapon.SelectionOrder 5;
 		Weapon.AmmoType "URocketAmmo";
@@ -74,5 +509,91 @@ Class Eightball : UnrealWeapon
 		Stop;
 		EBLP B -1;
 		Stop;
+	Select:
+		EBLS A 1 A_Raise(int.max);
+		Wait;
+	Ready:
+		EBLS ABCDEFGHIJKLMNO 1 A_WeaponReady(WRF_NOFIRE);
+	Ready2:
+		EBLS O 0 A_CheckReload();
+		EBLL A 0 A_PlaySound("utrl/load",CHAN_ITEM,Dampener.Active(self)?.1:1.);
+		EBLL ABCDEFGHIJK 2 A_WeaponReady(WRF_NOFIRE);
+		EBLL L 0 A_PlaySound("utrl/rotate",CHAN_ITEM,Dampener.Active(self)?.01:.1);
+		EBLL LMNOPQRSTUVWXYZ[ 1 A_WeaponReady(WRF_NOFIRE);
+		EBLL Z 0;	// force no tweening
+		EBLI A 0;
+		Goto Idle;
+	Idle:
+		#### # 0 A_Overlay(-9999,"Dummy");
+		EBLI AB 50;
+		Goto Idle+1;
+	Dummy:
+		TNT1 A 1
+		{
+			invoker.locktics = 0;
+			invoker.special1 = 0;
+			A_CheckReload();
+			A_WeaponReady(WRF_ALLOWRELOAD);
+		}
+		TNT1 A 1
+		{
+			A_CheckReload();
+			A_WeaponReady(WRF_ALLOWRELOAD);
+			invoker.locktics++;
+			if ( invoker.locktics > 42 )
+			{
+				invoker.locktics = 0;
+				A_CheckTarget();
+			}
+		}
+		Wait;
+	Reload:
+		#### # 5
+		{
+			A_Overlay(-9999,"Null");
+			A_PlaySound("utrl/load",CHAN_6,Dampener.Active(self)?.03:.3);
+			if ( invoker.bSingleRocket = !invoker.bSingleRocket )
+				A_Print(StringTable.Localize("$M_SINGLEROCKETON"));
+			else A_Print(StringTable.Localize("$M_SINGLEROCKETOFF"));
+		}
+		Goto Idle;
+	Fire:
+	AltFire:
+		// one is loaded already
+		#### # 1
+		{
+			A_Overlay(-9999,"Null");
+			A_LoadRocket(false);
+		}
+		#### # 3 A_JumpIf(!invoker.bAltFire&&invoker.bSingleRocket,"Release");
+		#### # 0 A_LoadedRefire(1);
+		Goto Release;
+	Loading:
+		EBLI A 0;
+		EBLL A 0 A_LoadRocket();
+		EBLL A 0 A_PlaySound("utrl/load",CHAN_ITEM,Dampener.Active(self)?.1:1.);
+		EBLL ABCDEFGHIJK 2;
+		EBLL L 0 A_PlaySound("utrl/rotate",CHAN_ITEM,Dampener.Active(self)?.01:.1);
+		EBLL LMNOPQRSTUVWXYZ[ 1;
+		EBLL Z 0;
+		EBLI A 0;
+		EBLI A 1 A_JumpIf(invoker.special1>=6,2);
+		EBLI A 0 A_LoadedRefire("Loading");
+		Goto Release;
+		EBLI A 2;
+	LoadHold:
+		EBLI C 2;
+		EBLI C 0 A_LoadedRefire("LoadHold");
+		Goto Release;
+	Release:
+		EBLF A 0 A_FireRockets(invoker.special1);
+		EBLF ABCDEFGH 3;
+		EBLS S 0;
+		Goto Ready2;
+	Deselect:
+		EBLD A 1 A_Overlay(-9999,"Null");
+		EBLD BCDEFGHIJKL 1;
+		EBLD L 1 A_Lower(int.max);
+		Wait;
 	}
 }

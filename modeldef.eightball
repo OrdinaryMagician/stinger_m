@@ -46,3 +46,114 @@ Model "Eightball"
 	ROTATING
 	FrameIndex EBLP A 1 0
 }
+
+Model "URocket"
+{
+	Path "models"
+	Model 0 "RocketM_d.3d"
+	Skin 0 "JRocket1.png"
+	AngleOffset 90
+	Offset 5 0 0
+	Scale 0.05 0.05 0.06
+	USEACTORPITCH
+
+	FrameIndex RCKT A 0 1
+	FrameIndex RCKT B 0 2
+	FrameIndex RCKT C 0 3
+}
+
+Model "UGrenade"
+{
+	Path "models"
+	Model 0 "GrenadeM_d.3d"
+	Skin 0 "JRocket1.png"
+	AngleOffset 90
+	Offset -2 0 0
+	Scale 0.05 0.05 0.06
+	USEACTORPITCH
+
+	FrameIndex RCKT A 0 0
+}
+
+Model "Eightball"
+{
+	Path "models"
+	Model 0 "EightB_d.3d"
+	Skin 0 "JEightB1.png"
+	AngleOffset -90
+	RollOffset -11.25
+	Scale 0.1 -0.1 0.1
+	Offset 0 -5.75 -4
+
+	// Select
+	FrameIndex EBLS A 0 0
+	FrameIndex EBLS B 0 1
+	FrameIndex EBLS C 0 2
+	FrameIndex EBLS D 0 3
+	FrameIndex EBLS E 0 4
+	FrameIndex EBLS F 0 5
+	FrameIndex EBLS G 0 6
+	FrameIndex EBLS H 0 7
+	FrameIndex EBLS I 0 8
+	FrameIndex EBLS J 0 9
+	FrameIndex EBLS K 0 10
+	FrameIndex EBLS L 0 11
+	FrameIndex EBLS M 0 12
+	FrameIndex EBLS N 0 13
+	FrameIndex EBLS O 0 14
+	// Down
+	FrameIndex EBLD A 0 15
+	FrameIndex EBLD B 0 16
+	FrameIndex EBLD C 0 17
+	FrameIndex EBLD D 0 18
+	FrameIndex EBLD E 0 19
+	FrameIndex EBLD F 0 20
+	FrameIndex EBLD G 0 21
+	FrameIndex EBLD H 0 22
+	FrameIndex EBLD I 0 23
+	FrameIndex EBLD J 0 24
+	FrameIndex EBLD K 0 25
+	FrameIndex EBLD L 0 26
+	// Idle
+	FrameIndex EBLI A 0 27
+	FrameIndex EBLI B 0 28
+	// Idle2
+	FrameIndex EBLI C 0 29
+	// Loading
+	FrameIndex EBLL A 0 30
+	FrameIndex EBLL B 0 31
+	FrameIndex EBLL C 0 32
+	FrameIndex EBLL D 0 33
+	FrameIndex EBLL E 0 34
+	FrameIndex EBLL F 0 35
+	FrameIndex EBLL G 0 36
+	FrameIndex EBLL H 0 37
+	FrameIndex EBLL I 0 38
+	FrameIndex EBLL J 0 39
+	FrameIndex EBLL K 0 40
+	FrameIndex EBLL L 0 41
+	FrameIndex EBLL M 0 42
+	FrameIndex EBLL N 0 43
+	FrameIndex EBLL O 0 44
+	FrameIndex EBLL P 0 45
+	FrameIndex EBLL Q 0 46
+	FrameIndex EBLL R 0 47
+	FrameIndex EBLL S 0 48
+	FrameIndex EBLL T 0 49
+	FrameIndex EBLL U 0 50
+	FrameIndex EBLL V 0 51
+	FrameIndex EBLL W 0 52
+	FrameIndex EBLL X 0 53
+	FrameIndex EBLL Y 0 54
+	FrameIndex EBLL Z 0 55
+	FrameIndex EBLL [ 0 56
+	// Fire
+	FrameIndex EBLF A 0 57
+	FrameIndex EBLF B 0 58
+	FrameIndex EBLF C 0 59
+	FrameIndex EBLF D 0 60
+	FrameIndex EBLF E 0 61
+	FrameIndex EBLF F 0 62
+	FrameIndex EBLF G 0 63
+	FrameIndex EBLF H 0 64
+}

@@ -155,7 +155,7 @@ Class OLSMP : UnrealWeapon
 		}
 		else
 		{
-			vel -= x*(player.onground?4.:1.5);
+			vel -= x*(player.onground?2.2:1.);
 			vel.z += (player.onground?.5:.15);
 		}
 		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x;
