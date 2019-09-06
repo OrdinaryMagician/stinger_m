@@ -79,6 +79,8 @@ Doom Tournament (currently the devel branch is required).
  - Demolisher (slot 9) (replaces bfg9000)
  - Autocannon (slot 0) (replaces bfg9000)
 
+ - Original Sentry Gun (rare spawn in backpacks)
+
 ## Known bugs
 
  - N/A
