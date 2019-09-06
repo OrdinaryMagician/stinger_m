@@ -2049,7 +2049,8 @@ Class MinigunSentryBase : Actor
 	override void Touch( Actor toucher )
 	{
 		if ( !toucher.player || !bSPECIAL ) return;
-		if ( deathmatch )
+		if ( abs(DeltaAngle(angle,AngleTo(toucher))) < 120 ) return;
+		if ( deathmatch || !master )
 		{
 			if ( master && (toucher != master) && master.CheckLocalView() )
 				Console.Printf(StringTable.Localize("$M_SENTRYHIJACK"));
