@@ -592,8 +592,11 @@ Class UnrealInventory : Inventory
 	bool bActive;	// is currently activated
 	int Charge;	// for timed items
 	int DefaultCharge;
+	private int UItemFlags;
 
 	Property Charge : DefaultCharge;
+
+	FlagDef DrawSpecial : UItemFlags, 0;	// hud draws special1 as amount
 
 	// Drawstuffs under HUD
 	virtual ui void PreRender( double lbottom ) {}

@@ -532,7 +532,7 @@ Class ASMDBeam : Actor
 			Actor r;
 			if ( t.Results.HitActor is 'ASMDHitbox' )
 			{
-				BeamExplode(true);
+				BeamExplode(mult>1.5);
 				if ( target )
 				{
 					target.TakeInventory('ASMDAmmo',2);

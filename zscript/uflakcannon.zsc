@@ -117,7 +117,7 @@ Class UFlakSlug : FlakSlug
 		A_SetRenderStyle(1.0,STYLE_Add);
 		A_SprayDecal("RocketBlast",50);
 		A_NoGravity();
-		A_SetScale(1.2);
+		A_SetScale(2.2);
 		UTMainHandler.DoBlast(self,120,75000);
 		A_Explode(70,120);
 		A_QuakeEx(4,4,4,8,0,170,"",QF_RELATIVE|QF_SCALEDOWN,falloff:120,rollIntensity:0.2);

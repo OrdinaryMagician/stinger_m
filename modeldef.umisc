@@ -565,6 +565,23 @@ Model "MinigunSentryX"
 	FrameIndex SENF P 0 47 // shoot
 }
 
+Model "SentryFragment"
+{
+	Path "models"
+	Model 0 "sfrag_d.3d"
+	Skin 0 "Minigun.png"
+	Scale 0.1 0.1 0.12
+	USEACTORPITCH
+	USEACTORROLL
+
+	FrameIndex CHIP A 0 0
+	FrameIndex CHIP B 0 1
+	FrameIndex CHIP C 0 2
+	FrameIndex CHIP D 0 3
+	FrameIndex CHIP E 0 4
+	FrameIndex CHIP F 0 5
+}
+
 Model "MinigunSentryBase"
 {
 	Path "models"

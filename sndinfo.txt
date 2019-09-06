@@ -225,3 +225,8 @@ sentry/raise	sentup
 sentry/wind	sentwind
 sentry/fire	sentfire
 sentry/unwind	sentuwnd
+sentry/explode	cannonex
+
+vfrag/bounce1	glasstk1
+vfrag/bounce2	glasstk2
+$random vfrag/bounce { vfrag/bounce1 vfrag/bounce2 }

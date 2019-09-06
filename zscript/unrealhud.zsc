@@ -190,9 +190,9 @@ Class UnrealHUD : BaseStatusBar
 
 	private void DrawNumberOf( Inventory i, double x, double y )
 	{
-		if ( i.Amount <= 1 ) return;
+		if ( (i.Amount <= 1) && !((i is 'UnrealInventory') || !UnrealInventory(i).bDRAWSPECIAL) ) return;
 		double TempX = CurX, TempY = CurY;
-		string itxt = String.Format("%d",i.Amount);
+		string itxt = String.Format("%d",((i is 'UnrealInventory')&&UnrealInventory(i).bDRAWSPECIAL)?i.special1:i.Amount);
 		CurX += 30;
 		CurY += 23;
 		CurX -= TinyRedFont.StringWidth(itxt);
@@ -377,7 +377,7 @@ Class UnrealHUD : BaseStatusBar
 		{
 			bRed = ((Prev is 'UnrealInventory') && UnrealInventory(Prev).bActive) || (Prev is 'Powerup') || ((Prev is 'UTranslator') && ((bTranslatorActive) || (bFlashTranslator && ((gametic%8)<4))));
 			DrawHudIcon(x,y,Prev,bRed);
-			if ( Prev.MaxAmount > 1 ) DrawNumberOf(Prev,x,y);
+			if ( (Prev.MaxAmount > 1) || ((Prev is 'UnrealInventory') && UnrealInventory(Prev).bDRAWSPECIAL) ) DrawNumberOf(Prev,x,y);
 		}
 		bRed = ((SelectedItem is 'UnrealInventory') && UnrealInventory(SelectedItem).bActive) || (SelectedItem is 'Powerup') || ((SelectedItem is 'UTranslator') && ((bTranslatorActive) || (bFlashTranslator && ((gametic%8)<4))));
 		if ( !Next && !Prev && !bDrawOne ) DrawHudIcon(x+64,y,SelectedItem,bRed);
@@ -386,12 +386,12 @@ Class UnrealHUD : BaseStatusBar
 		if ( !Next && !Prev && !bDrawOne ) CurX = x+64;
 		CurY = y;
 		Screen.DrawTexture(IconSel,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_Alpha,0.5);
-		if ( SelectedItem.MaxAmount > 1 ) DrawNumberOf(SelectedItem,CurX,y);
+		if ( (SelectedItem.MaxAmount > 1) || ((SelectedItem is 'UnrealInventory') && UnrealInventory(SelectedItem).bDRAWSPECIAL) ) DrawNumberOf(SelectedItem,CurX,y);
 		if ( Next )
 		{
 			bRed = ((Next is 'UnrealInventory') && UnrealInventory(Next).bActive) || (Next is 'Powerup') || ((Next is 'UTranslator') && ((bTranslatorActive) || (bFlashTranslator && ((gametic%8)<4))));
 			DrawHudIcon(x+64,y,Next,bRed);
-			if ( Next.MaxAmount > 1 ) DrawNumberOf(Next,x+64,y);
+			if ( (Next.MaxAmount > 1) || ((Next is 'UnrealInventory') && UnrealInventory(Next).bDRAWSPECIAL) ) DrawNumberOf(Next,x+64,y);
 		}
 	}
 
