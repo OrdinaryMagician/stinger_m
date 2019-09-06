@@ -99,6 +99,7 @@ I_DETECTOR = "You got the Motion Detector.";
 I_SCUBA = "You picked up the SCUBA Gear.";
 I_OLSMP = "You got the SMP 7243. Time to kick ass!";
 I_OLSMPAMMO = "You picked up a SMP 7243 Magazine.";
+I_LBOOTS = "You picked up the Jump Boots.";
 /* Tags */
 T_WPOWERUP = "Dispersion Pistol Powerup";
 T_STINGERAMMO = "Tarydium Shards";
@@ -163,6 +164,7 @@ T_DETECTOR = "Motion Detector";
 T_SCUBA = "SCUBA Gear";
 T_OLSMP = "SMP 7243";
 T_OLSMPAMMO = "SMP 7243 Magazine";
+T_LBOOTS = "Jump Boots";
 /* Miscellaneous */
 TR_NOMSG = "No new messages";
 TR_NEWMSG = "New Translator message";
@@ -183,6 +185,7 @@ D_SCUBA = "SCUBA Gear oxygen supply has run out.";
 D_FLASHLIGHT = "The Flashlight batteries have died.";
 D_SEARCHLIGHT = "The Searchlight has run out of battery.";
 D_DETECTOR = "The Detector has run out of battery.";
+D_LBOOTS = "The Jump Boots have drained.";
 M_SENTRYDOWN = "Your Sentry has been destroyed.";
 M_SENTRYDRY = "Your Sentry has run out of ammo.";
 M_SENTRYHIJACK = "Your Sentry has been hijacked.";
@@ -329,6 +332,7 @@ I_DETECTOR = "Has obtenido el Detector de Movimiento.";
 I_SCUBA = "Has recogido el Kit de Buceo.";
 I_OLSMP = "Has obtenido el SMP 7243. ¡Hora de patear traseros!";
 I_OLSMPAMMO = "Has recogido un Cargador de SMP 7243.";
+I_LBOOTS = "Has recogido las Botas de Salto.";
 /* Tags */
 T_WPOWERUP = "Mejora para Pistola de Dispersión";
 T_STINGERAMMO = "Fragmentos de Tarydium";
@@ -388,6 +392,7 @@ T_DFLARES = "Bengala Oscura";
 T_DETECTOR = "Detector de Movimiento";
 T_SCUBA = "Kit de Buceo";
 T_OLSMPAMMO = "Cargador de SMP 7243";
+T_LBOOTS = "Botas de Salto";
 /* Miscellaneous */
 TR_NOMSG = "No hay mensajes nuevos";
 TR_NEWMSG = "Nuevo mensaje de Traductor";
@@ -399,6 +404,7 @@ D_SCUBA = "La reserva de oxígeno del Kit de Buceo se ha agotado.";
 D_FLASHLIGHT = "Las pilas de la Linterna se han agotado.";
 D_SEARCHLIGHT = "El Faro se ha quedado sin energía.";
 D_DETECTOR = "El Detector se ha quedado sin energía.";
+D_LBOOTS = "Las Botas de Salto se han agotado.";
 M_SENTRYDOWN = "Tu Torreta ha sido destruida.";
 M_SENTRYDRY = "Tu Torreta se ha quedado sin munición.";
 M_SENTRYHIJACK = "Tu Torreta ha sido hackeada.";

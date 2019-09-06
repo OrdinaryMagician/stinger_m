@@ -190,13 +190,13 @@ Class UJumpBoots : UnrealInventory
 
 	Default
 	{
-		Tag "$T_JUMPBOOTS";
+		Tag "$T_LBOOTS";
 		+COUNTITEM;
 		+INVENTORY.BIGPOWERUP;
 		+INVENTORY.ALWAYSPICKUP;
 		Inventory.MaxAmount 3;
 		Inventory.Icon "I_Boots";
-		Inventory.PickupMessage "$I_JUMPBOOTS";
+		Inventory.PickupMessage "$I_LBOOTS";
 		Inventory.RespawnTics 1050;
 		UnrealInventory.Charge 3;
 	}
@@ -222,7 +222,7 @@ Class UJumpBoots : UnrealInventory
 		}
 		else if ( (charge <= 0) && owner.player.onground )
 		{
-			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_JUMPBOOTS"));
+			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_LBOOTS"));
 			Amount--;
 			Owner.TakeInventory("PowerJumpBoots_HighJump",1);
 			charge = defaultcharge;
