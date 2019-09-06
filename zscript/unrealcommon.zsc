@@ -979,7 +979,8 @@ Class UnrealMainHandler : EventHandler
 		else if ( (e.Replacee == 'InvulnerabilitySphere') || (e.Replacee == 'ArtiInvulnerability') ) e.Replacement = 'PowerShield';
 		else if ( (e.Replacee == 'Berserk') || (e.Replacee == 'ArtiTomeOfPower') )
 		{
-			if ( !Random[Replacements](0,2) ) e.Replacement = 'WeaponPowerUp';
+			if ( !Random[Replacements](0,9) ) e.Replacement = 'SentryItem';
+			else if ( !Random[Replacements](0,2) ) e.Replacement = 'WeaponPowerUp';
 			else e.Replacement = 'Amplifier';
 		}
 		else if ( e.Replacee == 'ArtiEgg' ) e.Replacement = 'VoiceBox';

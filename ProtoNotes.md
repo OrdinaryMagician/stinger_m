@@ -102,8 +102,8 @@
    redone the whole thing. Since I didn't feel like making new textures this
    thing now mixes and matches a couple weapon skins.
  - It's composed of two models so the gun part can rotate independently.
- - Thinking of making an alternate item that still uses the source model and
-   its frankenUVs. Will have to stitch a skin for it tho.
+ - Original version is available as a separate item. Gave it some stitched
+   textures.
 
 ### Peacemaker
 

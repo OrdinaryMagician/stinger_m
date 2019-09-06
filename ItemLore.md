@@ -181,10 +181,21 @@ infinitely regenerating supply of both, but only one can be used at a time.
 These merely existed as a gimmick to show off dynamic lighting in Unreal
 Engine, so they're not very practical or balanced.
 
+## Light Sentry
+
+Pocket turrets that shoot at any enemies standing in front of them. Easy to
+carry and deploy, but once they're out in the field that's it. They will keep
+going until they run out of ammo or battery, after which they will
+self-destruct.
+
 ## Minigun Sentry
 
-A deployable little helper that will gun down any enemies that stand in its
-view range. Starts with a full 200 bullets, and must be replenished by players.
+A big, heavy turret that will gun down any enemies that stand in its view
+range.
+
+Unlike the Light Sentries this one has a much wider range of view and can be
+resupplied with extra ammo. Conveniently, you can also recall it to put it back
+in your inventory. While carried it will slowly repair any damage it has taken.
 
 In deathmatch, the Sentry will "switch owners" to whoever last replenished it
 with ammunition, like the Turrets in ChaosUT.

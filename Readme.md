@@ -44,7 +44,8 @@ Doom Tournament (currently the devel branch is required).
  - SCUBA Gear (replaces radsuit if map has swimmable water)
  - Motion Detector (replaces computer map)
  - Light & Dark Flares
- - Minigun Sentry (rare spawn in backpacks)
+ - Minigun Sentry (rare berserk replacement)
+ - Light Sentry (rare spawn in backpacks)
 
 ## In progress
 
@@ -78,8 +79,6 @@ Doom Tournament (currently the devel branch is required).
  - Fireblaster (slot 5) (replaces rocket launcher)
  - Demolisher (slot 9) (replaces bfg9000)
  - Autocannon (slot 0) (replaces bfg9000)
-
- - Original Sentry Gun (rare spawn in backpacks)
 
 ## Known bugs
 

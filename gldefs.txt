@@ -350,6 +350,21 @@ Object MinigunSentry
 	Frame "SENFQ" { light "SENTRYLIGHT2" }
 }
 
+FlickerLight2 SENTRYLIGHT3
+{
+	Color 1.0 0.6 0.0
+	Size 40
+	SecondarySize 48
+	Interval 0.1
+	Offset 0 16 10
+}
+
+Object SentryGun
+{
+	Frame "SENFA" { light "SENTRYLIGHT3" }
+	Frame "SENFC" { light "SENTRYLIGHT3" }
+}
+
 // Shaders / Brightmaps
 HardwareShader Texture "graphics/MenuBarr.png"
 {
@@ -732,4 +747,8 @@ HardwareShader Texture "models/OLSMP_.png"
 	Shader "shaders/glsl/MeshEnviroMapMasked_AmbientGlow.fp"
 	Texture "masktex" "models/OLSMP_m.png"
 	texture "envtex" "models/OLSMP_env.png"
+}
+HardwareShader Texture "models/JSentry1_.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
 }

@@ -88,7 +88,7 @@ Class UnrealBackpack : BackpackItem replaces Backpack
 		Super.DoPickupSpecial(toucher);
 		if ( gameinfo.gametype&GAME_DOOMCHEX )
 		{
-			static const Class<Inventory> xitems[] = {"Flare", "Seeds", "SentryItem", "VoiceBox", "ForceField", "Dampener", "Peacemaker"};
+			static const Class<Inventory> xitems[] = {"Flare", "Seeds", "SentryGunItem", "VoiceBox", "ForceField", "Dampener", "Peacemaker"};
 			int xitemn[7];
 			xitemn[0] = max(0,Random[BackpackExtra](-1,3));
 			xitemn[1] = max(0,Random[BackpackExtra](-1,3));
@@ -1432,6 +1432,11 @@ Class SentryItem : UnrealInventory
 		UnrealInventory.Charge MinigunSentryBase.sentryhealth;
 		+UNREALINVENTORY.DRAWSPECIAL;
 	}
+	override bool HandlePickup( Inventory item )
+	{
+		if ( item.GetClass() == GetClass() ) return true;	// can never get more than one
+		return Super.HandlePickup(item);
+	}
 	static void TransferOwnership( Actor newowner, Actor sentry )
 	{
 		if ( sentry.master ) sentry.master.TakeInventory("SentryItem",200);
@@ -1500,7 +1505,11 @@ Class SentryItem : UnrealInventory
 	override void DoEffect()
 	{
 		Super.DoEffect();
-		if ( !bActive ) return;
+		if ( !bActive )
+		{
+			if ( !(level.maptime%10) ) Charge = min(DefaultCharge,Charge+1);
+			return;
+		}
 		if ( !tracer )
 		{
 			bActive = false;
@@ -2015,7 +2024,11 @@ Class MinigunSentryBase : Actor
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		tracer.SetOrigin(level.Vec3Offset(pos,z*38),false);
-		if ( !deathmatch ) return;
+		if ( !deathmatch )
+		{
+			if ( !master || !master.player ) bFRIENDLY = false;
+			return;
+		}
 		if ( master && master.player ) tracer.SetFriendPlayer(master.player);
 		else tracer.bFRIENDLY = false;
 	}
@@ -2124,6 +2137,343 @@ Class MinigunSentryBase : Actor
 		Stop;
 	Death:
 		TNT1 A 1 Spawn("SentryBoom",Vec3Offset(0,0,height/2));
+		Stop;
+	}
+}
+
+// original fun-size stationary version
+Class SentryGunItem : UnrealInventory
+{
+	Default
+	{
+		Tag "$T_OSENTRY";
+		Inventory.Icon "I_OSntry";
+		Inventory.MaxAmount 3;
+		Inventory.PickupMessage "$I_OSENTRY";
+		Inventory.RespawnTics 1050;
+	}
+	override bool Use( bool pickup )
+	{
+		if ( pickup ) return false;
+		Vector3 origin = Owner.Vec2OffsetZ(0,0,Owner.player.viewz);
+		FLineTraceData d;
+		Owner.LineTrace(Owner.angle,90,Owner.pitch,TRF_ABSPOSITION,origin.z,origin.x,origin.y,data:d);
+		if ( d.HitType != TRACE_HitNone ) origin = d.HitLocation-d.HitDir*20;
+		else origin = d.HitLocation;
+		Owner.LineTrace(0,56,90,TRF_ABSPOSITION,origin.z,origin.x,origin.y,data:d);
+		origin = d.HitLocation;
+		let a = Spawn("SentryGun",origin);
+		if ( !a.TestMobjLocation() )
+		{
+			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$M_MSNOROOM"));
+			a.Destroy();
+			return false;
+		}
+		tracer = a;
+		a.master = Owner;
+		a.angle = Owner.angle;
+		a.pitch = 0;
+		a.roll = 0;
+		return true;
+	}
+	States
+	{
+	Spawn:
+		SENT A -1;
+		Stop;
+	}
+}
+
+Class SentryGunX : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		+NOGRAVITY;
+		+NOBLOCKMAP;
+		+INTERPOLATEANGLES;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !tracer || !tracer.InStateSequence(tracer.CurState,tracer.FindState("Fire")) )
+		{
+			Destroy();
+			return;
+		}
+		SetOrigin(tracer.pos,true);
+		angle = tracer.angle;
+		pitch = tracer.pitch;
+		roll = tracer.roll;
+	}
+	States
+	{
+	Spawn:
+		SENF A 2 Bright;
+		TNT1 A 2;
+		SENF C 2 Bright;
+		TNT1 A 2;
+		Stop;
+	}
+}
+
+Class SentryGun : Actor
+{
+	int rememberedplayer;
+	Default
+	{
+		Health 50;
+		Mass int.max;
+		Radius 10;
+		Height 24;
+		+SOLID;
+		+SHOOTABLE;
+		+NOBLOOD;
+		+DONTTHRUST;
+		+FRIENDLY;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		if ( master && master.player )
+		{
+			SetTag(String.Format(StringTable.Localize("$T_OWNEDOSENTRY"),master.player.GetUserName()));
+			rememberedplayer = master.playernumber();
+		}
+		else
+		{
+			SetTag(StringTable.Localize("$T_OSENTRY"));
+			rememberedplayer = -1;
+		}
+		if ( !deathmatch )
+		{
+			if ( !master || !master.player ) bFRIENDLY = false;
+			return;
+		}
+		if ( master && master.player ) SetFriendPlayer(master.player);
+		else bFRIENDLY = false;
+	}
+	override string GetObituary( Actor victim, Actor inflictor, Name mod, bool playerattack )
+	{
+		if ( victim == master ) return String.Format(StringTable.Localize("$O_OWNOSENTRY"),GetTag());
+		return String.Format(StringTable.Localize("$O_OSENTRY"),GetTag());
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !master && (rememberedplayer != -1) && playeringame[rememberedplayer] )
+			master = players[rememberedplayer].mo;
+	}
+	bool IsEnemy( Actor a )
+	{
+		if ( !a || !a.bSHOOTABLE || !a.bISMONSTER || (a.Health <= 0) ) return false;
+		if ( deathmatch ) return ((a != master) && (a.master != master));
+		return (!bFRIENDLY || (!a.bFRIENDLY && !a.player));
+	}
+	bool HasTarget()
+	{
+		// check for targets in range
+		let ti = ThinkerIterator.Create("Actor");
+		Actor a;
+		while ( a = Actor(ti.Next()) )
+		{
+			if ( !IsEnemy(a) ) continue;
+			Vector3 x = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+			Vector3 vecto = level.Vec3Diff(Vec3Offset(0,0,16),a.Vec3Offset(0,0,a.height/2));
+			double distto = vecto.length();
+			Vector3 dirto = vecto/distto;
+			double angleto = atan2(dirto.y,dirto.x);
+			double pitchto = asin(-dirto.z);
+			if ( (distto < 6000) && (dirto dot x > 0.95) && !LineTrace(angleto,distto,pitchto,TRF_THRUACTORS,16) )
+			{
+				target = a;
+				return true;
+			}
+		}
+		// check for targets in a straight line
+		FLineTraceData d;
+		LineTrace(angle,200,pitch,0,16,data:d);
+		if ( (d.HitType == TRACE_HitActor) && IsEnemy(d.HitActor) )
+		{
+			target = d.HitActor;
+			return true;
+		}
+		target = null;
+		return false;
+	}
+	// if there's a target and we have ammo, jump to first state (if set)
+	// if there's no target but we still have ammo, jump to second state (if set)
+	// if we have no ammo, jump to third state (if set)
+	void A_SentryGunCheck( statelabel actstate = null, statelabel idlestate = null, statelabel failstate = null )
+	{
+		if ( !(GetAge()%35) ) special1++;
+		if ( (special1 >= 200) && failstate ) SetStateLabel(failstate);
+		else if ( HasTarget() && actstate ) SetStateLabel(actstate);
+		else if ( !HasTarget() && idlestate ) SetStateLabel(idlestate);
+	}
+	void A_SentryGunAttack( statelabel failstate = null )
+	{
+		special1++;
+		if ( ((special1 >= 200) || !HasTarget()) && failstate )
+		{
+			A_StopSound(CHAN_BODY);
+			SetStateLabel(failstate);
+			return;
+		}
+		A_AlertMonsters(0,AMF_TARGETEMITTER);
+		A_PlaySound("sentry/fire",CHAN_WEAPON,pitch:1.6);
+		Vector3 x, y, z, origin;
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		origin = level.Vec3Offset(pos,x*12+z*16);
+		double a = FRandom[Sentry](0,360), s = FRandom[Sentry](0,0.05);
+		Vector3 nx = target?Vec3To(target).unit():x;
+		Vector3 dir = (nx+y*cos(a)*s+z*sin(a)*s).unit();
+		FLineTraceData d;
+		LineTrace(atan2(dir.y,dir.x),10000,asin(-dir.z),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
+		if ( d.HitType == TRACE_HitActor )
+		{
+			int dmg = Random[OSentry](6,17);
+			dmg = d.HitActor.DamageMobj(self,self,dmg,'shot',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
+			double mm = 3000;
+			if ( FRandom[OSentry](0,1) < 0.2 ) mm *= 5;
+			UTMainHandler.DoKnockback(d.HitActor,d.HitDir,mm);
+			if ( d.HitActor.bNOBLOOD )
+			{
+				let p = Spawn("BulletImpact",d.HitLocation);
+				p.angle = atan2(d.HitDir.y,d.HitDir.x)+180;
+				p.pitch = asin(d.HitDir.z);
+			}
+			else
+			{
+				d.HitActor.TraceBleed(dmg,self);
+				d.HitActor.SpawnBlood(d.HitLocation,atan2(d.HitDir.y,d.HitDir.x)+180,dmg);
+			}
+		}
+		else if ( d.HitType != TRACE_HitNone )
+		{
+			Vector3 hitnormal = -d.HitDir;
+			if ( d.HitType == TRACE_HitFloor ) hitnormal = d.HitSector.floorplane.Normal;
+			else if ( d.HitType == TRACE_HitCeiling ) hitnormal = d.HitSector.ceilingplane.Normal;
+			else if ( d.HitType == TRACE_HitWall )
+			{
+				hitnormal = (-d.HitLine.delta.y,d.HitLine.delta.x,0).unit();
+				if ( !d.LineSide ) hitnormal *= -1;
+			}
+			let p = Spawn("BulletImpact",d.HitLocation+hitnormal*0.01);
+			p.angle = atan2(hitnormal.y,hitnormal.x);
+			p.pitch = asin(-hitnormal.z);
+			if ( d.HitLine ) d.HitLine.RemoteActivate(self,d.LineSide,SPAC_Impact,d.HitLocation);
+		}
+		for ( int i=0; i<3; i++ )
+		{
+			let s = Spawn("UTSmoke",origin);
+			s.alpha *= 0.5;
+			s.scale *= 0.7;
+			s.vel += x*2;
+		}
+		let c = Spawn("UCasing",level.Vec3Offset(pos,-x*8+y*0.6+z*16));
+		c.scale *= 0.5;
+		c.vel = x*FRandom[Junk](-1.5,1.5)+y*FRandom[Junk](2,4)+z*FRandom[Junk](2,3);
+	}
+	States
+	{
+	Spawn:
+		SENT A 15;
+		Goto StartUp;
+	StartUp:
+		SENR A 0
+		{
+			A_PlaySound("sentry/raise",pitch:1.6);
+			A_AlertMonsters(0,AMF_TARGETEMITTER);
+		}
+		SENR ABCDE 4;
+		Goto Idle;
+	Idle:
+		SENI A 1 A_SentryGunCheck("WindUp",null,"ShutDown");
+		Wait;
+	WindUp:
+		SENW A 0
+		{
+			A_PlaySound("sentry/wind",looping:true,pitch:1.6);
+			A_AlertMonsters(0,AMF_TARGETEMITTER);
+		}
+		SENW ABCDEFGHIJKLMN 1;
+	Fire:
+		SENF A 0
+		{
+			let f = Spawn("SentryGunX",pos);
+			f.angle = angle;
+			f.pitch = pitch;
+			f.roll = roll;
+			f.tracer = self;
+		}
+		SENF A 2 A_SentryGunAttack("Unwind");
+		SENF B 2;
+		SENF C 2 A_SentryGunAttack("Unwind");
+		SENF D 2;
+		SENU A 0;	// tweening hack
+		Loop;
+	Unwind:
+		SENU A 0 A_PlaySound("sentry/unwind",pitch:1.6);
+		SENU ABCDEFGHIJKLMN 1;
+		Goto Idle;
+	ShutDown:
+		SEND A 0 A_PlaySound("sentry/raise",pitch:1.6);
+		SEND ABCDE 4;
+		SEND E 20;
+		SEND E -1 A_Die();
+		Stop;
+	Death:
+		TNT1 A 0
+		{
+			A_StopSound(CHAN_BODY);
+			A_PlaySound("flare/explode",CHAN_VOICE);
+			A_NoGravity();
+			A_Stop();
+			A_SetRenderStyle(1.,STYLE_Add);
+			SetZ(pos.z+16);
+			Spawn("FlareXLight",pos);
+			bMOVEWITHSECTOR = false;
+			bFORCEXYBILLBOARD = true;
+			A_SetScale(FRandomPick[ExploS](-1.5,1.5),FRandomPick[ExploS](-1.5,1.5));
+			int numpt = Random[ExploS](15,30);
+			for ( int i=0; i<numpt; i++ )
+			{
+				Vector3 pvel = (FRandom[ExploS](-1,1),FRandom[ExploS](-1,1),FRandom[ExploS](-1,1)).unit()*FRandom[ExploS](1,3);
+				let s = Spawn("UTSmoke",pos);
+				s.vel = pvel;
+			}
+			numpt = Random[ExploS](9,18);
+			for ( int i=0; i<numpt; i++ )
+			{
+				Vector3 pvel = (FRandom[ExploS](-1,1),FRandom[ExploS](-1,1),FRandom[ExploS](-1,1)).unit()*FRandom[ExploS](2,6);
+				let s = Spawn("UTSpark",pos);
+				s.vel = pvel;
+			}
+			numpt = Random[ExploS](18,28);
+			for ( int i=0; i<numpt; i++ )
+			{
+				Vector3 pvel = (FRandom[ExploS](-1,1),FRandom[ExploS](-1,1),FRandom[ExploS](-1,1)).unit()*FRandom[ExploS](2,12);
+				let s = Spawn("UTChip",pos);
+				s.vel = pvel;
+				s.scale *= FRandom[ExploS](0.9,2.7);
+			}
+			return A_Jump(256,"Explo1","Explo2","Explo3","Explo4","Explo5");
+		}
+	Explo1:
+		EXP1 ABCDEFGH 3 Bright;
+		Stop;
+	Explo2:
+		EXP2 ABCDEFGH 3 Bright;
+		Stop;
+	Explo3:
+		EXP3 ABCDEFGH 3 Bright;
+		Stop;
+	Explo4:
+		EXP4 ABCDEFGH 3 Bright;
+		Stop;
+	Explo5:
+		EXP5 ABCDEFGH 3 Bright;
 		Stop;
 	}
 }

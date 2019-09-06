@@ -673,6 +673,97 @@ Model "MinigunSentryBase"
 	FrameIndex SENU R 0 67
 }
 
+Model "SentryGunItem"
+{
+	Path "models"
+	Model 0 "SentryM_d.3d"
+	SurfaceSkin 0 1 "JSentry1_.png"
+	AngleOffset -90
+	Scale 0.12 0.12 0.144
+	ZOffset 16
+
+	FrameIndex SENT A 0 0
+}
+
+Model "SentryGunX"
+{
+	Path "models"
+	Model 0 "SentryM_d.3d"
+	SurfaceSkin 0 0 "JSentry1.png"
+	AngleOffset -90
+	Scale 0.12 0.12 0.144
+	ZOffset 16
+	DONTCULLBACKFACES
+
+	FrameIndex SENF A 0 20
+	FrameIndex SENF C 0 22
+}
+
+Model "SentryGun"
+{
+	Path "models"
+	Model 0 "SentryM_d.3d"
+	SurfaceSkin 0 1 "JSentry1.png"
+	AngleOffset -90
+	Scale 0.12 0.12 0.144
+	ZOffset 16
+
+	// Spawn
+	FrameIndex SENT A 0 0
+	// Up
+	FrameIndex SENR A 0 0
+	FrameIndex SENR B 0 1
+	FrameIndex SENR C 0 2
+	FrameIndex SENR D 0 3
+	FrameIndex SENR E 0 4
+	// Still
+	FrameIndex SENI A 0 5
+	// Wind
+	FrameIndex SENW A 0 6
+	FrameIndex SENW B 0 7
+	FrameIndex SENW C 0 8
+	FrameIndex SENW D 0 9
+	FrameIndex SENW E 0 10
+	FrameIndex SENW F 0 11
+	FrameIndex SENW G 0 12
+	FrameIndex SENW H 0 13
+	FrameIndex SENW I 0 14
+	FrameIndex SENW J 0 15
+	FrameIndex SENW K 0 16
+	FrameIndex SENW L 0 17
+	FrameIndex SENW M 0 18
+	FrameIndex SENW N 0 19
+	// Fire
+	FrameIndex SENF A 0 20
+	FrameIndex SENF B 0 21
+	FrameIndex SENF C 0 22
+	FrameIndex SENF D 0 23
+	// Unwind
+	FrameIndex SENU A 0 24
+	FrameIndex SENU B 0 25
+	FrameIndex SENU C 0 26
+	FrameIndex SENU D 0 27
+	FrameIndex SENU E 0 28
+	FrameIndex SENU F 0 29
+	FrameIndex SENU G 0 30
+	FrameIndex SENU H 0 31
+	FrameIndex SENU I 0 32
+	FrameIndex SENU J 0 33
+	FrameIndex SENU K 0 34
+	FrameIndex SENU L 0 35
+	FrameIndex SENU M 0 36
+	FrameIndex SENU N 0 37
+	FrameIndex SENU O 0 38
+	FrameIndex SENU P 0 39
+	FrameIndex SENU Q 0 40
+	// Down
+	FrameIndex SEND A 0 41
+	FrameIndex SEND B 0 42
+	FrameIndex SEND C 0 43
+	FrameIndex SEND D 0 44
+	FrameIndex SEND E 0 45
+}
+
 Model "MotionDetector"
 {
 	Path "models"
