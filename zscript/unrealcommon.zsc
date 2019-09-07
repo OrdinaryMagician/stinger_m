@@ -812,6 +812,20 @@ Class UnrealMainHandler : EventHandler
 {
 	Array<AmmoUsedInSlot> AmmoSlots;
 
+	override void WorldThingDamaged( WorldEvent e )
+	{
+		// blow up stinger pumped actors when taking damage from other sources
+		if ( e.DamageType == 'Stinger' ) return;
+		let ti = ThinkerIterator.Create("TarydiumDebuff",Thinker.STAT_USER);
+		TarydiumDebuff t;
+		while ( t = TarydiumDebuff(ti.Next()) )
+		{
+			if ( (t.victim != e.Thing) || t.reentrant ) continue;	// make sure to skip any debuffs that already blew up to prevent infinite recursion on chain reactions
+			t.Amount += e.Damage/2;
+			t.BlowUp();
+			break;
+		}
+	}
 	override void CheckReplacement( ReplaceEvent e )
 	{
 		if ( (e.Replacee == 'Chainsaw') || (e.Replacee == 'Gauntlets') )

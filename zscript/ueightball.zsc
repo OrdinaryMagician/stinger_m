@@ -577,13 +577,26 @@ Class Eightball : UnrealWeapon
 		EBLL LMNOPQRSTUVWXYZ[ 1;
 		EBLL Z 0;
 		EBLI A 0;
-		EBLI A 1 A_JumpIf(invoker.special1>=6,2);
+		EBLI A 1
+		{
+			if ( invoker.special1 >= 6 )
+			{
+				if ( sting_ehold )
+				{
+					invoker.special2 = 70;
+					return ResolveState("LoadHold");
+				}
+				else return ResolveState("Release");
+			}
+			return ResolveState(null);
+		}
 		EBLI A 0 A_LoadedRefire("Loading");
 		Goto Release;
-		EBLI A 2;
 	LoadHold:
-		EBLI C 2;
-		EBLI C 0 A_LoadedRefire("LoadHold");
+		EBLI A 2;
+	LoadHoldL:
+		EBLI C 1 A_JumpIf(--invoker.special2<0,"Release");
+		EBLI C 0 A_LoadedRefire("LoadHoldL");
 		Goto Release;
 	Release:
 		EBLF A 0 A_FireRockets(invoker.special1);

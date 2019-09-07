@@ -147,8 +147,199 @@ Class ViewStingerChunk : StingerChunk
 	}
 }
 
+Class TarydiumExLight : PaletteLight
+{
+	Default
+	{
+		Tag "Blue2";
+		Args 0,0,0,60;
+		ReactionTime 30;
+	}
+}
+
+Class TarydiumExplosion : Actor
+{
+	Default
+	{
+		RenderStyle "Add";
+		+NOGRAVITY;
+		+NOBLOCKMAP;
+		+FORCEXYBILLBOARD;
+		+FORCERADIUSDMG;
+		+NODAMAGETHRUST;
+		DamageType 'TarydiumCharge';
+		Obituary "$O_STINGERX";
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		A_Explode(special1,int(90*scale.x));
+		UTMainHandler.DoBlast(self,90*scale.x,90000);
+		A_PlaySound("flare/explode");
+		let l = Spawn("TarydiumExLight",pos);
+		l.args[3] = int(60*scale.x);
+		scale.x *= RandomPick[Stinger](-1,1);
+		scale.y *= RandomPick[Stinger](-1,1);
+		double ang, pt;
+		int numpt = Random[Stinger](10,15)*min(3,special1/60);
+		for ( int i=0; i<numpt; i++ )
+		{
+			ang = FRandom[Stinger](0,360);
+			pt = FRandom[Stinger](-90,90);
+			let c = Spawn("UTSmoke",pos);
+			c.vel = (cos(ang)*cos(pt),sin(ang)*cos(pt),-sin(pt))*FRandom[Stinger](2,7);
+			c.SetShade(Color(1,3,4)*Random[Stinger](24,63));
+			c.scale *= 3.;
+		}
+		numpt = Random[Stinger](4,8)*min(8,special1/25);
+		for ( int i=0; i<numpt; i++ )
+		{
+			ang = FRandom[Stinger](0,360);
+			pt = FRandom[Stinger](-90,90);
+			let c = Spawn("StingerChunk",pos);
+			c.angle = ang;
+			c.pitch = pt;
+			c.vel = (cos(ang)*cos(pt),sin(ang)*cos(pt),-sin(pt))*FRandom[Stinger](6,12);
+		}
+		numpt = Random[Stinger](10,20)*min(4,special1/40);
+		for ( int i=0; i<numpt; i++ )
+		{
+			ang = FRandom[Stinger](0,360);
+			pt = FRandom[Stinger](-90,90);
+			let c = Spawn("UTChip",pos);
+			c.vel = (cos(ang)*cos(pt),sin(ang)*cos(pt),-sin(pt))*FRandom[Stinger](6,12);
+			c.scale *= FRandom[Stinger](0.9,1.5);
+		}
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_Jump(128,"Explo2");
+	Explo1:
+		TEX1 ABCDEFGHI 3 Bright;
+		Stop;
+	Explo2:
+		TEX2 ABCDEFGHIJK 3 Bright;
+		Stop;
+	}
+}
+
+Class TarydiumDebuff : Thinker
+{
+	Actor victim, instigator;
+	int amount;	// accumulated damage for the explosion
+	Vector3 oldvel;
+	bool wasonair, reentrant;
+
+	void UpdateEffect()
+	{
+		if ( !victim )
+		{
+			BlowUp();
+			return;
+		}
+		victim.A_AttachLight('TDEBUFFLIGHT',DynamicLight.PointLight,Color(1,3,4)*min(amount,63),int(max(victim.radius,victim.height))+60+min(amount/4,40),0,DynamicLight.LF_ATTENUATE,(0,0,victim.height/2));
+		if ( Random[Stinger](0,amount) > 100 )
+		{
+			amount += 30;
+			BlowUp();
+		}
+	}
+
+	void BlowUp()
+	{
+		reentrant = true;
+		let b = victim.Spawn("TarydiumExplosion",victim.Vec3Offset(0,0,victim.height/2));
+		b.target = instigator;
+		b.special1 = amount;
+		b.scale *= 1.+min(1.5,amount*0.02);
+		Destroy();
+	}
+
+	override void OnDestroy()
+	{
+		Super.OnDestroy();
+		if ( victim ) victim.A_RemoveLight('TDEBUFFLIGHT');
+	}
+
+	override void Tick()
+	{
+		if ( !victim || (victim.Health <= 0) )
+		{
+			BlowUp();
+			return;
+		}
+		if ( victim.pos.z > victim.floorz ) wasonair = true;
+		else
+		{
+			if ( wasonair && (oldvel.z < -20) )
+			{
+				Amount += min(int(-oldvel.z),100);
+				BlowUp();
+				return;
+			}
+			wasonair = false;
+		}
+		oldvel = victim.vel;
+		if ( !(level.maptime%20) )
+		{
+			amount--;
+			UpdateEffect();
+			if ( amount <= 0 )
+			{
+				Destroy();
+				return;
+			}
+		}
+		if ( level.maptime%3 ) return;
+		int numpt = clamp(int(Random[Stinger](1,3)*amount*0.02),1,8);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pos = victim.Vec3Offset(FRandom[Stinger](-victim.radius,victim.radius),FRandom[Stinger](-victim.radius,victim.radius),FRandom[Stinger](0,victim.height));
+			let l = victim.Spawn("StingerBurstLight",pos);
+			l.Args[3] /= 2;
+			double ang, pt;
+			int numpt2 = Random[Stinger](2,5);
+			for ( int i=0; i<numpt; i++ )
+			{
+				ang = FRandom[Stinger](0,360);
+				pt = FRandom[Stinger](-90,90);
+				let c = victim.Spawn("UTSmoke",pos);
+				c.vel = (cos(ang)*cos(pt),sin(ang)*cos(pt),-sin(pt))*FRandom[Stinger](0.3,0.8);
+				c.SetShade(Color(1,3,4)*Random[Stinger](24,63));
+				c.scale *= 3.;
+				c.alpha *= 0.35;
+			}
+		}
+	}
+
+	static void Apply( Actor victim, Actor instigator, int amount )
+	{
+		if ( !victim || (victim.Health <= 0) || !victim.bISMONSTER ) return;
+		let ti = ThinkerIterator.Create("TarydiumDebuff",STAT_USER);
+		TarydiumDebuff t;
+		while ( t = TarydiumDebuff(ti.Next()) )
+		{
+			if ( t.victim != victim ) continue;
+			if ( instigator ) t.instigator = instigator;
+			t.amount += amount;
+			t.UpdateEffect();
+			return;
+		}
+		t = new("TarydiumDebuff");
+		t.ChangeStatNum(STAT_USER);
+		t.victim = victim;
+		t.instigator = instigator;
+		t.amount = amount;
+		t.oldvel = victim.vel;
+		t.wasonair = (victim.pos.z>victim.floorz);
+		t.UpdateEffect();
+	}
+}
+
 Class StingerProjectile : Actor
 {
+	Vector3 oldvel;
 	Default
 	{
 		Obituary "$O_STINGER";
@@ -160,6 +351,66 @@ Class StingerProjectile : Actor
 		PROJECTILE;
 		+SKYEXPLODE;
 	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		if ( sting_stingerb )
+		{
+			// set bounce stuff
+			bBOUNCEONWALLS = true;
+			bBOUNCEONFLOORS = true;
+			bBOUNCEONCEILINGS = true;
+			bALLOWBOUNCEONACTORS = true;
+			bCANBOUNCEWATER = true;
+			bUSEBOUNCESTATE = true;
+			BounceCount = 4;
+			BounceFactor = 1.;
+			WallBounceFactor = 1.;
+		}
+	}
+	override void Tick()
+	{
+		oldvel = vel;
+		Super.Tick();
+	}
+	void A_HandleBounce()
+	{
+		// cancel bounce based on "incidence"
+		if ( vel dot oldvel < 0.87 )
+		{
+			ClearBounce();
+			ExplodeMissile();
+			return;
+		}
+		if ( !Random[Stinger](0,2) ) A_PlaySound("stinger/hit2",CHAN_BODY,0.5,pitch:FRandom[Stinger](0.5,1.5));
+		else A_PlaySound("stinger/hit",CHAN_BODY,0.6);
+		A_SprayDecal("WallCrack",-20);
+		A_AlertMonsters();
+		let l = Spawn("StingerBurstLight",pos);
+		l.Args[3] /= 2;
+		double ang, pt;
+		int numpt = Random[Stinger](1,3);
+		for ( int i=0; i<numpt; i++ )
+		{
+			ang = FRandom[Stinger](0,360);
+			pt = FRandom[Stinger](-90,90);
+			let c = Spawn("StingerChunk",pos);
+			c.scale *= 0.5;
+			c.angle = ang;
+			c.pitch = pt;
+			c.vel = (cos(ang)*cos(pt),sin(ang)*cos(pt),-sin(pt))*FRandom[Stinger](3,9);
+		}
+		numpt = Random[Stinger](2,5);
+		for ( int i=0; i<numpt; i++ )
+		{
+			ang = FRandom[Stinger](0,360);
+			pt = FRandom[Stinger](-90,90);
+			let c = Spawn("UTSmoke",pos);
+			c.vel = (cos(ang)*cos(pt),sin(ang)*cos(pt),-sin(pt))*FRandom[Stinger](0.3,0.8);
+			c.SetShade(Color(1,3,4)*Random[Stinger](48,63));
+			c.alpha *= 0.35;
+		}
+	}
 	override int DoSpecialDamage( Actor target, int damage, Name damagetype )
 	{
 		if ( !target.bNOBLOOD )
@@ -167,6 +418,7 @@ Class StingerProjectile : Actor
 			target.SpawnBlood(pos,AngleTo(target),damage);
 			A_PlaySound("stinger/flesh");
 			A_AlertMonsters();
+			if ( sting_stinger ) TarydiumDebuff.Apply(target,self.target,damage/4);
 		}
 		return damage;
 	}
@@ -204,6 +456,9 @@ Class StingerProjectile : Actor
 	Spawn:
 		TPRJ A -1 Bright;
 		Stop;
+	Bounce:
+		TPRJ A 0 Bright A_HandleBounce();
+		Goto Spawn;
 	Death:
 	Crash:
 		TNT1 A 1 A_StingerHit();

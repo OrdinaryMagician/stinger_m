@@ -12,9 +12,12 @@ Doom Tournament (currently the devel branch is required).
  - Automag (slot 2) (replaces pistol)
    - Dual Automags
  - Stinger (slot 3) (replaces shotguns)
+   - Projectile bouncing from 0.866 and below
+   - Tarydium charge & explosion described in Unreal Bible
  - ASMD (slot 4) (replaces shotguns)
  - Eightball (slot 5) (replaces rocket launcher)
    - Single rocket mode for Eightball
+   - "Hold up to 2 seconds" feature from Unreal Bible
  - Flak Cannon (slot 6) (replaces rocket launcher)
  - SMP 7243 (slot 0) (replaces bfg9000)
  - Backpack (replaces backpack, identical to Doom Tournament version)
@@ -57,11 +60,10 @@ Doom Tournament (currently the devel branch is required).
 ## Planned
 
  - Unreal Bible & prototype build behaviour restoration
-   - Stinger projectile remanence & explosion
-   - Stinger projectile bouncing
    - Razorjack hold fire to increase blade speed
    - Rifle restored rapid fire
    - Rifle restored flashlight
+   - Biorifle "Hold up to 2 seconds" feature from Unreal Bible
 
  - QOL improvements
    - Make Razorjack altfire actually seek where player is aiming

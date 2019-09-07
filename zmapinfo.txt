@@ -22,3 +22,9 @@ DoomEdNums
 	4510 = UTranslator
 	4511 = TranslatorEvent
 }
+
+DamageType TarydiumCharge
+{
+	// obituary for no instigator
+	Obituary = "$O_STINGERX2"
+}
