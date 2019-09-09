@@ -74,6 +74,14 @@ server bool sting_olsmp = false;	// adds the stupid oldskool SMP 7243 to
 					// this weapon is dumb, but just for
 					// the sake of completion it's there as
 					// an option
+server bool sting_msentry = false;	// allows the new Minigun Sentry, which
+					// is an original creation for this mod
+server bool sting_dubious = false;	// allows weapons of dubious origin
+					// (Demolisher and Razorclaw)
+					// along with the Minigun Sentry, since
+					// it's an original creation
+server bool sting_proto = true;		// enable all prototype items and
+					// features
 server bool sting_autoscuba = false;	// SCUBA gear toggles automatically
 					// when needed
 server bool sting_ehold = false;	// eightball can be held fully loaded

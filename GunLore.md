@@ -43,7 +43,7 @@ this the weapon will need a short time to load up ammunition again.
 
 ### Extended behaviour
 
-As tarydium is highly volatile, any shards that remain attached to a target can
+With each shot, targets will be pumped with highly volatile Tarydium, and can
 be detonated with fire from other weapons, or sufficient kinetic force (e.g.
 making them fall from a considerable height).
 
@@ -296,8 +296,9 @@ The weapon is completely useless if the user or target are underwater.
 Another Mercenary invention, and a direct evolution of the previously listed
 Flamethrower. Shoots green-ish fireballs stabilized by microgravity.
 
-Primary fire: Single, steady shots, or a rapid three shot burst in a horizontal
-arc, depending on selected mode. Costs 10 units of napalm per projectile.
+Primary fire: A single, steady shot, followed by rapid three shot bursts in a
+horizontal arc if you keep the trigger held. Costs 10 units of napalm per
+projectile.
 
 Secondary fire: A slowly charged fireball costing 20 units of napalm. Deals
 more splash damage.
@@ -311,9 +312,8 @@ but that's a story for another time (and mod).
 ## Demolisher
 
 The signature handgun wielded by the Archangels, who lead the Bigman tribes
-living in the southern swamplands of Na Pali's neighbour planet Gryphon.
-Firing highly explosive, massive bullets, this truly is a force to be reckoned
-with.
+living in the southern swamplands of Na Pali. Firing highly explosive, massive
+bullets, this truly is a force to be reckoned with.
 
 Primary fire: Single explosive shot, high recoil.
 

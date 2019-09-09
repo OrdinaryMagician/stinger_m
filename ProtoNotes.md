@@ -3,12 +3,14 @@
  - Undocumented, shape-wise it's reminiscent of the Bigman's guns, so I'm
    going to repurpose it as pretty much that.
  - Texture made from scratch, some handpainting plus detail textures and
-   various overlays from Mine.utx just for kicks.
+   various overlays from Mine.utx just for kicks. Doesn't look very good and
+   needs improvement.
  - It's big. Pretty much as big as a Redeemer, so you need two hands to use it.
  - Fires exploding boolets. Altfire is a rapid fire mode with a lot of recoil.
  - Came up with a name for it.
  - Ammo models were improvised by editing the unused sconce part of the Jclip1
    texture.
+ - It is likely that this wasn't a weapon meant for Unreal, but oh well.
 
 ### Bonesaw? / Razorclaw
 
@@ -18,14 +20,22 @@
  - Bible describes a "Skaarj Blade" upgrade, guess since I'm using the
    Razorjack texture for them then it's already upgraded.
  - Also came up with a name for it.
+ - The actual "Bonesaw" does not exist in any form but I might model it from
+   scratch sometime.
+ - I forgot to re-add in the little bits of flesh/dried blood that hang from
+   the blades, but I think it still looks fine like this.
+ - Same story as the Demolisher. The fact that these two only popped up in one
+   third-party source for another game is really suspicious.
 
 ### Flame Gun / Fireblaster
 
  - Changed up to not make it redundant since the Flamethrower is in too. It
    shoots fireballs, so it's more of a long range single shot weapon compared
-   to the medium range dps barrage that is the flamethrower.
- - Altfire is a three-shot burst in a horizontal arc. Kinda like the "spray"
-   attack mercs do.
+   to the medium range dps barrage that is the flamethrower. (after reading up
+   more into the 0.83~0.86 builds I've come to realize that this was the
+   correct way to go).
+ - Has extra animation with a three-shot burst in a horizontal arc. Kinda like
+   the "spray" attack mercs do.
  - The model had no UV mapping so I improvised a lot. Thankfully Blender's
    texture paint helped for most of it.
  - New name given, "flame gun" sounds too placeholder-y.
@@ -82,7 +92,8 @@
 
  - This one can be used as-is (though I did fix some holes and stuff).
  - Made a separate pickup model with holes filled.
- - Has a similar regenerating ammo as the dispersion pistol.
+ - Has a similar regenerating ammo as the dispersion pistol. IIRC it was
+   supposed to use the same ammo as the ASMD?
 
 ### "Teleport gun"
 
@@ -95,6 +106,8 @@
  - Gun is re-animated in order to use the same hand as the final automag.
  - Uses the old black skin, but the off-hand gun when dual wielding will use
    the newer skin.
+ - Forgot to make a reload animation, so I came up with lore to make it not
+   need one. I'm lazy like that.
 
 ### Sentry
 

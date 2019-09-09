@@ -200,6 +200,9 @@ in your inventory. While carried it will slowly repair any damage it has taken.
 In deathmatch, the Sentry will "switch owners" to whoever last replenished it
 with ammunition, like the Turrets in ChaosUT.
 
+Note: This is an original item that mainly exists as a more polished take on
+the previous one.
+
 ## Motion Detector
 
 This pocket device will allow you to spot nearby enemies. In addition each one
