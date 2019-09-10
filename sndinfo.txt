@@ -226,6 +226,8 @@ sentry/wind	sentwind
 sentry/fire	sentfire
 sentry/unwind	sentuwnd
 sentry/explode	cannonex
+sentry/move	sentmovs
+sentry/movestop	sentmove
 
 vfrag/bounce1	glasstk1
 vfrag/bounce2	glasstk2

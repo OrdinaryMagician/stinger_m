@@ -190,7 +190,7 @@ Class UnrealHUD : BaseStatusBar
 
 	private void DrawNumberOf( Inventory i, double x, double y )
 	{
-		if ( (i.Amount <= 1) && !((i is 'UnrealInventory') || !UnrealInventory(i).bDRAWSPECIAL) ) return;
+		if ( (i.Amount <= 1) && !((i is 'UnrealInventory') && UnrealInventory(i).bDRAWSPECIAL) ) return;
 		double TempX = CurX, TempY = CurY;
 		string itxt = String.Format("%d",((i is 'UnrealInventory')&&UnrealInventory(i).bDRAWSPECIAL)?i.special1:i.Amount);
 		CurX += 30;

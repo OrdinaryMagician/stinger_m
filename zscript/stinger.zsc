@@ -264,6 +264,11 @@ Class TarydiumDebuff : Thinker
 
 	override void Tick()
 	{
+		if ( !sting_stinger )
+		{
+			Destroy();
+			return;
+		}
 		if ( !victim || (victim.Health <= 0) )
 		{
 			BlowUp();
@@ -316,6 +321,7 @@ Class TarydiumDebuff : Thinker
 	static void Apply( Actor victim, Actor instigator, int amount )
 	{
 		if ( !victim || (victim.Health <= 0) || !victim.bISMONSTER ) return;
+		if ( !sting_stinger ) return;
 		let ti = ThinkerIterator.Create("TarydiumDebuff",STAT_USER);
 		TarydiumDebuff t;
 		while ( t = TarydiumDebuff(ti.Next()) )

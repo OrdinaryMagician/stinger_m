@@ -830,10 +830,10 @@ Class UnrealMainHandler : EventHandler
 	{
 		if ( (e.Replacee == 'Chainsaw') || (e.Replacee == 'Gauntlets') )
 		{
-			if ( !Random[Replacements](0,3) ) e.Replacement = 'WeaponPowerUp';
+			if ( (sting_dubious || sting_olsmp) && !Random[Replacements](0,3) ) e.Replacement = 'WeaponPowerUp';
 			else if ( Random[Replacements](0,2) )
 			{
-				if ( Random[Replacements](0,1) ) e.Replacement = 'Bonesaw';
+				if ( sting_dubious && Random[Replacements](0,1) ) e.Replacement = 'Bonesaw';
 				else e.Replacement = 'Stunner';
 			}
 			else if ( !Random[Replacements](0,2) ) e.Replacement = 'Betamag';
@@ -888,9 +888,13 @@ Class UnrealMainHandler : EventHandler
 		}
 		else if ( (e.Replacee == 'BFG9000') || (e.Replacee == 'Mace') )
 		{
-			if ( sting_olsmp && Random[Replacements](0,1) ) e.Replacement = 'OLSMP';
-			else if ( Random[Replacements](0,1) ) e.Replacement = 'SMiniGun';
-			else e.Replacement = 'BigGun';
+			if ( sting_olsmp && (!sting_dubious || Random[Replacements](0,1)) ) e.Replacement = 'OLSMP';
+			else if ( sting_dubious )
+			{
+				if ( Random[Replacements](0,1) ) e.Replacement = 'SMiniGun';
+				else e.Replacement = 'BigGun';
+			}
+			else e.Replacement = 'WeaponPowerup';	// lousy, I know
 		}
 		else if ( (e.Replacee == 'Clip') || (e.Replacee == 'GoldWandAmmo') || (e.Replacee == 'GoldWandHefty') ) e.Replacement = 'UClip';
 		else if ( (e.Replacee == 'ClipBox') )
@@ -957,7 +961,7 @@ Class UnrealMainHandler : EventHandler
 		}
 		else if ( (e.Replacee == 'Cell') || (e.Replacee == 'SkullRodAmmo') )
 		{
-			if ( !Random[Replacements](0,4) )
+			if ( sting_dubious && !Random[Replacements](0,4) )
 			{
 				if ( !Random[Replacements](0,2) ) e.Replacement = 'BigAmmo2';
 				else e.Replacement = 'BigAmmo3';
@@ -980,7 +984,7 @@ Class UnrealMainHandler : EventHandler
 		}
 		else if ( (e.Replacee == 'CellPack') || (e.Replacee == 'SkullRodHefty') )
 		{
-			if ( !Random[Replacements](0,4) )
+			if ( sting_dubious && !Random[Replacements](0,4) )
 			{
 				if ( !Random[Replacements](0,2) ) e.Replacement = 'BigAmmo';
 				else e.Replacement = 'BigAmmo2';
@@ -993,8 +997,8 @@ Class UnrealMainHandler : EventHandler
 		else if ( (e.Replacee == 'InvulnerabilitySphere') || (e.Replacee == 'ArtiInvulnerability') ) e.Replacement = 'PowerShield';
 		else if ( (e.Replacee == 'Berserk') || (e.Replacee == 'ArtiTomeOfPower') )
 		{
-			if ( !Random[Replacements](0,9) ) e.Replacement = 'SentryItem';
-			else if ( !Random[Replacements](0,2) ) e.Replacement = 'WeaponPowerUp';
+			if ( sting_msentry && !Random[Replacements](0,9) ) e.Replacement = 'SentryItem';
+			else if ( (sting_dubious || sting_olsmp) && !Random[Replacements](0,2) ) e.Replacement = 'WeaponPowerUp';
 			else e.Replacement = 'Amplifier';
 		}
 		else if ( e.Replacee == 'ArtiEgg' ) e.Replacement = 'VoiceBox';

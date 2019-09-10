@@ -1432,17 +1432,35 @@ Class SentryItem : UnrealInventory
 		UnrealInventory.Charge MinigunSentryBase.sentryhealth;
 		+UNREALINVENTORY.DRAWSPECIAL;
 	}
+	override bool TryPickup( in out Actor toucher )
+	{
+		if ( !sting_msentry ) return false;	// not allowed
+		return Super.TryPickup(toucher);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( sting_msentry ) return;
+		if ( Owner ) Owner.RemoveInventory(self);
+		else
+		{
+			// TODO replace
+		}
+		Destroy();
+	}
 	override bool HandlePickup( Inventory item )
 	{
 		if ( item.GetClass() == GetClass() ) return true;	// can never get more than one
 		return Super.HandlePickup(item);
 	}
-	static void TransferOwnership( Actor newowner, Actor sentry )
+	static bool TransferOwnership( Actor newowner, Actor sentry )
 	{
-		if ( sentry.master ) sentry.master.TakeInventory("SentryItem",200);
+		if ( sentry.master == newowner ) return false;
+		if ( sentry.master ) sentry.master.TakeInventory("SentryItem",1);
 		sentry.master = newowner;
 		sentry.SetTag(String.Format(StringTable.Localize("$T_OWNEDSENTRY"),newowner.player.GetUserName()));
 		sentry.tracer.A_ClearTarget();
+		sentry.tracer.bFRIENDLY = true;
 		sentry.tracer.SetFriendPlayer(newowner.player);
 		let si = SentryItem(newowner.FindInventory("SentryItem"));
 		if ( si )
@@ -1457,6 +1475,7 @@ Class SentryItem : UnrealInventory
 			si.bActive = true;
 			si.tracer = sentry;
 		}
+		return true;
 	}
 	override void AttachToOwner( Actor other )
 	{
@@ -1632,7 +1651,7 @@ Class MinigunSentry : Actor
 		angle = clamp(angle+clamp(angledelta,-angleturn,angleturn),master.angle-maxangle,master.angle+maxangle);
 		pitch = clamp(pitch+clamp(pitchdelta,-pitchturn,pitchturn),master.pitch-maxpitch,master.pitch+maxpitch);
 	}
-	void A_SentryFaceDir( int dest, statelabel next )
+	void A_SentryFaceDir( double dest, statelabel next )
 	{
 		double angledelta = DeltaAngle(angle,master.angle+dest);
 		double pitchdelta = DeltaAngle(pitch,master.pitch);
@@ -1714,34 +1733,31 @@ Class MinigunSentry : Actor
 		SENR ABCDEFGHIJKLMNO 3;
 		Goto Idle;
 	Idle:
-		SENI A 1 A_SentryFaceDir(0,1);
-		Wait;
-		SENI A 1
+		SENI A 0
 		{
-			A_LookEx(LOF_NOSOUNDCHECK|LOF_NOJUMP);
-			A_SentryFaceDir(-maxangle,1);
-			return A_JumpIf(TargetVisible(),"See");
-		}
-		Wait;
-		SENI AAAAAA 1
-		{
-			A_LookEx(LOF_NOSOUNDCHECK|LOF_NOJUMP);
-			return A_JumpIf(TargetVisible(),"See");
+			A_PlaySound("sentry/move",CHAN_BODY,0.4,true,pitch:0.8);
+			if ( specialf1 > 0 ) specialf1 = -maxangle;
+			else specialf1 = maxangle;
+			special2 = 0;
 		}
 		SENI A 1
 		{
 			A_LookEx(LOF_NOSOUNDCHECK|LOF_NOJUMP);
-			A_SentryFaceDir(maxangle,1);
+			A_SentryFaceDir(specialf1,"IdleStop");
 			return A_JumpIf(TargetVisible(),"See");
 		}
 		Wait;
-		SENI AAAAAA 1
+	IdleStop:
+		SENI A 0 A_PlaySound("sentry/movestop",CHAN_BODY,0.4,pitch:0.8);
+		SENI A 1
 		{
 			A_LookEx(LOF_NOSOUNDCHECK|LOF_NOJUMP);
+			if ( special2++ > 20 ) return ResolveState("Idle");
 			return A_JumpIf(TargetVisible(),"See");
 		}
-		Goto Idle+1;
+		Wait;
 	See:
+		SENI A 0 A_PlaySound("sentry/movestop",CHAN_BODY,0.4,pitch:0.8);
 		SENI A 1
 		{
 			if ( !TargetVisible() )
@@ -1992,6 +2008,7 @@ Class MinigunSentryBase : Actor
 
 	Default
 	{
+		Tag "$T_SENTRY";
 		Health sentryhealth;
 		Mass int.max;
 		Radius 12;
@@ -2000,7 +2017,6 @@ Class MinigunSentryBase : Actor
 		+SHOOTABLE;
 		+NOBLOOD;
 		+DONTTHRUST;
-		+SPECIAL;
 	}
 	override void PostBeginPlay()
 	{
@@ -2012,8 +2028,8 @@ Class MinigunSentryBase : Actor
 		}
 		else
 		{
-			SetTag(StringTable.Localize("$T_SENTRY"));
 			rememberedplayer = -1;
+			special1 = sentryammo;	// rogue sentries need ammo assigned
 		}
 		tracer = Spawn("MinigunSentry",pos);
 		tracer.special1 = special1;
@@ -2026,15 +2042,23 @@ Class MinigunSentryBase : Actor
 		tracer.SetOrigin(level.Vec3Offset(pos,z*38),false);
 		if ( !deathmatch )
 		{
-			if ( !master || !master.player ) bFRIENDLY = false;
+			if ( !master || !master.player ) tracer.bFRIENDLY = bFRIENDLY;
+			bFRIENDLY = false;
 			return;
 		}
 		if ( master && master.player ) tracer.SetFriendPlayer(master.player);
-		else tracer.bFRIENDLY = false;
+		else tracer.bFRIENDLY = bFRIENDLY;
+		bFRIENDLY = false;
 	}
 	override void Tick()
 	{
 		Super.Tick();
+		if ( !sting_msentry )
+		{
+			if ( tracer ) tracer.Destroy();
+			Destroy();
+			return;
+		}
 		// hub return support
 		if ( !master && (rememberedplayer != -1) && playeringame[rememberedplayer] )
 		{
@@ -2056,25 +2080,28 @@ Class MinigunSentryBase : Actor
 	}
 	override string GetObituary( Actor victim, Actor inflictor, Name mod, bool playerattack )
 	{
-		if ( victim == master ) return String.Format(StringTable.Localize("$O_OWNSENTRY"),GetTag());
-		return String.Format(StringTable.Localize("$O_SENTRY"),GetTag());
+		if ( victim == master ) return StringTable.Localize("$O_OWNSENTRY");
+		else if ( master && master.player ) return String.Format(StringTable.Localize("$O_SENTRY"),GetTag());
+		return StringTable.Localize("$O_ROGUESENTRY");
 	}
-	override void Touch( Actor toucher )
+	override bool Used( Actor user )
 	{
-		if ( !toucher.player || !bSPECIAL ) return;
-		if ( abs(DeltaAngle(angle,AngleTo(toucher))) < 120 ) return;
+		if ( !user.player || !InStateSequence(CurState,FindState("Idle")) ) return false;
+		if ( abs(DeltaAngle(angle,AngleTo(user))) < 120 ) return false;
 		if ( deathmatch || !master )
 		{
-			if ( master && (toucher != master) && master.CheckLocalView() )
+			if ( master && (user != master) && master.CheckLocalView() )
 				Console.Printf(StringTable.Localize("$M_SENTRYHIJACK"));
-			SentryItem.TransferOwnership(toucher,self);
+			if ( SentryItem.TransferOwnership(user,self) )
+				return false;	// on first touch only transfer ownership
 		}
-		let amo = toucher.FindInventory("UMiniAmmo");
-		if ( !amo || (amo.Amount <= 0) || (tracer.special1 >= sentryammo) ) return;
+		let amo = user.FindInventory("UMiniAmmo");
+		if ( !amo || (amo.Amount <= 0) || (tracer.special1 >= sentryammo) ) return false;
 		A_PlaySound("misc/i_pkup",CHAN_ITEM);
 		int xammo = min(sentryammo-tracer.special1,amo.Amount);
 		special1 = tracer.special1 += xammo;
 		amo.Amount -= xammo;
+		return false;
 	}
 	override int DamageMobj( Actor inflictor, Actor source, int damage, Name mod, int flags, double angle )
 	{
@@ -2110,7 +2137,6 @@ Class MinigunSentryBase : Actor
 	PackUp:
 		SENI A -1
 		{
-			bSPECIAL = false;
 			tracer.SetStateLabel("PackUp");
 		}
 		Stop;
@@ -2222,6 +2248,7 @@ Class SentryGun : Actor
 	int rememberedplayer;
 	Default
 	{
+		Tag "$T_OSENTRY";
 		Health 50;
 		Mass int.max;
 		Radius 10;
@@ -2240,11 +2267,7 @@ Class SentryGun : Actor
 			SetTag(String.Format(StringTable.Localize("$T_OWNEDOSENTRY"),master.player.GetUserName()));
 			rememberedplayer = master.playernumber();
 		}
-		else
-		{
-			SetTag(StringTable.Localize("$T_OSENTRY"));
-			rememberedplayer = -1;
-		}
+		else rememberedplayer = -1;
 		if ( !deathmatch )
 		{
 			if ( !master || !master.player ) bFRIENDLY = false;
@@ -2255,8 +2278,9 @@ Class SentryGun : Actor
 	}
 	override string GetObituary( Actor victim, Actor inflictor, Name mod, bool playerattack )
 	{
-		if ( victim == master ) return String.Format(StringTable.Localize("$O_OWNOSENTRY"),GetTag());
-		return String.Format(StringTable.Localize("$O_OSENTRY"),GetTag());
+		if ( victim == master ) return StringTable.Localize("$O_OWNOSENTRY");
+		else if ( master && master.player ) return String.Format(StringTable.Localize("$O_OSENTRY"),GetTag());
+		return StringTable.Localize("$O_ROGUEOSENTRY");
 	}
 	override void Tick()
 	{

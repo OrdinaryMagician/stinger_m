@@ -8,6 +8,18 @@ Class SMiniAmmo : Ammo
 		Ammo.BackpackAmount 0;
 		Ammo.BackpackMaxAmount 32;
 	}
+	override bool TryPickup( in out Actor toucher )
+	{
+		if ( !sting_dubious ) return false;	// not allowed
+		return Super.TryPickup(toucher);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( sting_dubious ) return;
+		if ( Owner ) Owner.RemoveInventory(self);
+		Destroy();
+	}
 }
 
 Class SMiniBlast : Actor
@@ -16,6 +28,47 @@ Class SMiniBlast : Actor
 
 Class SMiniGun : UnrealWeapon
 {
+	override bool TryPickup( in out Actor toucher )
+	{
+		if ( !sting_dubious ) return false;	// not allowed
+		return Super.TryPickup(toucher);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( sting_dubious ) return;
+		if ( !Owner )
+		{
+			let r = Spawn("BFG9000",pos,ALLOW_REPLACE);
+			r.spawnangle = spawnangle;
+			r.spawnpoint = spawnpoint;
+			r.angle = angle;
+			r.pitch = pitch;
+			r.roll = roll;
+			r.special = special;
+			r.args[0] = args[0];
+			r.args[1] = args[1];
+			r.args[2] = args[2];
+			r.args[3] = args[3];
+			r.args[4] = args[4];
+			r.ChangeTid(tid);
+			r.SpawnFlags = SpawnFlags&~MTF_SECRET;
+			r.HandleSpawnFlags();
+			r.SpawnFlags = SpawnFlags;
+			r.bCountSecret = SpawnFlags&MTF_SECRET;
+			r.vel = vel;
+			r.master = master;
+			r.target = target;
+			r.tracer = tracer;
+			r.bDropped = bDropped;
+			Destroy();
+		}
+		else
+		{
+			Owner.RemoveInventory(self);
+			Destroy();
+		}
+	}
 	Default
 	{
 		Tag "$T_SMINI";
