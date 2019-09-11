@@ -18,7 +18,7 @@ Class UInvisibility : UnrealInventory
 		bActive = !bActive;
 		if ( bActive )
 		{
-			Owner.A_PlaySound("uinvis/toggle",CHAN_ITEM);
+			Owner.A_PlaySound("invis/pickup",CHAN_ITEM);
 			Owner.GiveInventory("PowerUInvisibility",1);
 		}
 		else Owner.TakeInventory("PowerUInvisibility",1);
@@ -244,12 +244,11 @@ Class UJumpBoots : UnrealInventory
 		{
 			Sector s = level.Sectors[i];
 			if ( s.MoreFlags&(Sector.SECMF_UNDERWATER|Sector.SECMF_FORCEDUNDERWATER) ) foundswim = true;
+			for ( int i=0; i<s.Get3DFloorCount(); i++ )
+				if ( s.Get3DFloor(i).flags&F3DFloor.FF_SWIMMABLE ) foundswim = true;
 			if ( !s.DamageInterval || !s.DamageAmount ) continue;
 			if ( s.DamageType == 'Slime' ) foundslime = true;
 			else if ( s.DamageType == 'Fire' ) foundlava = true;
-			// 3d floors don't set the underwater flags or anything so we're completely screwed until Graf merges my goddamn PR
-			//for ( int i=0; i<s.Get3DFloorCount(); i++ )
-			//	if ( s.Get3DFloor(i).flags&F3DFloor.FF_SWIMMABLE ) foundswim = true;
 		}
 		// random chance to ignore if a replacement already was made
 		let ti = ThinkerIterator.Create("Inventory");
@@ -448,6 +447,7 @@ Class DetectorSound : Actor
 
 Class SCUBAGear : UnrealInventory
 {
+	int oldwaterlevel;
 	Default
 	{
 		Tag "$T_SCUBA";
@@ -464,6 +464,11 @@ Class SCUBAGear : UnrealInventory
 		if ( !bActive ) Owner.A_PlaySound("scuba/stop",CHAN_ITEM);
 		return false;
 	}
+	override void AttachToOwner( Actor other )
+	{
+		Super.AttachToOwner(other);
+		oldwaterlevel = other.waterlevel;
+	}
 	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
 	{
 		if ( bActive && (damageType == 'Drowning') )
@@ -472,8 +477,16 @@ Class SCUBAGear : UnrealInventory
 	override void DoEffect()
 	{
 		Super.DoEffect();
-		if ( sting_autoscuba && ((bActive && (Owner.waterlevel < 2)) || (!bActive && (Owner.waterlevel > 2))) )
-			Use(false);
+		if ( (oldwaterlevel < 2) && (owner.waterlevel > 2) )
+		{
+			if ( sting_autoscuba && !bActive ) Use(false);
+			oldwaterlevel = owner.waterlevel;
+		}
+		else if ( (oldwaterlevel > 2) && (owner.waterlevel < 2) )
+		{
+			if ( sting_autoscuba && bActive ) Use(false);
+			oldwaterlevel = owner.waterlevel;
+		}
 		if ( bActive && !tracer )
 		{
 			tracer = Spawn("SCUBASound",Owner.pos);

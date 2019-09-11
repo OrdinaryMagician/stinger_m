@@ -228,10 +228,21 @@ Class UPlayer : UTPlayer
 		// no animation if crouched
 		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
 		// check weapon type
+		if ( ((player.ReadyWeapon is 'URifle') && !sting_rifle && (player.buttons&BT_ALTATTACK)) || ((player.ReadyWeapon is 'Peacemaker') && player.buttons&BT_ALTATTACK) )
+			return;
 		let psp = player.FindPSprite(PSP_WEAPON);
-		if ( ((player.ReadyWeapon is 'Stinger') && psp
-			&& psp.CurState.InStateSequence(player.ReadyWeapon.FindState("Hold")))
+		if ( ((player.ReadyWeapon is 'UBioRifle') && (player.buttons&BT_ALTATTACK))
+			|| (player.ReadyWeapon is 'Eightball')
 			|| ((player.ReadyWeapon is 'DispersionPistol') && DispersionPistol(player.ReadyWeapon).bCharging) )
+		{
+			if ( !InStateSequence(CurState,FindState("MissileRepStill")) )
+				SetStateLabel("MissileRepStill");
+		}
+		else if ( ((player.ReadyWeapon is 'Stinger') && psp
+			&& psp.CurState.InStateSequence(player.ReadyWeapon.FindState("Hold")))
+			|| (player.ReadyWeapon is 'UFlamethrower') || (player.ReadyWeapon is 'UMinigun')
+			|| ((player.ReadyWeapon is 'Bonesaw') && player.buttons&BT_ATTACK)
+			|| ((player.ReadyWeapon is 'Impaler') && psp.CurState.InStateSequence(player.ReadyWeapon.FindState("AltHold"))) )
 		{
 			if ( !InStateSequence(CurState,FindState("MissileRep")) )
 				SetStateLabel("MissileRep");

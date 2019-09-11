@@ -3,7 +3,7 @@
 The Unreal 1 counterpart to Doom Tournament. Adds Unreal 1 weapons and items
 (including dummied out stuff and others).
 
-This mod requires GZDoom g4.3pre-64-g37fa2e1b6 or later, and runs on top of
+This mod requires GZDoom g4.3pre-79-gbcef44051 or later, and runs on top of
 Doom Tournament (currently the devel branch is required).
 
 ## Currently Implemented
@@ -19,6 +19,9 @@ Doom Tournament (currently the devel branch is required).
    - Single rocket mode for Eightball
    - "Hold up to 2 seconds" feature from Unreal Bible
  - Flak Cannon (slot 6) (replaces rocket launcher)
+ - Razorjack (slot 7) (replaces chaingun)
+   - Razorjack hold fire to increase blade speed (from Unreal Bible)
+   - Make Razorjack altfire actually seek where player is aiming (toggleable)
  - SMP 7243 (slot 0) (replaces bfg9000)
  - Backpack (replaces backpack, identical to Doom Tournament version)
  - Unreal 1 HUD
@@ -52,7 +55,6 @@ Doom Tournament (currently the devel branch is required).
 
 ## In progress
 
- - Razorjack (slot 7) (replaces chaingun)
  - GES Bio Rifle (slot 8) (replaces plasma rifle)
  - Rifle (slot 9) (replaces plasma rifle)
  - Minigun (slot 0) (replaces chaingun)
@@ -60,13 +62,11 @@ Doom Tournament (currently the devel branch is required).
 ## Planned
 
  - Unreal Bible & prototype build behaviour restoration
-   - Razorjack hold fire to increase blade speed
    - Rifle restored rapid fire
    - Rifle restored flashlight
    - Biorifle "Hold up to 2 seconds" feature from Unreal Bible
 
  - QOL improvements
-   - Make Razorjack altfire actually seek where player is aiming
    - Biorifle splashes like UT (toggleable)
 
  - Stunner (slot 4) (replaces chainsaw)

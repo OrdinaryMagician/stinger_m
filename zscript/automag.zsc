@@ -196,8 +196,16 @@ Class Automag : UnrealWeapon
 		else if ( d.HitType != TRACE_HitNone )
 		{
 			Vector3 hitnormal = -d.HitDir;
-			if ( d.HitType == TRACE_HitFloor ) hitnormal = d.HitSector.floorplane.Normal;
-			else if ( d.HitType == TRACE_HitCeiling ) hitnormal = d.HitSector.ceilingplane.Normal;
+			if ( d.HitType == TRACE_HitFloor )
+			{
+				if ( d.Hit3DFloor ) hitnormal = -d.Hit3DFloor.top.Normal;
+				else hitnormal = d.HitSector.floorplane.Normal;
+			}
+			else if ( d.HitType == TRACE_HitCeiling )
+			{
+				if ( d.Hit3DFloor ) hitnormal = -d.Hit3DFloor.bottom.Normal;
+				else hitnormal = d.HitSector.ceilingplane.Normal;
+			}
 			else if ( d.HitType == TRACE_HitWall )
 			{
 				hitnormal = (-d.HitLine.delta.y,d.HitLine.delta.x,0).unit();

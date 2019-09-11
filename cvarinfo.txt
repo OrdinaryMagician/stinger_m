@@ -37,7 +37,7 @@ server bool sting_riflel = false;	// old rifle flashlight
 					// you know... a scope
 server bool sting_razor = false;	// razorjack blade charging
 					// hold primary fire to increase the
-					// spin up to 3x
+					// spin up to 3 levels
 server bool sting_flamet = false;	// use flamethrower model based on old
 					// design and texture rather than the
 					// modern redesign
@@ -84,3 +84,6 @@ server bool sting_ehold = false;	// eightball can be held fully loaded
 					// for up to 2 seconds
 server bool sting_bhold = false;	// biorifle can be held fully loaded
 					// for up to 2 seconds
+server bool sting_razoraim = false;	// razorjack alt follows aim instead of
+					// being steered by player rotation
+server bool sting_biosplash = false;	// biorifle alt splashes like in ut

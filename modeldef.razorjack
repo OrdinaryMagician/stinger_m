@@ -3,11 +3,46 @@ Model "RazorAmmo"
 	Path "models"
 	Model 0 "RazorAmmoMesh_d.3d"
 	Skin 0 "JPickup21.png"
-	ZOffset 8
+	ZOffset 5
 	Scale 0.1 0.1 0.12
 
 	FrameIndex BHOP A 0 0
 	FrameIndex BHOP B 0 1
+}
+
+Model "RazorBlade"
+{
+	Path "models"
+	Model 0 "razorb_d.3d"
+	SurfaceSkin 0 1 "JRazor1.png"
+	USEACTORPITCH
+	USEACTORROLL
+	ROTATING
+	AngleOffset 90
+	Scale 0.08 0.08 0.096
+
+	Rotation-Speed 15
+	FrameIndex RAZB A 0 0
+	Rotation-Speed 25
+	FrameIndex RAZB B 0 0
+	Rotation-Speed 35
+	FrameIndex RAZB C 0 0
+	Rotation-Speed 45
+	FrameIndex RAZB D 0 0
+}
+
+Model "RazorBladeTrail"
+{
+	Path "models"
+	Model 0 "razorb_d.3d"
+	SurfaceSkin 0 0 "FireEffect54.png"
+	DONTCULLBACKFACES
+	USEACTORPITCH
+	USEACTORROLL
+	AngleOffset 90
+	Scale 0.08 0.08 0.096
+
+	FrameIndex RAZB A 0 0
 }
 
 Model "Razorjack"
@@ -25,4 +60,125 @@ Model "Razorjack"
 	ZOffset 13
 	ROTATING
 	FrameIndex RZRP A 1 0
+}
+
+Model "Razorjack"
+{
+	Path "models"
+	Model 0 "Razor_d.3d"
+	Skin 0 "JRazor1.png"
+	Scale 0.1 -0.1 0.1
+	//Offset 0 -18.7 -8
+	Offset 0 -10 -4.5
+	AngleOffset -90
+	RollOffset -11.25
+
+	// Select
+	FrameIndex RZRS A 0 0
+	FrameIndex RZRS B 0 1
+	FrameIndex RZRS C 0 2
+	FrameIndex RZRS D 0 3
+	FrameIndex RZRS E 0 4
+	FrameIndex RZRS F 0 5
+	FrameIndex RZRS G 0 6
+	FrameIndex RZRS H 0 7
+	FrameIndex RZRS I 0 8
+	FrameIndex RZRS J 0 9
+	FrameIndex RZRS K 0 10
+	FrameIndex RZRS L 0 11
+	FrameIndex RZRS M 0 12
+	FrameIndex RZRS N 0 13
+	FrameIndex RZRS O 0 14
+	FrameIndex RZRS P 0 15
+	FrameIndex RZRS Q 0 16
+	FrameIndex RZRS R 0 17
+	FrameIndex RZRS S 0 18
+	FrameIndex RZRS T 0 19
+	FrameIndex RZRS U 0 20
+	FrameIndex RZRS V 0 21
+	FrameIndex RZRS W 0 22
+	FrameIndex RZRS X 0 23
+	FrameIndex RZRS Y 0 24
+	FrameIndex RZRS Z 0 25
+	FrameIndex RZS2 A 0 26
+	FrameIndex RZS2 B 0 27
+	FrameIndex RZS2 C 0 28
+	FrameIndex RZS2 D 0 29
+	// Fire
+	FrameIndex RZRF A 0 30
+	FrameIndex RZRF B 0 31
+	FrameIndex RZRF C 0 32
+	FrameIndex RZRF D 0 33
+	FrameIndex RZRF E 0 34
+	FrameIndex RZRF F 0 35
+	// Load
+	FrameIndex RZRF G 0 36
+	FrameIndex RZRF H 0 37
+	FrameIndex RZRF I 0 38
+	FrameIndex RZRF J 0 39
+	// Idle
+	FrameIndex RZRI A 0 40
+	FrameIndex RZRI B 0 41
+	FrameIndex RZRI C 0 42
+	FrameIndex RZRI D 0 43
+	FrameIndex RZRI E 0 44
+	FrameIndex RZRI F 0 45
+	FrameIndex RZRI G 0 46
+	FrameIndex RZRI H 0 47
+	FrameIndex RZRI I 0 48
+	FrameIndex RZRI J 0 49
+	FrameIndex RZRI K 0 50
+	FrameIndex RZRI L 0 51
+	FrameIndex RZRI M 0 52
+	FrameIndex RZRI N 0 53
+	FrameIndex RZRI O 0 54
+	FrameIndex RZRI P 0 55
+	FrameIndex RZRI Q 0 56
+	FrameIndex RZRI R 0 57
+	FrameIndex RZRI S 0 58
+	FrameIndex RZRI T 0 59
+	FrameIndex RZRI U 0 60
+	FrameIndex RZRI V 0 61
+	FrameIndex RZRI W 0 62
+	FrameIndex RZRI X 0 63
+	FrameIndex RZRI Y 0 64
+	FrameIndex RZRI Z 0 65
+	FrameIndex RZI2 A 0 66
+	FrameIndex RZI2 B 0 67
+	FrameIndex RZI2 C 0 68
+	FrameIndex RZI2 D 0 69
+	FrameIndex RZI2 E 0 70
+	// AltFire1
+	FrameIndex RZRA A 0 71
+	FrameIndex RZRA B 0 72
+	FrameIndex RZRA C 0 73
+	FrameIndex RZRA D 0 74
+	FrameIndex RZRA E 0 75
+	FrameIndex RZRA F 0 76
+	FrameIndex RZRA G 0 77
+	FrameIndex RZRA H 0 78
+	FrameIndex RZRA I 0 79
+	FrameIndex RZRA J 0 80
+	FrameIndex RZRA K 0 81
+	FrameIndex RZRA L 0 82
+	// AltFire2
+	FrameIndex RZRA M 0 83
+	FrameIndex RZRA N 0 84
+	FrameIndex RZRA O 0 85
+	FrameIndex RZRA P 0 86
+	FrameIndex RZRA Q 0 87
+	// AltFire3
+	FrameIndex RZRA R 0 88
+	FrameIndex RZRA S 0 89
+	FrameIndex RZRA T 0 90
+	FrameIndex RZRA U 0 91
+	// Down
+	FrameIndex RZRD A 0 92
+	FrameIndex RZRD B 0 93
+	FrameIndex RZRD C 0 94
+	FrameIndex RZRD D 0 95
+	FrameIndex RZRD E 0 96
+	FrameIndex RZRD F 0 97
+	FrameIndex RZRD G 0 98
+	FrameIndex RZRD H 0 99
 }

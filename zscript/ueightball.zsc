@@ -123,7 +123,7 @@ Class URocket : Actor
 		A_SetRenderStyle(1.0,STYLE_Add);
 		A_SprayDecal("RocketBlast",50);
 		A_NoGravity();
-		A_SetScale(FRandomPick[ExploS](-1.5,1.5),FRandomPick[ExploS](-1.5,1.5));
+		A_SetScale(FRandomPick[ExploS](-2.5,2.5),FRandomPick[ExploS](-2.5,2.5));
 		UTMainHandler.DoBlast(self,rad,80000);
 		A_Explode(dmg,rad);
 		A_QuakeEx(3,3,3,8,0,rad+50,"",QF_RELATIVE|QF_SCALEDOWN,falloff:rad,rollIntensity:0.2);

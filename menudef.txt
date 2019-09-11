@@ -49,6 +49,8 @@ OptionMenu "UnrealOptionMenu"
 	StaticText " "
 	StaticText "$STING_QOPTS", "Gold"
 	Option "$STING_AUTOSCUBA", "sting_autoscuba", "YesNo"
+	Option "$STING_RAZORAIM", "sting_razoraim", "YesNo"
+	Option "$STING_BIOSPLASH", "sting_biosplash", "YesNo"
 }
 
 AddOptionMenu "OptionsMenu"
