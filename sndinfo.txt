@@ -178,6 +178,9 @@ eightball/fly	brocket
 
 asmd/vapour	vapour
 
+ges/drip	GelDrip
+ges/load	GelLoad
+
 dampener/on	dampsnd
 dampener/off	dampndea
 

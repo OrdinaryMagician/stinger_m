@@ -233,7 +233,8 @@ Class UPlayer : UTPlayer
 		let psp = player.FindPSprite(PSP_WEAPON);
 		if ( ((player.ReadyWeapon is 'UBioRifle') && (player.buttons&BT_ALTATTACK))
 			|| (player.ReadyWeapon is 'Eightball')
-			|| ((player.ReadyWeapon is 'DispersionPistol') && DispersionPistol(player.ReadyWeapon).bCharging) )
+			|| ((player.ReadyWeapon is 'DispersionPistol') && DispersionPistol(player.ReadyWeapon).bCharging)
+			|| ((player.ReadyWeapon is 'UBioRifle') && UBioRifle(player.ReadyWeapon).bCharging) )
 		{
 			if ( !InStateSequence(CurState,FindState("MissileRepStill")) )
 				SetStateLabel("MissileRepStill");

@@ -42,18 +42,622 @@ Class UBioAmmo2 : UBioAmmo
 
 Class UBioGel : Actor
 {
+	Actor l, b;
+	enum EHitType
+	{
+		HIT_NONE,
+		HIT_WALL,
+		HIT_CEILING,
+		HIT_FLOOR
+	};
+	int hittype;
+	int deadtimer, dttimer;
+	Line atline;
+	int atside;
+	int atpart;
+	int atplane;
+	Sector atsector;
+	double atz;
+	double rollvel, pitchvel, yawvel;
+	Vector3	normal;
+	Actor atbridge;
+	bool onbridge;
+	Vector3 atbridgeofs;
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		vel.z += 3;
+		deadtimer = 105;
+		A_AttachLight('BioLight',DynamicLight.PointLight,"40FF80",int(8*scale.x),int(8*scale.x));
+		rollvel = FRandom[GES](10,30)*RandomPick[GES](-1,1);
+		pitchvel = FRandom[GES](10,30)*RandomPick[GES](-1,1);
+		yawvel = FRandom[GES](10,30)*RandomPick[GES](-1,1);
+	}
+	override int SpecialMissileHit( Actor victim )
+	{
+		if ( victim == b ) return 1;
+		if ( (victim is 'BioHitbox') && ((victim.target == master) || (victim.target.master == master)) ) return 1;
+		return -1;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( isFrozen() ) return;
+		if ( !bNOGRAVITY )
+		{
+			roll += rollvel;
+			pitch += pitchvel;
+			pitch += yawvel;
+			if ( waterlevel > 0 )
+			{
+				vel.xy *= 0.98;
+				rollvel *= 0.98;
+				pitchvel *= 0.98;
+				yawvel *= 0.98;
+			}
+		}
+		if ( deadtimer > -2 )
+		{
+			if ( onbridge )	// attempt to follow the movement of the bridge (if it's moving)
+			{
+				if ( atbridge )
+				{
+					if ( !Warp(atbridge,atbridgeofs.x,atbridgeofs.y,atbridgeofs.z,0,WARPF_ABSOLUTEOFFSET|WARPF_USECALLERANGLE|WARPF_COPYINTERPOLATION) )
+						deadtimer = min(deadtimer,0);
+				}
+				else deadtimer = min(deadtimer,0);
+			}
+			if ( atline )	// attempt to follow the movement of the line
+			{
+				if ( atpart == 1 )
+				{
+					if ( atline.flags&Line.ML_DONTPEGTOP ) SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside].sector.GetPlaneTexZ(1)),true);
+					else SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside?0:1].sector.GetPlaneTexZ(1)),true);
+				}
+				else if ( atpart == -1 )
+				{
+					if ( atline.flags&Line.ML_DONTPEGBOTTOM ) SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside].sector.GetPlaneTexZ(0)),true);
+					else SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside?0:1].sector.GetPlaneTexZ(0)),true);
+				}
+				else if ( atline.flags&Line.ML_DONTPEGBOTTOM ) SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside].sector.GetPlaneTexZ(0)),true);
+				else SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside].sector.GetPlaneTexZ(1)),true);
+				if ( (pos.z > ceilingz) || (pos.z < floorz) ) deadtimer = min(deadtimer,0);
+			}
+			else if ( atsector )	// attempt to follow the movement of the plane
+			{
+				SetOrigin(Vec2OffsetZ(0,0,atz+atsector.GetPlaneTexZ(atplane)),true);
+				if ( ceilingz-floorz <= 2 ) deadtimer = min(deadtimer,0);
+			}
+		}
+		if ( !InStateSequence(CurState,FindState("XDeath")) )
+		{
+			int numpt;
+			if ( (!bNOGRAVITY && !Random[GES](0,2)) || !Random[GES](0,10) )
+			{
+				numpt = Min(20,int(Scale.x*2))+Random[GES](-1,1);
+				for ( int i=0; i<numpt; i++ )
+				{
+					Vector3 pvel = (FRandom[GES](-1,1),FRandom[GES](-1,1),FRandom[GES](-1,1)).unit()*FRandom[GES](1,3);
+					Vector3 spos = pos+normal*2*scale.x;
+					let s = Spawn("BioSpark",spos);
+					s.vel = pvel;
+					if ( normal != (0,0,0) ) s.vel += normal*2;
+				}
+			}
+			numpt = Min(3,int(Scale.x*4))+Random[GES](-2,2);
+			for ( int i=0; i<numpt; i++ )
+			{
+				Vector3 pvel = (FRandom[GES](-1,1),FRandom[GES](-1,1),FRandom[GES](-1,1)).unit()*FRandom[GES](0.2,0.4);
+				let s = Spawn("UTSmoke",pos+normal);
+				s.vel = pvel+vel*0.25+normal*0.5;
+				s.scale *= scale.x;
+				s.A_SetRenderStyle(0.75,STYLE_AddShaded);
+				if ( Random[GES](0,1) ) s.SetShade("061004");
+				else s.SetShade("061006");
+			}
+		}
+		if ( deadtimer <= -1 ) return;
+		let bi = BlockThingsIterator.Create(self,4*Scale.x);
+		while ( bi.Next() )
+		{
+			if ( !bi.Thing || !bi.Thing.bSHOOTABLE || (bi.Thing == b) || ((bi.Thing is 'BioHitbox') && ((bi.Thing.target.master == self) || (bi.Thing.target == master))) || (bi.Thing == target && !bHITOWNER) ) continue;
+			if ( (Distance2D(bi.Thing)-bi.Thing.radius <= 4*Scale.x) && ((bi.Thing.pos.z <= pos.z+4*Scale.x) && (bi.Thing.pos.z+bi.Thing.height >= pos.z-4*Scale.x)) ) deadtimer = 0;
+		}
+		if ( deadtimer-- <= 0 )
+		{
+			deadtimer = -1;
+			SetStateLabel("XDeath");
+		}
+	}
+	// align self to what surface was hit
+	// TODO handle plane collision within the very border between two
+	// sectors (most noticeable with moving 3d floors)
+	virtual void AlignSelf()
+	{
+		F3DFloor ff;
+		bINTERPOLATEANGLES = false;
+		bHITOWNER = true;
+		A_NoGravity();
+		A_Stop();
+		if ( bAMBUSH )
+		{
+			SetStateLabel("XDeath");
+			return;
+		}
+		A_SetSize(0.1,0);
+		if ( tracer && tracer.bACTLIKEBRIDGE )
+		{
+			atbridge = tracer;
+			onbridge = true;
+			if ( (pos.x+radius) <= (atbridge.pos.x-atbridge.radius) )
+			{
+				// west side
+				normal = (-1,0,0);
+				SetOrigin((atbridge.pos.x-atbridge.radius,pos.y,pos.z),false);
+				atbridgeofs = pos-atbridge.pos;
+				angle = 180;
+				pitch = 0;
+				roll = 180;	// otherwise it slides upwards (UT changes roll like this too)
+				if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+				else hittype = HIT_WALL;
+			}
+			else if ( (pos.x-radius) >= (atbridge.pos.x+atbridge.radius) )
+			{
+				// east side
+				normal = (1,0,0);
+				SetOrigin((atbridge.pos.x+atbridge.radius,pos.y,pos.z),false);
+				atbridgeofs = pos-atbridge.pos;
+				angle = 0;
+				pitch = 0;
+				roll = 180;	// otherwise it slides upwards (UT changes roll like this too)
+				if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+				else hittype = HIT_WALL;
+			}
+			else if ( (pos.y+radius) <= (atbridge.pos.y-atbridge.radius) )
+			{
+				// north side
+				normal = (0,-1,0);
+				SetOrigin((pos.x,atbridge.pos.y-atbridge.radius,pos.z),false);
+				atbridgeofs = pos-atbridge.pos;
+				angle = 270;
+				pitch = 0;
+				roll = 180;	// otherwise it slides upwards (UT changes roll like this too)
+				if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+				else hittype = HIT_WALL;
+			}
+			else if ( (pos.y-radius) >= (atbridge.pos.y+atbridge.radius) )
+			{
+				// south side
+				normal = (0,1,0);
+				SetOrigin((pos.x,atbridge.pos.y+atbridge.radius,pos.z),false);
+				atbridgeofs = pos-atbridge.pos;
+				angle = 90;
+				pitch = 0;
+				roll = 180;	// otherwise it slides upwards (UT changes roll like this too)
+				if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+				else hittype = HIT_WALL;
+			}
+			else if ( pos.z >= (atbridge.pos.z+atbridge.height) )
+			{
+				// top of actor
+				normal = (0,0,1);
+				SetOrigin((pos.x,pos.y,atbridge.pos.z+atbridge.height),false);
+				atbridgeofs = pos-atbridge.pos;
+				pitch = -90;
+				angle = 0;
+				roll = FRandom[GES](0,360);
+				hittype = HIT_FLOOR;
+			}
+			else if ( (pos.z+height) <= atbridge.pos.z )
+			{
+				// bottom of actor
+				normal = (0,0,-1);
+				SetOrigin((pos.x,pos.y,atbridge.pos.z),false);
+				pitch = 90;
+				angle = 0;
+				roll = FRandom[GES](0,360);
+				if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+				else hittype = HIT_CEILING;
+			}
+			else
+			{
+				// inside of actor, just shove to the top or bottom based on our Z velocity
+				if ( vel.z <= 0 )
+				{
+					normal = (0,0,1);
+					SetOrigin((pos.x,pos.y,atbridge.pos.z+atbridge.height),false);
+					atbridgeofs = pos-atbridge.pos;
+					pitch = -90;
+					angle = 0;
+					roll = FRandom[GES](0,360);
+					hittype = HIT_FLOOR;
+				}
+				else
+				{
+					normal = (0,0,-1);
+					SetOrigin((pos.x,pos.y,atbridge.pos.z),false);
+					pitch = 90;
+					angle = 0;
+					roll = FRandom[GES](0,360);
+					if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+					else hittype = HIT_CEILING;
+				}
+			}
+		}
+		else if ( BlockingFloor )
+		{
+			// find closest 3d floor for its normal
+			for ( int i=0; i<BlockingFloor.Get3DFloorCount(); i++ )
+			{
+				if ( !(BlockingFloor.Get3DFloor(i).top.ZAtPoint(pos.xy) ~== floorz) ) continue;
+				ff = BlockingFloor.Get3DFLoor(i);
+				break;
+			}
+			if ( ff )
+			{
+				normal = -ff.top.Normal;
+				atsector = ff.model;
+				atplane = 1;
+			}
+			else
+			{
+				normal = BlockingFloor.floorplane.Normal;
+				atsector = BlockingFloor;
+				atplane = 0;
+			}
+			pitch = asin(-normal.z);
+			angle = atan2(normal.y,normal.x);
+			roll = FRandom[GES](0,360);
+			SetOrigin((pos.x,pos.y,floorz)+normal*0.5,false);
+			atz = pos.z-atsector.GetPlaneTexZ(atplane);
+			hittype = HIT_FLOOR;
+		}
+		else if ( BlockingCeiling )
+		{
+			// find closest 3d floor for its normal
+			for ( int i=0; i<BlockingCeiling.Get3DFloorCount(); i++ )
+			{
+				if ( !(BlockingCeiling.Get3DFloor(i).bottom.ZAtPoint(pos.xy) ~== ceilingz) ) continue;
+				ff = BlockingCeiling.Get3DFloor(i);
+				break;
+			}
+			if ( ff )
+			{
+				normal = -ff.bottom.Normal;
+				atsector = ff.model;
+				atplane = 0;
+			}
+			else
+			{
+				normal = BlockingCeiling.ceilingplane.Normal;
+				atsector = BlockingCeiling;
+				atplane = 1;
+			}
+			pitch = asin(-normal.z);
+			angle = atan2(normal.y,normal.x);
+			roll = FRandom[GES](0,360);
+			SetOrigin((pos.x,pos.y,ceilingz)+normal*0.5,false);
+			atz = pos.z-atsector.GetPlaneTexZ(atplane);
+			if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+			else if ( normal dot (0,0,-1) > 0.7 )
+				hittype = HIT_CEILING;
+			else hittype = HIT_FLOOR;
+		}
+		else if ( BlockingLine )
+		{
+			atline = BlockingLine;
+			normal = (-BlockingLine.delta.y,BlockingLine.delta.x,0).unit();
+			atside = 1;
+			if ( !BlockingLine.sidedef[1] || (CurSector == BlockingLine.frontsector) )
+			{
+				atside = 0;
+				normal *= -1;
+			}
+			Vector3 orig = (BlockingLine.v1.p.x,BlockingLine.v1.p.y,0);
+			Vector3 onwall = pos-(normal dot (pos-orig))*normal;
+			SetOrigin(onwall+normal*0.5,false);
+			// attempt to guess line part (upper/mid/lower)
+			if ( !atline.sidedef[1] ) atpart = 0;	// mid
+			else if ( atline.sidedef[atside?0:1].sector.ceilingplane.ZAtPoint(pos.xy) < pos.z ) atpart = 1;	// upper
+			else if ( atline.sidedef[atside?0:1].sector.floorplane.ZAtPoint(pos.xy) > (pos.z+height) ) atpart = -1;	// lower
+			else
+			{
+				atpart = 0;
+				// check if we're touching a 3d floor line
+				Sector backsector = atline.sidedef[atside?0:1].sector;
+				for ( int i=0; i<backsector.Get3DFloorCount(); i++ )
+				{
+					if ( backsector.Get3DFloor(i).bottom.ZAtPoint(pos.xy) > (pos.z+height) ) continue;
+					if ( backsector.Get3DFloor(i).top.ZAtPoint(pos.xy) < pos.z ) continue;
+					ff = backsector.Get3DFloor(i);
+					break;
+				}
+				// attach to it
+				if ( ff )
+				{
+					atline = ff.master;
+					atside = 0;
+				}
+			}
+			if ( atpart == 1 )
+			{
+				if ( atline.flags&Line.ML_DONTPEGTOP ) atz = pos.z-atline.sidedef[atside].sector.GetPlaneTexZ(1);
+				else atz = pos.z-atline.sidedef[atside?0:1].sector.GetPlaneTexZ(1);
+			}
+			else if ( atpart == -1 )
+			{
+				if ( atline.flags&Line.ML_DONTPEGBOTTOM ) atz = pos.z-atline.sidedef[atside].sector.GetPlaneTexZ(0);
+				else atz = pos.z-atline.sidedef[atside?0:1].sector.GetPlaneTexZ(0);
+			}
+			else if ( atline.flags&Line.ML_DONTPEGBOTTOM ) atz = pos.z-atline.sidedef[atside].sector.GetPlaneTexZ(0);
+			else atz = pos.z-atline.sidedef[atside].sector.GetPlaneTexZ(1);
+			angle = atan2(normal.y,normal.x);
+			pitch = 0;
+			roll = 180;	// otherwise it slides upwards (UT changes roll like this too)
+			if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+			else hittype = HIT_WALL;
+		}
+		else
+		{
+			SetStateLabel("XDeath");
+			return;
+		}
+		b = Spawn("BioHitbox",pos);
+		b.target = self;
+		A_PlaySound("ges/hit");
+		A_SprayDecal("BioSplat",-172);
+		int numpt = Min(100,int(Scale.x*10))+Random[GES](-5,5);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (normal+(FRandom[GES](-.8,.8),FRandom[GES](-.8,.8),FRandom[GES](-.8,.8))).unit()*FRandom[GES](3,6);
+			let s = Spawn("BioSpark",pos);
+			s.vel = pvel;
+		}
+	}
+	action void A_DropDrip()
+	{
+		let d = Spawn("UBioSplash",pos+invoker.normal*2*scale.x);
+		d.target = target;
+		d.angle = angle;
+		d.pitch = pitch;
+		d.roll = roll;
+		d.master = self;
+		d.scale = scale*0.5;
+		d.vel.z -= 6;
+	}
+	action void A_GelExplode()
+	{
+		A_NoGravity();
+		A_Stop();
+		A_RemoveLight('BioLight');
+		A_SetRenderStyle(1.,STYLE_Add);
+		if ( invoker.b ) invoker.b.Destroy();
+		let s = Spawn("BioXLight",pos);
+		s.args[3] = int(s.args[3]*Scale.x);
+		invoker.deadtimer = -2;
+		if ( invoker.atline ) invoker.atline.RemoteActivate(target,invoker.atside,SPAC_Impact,pos);
+		UTMainHandler.DoBlast(self,Min(175,int(Scale.x*100)),40000*Scale.x);
+		A_Explode(int(40*Scale.x),Min(175,int(Scale.x*100)));
+		A_PlaySound("ges/explode",CHAN_VOICE);
+		int numpt = Min(300,int(Scale.x*30))+Random[GES](-10,10);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[GES](-1,1),FRandom[GES](-1,1),FRandom[GES](-1,1)).unit()*FRandom[GES](3,12);
+			let s = Spawn("BioSpark",pos);
+			s.vel = pvel;
+		}
+		numpt = Min(100,int(Scale.x*10))+Random[GES](-4,4);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[GES](-1,1),FRandom[GES](-1,1),FRandom[GES](-1,1)).unit()*FRandom[GES](1.2,2.4);
+			let s = Spawn("UTSmoke",pos+invoker.normal*4);
+			s.vel = pvel;
+			s.scale *= 2;
+			s.A_SetRenderStyle(0.5,STYLE_AddShaded);
+			if ( Random[GES](0,1) ) s.SetShade("40FF60");
+			else s.SetShade("60FF40");
+		}
+	}
+	Default
+	{
+		Obituary "$O_BIORIFLE";
+		DamageType 'Slime';
+		Radius 3;
+		Height 3;
+		Speed 11;
+		Gravity 0.25;
+		PROJECTILE;
+		-NOGRAVITY;
+		+SKYEXPLODE;
+		+EXPLODEONWATER;
+		+FORCERADIUSDMG;
+		+FORCEXYBILLBOARD;
+		+MOVEWITHSECTOR;
+		+NODAMAGETHRUST;
+		+HITTRACER;
+		+INTERPOLATEANGLES;
+	}
+	States
+	{
+	Spawn:
+		GELF ABCDEFGHIJKLM 1;
+		Loop;
+	Death:
+		GELH A 1 AlignSelf();
+		GELH BCDEFGHIJ 1;
+		GELH J 1 A_SetTics(Random[GES](10,30));
+		GELH J -1
+		{
+			invoker.deadtimer = Random[GES](250,300);
+			if ( invoker.hittype == HIT_WALL ) return ResolveState("Slide");
+			else if ( invoker.hittype == HIT_CEILING ) return ResolveState("Drip");
+			return ResolveState(null);
+		}
+		Stop;
+	Drip:
+		GELD ABCDEFGH 4;
+		GELD I 4 A_DropDrip();
+		GELD JKLM 4;
+		GELH J -1;
+		Stop;
+	Slide:
+		GELS ABCDEF 3;
+		GELS G -1;
+		Stop;
+	Crash:
+	XDeath:
+		TNT1 A 0 A_JumpIf(invoker.HitType==HIT_NONE,"Explode");
+		TNT1 A 0 A_JumpIf(invoker.HitType==HIT_WALL,2);
+		GELH J 1 A_SetTics(Random[GES](3,10));
+		Goto Explode;
+		GELS G 1 A_SetTics(Random[GES](3,10));
+		Goto Explode;
+	Explode:
+		TNT1 A 0 A_Jump(255,"Explode1","Explode2","Explode3");
+	Explode1:
+		GEX1 A 1 Bright A_GelExplode();
+		GEX1 BCDEFGHIJK 3 Bright;
+		Stop;
+	Explode2:
+		GEX2 A 1 Bright A_GelExplode();
+		GEX2 BCDEFGHIJK 3 Bright;
+		Stop;
+	Explode3:
+		GEX3 A 1 Bright A_GelExplode();
+		GEX3 BCDEFGHIJK 3 Bright;
+		Stop;
+	Shrivel:
+		GELX ABCDEFGHIJKL 1 Bright;	// UNUSED
+		Stop;
+	}
 }
 
 Class UBioGlob : UBioGel
 {
+	int numsplash;
+
+	override void AlignSelf()
+	{
+		Super.AlignSelf();
+		if ( !bAMBUSH && (Scale.x > 1) ) numsplash = int(4*Scale.x)-1;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( isFrozen() || !sting_biosplash ) return;
+		Vector3 ofs = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		for ( int i=0; i<2; i++ )
+		{
+			if ( numsplash-- <= 0 ) return;
+			Vector3 dir = (ofs+(FRandom[GES](-.8,.8),FRandom[GES](-.8,.8),FRandom[GES](-.8,.8))).unit();
+			A_SetScale(scale.x-0.15);
+			A_AttachLight('BioLight',DynamicLight.PointLight,"40FF80",int(8*scale.x),int(8*scale.x));
+			let d = Spawn("UBioSplash",pos+ofs*4);
+			d.target = target;
+			d.master = self;
+			d.scale *= FRandom[GES](0.5,0.7);
+			d.angle = atan2(dir.y,dir.x);
+			d.pitch = -asin(dir.z);
+			d.vel = (cos(d.angle)*cos(d.pitch),sin(d.angle)*cos(d.pitch),-sin(d.pitch))*d.speed*FRandom[GES](0.4,0.6);
+			d.vel.z -= 2;
+		}
+	}
 }
 
 Class UBioSplash : UBioGel
 {
+	override void AlignSelf()
+	{
+		Super.AlignSelf();
+		if ( hittype == HIT_CEILING ) hittype = HIT_FLOOR;
+	}
 }
 
 Class UBioRifle : UnrealWeapon
 {
+	double chargesize, count;
+	bool bCharging;
+
+	action void A_BioFire( bool bAlt = false )
+	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		if ( !bAlt )
+		{
+			if ( weap.Ammo1.Amount <= 0 ) return;
+			if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
+		}
+		invoker.chargesize = min(invoker.chargesize,4.9);
+		if ( bAlt ) A_PlaySound("ges/fire",CHAN_WEAPON,Dampener.Active(self)?.17:1.,pitch:max(.5,1.35-invoker.chargesize/8.));
+		else A_PlaySound("ges/fire",CHAN_WEAPON,Dampener.Active(self)?.17:1.);
+		invoker.FireEffect();
+		UTMainHandler.DoFlash(self,Color(48,0,255,0),1);
+		A_AlertMonsters();
+		if ( bAlt ) A_QuakeEx(1+int(0.5*invoker.chargesize),1+int(0.5*invoker.chargesize),1+int(0.5*invoker.chargesize),5+int(1.2*invoker.chargesize),0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05+0.01*invoker.chargesize);
+		else A_QuakeEx(1,1,1,5,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05);
+		Vector3 x, y, z;
+		double a, s;
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+4*y-5*z);
+		Actor p;
+		if ( bAlt )
+		{
+			p = Spawn("UBioGlob",origin);
+			p.A_SetScale(0.5+invoker.chargesize/3.5);
+			UTMainHandler.DoSwing(self,(FRandom[GES](-0.6,-1.3),FRandom[GES](-0.9,-0.2)),1+invoker.chargesize*0.3,-0.1,3,SWING_Spring,3,2);
+		}
+		else
+		{
+			p = Spawn("UBioGel",origin);
+			UTMainHandler.DoSwing(self,(FRandom[GES](-0.6,-1.3),FRandom[GES](-0.9,-0.2)),2,-0.5,2,SWING_Spring,2,2);
+		}
+		p.angle = angle;
+		p.pitch = BulletSlope();
+		p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed;
+		p.target = self;
+		for ( int i=0; i<12; i++ )
+		{
+			let s = Spawn("UTViewSmoke",origin);
+			UTViewSmoke(s).ofs = (10,4,-5);
+			s.scale *= 2.0;
+			s.target = self;
+			if ( Random[GES](0,1) ) s.SetShade("40FF60");
+			else s.SetShade("60FF40");
+			s.A_SetRenderStyle(0.5,STYLE_AddShaded);
+			UTViewSmoke(s).vvel += (FRandom[GES](0.8,1.6),FRandom[GES](-0.5,0.5),FRandom[GES](-0.5,0.5));
+		}
+	}
+	action void A_ChargeUp()
+	{
+		let weap = Weapon(invoker);
+		if ( (invoker.chargesize < 4.9) && (weap.Ammo1.Amount > 0) )
+		{
+			invoker.chargesize += 1./TICRATE;
+			invoker.count += 1./TICRATE;
+			if ( invoker.count > 1. )
+			{
+				weap.DepleteAmmo(weap.bAltFire,true,1);
+				invoker.count = 0;
+			}
+		}
+		if ( !(player.cmd.buttons&BT_ALTATTACK) )
+			player.SetPSPrite(PSP_WEAPON,invoker.FindState("AltRelease"));
+	}
+	action void A_BeginCharge()
+	{
+		let weap = Weapon(invoker);
+		invoker.bCharging = true;
+		weap.DepleteAmmo(weap.bAltFire,true,1);
+		invoker.count = invoker.chargesize = 0;
+		A_PlaySound("ges/load",CHAN_WEAPON,Dampener.Active(self)?.13:1.,true);
+		A_Overlay(-9999,"Dummy2");
+	}
+	override bool CheckAmmo( int fireMode, bool autoSwitch, bool requireAmmo, int ammocount )
+	{
+		if ( bCharging ) return true;
+		return Super.CheckAmmo(fireMode,autoSwitch,requireAmmo,ammocount);
+	}
 	Default
 	{
 		Tag "$T_BIORIFLE";
@@ -75,5 +679,74 @@ Class UBioRifle : UnrealWeapon
 		Stop;
 		BIOP B -1;
 		Stop;
+	Select:
+		BIOS A 1 A_Raise(int.max);
+		Wait;
+	Ready:
+		BIOS ABCDEFGHIJKLMNOPQRST 1 A_WeaponReady(WRF_NOFIRE);
+		Goto Idle;
+	Dummy:
+		TNT1 A 1
+		{
+			A_CheckReload();
+			A_WeaponReady();
+			// that's a long-ass if
+			if ( player.FindPSprite(PSP_WEAPON).CurState.InStateSequence(invoker.FindState("Idle")) && (player.cmd.forwardmove || player.cmd.sidemove) && (player.vel.length() > 0.5) )
+				player.SetPSPrite(PSP_WEAPON,invoker.FindState("Sway"));
+		}
+		Wait;
+	Idle:
+		#### # 4 A_Overlay(-9999,"Dummy");	// little hackeroo to make this more responsive
+		BIOI A 1 A_Jump(80,"Drip");
+		BIOI A -1;
+		Stop;
+	Sway:
+		#### # 3;
+		BIOW ABCDEFGHIJKLMNOPQRS 3 A_JumpIf((!player.cmd.forwardmove && !player.cmd.sidemove) || (player.vel.length() < 0.5),"Idle");
+		Goto Sway+1;
+	Drip:
+		#### # 4;
+		BIOT ABC 6;
+		BIOT D 6 A_PlaySound("ges/drip",CHAN_ITEM,Dampener.Active(self)?.05:.5);
+		BIOT EFG 6;
+		BIOI A 4;
+		Goto Idle;
+	Fire:
+		BIOF A 0
+		{
+			A_Overlay(-9999,"Null");
+			A_BioFire();
+		}
+		BIOF ABCDEFGHIJ 1;
+		Goto Idle;
+	Dummy2:
+		TNT1 A 1 A_ChargeUp();
+		Wait;
+	AltFire:
+		#### # 2 A_BeginCharge();
+		BIOA ABCDEFGHIJKLMNOPQRSTUVWXYZ 6;
+		BIA2 ABC 6;
+		BIA2 D 0 A_JumpIf(sting_bhold,1);
+		Goto AltRelease;
+		BIA2 D 3;
+		BIA2 CBA 6;
+		BIOA ZYXWVUT 6;
+		BIOA S 0;
+		Goto AltRelease;
+	AltRelease:
+		#### # 1
+		{
+			A_Overlay(-9999,"Null");
+			if ( self is 'UTPlayer' )
+				UTPlayer(self).PlayAttacking3();
+			A_BioFire(true);
+		}
+		BIOF ABCDEFGHIJ 2;
+		Goto Idle;
+	Deselect:
+		BIOD A 0 A_Overlay(-9999,"Null");
+		BIOD ABCDEF 1;
+		BIOD G 1 A_Lower(int.max);
+		Wait;
 	}
 }

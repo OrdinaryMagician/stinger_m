@@ -20,8 +20,11 @@ Doom Tournament (currently the devel branch is required).
    - "Hold up to 2 seconds" feature from Unreal Bible
  - Flak Cannon (slot 6) (replaces rocket launcher)
  - Razorjack (slot 7) (replaces chaingun)
-   - Razorjack hold fire to increase blade speed (from Unreal Bible)
+   - Hold fire to increase blade speed (from Unreal Bible)
    - Make Razorjack altfire actually seek where player is aiming (toggleable)
+ - GES Bio Rifle (slot 8) (replaces plasma rifle)
+   - "Hold up to 2 seconds" feature from Unreal Bible
+   - Biorifle splashes like UT (toggleable)
  - SMP 7243 (slot 0) (replaces bfg9000)
  - Backpack (replaces backpack, identical to Doom Tournament version)
  - Unreal 1 HUD
@@ -55,7 +58,6 @@ Doom Tournament (currently the devel branch is required).
 
 ## In progress
 
- - GES Bio Rifle (slot 8) (replaces plasma rifle)
  - Rifle (slot 9) (replaces plasma rifle)
  - Minigun (slot 0) (replaces chaingun)
 
@@ -64,10 +66,6 @@ Doom Tournament (currently the devel branch is required).
  - Unreal Bible & prototype build behaviour restoration
    - Rifle restored rapid fire
    - Rifle restored flashlight
-   - Biorifle "Hold up to 2 seconds" feature from Unreal Bible
-
- - QOL improvements
-   - Biorifle splashes like UT (toggleable)
 
  - Stunner (slot 4) (replaces chainsaw)
  - Razorclaw (slot 1) (replaces chainsaw)
