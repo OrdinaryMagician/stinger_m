@@ -33,23 +33,23 @@ Model "OLSMP"
 	Scale 0.04 0.04 0.04
 	Offset 12.4 -30.0 -3.9
 
-	Skin 2 "Muz1.png"
+	Skin 2 "UMuz1.png"
 	FrameIndex AMUZ A 2 0
-	Skin 2 "Muz2.png"
+	Skin 2 "UMuz2.png"
 	FrameIndex AMUZ B 2 0
-	Skin 2 "Muz3.png"
+	Skin 2 "UMuz3.png"
 	FrameIndex AMUZ C 2 0
-	Skin 2 "Muz4.png"
+	Skin 2 "UMuz4.png"
 	FrameIndex AMUZ D 2 0
-	Skin 2 "Muz5.png"
+	Skin 2 "UMuz5.png"
 	FrameIndex AMUZ E 2 0
-	Skin 2 "Muz6.png"
+	Skin 2 "UMuz6.png"
 	FrameIndex AMUZ F 2 0
-	Skin 2 "Muz7.png"
+	Skin 2 "UMuz7.png"
 	FrameIndex AMUZ G 2 0
-	Skin 2 "Muz8.png"
+	Skin 2 "UMuz8.png"
 	FrameIndex AMUZ H 2 0
-	Skin 2 "Muz9.png"
+	Skin 2 "UMuz9.png"
 	FrameIndex AMUZ I 2 0
 }
 

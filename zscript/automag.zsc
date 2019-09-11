@@ -545,29 +545,37 @@ Class Automag : UnrealWeapon
 		2UTD E 0;
 		Stop;
 	MuzzleFlash:
-		AMUZ A 2 Bright
+		AMZ1 # 2 Bright
 		{
+			let psp = player.FindPSprite(OverlayID());
+			psp.frame = Random[Automag](0,4);
 			let l = Spawn("EnforcerLight",pos);
 			l.target = self;
 		}
 		Stop;
 	AltMuzzleFlash:
-		AMUZ B 2 Bright
+		AMZ2 # 2 Bright
 		{
+			let psp = player.FindPSprite(OverlayID());
+			psp.frame = Random[Automag](0,4);
 			let l = Spawn("EnforcerLight",pos);
 			l.target = self;
 		}
 		Stop;
 	LeftMuzzleFlash:
-		AMUZ C 2 Bright
+		AMZ3 # 2 Bright
 		{
+			let psp = player.FindPSprite(OverlayID());
+			psp.frame = Random[Automag](0,4);
 			let l = Spawn("EnforcerLight",pos);
 			l.target = self;
 		}
 		Stop;
 	LeftAltMuzzleFlash:
-		AMUZ D 2 Bright
+		AMZ4 # 2 Bright
 		{
+			let psp = player.FindPSprite(OverlayID());
+			psp.frame = Random[Automag](0,4);
 			let l = Spawn("EnforcerLight",pos);
 			l.target = self;
 		}

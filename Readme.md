@@ -28,6 +28,7 @@ Doom Tournament (currently the devel branch is required).
  - Rifle (slot 9) (replaces plasma rifle)
    - Restored rapid fire
    - Restored flashlight
+ - Minigun (slot 0) (replaces chaingun)
  - SMP 7243 (slot 0) (replaces bfg9000)
  - Backpack (replaces backpack, identical to Doom Tournament version)
  - Unreal 1 HUD
@@ -61,7 +62,7 @@ Doom Tournament (currently the devel branch is required).
 
 ## In progress
 
- - Minigun (slot 0) (replaces chaingun)
+ - N/A
 
 ## Planned
 

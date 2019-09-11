@@ -365,6 +365,18 @@ Object SentryGun
 	Frame "SENFC" { light "SENTRYLIGHT3" }
 }
 
+PointLight FFIELDLIGHT
+{
+	Color 1.0 0.1 1.0
+	Size 15
+	Offset 0 12 0
+	Attenuate 1
+}
+Object ForceField
+{
+	Frame "FFPK" { light "FFIELDLIGHT" }
+}
+
 // Shaders / Brightmaps
 HardwareShader Texture "graphics/MenuBarr.png"
 {
@@ -694,6 +706,11 @@ HardwareShader Texture "models/ShockSm.png"
 {
 	Shader "shaders/glsl/ShockSm.fp"
 	Texture "smoketex" "models/ShockSm2.png"
+}
+HardwareShader Texture "models/ForceF.png"
+{
+	Shader "shaders/glsl/ShockCore.fp"
+	Texture "warptex" "textures/roughwarp.png"
 }
 HardwareShader Texture "models/ShockC.png"
 {

@@ -25,3 +25,151 @@ Model "UMinigun"
 	ROTATING
 	FrameIndex MGNP A 1 0
 }
+
+Model "UMinigun"
+{
+	Path "models"
+	Model 2 "Flat_d.3d"
+	Scale 0.2 0.2 0.2
+	Offset 18 -80.0 -20
+	AngleOffset 90
+	PitchOffset 90
+
+	Skin 2 "UMuz1.png"
+	FrameIndex MMUZ A 2 0
+	Skin 2 "UMuz2.png"
+	FrameIndex MMUZ B 2 0
+	Skin 2 "UMuz3.png"
+	FrameIndex MMUZ C 2 0
+	Skin 2 "UMuz4.png"
+	FrameIndex MMUZ D 2 0
+	Skin 2 "UMuz5.png"
+	FrameIndex MMUZ E 2 0
+	Skin 2 "UMuz6.png"
+	FrameIndex MMUZ F 2 0
+	Skin 2 "UMuz7.png"
+	FrameIndex MMUZ G 2 0
+	Skin 2 "UMuz8.png"
+	FrameIndex MMUZ H 2 0
+	Skin 2 "UMuz9.png"
+	FrameIndex MMUZ I 2 0
+}
+
+Model "UMinigun"
+{
+	Path "models"
+	Model 0 "minigunM_d.3d"
+	SurfaceSkin 0 1 "minigun1.png"
+	SurfaceSkin 0 2 "minigun1.png"
+	AngleOffset 90
+	RollOffset -90
+	Scale 0.22 -0.22 0.22
+	Offset 15 -56 -18
+
+	// Select
+	FrameIndex MGNS A 0 0
+	FrameIndex MGNS B 0 1
+	FrameIndex MGNS C 0 2
+	FrameIndex MGNS D 0 3
+	FrameIndex MGNS E 0 4
+	FrameIndex MGNS F 0 5
+	FrameIndex MGNS G 0 6
+	FrameIndex MGNS H 0 7
+	FrameIndex MGNS I 0 8
+	FrameIndex MGNS J 0 9
+	FrameIndex MGNS K 0 10
+	FrameIndex MGNS L 0 11
+	FrameIndex MGNS M 0 12
+	FrameIndex MGNS N 0 13
+	FrameIndex MGNS O 0 14
+	FrameIndex MGNS P 0 15
+	FrameIndex MGNS Q 0 16
+	FrameIndex MGNS R 0 17
+	FrameIndex MGNS S 0 18
+	FrameIndex MGNS T 0 19
+	FrameIndex MGNS U 0 20
+	FrameIndex MGNS V 0 21
+	FrameIndex MGNS W 0 22
+	// Idle
+	FrameIndex MGNI A 0 23
+	// Wind
+	FrameIndex MGNW A 0 24
+	FrameIndex MGNW B 0 25
+	FrameIndex MGNW C 0 26
+	FrameIndex MGNW D 0 27
+	FrameIndex MGNW E 0 28
+	FrameIndex MGNW F 0 29
+	FrameIndex MGNW G 0 30
+	FrameIndex MGNW H 0 31
+	FrameIndex MGNW I 0 32
+	FrameIndex MGNW J 0 33
+	FrameIndex MGNW K 0 34
+	FrameIndex MGNW L 0 35
+	FrameIndex MGNW M 0 36
+	FrameIndex MGNW N 0 37
+	FrameIndex MGNW O 0 38
+	// Shoot1
+	FrameIndex MGNF A 0 39
+	FrameIndex MGNF B 0 40
+	FrameIndex MGNF C 0 41
+	FrameIndex MGNF D 0 42
+	FrameIndex MGNF E 0 43
+	FrameIndex MGNF F 0 44
+	FrameIndex MGNF G 0 45
+	FrameIndex MGNF H 0 46
+	FrameIndex MGNF I 0 47
+	FrameIndex MGNF J 0 48
+	FrameIndex MGNF K 0 49
+	FrameIndex MGNF L 0 50
+	FrameIndex MGNF M 0 51
+	FrameIndex MGNF N 0 52
+	FrameIndex MGNF O 0 53
+	// Shoot2
+	FrameIndex MGNA A 0 54
+	FrameIndex MGNA B 0 55
+	FrameIndex MGNA C 0 56
+	FrameIndex MGNA D 0 57
+	FrameIndex MGNA E 0 58
+	FrameIndex MGNA F 0 59
+	FrameIndex MGNA G 0 60
+	FrameIndex MGNA H 0 61
+	FrameIndex MGNA I 0 62
+	FrameIndex MGNA J 0 63
+	FrameIndex MGNA K 0 64
+	FrameIndex MGNA L 0 65
+	FrameIndex MGNA M 0 66
+	FrameIndex MGNA N 0 67
+	FrameIndex MGNA O 0 68
+	FrameIndex MGNA P 0 69
+	FrameIndex MGNA Q 0 70
+	FrameIndex MGNA R 0 71
+	FrameIndex MGNA S 0 72
+	FrameIndex MGNA T 0 73
+	// Unwind
+	FrameIndex MGNU A 0 74
+	FrameIndex MGNU B 0 75
+	FrameIndex MGNU C 0 76
+	FrameIndex MGNU D 0 77
+	FrameIndex MGNU E 0 78
+	FrameIndex MGNU F 0 79
+	FrameIndex MGNU G 0 80
+	FrameIndex MGNU H 0 81
+	FrameIndex MGNU I 0 82
+	FrameIndex MGNU J 0 83
+	FrameIndex MGNU K 0 84
+	FrameIndex MGNU L 0 85
+	FrameIndex MGNU M 0 86
+	FrameIndex MGNU N 0 87
+	FrameIndex MGNU O 0 88
+	// Down
+	FrameIndex MGND A 0 109
+	FrameIndex MGND B 0 110
+	FrameIndex MGND C 0 111
+	FrameIndex MGND D 0 112
+	FrameIndex MGND E 0 113
+	FrameIndex MGND F 0 114
+	FrameIndex MGND G 0 115
+	FrameIndex MGND H 0 116
+	FrameIndex MGND I 0 117
+	FrameIndex MGND J 0 118
+}

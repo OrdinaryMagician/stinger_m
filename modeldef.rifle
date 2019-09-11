@@ -43,8 +43,8 @@ Model "URifle"
 	Skin 2 "URifMuz.png"
 	AngleOffset 90
 	PitchOffset 90
-	Scale 0.12 0.12 0.12
-	Offset 12 -50 -10
+	Scale 0.16 0.16 0.16
+	Offset 13 -60 -12
 
 	FrameIndex SMUZ A 2 0
 }

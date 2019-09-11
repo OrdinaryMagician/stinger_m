@@ -224,6 +224,11 @@ rifle/fire	riflesht
 rifle/scopeon	rifllon
 rifle/scopeoff	riflloff
 
+umini/wind	windu2
+umini/fire	regf1
+umini/altfire	altf1
+umini/unwind	windd2
+
 translator/event	transa3
 
 detector/start	detact

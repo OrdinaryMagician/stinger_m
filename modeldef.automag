@@ -47,27 +47,62 @@ Model "Automag"
 {
 	Path "models"
 	Model 3 "Flat_d.3d"
-	Skin 3 "EMuz1.png"
 	AngleOffset 90
 	Scale 0.04 0.04 0.04
 	Offset 12.4 -30.0 -3.9
 
-	FrameIndex AMUZ A 3 0
+	Skin 3 "AMuz1.png"
+	FrameIndex AMZ1 A 3 0
+	Skin 3 "AMuz2.png"
+	FrameIndex AMZ1 B 3 0
+	Skin 3 "AMuz3.png"
+	FrameIndex AMZ1 C 3 0
+	Skin 3 "AMuz4.png"
+	FrameIndex AMZ1 D 3 0
+	Skin 3 "AMuz5.png"
+	FrameIndex AMZ1 E 3 0
 
 	Scale 0.04 0.04 0.04
 	Offset 3.9 -30.0 -10
 
-	FrameIndex AMUZ B 3 0
+	Skin 3 "AMuz1.png"
+	FrameIndex AMZ2 A 3 0
+	Skin 3 "AMuz2.png"
+	FrameIndex AMZ2 B 3 0
+	Skin 3 "AMuz3.png"
+	FrameIndex AMZ2 C 3 0
+	Skin 3 "AMuz4.png"
+	FrameIndex AMZ2 D 3 0
+	Skin 3 "AMuz5.png"
+	FrameIndex AMZ2 E 3 0
 
 	Scale 0.04 0.04 0.04
 	Offset -12.4 -30.0 -3.9
 
-	FrameIndex AMUZ C 3 0
+	Skin 3 "AMuz1.png"
+	FrameIndex AMZ3 A 3 0
+	Skin 3 "AMuz2.png"
+	FrameIndex AMZ3 B 3 0
+	Skin 3 "AMuz3.png"
+	FrameIndex AMZ3 C 3 0
+	Skin 3 "AMuz4.png"
+	FrameIndex AMZ3 D 3 0
+	Skin 3 "AMuz5.png"
+	FrameIndex AMZ3 E 3 0
 
 	Scale 0.04 0.04 0.04
 	Offset -3.9 -30.0 -10
 
-	FrameIndex AMUZ D 3 0
+	Skin 3 "AMuz1.png"
+	FrameIndex AMZ4 A 3 0
+	Skin 3 "AMuz2.png"
+	FrameIndex AMZ4 B 3 0
+	Skin 3 "AMuz3.png"
+	FrameIndex AMZ4 C 3 0
+	Skin 3 "AMuz4.png"
+	FrameIndex AMZ4 D 3 0
+	Skin 3 "AMuz5.png"
+	FrameIndex AMZ4 E 3 0
 }
 
 Model "Automag"
