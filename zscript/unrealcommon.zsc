@@ -234,7 +234,8 @@ Class UPlayer : UTPlayer
 		if ( ((player.ReadyWeapon is 'UBioRifle') && (player.buttons&BT_ALTATTACK))
 			|| (player.ReadyWeapon is 'Eightball')
 			|| ((player.ReadyWeapon is 'DispersionPistol') && DispersionPistol(player.ReadyWeapon).bCharging)
-			|| ((player.ReadyWeapon is 'UBioRifle') && UBioRifle(player.ReadyWeapon).bCharging) )
+			|| ((player.ReadyWeapon is 'UBioRifle') && UBioRifle(player.ReadyWeapon).bCharging)
+			|| (player.ReadyWeapon is 'Razorjack') )
 		{
 			if ( !InStateSequence(CurState,FindState("MissileRepStill")) )
 				SetStateLabel("MissileRepStill");

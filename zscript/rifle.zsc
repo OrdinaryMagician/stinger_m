@@ -3,6 +3,7 @@ Class URifleAmmo : Ammo
 	Default
 	{
 		Tag "$T_RIFLEAMMO";
+		Inventory.Icon "I_RifleA";
 		Inventory.PickupMessage "";
 		Inventory.Amount 8;
 		Inventory.MaxAmount 50;
@@ -44,11 +45,183 @@ Class URifleAmmo2 : URifleAmmo
 
 Class URifle : UnrealWeapon
 {
+	double sniperzoom;
+	ui TextureID reticle;
+	transient ui Font zfont;
+	bool bLightOn;
+	UFlashLight1 lt[2];
+
+	override void PreRender( double lbottom )
+	{
+		if ( sniperzoom <= 1. ) return;
+		if ( reticle.IsNull() ) reticle = TexMan.CheckForTexture("UReticle",Texman.Type_Any);
+		Screen.DrawTexture(reticle,false,300,300,DTA_VirtualWidth,600,DTA_VirtualHeight,600,DTA_LegacyRenderStyle,STYLE_Stencil,DTA_FillColor,Color(0,0,0));
+		if ( !zfont ) zfont = Font.GetFont('UTFont40');
+		Screen.DrawText(zfont,Font.CR_UNTRANSLATED,700,700,String.Format("X%.1f",sniperzoom),DTA_VirtualWidth,1280,DTA_VirtualHeight,960,DTA_LegacyRenderStyle,STYLE_Stencil,DTA_FillColor,Color(0,0,0));
+	}
+	override void DetachFromOwner()
+	{
+		Super.DetachFromOwner();
+		PlayerInfo p = players[consoleplayer];
+		if ( p.Camera == Owner ) Shader.SetEnabled(p,"URifleScope",false);
+		bLightOn = false;
+		if ( lt[0] ) lt[0].Destroy();
+		if ( lt[1] ) lt[1].Destroy();
+	}
+	override void RenderOverlay( RenderEvent e )
+	{
+		PlayerInfo p = players[consoleplayer];
+		if ( (p.Camera != Owner) || (sniperzoom <= 1.) ) Shader.SetEnabled(p,"URifleScope",false);
+		else Shader.SetEnabled(p,"URifleScope",true);
+	}
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		bALT_AMMO_OPTIONAL = !sting_rifle;
+		if ( sniperzoom > 1.0 ) crosshair = 99;
+		else crosshair = 0;
+	}
+	action void A_ToggleLight()
+	{
+		invoker.bLightOn = !invoker.bLightOn;
+		A_PlaySound(invoker.bLightOn?"lite/pickup":"lite/off",CHAN_ITEM);
+		if ( invoker.bLightOn )
+		{
+			if ( !invoker.lt[0] ) invoker.lt[0] = UFlashLight1(Spawn("UFlashLight1",pos));
+			invoker.lt[0].target = self;
+			invoker.lt[0].master = invoker;
+			invoker.lt[0].basecolor[0] = 255;
+			invoker.lt[0].basecolor[1] = 224;
+			invoker.lt[0].basecolor[2] = 192;
+			invoker.lt[0].args[3] = 480;
+			invoker.lt[0].SpotInnerAngle = 2;
+			invoker.lt[0].SpotOuterAngle = 9;
+			if ( !invoker.lt[1] ) invoker.lt[1] = UFlashLight1(Spawn("UFlashLight2",pos));
+			invoker.lt[1].target = self;
+			invoker.lt[1].master = invoker;
+			invoker.lt[1].basecolor[0] = 128;
+			invoker.lt[1].basecolor[1] = 112;
+			invoker.lt[1].basecolor[2] = 96;
+			invoker.lt[1].args[3] = 500;
+			invoker.lt[1].SpotOuterAngle = 15;
+		}
+		else
+		{
+			if ( invoker.lt[0] ) invoker.lt[0].Destroy();
+			if ( invoker.lt[1] ) invoker.lt[1].Destroy();
+		}
+	}
+	action void A_RifleFire( bool zoomed = false, bool alt = false )
+	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		if ( weap.Ammo1.Amount <= 0 ) return;
+		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
+		if ( self is 'UTPlayer' )
+			UTPlayer(self).PlayAttacking3();
+		invoker.FireEffect();
+		UTMainHandler.DoFlash(self,Color(32,0,0,255),1);
+		if ( alt ) A_PlaySound("rifle/fire",CHAN_WEAPON,Dampener.Active(self)?.3:1.,pitch:FRandom[Sniper](0.9,1.1));
+		else A_PlaySound("rifle/fire",CHAN_WEAPON,Dampener.Active(self)?.3:1.);
+		if ( !Dampener.Active(self) ) A_AlertMonsters();
+		if ( zoomed )
+		{
+			A_QuakeEx(1,1,1,2,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.09);
+			for ( int i=0; i<3; i++ )
+				UTMainHandler.DoSwing(self,(FRandom[Sniper](-0.3,0.05),FRandom[Sniper](-0.3,0.1)),2,-0.5,Random[Sniper](3,4),SWING_Spring,Random[Sniper](3,4),Random[Sniper](4,5));
+		}
+		else
+		{
+			A_QuakeEx(2,2,2,3,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
+			for ( int i=0; i<(alt?6:3); i++ )
+				UTMainHandler.DoSwing(self,(FRandom[Sniper](-0.3,0.05),FRandom[Sniper](-0.3,0.1)),4,-1,Random[Sniper](3,4),SWING_Spring,Random[Sniper](3,4),Random[Sniper](4,5));
+			A_Overlay(-2,"MuzzleFlash");
+			A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
+			A_OverlayRenderstyle(-2,STYLE_Add);
+		}
+		let l = Spawn("SniperLight",pos);
+		l.target = self;
+		Vector3 x, y, z;
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x;
+		if ( !zoomed ) origin = origin+y*3.0-z*2.0;
+		FLineTraceData d;
+		LineTrace(angle,10000,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
+		if ( d.HitType == TRACE_HitActor )
+		{
+			int dmg = 45;
+			if ( d.HitLocation.z >= (d.HitActor.pos.z+d.HitActor.height*0.81) )
+			{
+				dmg = d.HitActor.DamageMobj(invoker,self,100,'Decapitated',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
+				UTMainHandler.DoKnockback(d.HitActor,d.HitDir,35000);
+			}
+			else
+			{
+				dmg = d.HitActor.DamageMobj(invoker,self,dmg,'shot',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
+				UTMainHandler.DoKnockback(d.HitActor,d.HitDir,30000);
+			}
+			if ( d.HitActor.bNOBLOOD )
+			{
+				let p = Spawn("BulletImpact",d.HitLocation);
+				p.scale *= 1.5;
+				p.angle = atan2(d.HitDir.y,d.HitDir.x)+180;
+				p.pitch = asin(d.HitDir.z);
+			}
+			else
+			{
+				d.HitActor.TraceBleed(dmg,self);
+				d.HitActor.SpawnBlood(d.HitLocation,atan2(d.HitDir.y,d.HitDir.x)+180,dmg);
+			}
+		}
+		else if ( d.HitType != TRACE_HitNone )
+		{
+			Vector3 hitnormal = -d.HitDir;
+			if ( d.HitType == TRACE_HitFloor )
+			{
+				if ( d.Hit3DFloor ) hitnormal = -d.Hit3DFloor.top.Normal;
+				else hitnormal = d.HitSector.floorplane.Normal;
+			}
+			else if ( d.HitType == TRACE_HitCeiling )
+			{
+				if ( d.Hit3DFloor ) hitnormal = -d.Hit3DFloor.bottom.Normal;
+				else hitnormal = d.HitSector.ceilingplane.Normal;
+			}
+			else if ( d.HitType == TRACE_HitWall )
+			{
+				hitnormal = (-d.HitLine.delta.y,d.HitLine.delta.x,0).unit();
+				if ( !d.LineSide ) hitnormal *= -1;
+			}
+			let p = Spawn("BulletImpact",d.HitLocation+hitnormal*0.01);
+			p.scale *= 1.5;
+			p.angle = atan2(hitnormal.y,hitnormal.x);
+			p.pitch = asin(-hitnormal.z);
+			if ( d.HitLine ) d.HitLine.RemoteActivate(self,d.LineSide,SPAC_Impact,d.HitLocation);
+		}
+		for ( int i=0; i<24; i++ )
+		{
+			let s = Spawn("UTStaticViewSmoke",origin);
+			UTViewSmoke(s).ofs = (10,3,-2);
+			UTViewSmoke(s).vvel += (FRandom[Sniper](-0.05,0.15),FRandom[Sniper](-1.2,1.2),FRandom[Sniper](-0.1,0.1));
+			s.target = self;
+			s.scale *= 1.8;
+			s.alpha *= 0.3;
+		}
+		origin += x*4.0+y*6.0-z*10.0;
+		let c = Spawn("UCasing",origin);
+		c.scale *= 1.25;
+		c.vel = x*FRandom[Junk](-1.5,1.5)+y*FRandom[Junk](2,4)+z*FRandom[Junk](2,3);
+	}
+	override String GetObituary( Actor victim, Actor inflictor, Name mod, bool playerattack )
+	{
+		if ( mod == 'Decapitated' ) return StringTable.Localize("$O_SNIPERDECAP");
+		return Obituary;
+	}
 	Default
 	{
 		Tag "$T_RIFLE";
+		Obituary "$O_SNIPER";
 		Inventory.PickupMessage "$I_RIFLE";
-		Weapon.UpSound "rifle/select";
+		Weapon.UpSound "sniper/select";
 		Weapon.SlotNumber 9;
 		Weapon.SelectionOrder 9;
 		Weapon.AmmoType "URifleAmmo";
@@ -56,7 +229,9 @@ Class URifle : UnrealWeapon
 		Weapon.AmmoType2 "URifleAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 8;
+		Weapon.Kickback 250;
 		UTWeapon.DropAmmo 4;
+		+NOEXTREMEDEATH;
 	}
 	States
 	{
@@ -64,6 +239,97 @@ Class URifle : UnrealWeapon
 		SRFP A -1;
 		Stop;
 		SRFP B -1;
+		Stop;
+	Select:
+		SRFS A 1 A_Raise(int.max);
+		Wait;
+	Ready:
+		SRFS A 0 A_ZoomFactor(invoker.sniperzoom=1.0,ZOOM_INSTANT);
+		SRFS ABCDEFGHIJKLMNOPQRST 1 A_WeaponReady(WRF_NOFIRE);
+	Idle:
+		SRFI A 1
+		{
+			A_CheckReload();
+			A_WeaponReady(sting_riflel?(WRF_ALLOWZOOM|WRF_ALLOWRELOAD):WRF_ALLOWZOOM);
+		}
+		Wait;
+	ZoomedIdle:
+		TNT1 A 1
+		{
+			A_CheckReload();
+			A_WeaponReady(sting_riflel?(WRF_ALLOWZOOM|WRF_ALLOWRELOAD):WRF_ALLOWZOOM);
+		}
+		Wait;
+	Fire:
+		SRFF A 0 A_JumpIf(invoker.sniperzoom>1.0,"ZoomedFire");
+		SRFF A 0 A_RifleFire();
+		SRFF ABCDEFGHIJ 2;
+		Goto Idle;
+	ZoomedFire:
+		SRSI A 20 A_RifleFire(true);
+		Goto ZoomedIdle;
+	AltFire:
+		SRFF A 0 A_JumpIf(!sting_rifle,"Zoom");
+		SRFF A 0 A_JumpIf(invoker.sniperzoom>1.0,"ZoomedAltFire");
+		SRFF A 0 A_RifleFire(false,true);
+		SRFF ABCDEFG 1;
+		SRFF A 0 A_JumpIfNoAmmo("AltFireEnd");
+		SRFF A 0 A_RifleFire(false,true);
+		SRFF ABCDEFG 1;
+		SRFF A 0 A_JumpIfNoAmmo("AltFireEnd");
+		SRFF A 0 A_RifleFire(false,true);
+		SRFF ABCDEFG 1;
+	AltFireEnd:
+		SRFF HIJ 1;
+		SRFI A 3;
+		Goto Idle;
+	ZoomedAltFire:
+		SRSI A 7 A_RifleFire(true,true);
+		SRSI A 0 A_JumpIfNoAmmo("ZoomedAltFireEnd");
+		SRSI A 7 A_RifleFire(true,true);
+		SRSI A 0 A_JumpIfNoAmmo("ZoomedAltFireEnd");
+		SRSI A 7 A_RifleFire(true,true);
+	ZoomedAltFireEnd:
+		SRSI A 6;
+		Goto Idle;
+	Reload:
+		SRFI A 8 A_ToggleLight();
+		Goto Idle;
+	Zoom:
+		SRSU A 0 A_JumpIf(invoker.sniperzoom>1.0,"ZoomOut");
+		SRSU A 0 A_PlaySound("rifle/scopeon",CHAN_ITEM,.5);
+		SRSU ABCDEFGHIJKLMN 1;
+		Goto ZoomHold;
+	ZoomHold:
+		TNT1 A 1
+		{
+			if ( invoker.sniperzoom <= 8.0 )
+				A_ZoomFactor(invoker.sniperzoom*=1.1);
+			invoker.sniperzoom = min(invoker.sniperzoom,8.1);
+		}
+		TNT1 A 0 A_JumpIf(player.cmd.buttons&(BT_ALTATTACK|BT_ZOOM),"ZoomHold");
+		Goto ZoomedIdle;
+	ZoomOut:
+		SRSD A 0 A_ZoomFactor(invoker.sniperzoom=1.0,ZOOM_INSTANT);
+		SRSD A 0 A_PlaySound("rifle/scopeoff",CHAN_ITEM,.5);
+		SRSD ABCDEFGHIJKLMNO 1;
+		Goto Idle;
+	Deselect:
+		SRFD A 0 A_JumpIf(invoker.sniperzoom<=1.0,"Deselect2");
+		SRSD A 0 A_ZoomFactor(invoker.sniperzoom=1.0,ZOOM_INSTANT);
+		SRSD A 0 A_PlaySound("rifle/scopeoff",CHAN_ITEM,.5);
+		SRSD ABCDEFGHIJKLMNO 1;
+	Deselect2:
+		SRFD A 0
+		{
+			A_ZoomFactor(invoker.sniperzoom=1.0,ZOOM_INSTANT);
+			if ( invoker.bLightOn ) A_ToggleLight();
+		}
+		SRFD ABCDEFG 1;
+		SRFD H 1 A_Lower(int.max);
+		Wait;
+	MuzzleFlash:
+		SMUZ A 3 Bright;
 		Stop;
 	}
 }

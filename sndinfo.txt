@@ -220,6 +220,10 @@ automag/fire	shot
 automag/click	click
 automag/reload	reload
 
+rifle/fire	riflesht
+rifle/scopeon	rifllon
+rifle/scopeoff	riflloff
+
 translator/event	transa3
 
 detector/start	detact

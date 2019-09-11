@@ -593,7 +593,7 @@ Class UBioRifle : UnrealWeapon
 		else A_PlaySound("ges/fire",CHAN_WEAPON,Dampener.Active(self)?.17:1.);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(48,0,255,0),1);
-		A_AlertMonsters();
+		if ( !Dampener.Active(self) ) A_AlertMonsters();
 		if ( bAlt ) A_QuakeEx(1+int(0.5*invoker.chargesize),1+int(0.5*invoker.chargesize),1+int(0.5*invoker.chargesize),5+int(1.2*invoker.chargesize),0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05+0.01*invoker.chargesize);
 		else A_QuakeEx(1,1,1,5,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05);
 		Vector3 x, y, z;

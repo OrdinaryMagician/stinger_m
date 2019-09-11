@@ -1263,7 +1263,7 @@ Class UFlashLight1 : DynamicLight
 	override void Tick()
 	{
 		Super.Tick();
-		if ( !target || !UnrealInventory(master) )
+		if ( !target || !master )
 		{
 			Destroy();
 			return;
@@ -1272,9 +1272,18 @@ Class UFlashLight1 : DynamicLight
 		else SetOrigin(target.vec3Offset(0,0,target.height*0.75),true);
 		A_SetAngle(target.angle,SPF_INTERPOLATE);
 		A_SetPitch(target.pitch,SPF_INTERPOLATE);
-		args[LIGHT_RED] = int(basecolor[0]*clamp(UnrealInventory(master).charge/1400.,0.,1.));
-		args[LIGHT_GREEN] = int(basecolor[1]*clamp(UnrealInventory(master).charge/1400.,0.,1.));
-		args[LIGHT_BLUE] = int(basecolor[2]*clamp(UnrealInventory(master).charge/1400.,0.,1.));
+		if ( UnrealInventory(master) )
+		{
+			args[LIGHT_RED] = int(basecolor[0]*clamp(UnrealInventory(master).charge/1400.,0.,1.));
+			args[LIGHT_GREEN] = int(basecolor[1]*clamp(UnrealInventory(master).charge/1400.,0.,1.));
+			args[LIGHT_BLUE] = int(basecolor[2]*clamp(UnrealInventory(master).charge/1400.,0.,1.));
+		}
+		else
+		{
+			args[LIGHT_RED] = basecolor[0];
+			args[LIGHT_GREEN] = basecolor[1];
+			args[LIGHT_BLUE] = basecolor[2];
+		}
 		bDORMANT = (target.health <= 0);
 		if ( Inventory(target) && target.bInvisible ) bDORMANT = true;
 		// alert monsters hit by the light

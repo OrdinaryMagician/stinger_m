@@ -25,6 +25,9 @@ Doom Tournament (currently the devel branch is required).
  - GES Bio Rifle (slot 8) (replaces plasma rifle)
    - "Hold up to 2 seconds" feature from Unreal Bible
    - Biorifle splashes like UT (toggleable)
+ - Rifle (slot 9) (replaces plasma rifle)
+   - Restored rapid fire
+   - Restored flashlight
  - SMP 7243 (slot 0) (replaces bfg9000)
  - Backpack (replaces backpack, identical to Doom Tournament version)
  - Unreal 1 HUD
@@ -58,14 +61,9 @@ Doom Tournament (currently the devel branch is required).
 
 ## In progress
 
- - Rifle (slot 9) (replaces plasma rifle)
  - Minigun (slot 0) (replaces chaingun)
 
 ## Planned
-
- - Unreal Bible & prototype build behaviour restoration
-   - Rifle restored rapid fire
-   - Rifle restored flashlight
 
  - Stunner (slot 4) (replaces chainsaw)
  - Razorclaw (slot 1) (replaces chainsaw)

@@ -752,3 +752,9 @@ HardwareShader Texture "models/JSentry1_.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
 }
+// PP shaders
+HardwareShader PostProcess scene
+{
+	Name "URifleScope"
+	Shader "shaders/glsl/URifleScope.fp" 330
+}

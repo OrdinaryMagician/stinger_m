@@ -212,6 +212,8 @@ Class Razorjack : UnrealWeapon
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
+		if ( self is 'UTPlayer' )
+			UTPlayer(self).PlayAttacking3();
 		A_PlaySound("ripper/fire",CHAN_WEAPON,pitch:bAlt?1.:(1.+invoker.special1*.1));
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(16,255,0,255),1);
