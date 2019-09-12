@@ -294,7 +294,8 @@ Model "UBioRifle"
 {
 	Path "models"
 	Model 0 "BRifle_d.3d"
-	Skin 0 "JBrifle1.png"
+	SurfaceSkin 0 0 "JBrifle1.png"
+	SurfaceSkin 0 1 "Glass2.png"
 	Scale 0.2 -0.2 0.2
 	AngleOffset -90
 	Offset 7 -20 -11.5

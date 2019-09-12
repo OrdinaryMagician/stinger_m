@@ -192,6 +192,8 @@ Class UMinigun : UnrealWeapon
 	AltFire:
 		MGNW A 0 A_PlaySound("umini/wind",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
 		MGNW ABCDEFGHIJKLMNO 1;
+		MGNW O 0 A_Refire(1);
+		Goto Release;
 	Hold:
 		MGNF A 0
 		{

@@ -757,17 +757,23 @@ HardwareShader Texture "models/OLSMP.png"
 {
 	Shader "shaders/glsl/MeshEnviroMapMasked.fp"
 	Texture "masktex" "models/OLSMP_m.png"
-	texture "envtex" "models/OLSMP_env.png"
+	Texture "envtex" "models/OLSMP_env.png"
 }
 HardwareShader Texture "models/OLSMP_.png"
 {
 	Shader "shaders/glsl/MeshEnviroMapMasked_AmbientGlow.fp"
 	Texture "masktex" "models/OLSMP_m.png"
-	texture "envtex" "models/OLSMP_env.png"
+	Texture "envtex" "models/OLSMP_env.png"
 }
 HardwareShader Texture "models/JSentry1_.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/Glass2.png"
+{
+	Shader "shaders/glsl/MeshEnviroMapMasked.fp"
+	Texture "masktex" "models/Glass2_m.png"
+	Texture "envtex" "models/NyLeve_env.png"
 }
 // PP shaders
 HardwareShader PostProcess scene
