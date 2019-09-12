@@ -229,7 +229,7 @@ Class QuadShot : UnrealWeapon
 		let weap = Weapon(invoker);
 		if ( invoker.clipcount > 3 )
 		{
-			if ( weap.Ammo1.Amount > 3 )
+			if ( weap.Ammo1.Amount > 0 )
 			{
 				player.SetPSprite(PSP_WEAPON,invoker.FindState("Reload"));
 				return true;
@@ -318,6 +318,11 @@ Class QuadShot : UnrealWeapon
 		QUAA ABCDEFGHIJKLMNOPQRS 1;
 		Goto Idle;
 	Pump:
+		QUAP A 0
+		{
+			if ( self is 'UTPlayer' )
+				UTPlayer(self).PlayReloading();
+		}
 		QUAP ABCD 1;
 		QUAP E 0 A_PlaySound("quadshot/pump1",CHAN_6,Dampener.Active(self)?.1:1.);
 		QUAP EFGHIJKLM 1;
@@ -329,20 +334,43 @@ Class QuadShot : UnrealWeapon
 	Reload:
 		QUAR A 0 A_Overlay(-9999,"Null");
 		QUAR ABCDEFGHIJK 1;
-		QUAR L 0 A_PlaySound("quadshot/open",CHAN_6,Dampener.Active(self)?.1:1.);
+		QUAR L 0
+		{
+			A_PlaySound("quadshot/open",CHAN_6,Dampener.Active(self)?.1:1.);
+			if ( self is 'UTPlayer' )
+				UTPlayer(self).PlayAttacking3();
+		}
 		QUAR LMNOPQRSTU 1;
 		QUAR V 0 A_DropShells();
 		QUAR VWXYZ[\] 1;
 		QUR2 ABCDEFGHIJKLMNOPQR 1;
-		QUR2 S 0 A_PlaySound("quadshot/load",CHAN_6,Dampener.Active(self)?.1:1.);
+		QUR2 S 0
+		{
+			A_PlaySound("quadshot/load",CHAN_6,Dampener.Active(self)?.1:1.);
+			if ( self is 'UTPlayer' )
+				UTPlayer(self).PlayReloading();
+		}
 		QUR2 STUVWXYZ[\] 1;
 		QUR3 ABCDEFGHIJKLMNO 1;
-		QUR3 P 0 A_PlaySound("quadshot/load",CHAN_6,Dampener.Active(self)?.1:1.);
+		QUR3 P 0
+		{
+			A_PlaySound("quadshot/load",CHAN_6,Dampener.Active(self)?.1:1.);
+			if ( self is 'UTPlayer' )
+				UTPlayer(self).PlayReloading();
+		}
 		QUR3 PQRSTUVWXYZ[\] 1;
 		QUR4 ABCDE 1;
-		QUR4 F 0 A_PlaySound("quadshot/close",CHAN_6,Dampener.Active(self)?.1:1.);
+		QUR4 F 0
+		{
+			A_PlaySound("quadshot/close",CHAN_6,Dampener.Active(self)?.1:1.);
+			if ( self is 'UTPlayer' ) UTPlayer(self).PlayAttacking3();
+		}
 		QUR4 FGHIJKLMNOPQ 1;
-		QUAI A 0 { invoker.clipcount = 0; }
+		QUAI A 0
+		{
+			let weap = Weapon(invoker);
+			invoker.clipcount = max(0,4-weap.Ammo1.Amount);
+		}
 		Goto Idle;
 	Deselect:
 		#### # 1 A_Overlay(-9999,"Null");

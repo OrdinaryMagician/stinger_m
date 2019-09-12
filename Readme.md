@@ -83,6 +83,5 @@ Doom Tournament (currently the devel branch is required).
 
 ## Known bugs
 
- - The Quadshot dry-firing and being unable to reload when you have less than 4
-   shells left is intentional. In theory this shouldn't happen anyway as all
-   ammo is in multiples of 4. Usually cheats and scripts would cause this.
+ - The Quadshot will visibly load 4 shells even when there's less available,
+   this is a limitation of the animation.
