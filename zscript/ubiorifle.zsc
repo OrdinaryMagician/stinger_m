@@ -642,7 +642,10 @@ Class UBioRifle : UnrealWeapon
 			}
 		}
 		if ( !(player.cmd.buttons&BT_ALTATTACK) )
+		{
+			invoker.bCharging = false;
 			player.SetPSPrite(PSP_WEAPON,invoker.FindState("AltRelease"));
+		}
 	}
 	action void A_BeginCharge()
 	{

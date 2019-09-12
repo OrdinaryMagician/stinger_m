@@ -88,7 +88,7 @@ Class QuadShot : UnrealWeapon
 	{
 		if ( t.Results.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Quadshot](8,12);
+			int dmg = Random[Quadshot](4,8);
 			FlakAccumulator.Accumulate(t.Results.HitActor,dmg,invoker,self,'shot');
 			double mm = 2400;
 			UTMainHandler.DoKnockback(t.Results.HitActor,t.Results.HitVector+(0,0,0.025),mm*FRandom[Quadshot](0.4,1.2));
@@ -275,7 +275,12 @@ Class QuadShot : UnrealWeapon
 		{
 			A_CheckReload();
 			if ( !A_QuadshotCheckForReload() )
-				A_WeaponReady();
+			{
+				let weap = Weapon(invoker);
+				if ( (invoker.clipcount > 0) && (weap.Ammo1.Amount > 4-invoker.clipcount) )
+					A_WeaponReady(WRF_ALLOWRELOAD);
+				else A_WeaponReady();
+			}
 		}
 		Wait;
 	Idle:
