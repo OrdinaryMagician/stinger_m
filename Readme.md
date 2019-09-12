@@ -30,6 +30,7 @@ Doom Tournament (currently the devel branch is required).
    - Restored flashlight
  - Minigun (slot 0) (replaces chaingun)
  - SMP 7243 (slot 0) (replaces bfg9000)
+ - Quadshot (slot 3) (replaces shotguns)
  - Backpack (replaces backpack, identical to Doom Tournament version)
  - Unreal 1 HUD
  - Translator (has to be spawned in, since it would only be useful for mappers)
@@ -62,23 +63,26 @@ Doom Tournament (currently the devel branch is required).
 
 ## In progress
 
- - N/A
-
-## Planned
-
- - Stunner (slot 4) (replaces chainsaw)
  - Razorclaw (slot 1) (replaces chainsaw)
  - Teleport Capsules (slot 1)
  - Protomag (slot 2) (replaces pistol)
    - Dual Protomags
- - Quadshot (slot 3) (replaces shotguns)
- - Peacemaker (slot 8) (rare spawn in backpacks)
- - Impaler (slot 7) (replaces plasma rifle)
- - Flamethrower (slot 6) (replaces plasma rifle)
+ - Stunner (slot 4) (replaces chainsaw)
  - Fireblaster (slot 5) (replaces rocket launcher)
+ - Flamethrower (slot 6) (replaces plasma rifle)
+ - Impaler (slot 7) (replaces plasma rifle)
+ - Peacemaker (slot 8) (rare spawn in backpacks)
  - Demolisher (slot 9) (replaces bfg9000)
  - Autocannon (slot 0) (replaces bfg9000)
 
+## Planned
+
+ - RTNP add-on
+ - Monster pack (someday)
+ - Map pack (maybe? who knows)
+
 ## Known bugs
 
- - N/A
+ - The Quadshot dry-firing and being unable to reload when you have less than 4
+   shells left is intentional. In theory this shouldn't happen anyway as all
+   ammo is in multiples of 4. Usually cheats and scripts would cause this.

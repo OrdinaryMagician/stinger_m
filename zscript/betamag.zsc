@@ -2,9 +2,9 @@ Class Betamag : UnrealWeapon
 {
 	Default
 	{
-		Tag "$T_BETAMAG";
+		Tag "$T_PROTOMAG";
 		Inventory.Icon "I_ClipAm";
-		Inventory.PickupMessage "$I_BETAMAG";
+		Inventory.PickupMessage "$I_PROTOMAG";
 		Inventory.MaxAmount 1;
 		Inventory.InterHubAmount 2;
 		Weapon.UpSound "betamag/select";

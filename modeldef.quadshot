@@ -22,6 +22,23 @@ Model "UShells2"
 	FrameIndex QAMO A 0 0
 }
 
+Model "QCasing"
+{
+	Path "models"
+	Model 0 "QShell_d.3d"
+	Skin 0 "JQuadAm2.png"
+	Scale 0.03 -0.03 0.036
+	AngleOffset 90
+	ZOffset 1
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1
+
+	FrameIndex PCAS A 0 0
+}
+
 Model "Quadshot"
 {
 	Path "models"
@@ -31,9 +48,253 @@ Model "Quadshot"
 	AngleOffset -90
 	Scale 0.08 -0.08 0.096
 
-	FrameIndex QUAP B 1 0
+	FrameIndex QSPK B 1 0
 
 	ZOffset 12
 	ROTATING
-	FrameIndex QUAP A 1 0
+	FrameIndex QSPK A 1 0
+}
+
+Model "Quadshot"
+{
+	Path "models"
+	Model 2 "Flat_d.3d"
+	Skin 2 "QuadMuz.png"
+	AngleOffset 90
+	Scale 0.07 0.07 0.07
+	Offset 9.5 -50 -7
+
+	FrameIndex QFLA A 2 0
+
+	Scale 0.12 0.12 0.12
+	Offset 9.5 -50 -8
+	FrameIndex QFLA B 2 0
+}
+// Way too many goddamn frames on this even though I actually reduced them
+Model "Quadshot"
+{
+	Path "models"
+	Model 0 "QuadShot_d.3d"
+	SurfaceSkin 0 0 "GunPick1.png"
+	SurfaceSkin 0 1 "Automa1.png"
+	SurfaceSkin 0 2 "JQuadAm1.png"
+	AngleOffset -90
+	Scale 0.32 -0.32 0.32
+	Offset 12 -24 -14
+
+	// Idle
+	FrameIndex QUAI A 0 0
+	FrameIndex QUAI B 0 1
+	FrameIndex QUAI C 0 2
+	FrameIndex QUAI D 0 3
+	FrameIndex QUAI E 0 4
+	// Twiddle
+	FrameIndex QUAT A 0 5
+	FrameIndex QUAT B 0 6
+	FrameIndex QUAT C 0 7
+	FrameIndex QUAT D 0 8
+	FrameIndex QUAT E 0 9
+	FrameIndex QUAT F 0 10
+	FrameIndex QUAT G 0 11
+	FrameIndex QUAT H 0 12
+	FrameIndex QUAT I 0 13
+	FrameIndex QUAT J 0 14
+	FrameIndex QUAT K 0 15
+	FrameIndex QUAT L 0 16
+	FrameIndex QUAT M 0 17
+	FrameIndex QUAT N 0 18
+	FrameIndex QUAT O 0 19
+	FrameIndex QUAT P 0 20
+	FrameIndex QUAT Q 0 21
+	FrameIndex QUAT R 0 22
+	FrameIndex QUAT S 0 23
+	FrameIndex QUAT T 0 24
+	FrameIndex QUAT U 0 25
+	// Select
+	FrameIndex QUAS A 0 26
+	FrameIndex QUAS B 0 27
+	FrameIndex QUAS C 0 28
+	FrameIndex QUAS D 0 29
+	FrameIndex QUAS E 0 30
+	FrameIndex QUAS F 0 31
+	FrameIndex QUAS G 0 32
+	FrameIndex QUAS H 0 33
+	FrameIndex QUAS I 0 34
+	FrameIndex QUAS J 0 35
+	FrameIndex QUAS K 0 36
+	// Down
+	FrameIndex QUAD A 0 36
+	FrameIndex QUAD B 0 37
+	FrameIndex QUAD C 0 38
+	FrameIndex QUAD D 0 39
+	FrameIndex QUAD E 0 40
+	FrameIndex QUAD F 0 41
+	FrameIndex QUAD G 0 42
+	FrameIndex QUAD H 0 43
+	// Fire
+	FrameIndex QUAF A 0 44
+	FrameIndex QUAF B 0 45
+	FrameIndex QUAF C 0 46
+	FrameIndex QUAF D 0 47
+	FrameIndex QUAF E 0 48
+	FrameIndex QUAF F 0 49
+	FrameIndex QUAF G 0 50
+	FrameIndex QUAF H 0 51
+	FrameIndex QUAF I 0 52
+	FrameIndex QUAF J 0 53
+	FrameIndex QUAF K 0 54
+	// Pump
+	FrameIndex QUAP A 0 54
+	FrameIndex QUAP B 0 55
+	FrameIndex QUAP C 0 56
+	FrameIndex QUAP D 0 57
+	FrameIndex QUAP E 0 58
+	FrameIndex QUAP F 0 59
+	FrameIndex QUAP G 0 60
+	FrameIndex QUAP H 0 61
+	FrameIndex QUAP I 0 62
+	FrameIndex QUAP J 0 63
+	FrameIndex QUAP K 0 64
+	FrameIndex QUAP L 0 65
+	FrameIndex QUAP M 0 66
+	FrameIndex QUAP N 0 67
+	FrameIndex QUAP O 0 68
+	FrameIndex QUAP P 0 69
+	FrameIndex QUAP Q 0 70
+	FrameIndex QUAP R 0 71
+	FrameIndex QUAP S 0 72
+	FrameIndex QUAP T 0 73
+	FrameIndex QUAP U 0 74
+	FrameIndex QUAP V 0 75
+	FrameIndex QUAP W 0 76
+	FrameIndex QUAP X 0 77
+	FrameIndex QUAP Y 0 78
+	FrameIndex QUAP Z 0 79
+	FrameIndex QUAP [ 0 80
+	FrameIndex QUAP \ 0 81
+	// AltFire
+	FrameIndex QUAA A 0 82
+	FrameIndex QUAA B 0 83
+	FrameIndex QUAA C 0 84
+	FrameIndex QUAA D 0 85
+	FrameIndex QUAA E 0 86
+	FrameIndex QUAA F 0 87
+	FrameIndex QUAA G 0 88
+	FrameIndex QUAA H 0 89
+	FrameIndex QUAA I 0 90
+	FrameIndex QUAA J 0 91
+	FrameIndex QUAA K 0 92
+	FrameIndex QUAA L 0 93
+	FrameIndex QUAA M 0 94
+	FrameIndex QUAA N 0 95
+	FrameIndex QUAA O 0 96
+	FrameIndex QUAA P 0 97
+	FrameIndex QUAA Q 0 98
+	FrameIndex QUAA R 0 99
+	FrameIndex QUAA S 0 100
+	// Reload
+	FrameIndex QUAR A 0 101
+	FrameIndex QUAR B 0 102
+	FrameIndex QUAR C 0 103
+	FrameIndex QUAR D 0 104
+	FrameIndex QUAR E 0 105
+	FrameIndex QUAR F 0 106
+	FrameIndex QUAR G 0 107
+	FrameIndex QUAR H 0 108
+	FrameIndex QUAR I 0 109
+	FrameIndex QUAR J 0 110
+	FrameIndex QUAR K 0 111
+	FrameIndex QUAR L 0 112	// open
+	FrameIndex QUAR M 0 113
+	FrameIndex QUAR N 0 114
+	FrameIndex QUAR O 0 115
+	FrameIndex QUAR P 0 116
+	FrameIndex QUAR Q 0 117
+	FrameIndex QUAR R 0 118
+	FrameIndex QUAR S 0 119
+	FrameIndex QUAR T 0 120
+	FrameIndex QUAR U 0 121
+	FrameIndex QUAR V 0 122	// drop
+	FrameIndex QUAR W 0 123
+	FrameIndex QUAR X 0 124
+	FrameIndex QUAR Y 0 125
+	FrameIndex QUAR Z 0 126
+	FrameIndex QUAR [ 0 127
+	FrameIndex QUAR \ 0 128
+	FrameIndex QUAR ] 0 129
+	FrameIndex QUR2 A 0 130
+	FrameIndex QUR2 B 0 131
+	FrameIndex QUR2 C 0 132
+	FrameIndex QUR2 D 0 133
+	FrameIndex QUR2 E 0 134
+	FrameIndex QUR2 F 0 135
+	FrameIndex QUR2 G 0 136
+	FrameIndex QUR2 H 0 137
+	FrameIndex QUR2 I 0 138
+	FrameIndex QUR2 J 0 139
+	FrameIndex QUR2 K 0 140
+	FrameIndex QUR2 L 0 141
+	FrameIndex QUR2 M 0 142
+	FrameIndex QUR2 N 0 143
+	FrameIndex QUR2 O 0 144
+	FrameIndex QUR2 P 0 145
+	FrameIndex QUR2 Q 0 146
+	FrameIndex QUR2 R 0 147
+	FrameIndex QUR2 S 0 148	// load
+	FrameIndex QUR2 T 0 149
+	FrameIndex QUR2 U 0 150
+	FrameIndex QUR2 V 0 151
+	FrameIndex QUR2 W 0 152
+	FrameIndex QUR2 X 0 153
+	FrameIndex QUR2 Y 0 154
+	FrameIndex QUR2 Z 0 155
+	FrameIndex QUR2 [ 0 156
+	FrameIndex QUR2 \ 0 157
+	FrameIndex QUR2 ] 0 158
+	FrameIndex QUR3 A 0 159
+	FrameIndex QUR3 B 0 160
+	FrameIndex QUR3 C 0 161
+	FrameIndex QUR3 D 0 162
+	FrameIndex QUR3 E 0 163
+	FrameIndex QUR3 F 0 164
+	FrameIndex QUR3 G 0 165
+	FrameIndex QUR3 H 0 166
+	FrameIndex QUR3 I 0 167
+	FrameIndex QUR3 J 0 168
+	FrameIndex QUR3 K 0 169
+	FrameIndex QUR3 L 0 170
+	FrameIndex QUR3 M 0 171
+	FrameIndex QUR3 N 0 172
+	FrameIndex QUR3 O 0 173
+	FrameIndex QUR3 P 0 174	// load
+	FrameIndex QUR3 Q 0 175
+	FrameIndex QUR3 R 0 176
+	FrameIndex QUR3 S 0 177
+	FrameIndex QUR3 T 0 178
+	FrameIndex QUR3 U 0 179
+	FrameIndex QUR3 V 0 180
+	FrameIndex QUR3 W 0 181
+	FrameIndex QUR3 X 0 182
+	FrameIndex QUR3 Y 0 183
+	FrameIndex QUR3 Z 0 184
+	FrameIndex QUR3 [ 0 185
+	FrameIndex QUR3 \ 0 186
+	FrameIndex QUR3 ] 0 187
+	FrameIndex QUR4 A 0 188
+	FrameIndex QUR4 B 0 189
+	FrameIndex QUR4 C 0 190
+	FrameIndex QUR4 D 0 191
+	FrameIndex QUR4 E 0 192
+	FrameIndex QUR4 F 0 193	// close
+	FrameIndex QUR4 G 0 194
+	FrameIndex QUR4 H 0 195
+	FrameIndex QUR4 I 0 196
+	FrameIndex QUR4 J 0 197
+	FrameIndex QUR4 K 0 198
+	FrameIndex QUR4 L 0 199
+	FrameIndex QUR4 M 0 200
+	FrameIndex QUR4 N 0 201
+	FrameIndex QUR4 O 0 202
+	FrameIndex QUR4 P 0 203
+	FrameIndex QUR4 Q 0 204
 }

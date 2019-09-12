@@ -229,6 +229,26 @@ umini/fire	regf1
 umini/altfire	altf1
 umini/unwind	windd2
 
+quadshot/select	quadsel
+quadshot/fire	quadfire
+quadshot/alt	quadalt
+quadshot/pump1	qpump1
+quadshot/pump2	qpump2
+quadshot/open	quadopen
+quadshot/load1	quadloa1
+quadshot/load2	quadloa2
+quadshot/load3	quadloa3
+quadshot/load4	quadloa4
+$random quadshot/load { quadshot/load1 quadshot/load2 quadshot/load3 quadshot/load4 }
+quadshot/close	quadclos
+quadshot/shell1	qshell1
+quadshot/shell2	qshell2
+quadshot/shell3	qshell3
+quadshot/shell4	qshell4
+quadshot/shell5	qshell5
+quadshot/shell6	qshell6
+$random quadshot/shell { quadshot/shell1 quadshot/shell2 quadshot/shell3 quadshot/shell4 quadshot/shell5 quadshot/shell6 }
+
 translator/event	transa3
 
 detector/start	detact
