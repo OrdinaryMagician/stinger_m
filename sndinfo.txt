@@ -249,6 +249,12 @@ quadshot/shell5	qshell5
 quadshot/shell6	qshell6
 $random quadshot/shell { quadshot/shell1 quadshot/shell2 quadshot/shell3 quadshot/shell4 quadshot/shell5 quadshot/shell6 }
 
+betamag/select	oldasel
+betamag/fire	oldmag
+betamag/slide	oldmage
+betamag/whip	oldawhip
+betamag/hit	oldahit
+
 translator/event	transa3
 
 detector/start	detact

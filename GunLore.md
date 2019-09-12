@@ -219,16 +219,16 @@ A very rare prototype handgun. Due to the difficulty of its manufacture, it was
 quickly discontinued and not many of these exist. You would have to be pretty
 lucky to come across one.
 
-Both of its fire modes work exactly like the Automag, although due to
-internal differences, it fires much slower, but bullets come out at a much
-higher velocity, resulting in increased damage.
-
 The special trait of this weapon comes into play when you realize that there's
 no need to reload. An experimental entanglement unit inside the gun's internal
 mag locates spare ammunition carried by the user and automatically loads it.
 
-Since there's no need to reload, pressing the reload button makes use of the
-gun's weight to beat the crap out of your enemies up close.
+Both of its fire modes work exactly like the Automag, although due to
+internal differences, it's a bit weaker in terms of speed and damage. The fact
+that it never needs to reload at least compensates for this.
+
+Pressing the reload button makes use of the gun's weight to beat the crap out
+of your enemies up close.
 
 As an added bonus, you can press the zoom button to spin the gun. This doesn't
 serve any purpose other than looking cool.

@@ -30,6 +30,8 @@ Doom Tournament (currently the devel branch is required).
    - Restored flashlight
  - Minigun (slot 0) (replaces chaingun)
  - SMP 7243 (slot 0) (replaces bfg9000)
+ - Protomag (slot 2) (replaces pistol)
+   - Dual Protomags
  - Quadshot (slot 3) (replaces shotguns)
  - Backpack (replaces backpack, identical to Doom Tournament version)
  - Unreal 1 HUD
@@ -65,8 +67,6 @@ Doom Tournament (currently the devel branch is required).
 
  - Razorclaw (slot 1) (replaces chainsaw)
  - Teleport Capsules (slot 1)
- - Protomag (slot 2) (replaces pistol)
-   - Dual Protomags
  - Stunner (slot 4) (replaces chainsaw)
  - Fireblaster (slot 5) (replaces rocket launcher)
  - Flamethrower (slot 6) (replaces plasma rifle)

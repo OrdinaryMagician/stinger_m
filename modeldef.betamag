@@ -13,3 +13,412 @@ Model "Betamag"
 	ROTATING
 	FrameIndex AUTP A 1 0
 }
+
+Model "BCasing"
+{
+	Path "models"
+	Model 0 "OldShell_d.3d"
+	Skin 0 "AutoHand1.png"
+	Scale 0.0264 -0.022 0.022
+	AngleOffset 90
+	RollOffset 180
+	ZOffset 1
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1
+
+	FrameIndex PCAS A 0 0
+}
+Model "BCasing2"
+{
+	Path "models"
+	Model 0 "OldShell_d.3d"
+	Skin 0 "Autom1.png"
+	Scale 0.0264 -0.022 0.022
+	AngleOffset 90
+	RollOffset 180
+	ZOffset 1
+	USEACTORPITCH
+	USEACTORROLL
+	DONTCULLBACKFACES
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1
+
+	FrameIndex PCAS A 0 0
+}
+
+Model "Betamag"
+{
+	Path "models"
+	Model 3 "Flat_d.3d"
+	Skin 3 "OldMuz.png"
+	AngleOffset 90
+	Offset 12 -30 -2.5
+	Scale 0.06 0.06 0.06
+
+	PitchOffset 0
+	FrameIndex AMZ1 A 3 0
+	PitchOffset 90
+	FrameIndex AMZ1 B 3 0
+	PitchOffset 180
+	FrameIndex AMZ1 C 3 0
+	PitchOffset 270
+	FrameIndex AMZ1 D 3 0
+
+	Offset 6 -30 -10
+
+	PitchOffset 0
+	FrameIndex AMZ2 A 3 0
+	PitchOffset 90
+	FrameIndex AMZ2 B 3 0
+	PitchOffset 180
+	FrameIndex AMZ2 C 3 0
+	PitchOffset 270
+	FrameIndex AMZ2 D 3 0
+
+	Offset -12 -30 -2.5
+
+	PitchOffset 0
+	FrameIndex AMZ3 A 3 0
+	PitchOffset 90
+	FrameIndex AMZ3 B 3 0
+	PitchOffset 180
+	FrameIndex AMZ3 C 3 0
+	PitchOffset 270
+	FrameIndex AMZ3 D 3 0
+
+	Offset -6 -30 -10
+
+	PitchOffset 0
+	FrameIndex AMZ4 A 3 0
+	PitchOffset 90
+	FrameIndex AMZ4 B 3 0
+	PitchOffset 180
+	FrameIndex AMZ4 C 3 0
+	PitchOffset 270
+	FrameIndex AMZ4 D 3 0
+}
+
+Model "Betamag"
+{
+	Path "models"
+	Model 0 "OldAutoMag_d.3d"
+	SurfaceSkin 0 0 "AutoHand1.png"
+	SurfaceSkin 0 1 "Automa1.png"
+	Scale 0.12 -0.06 0.084
+	Offset 10.2 -17 -8.7
+	AngleOffset 90
+	RollOffset -90
+
+	// Down
+	FrameIndex AUTD A 0 0
+	FrameIndex AUTD B 0 1
+	FrameIndex AUTD C 0 2
+	FrameIndex AUTD D 0 3
+	FrameIndex AUTD E 0 4
+	FrameIndex AUTD F 0 5
+	FrameIndex AUTD G 0 6
+	// Select
+	FrameIndex AUTS A 0 6
+	FrameIndex AUTS B 0 7
+	FrameIndex AUTS C 0 8
+	FrameIndex AUTS D 0 9
+	FrameIndex AUTS E 0 10
+	FrameIndex AUTS F 0 11
+	FrameIndex AUTS G 0 12
+	FrameIndex AUTS H 0 13
+	FrameIndex AUTS I 0 14
+	FrameIndex AUTS J 0 15
+	FrameIndex AUTS K 0 16
+	// Idle
+	FrameIndex AUTI A 0 17
+	FrameIndex AUTI B 0 18
+	FrameIndex AUTI C 0 19
+	FrameIndex AUTI D 0 20
+	FrameIndex AUTI E 0 21
+	FrameIndex AUTI F 0 22
+	// Twiddle
+	FrameIndex AUTT A 0 23
+	FrameIndex AUTT B 0 24
+	FrameIndex AUTT C 0 25
+	FrameIndex AUTT D 0 26
+	FrameIndex AUTT E 0 27
+	FrameIndex AUTT F 0 28
+	FrameIndex AUTT G 0 29
+	FrameIndex AUTT H 0 30
+	FrameIndex AUTT I 0 31
+	FrameIndex AUTT J 0 32
+	FrameIndex AUTT K 0 33
+	FrameIndex AUTT L 0 34
+	FrameIndex AUTT M 0 35
+	FrameIndex AUTT N 0 36
+	FrameIndex AUTT O 0 37
+	FrameIndex AUTT P 0 38
+	FrameIndex AUTT Q 0 39
+	// Fire
+	FrameIndex AUTF A 0 40
+	FrameIndex AUTF B 0 41
+	FrameIndex AUTF C 0 42
+	FrameIndex AUTF D 0 43
+	FrameIndex AUTF E 0 44
+	FrameIndex AUTF F 0 45
+	FrameIndex AUTF G 0 46
+	FrameIndex AUTF H 0 47
+	FrameIndex AUTF I 0 48
+	FrameIndex AUTF J 0 49
+	// T1
+	FrameIndex AUTA A 0 50
+	FrameIndex AUTA B 0 51
+	FrameIndex AUTA C 0 52
+	FrameIndex AUTA D 0 53
+	FrameIndex AUTA E 0 54
+	// AltFire
+	FrameIndex AUTA F 0 55
+	FrameIndex AUTA G 0 56
+	FrameIndex AUTA H 0 57
+	FrameIndex AUTA I 0 58
+	FrameIndex AUTA J 0 59
+	FrameIndex AUTA K 0 60
+	FrameIndex AUTA L 0 61
+	// T2
+	FrameIndex AUTA M 0 62
+	FrameIndex AUTA N 0 63
+	FrameIndex AUTA O 0 64
+	FrameIndex AUTA P 0 65
+	FrameIndex AUTA Q 0 66
+	// Twirl
+	FrameIndex AUTR A 0 67
+	FrameIndex AUTR B 0 68
+	FrameIndex AUTR C 0 69
+	FrameIndex AUTR D 0 70
+	FrameIndex AUTR E 0 71
+	FrameIndex AUTR F 0 72
+	FrameIndex AUTR G 0 73
+	FrameIndex AUTR H 0 74
+	FrameIndex AUTR I 0 75
+	FrameIndex AUTR J 0 76
+	FrameIndex AUTR K 0 77
+	FrameIndex AUTR L 0 78
+	FrameIndex AUTR M 0 79
+	FrameIndex AUTR N 0 80
+	// TwirlLoop
+	FrameIndex AUTR O 0 81
+	FrameIndex AUTR P 0 82
+	FrameIndex AUTR Q 0 83
+	FrameIndex AUTR R 0 84
+	FrameIndex AUTR S 0 85
+	FrameIndex AUTR T 0 86
+	FrameIndex AUTR U 0 87
+	FrameIndex AUTR V 0 88
+	FrameIndex AUTR W 0 89
+	FrameIndex AUTR X 0 90
+	// TwirlEnd
+	FrameIndex AUTR Y 0 91
+	FrameIndex AUTR Z 0 92
+	FrameIndex AUTR [ 0 93
+	FrameIndex AUTR \ 0 94
+	FrameIndex AUTR ] 0 95
+	FrameIndex AUR2 A 0 96
+	FrameIndex AUR2 B 0 97
+	FrameIndex AUR2 C 0 98
+	FrameIndex AUR2 D 0 99
+	FrameIndex AUR2 E 0 100
+	FrameIndex AUR2 F 0 101
+	FrameIndex AUR2 G 0 102
+	FrameIndex AUR2 H 0 103
+	FrameIndex AUR2 I 0 104
+	FrameIndex AUR2 J 0 105
+	FrameIndex AUR2 K 0 106
+	// Whip
+	FrameIndex AUTW A 0 107
+	FrameIndex AUTW B 0 108
+	FrameIndex AUTW C 0 109
+	FrameIndex AUTW D 0 110
+	FrameIndex AUTW E 0 111
+	FrameIndex AUTW F 0 112
+	FrameIndex AUTW G 0 113
+	FrameIndex AUTW H 0 114
+	FrameIndex AUTW I 0 115
+	FrameIndex AUTW J 0 116
+	FrameIndex AUTW K 0 117
+	FrameIndex AUTW L 0 118
+	FrameIndex AUTW M 0 119
+	FrameIndex AUTW N 0 120
+	FrameIndex AUTW O 0 121
+	FrameIndex AUTW P 0 122
+	FrameIndex AUTW Q 0 123
+	FrameIndex AUTW R 0 124
+	FrameIndex AUTW S 0 125
+	FrameIndex AUTW T 0 126
+	FrameIndex AUTW U 0 127
+	FrameIndex AUTW V 0 128
+	FrameIndex AUTW W 0 129
+	FrameIndex AUTW X 0 130
+	FrameIndex AUTW Y 0 131
+	FrameIndex AUTW Z 0 132
+	FrameIndex AUTW [ 0 133
+	FrameIndex AUTW \ 0 134
+}
+
+Model "Betamag"
+{
+	Path "models"
+	Model 2 "OldAutoMag_d.3d"
+	SurfaceSkin 2 0 "Autom1.png"
+	SurfaceSkin 2 1 "Automa1.png"
+	Scale 0.12 0.06 0.084
+	Offset -10.2 -17 -8.7
+	AngleOffset -90
+	RollOffset -90
+
+	// Down
+	FrameIndex 2UTD A 2 0
+	FrameIndex 2UTD B 2 1
+	FrameIndex 2UTD C 2 2
+	FrameIndex 2UTD D 2 3
+	FrameIndex 2UTD E 2 4
+	FrameIndex 2UTD F 2 5
+	FrameIndex 2UTD G 2 6
+	// Select
+	FrameIndex 2UTS A 2 6
+	FrameIndex 2UTS B 2 7
+	FrameIndex 2UTS C 2 8
+	FrameIndex 2UTS D 2 9
+	FrameIndex 2UTS E 2 10
+	FrameIndex 2UTS F 2 11
+	FrameIndex 2UTS G 2 12
+	FrameIndex 2UTS H 2 13
+	FrameIndex 2UTS I 2 14
+	FrameIndex 2UTS J 2 15
+	FrameIndex 2UTS K 2 16
+	// Idle
+	FrameIndex 2UTI A 2 17
+	FrameIndex 2UTI B 2 18
+	FrameIndex 2UTI C 2 19
+	FrameIndex 2UTI D 2 20
+	FrameIndex 2UTI E 2 21
+	FrameIndex 2UTI F 2 22
+	// Twiddle
+	FrameIndex 2UTT A 2 23
+	FrameIndex 2UTT B 2 24
+	FrameIndex 2UTT C 2 25
+	FrameIndex 2UTT D 2 26
+	FrameIndex 2UTT E 2 27
+	FrameIndex 2UTT F 2 28
+	FrameIndex 2UTT G 2 29
+	FrameIndex 2UTT H 2 30
+	FrameIndex 2UTT I 2 31
+	FrameIndex 2UTT J 2 32
+	FrameIndex 2UTT K 2 33
+	FrameIndex 2UTT L 2 34
+	FrameIndex 2UTT M 2 35
+	FrameIndex 2UTT N 2 36
+	FrameIndex 2UTT O 2 37
+	FrameIndex 2UTT P 2 38
+	FrameIndex 2UTT Q 2 39
+	// Fire
+	FrameIndex 2UTF A 2 40
+	FrameIndex 2UTF B 2 41
+	FrameIndex 2UTF C 2 42
+	FrameIndex 2UTF D 2 43
+	FrameIndex 2UTF E 2 44
+	FrameIndex 2UTF F 2 45
+	FrameIndex 2UTF G 2 46
+	FrameIndex 2UTF H 2 47
+	FrameIndex 2UTF I 2 48
+	FrameIndex 2UTF J 2 49
+	// T1
+	FrameIndex 2UTA A 2 50
+	FrameIndex 2UTA B 2 51
+	FrameIndex 2UTA C 2 52
+	FrameIndex 2UTA D 2 53
+	FrameIndex 2UTA E 2 54
+	// AltFire
+	FrameIndex 2UTA F 2 55
+	FrameIndex 2UTA G 2 56
+	FrameIndex 2UTA H 2 57
+	FrameIndex 2UTA I 2 58
+	FrameIndex 2UTA J 2 59
+	FrameIndex 2UTA K 2 60
+	FrameIndex 2UTA L 2 61
+	// T2
+	FrameIndex 2UTA M 2 62
+	FrameIndex 2UTA N 2 63
+	FrameIndex 2UTA O 2 64
+	FrameIndex 2UTA P 2 65
+	FrameIndex 2UTA Q 2 66
+	// Twirl
+	FrameIndex 2UTR A 2 67
+	FrameIndex 2UTR B 2 68
+	FrameIndex 2UTR C 2 69
+	FrameIndex 2UTR D 2 70
+	FrameIndex 2UTR E 2 71
+	FrameIndex 2UTR F 2 72
+	FrameIndex 2UTR G 2 73
+	FrameIndex 2UTR H 2 74
+	FrameIndex 2UTR I 2 75
+	FrameIndex 2UTR J 2 76
+	FrameIndex 2UTR K 2 77
+	FrameIndex 2UTR L 2 78
+	FrameIndex 2UTR M 2 79
+	FrameIndex 2UTR N 2 80
+	// TwirlLoop
+	FrameIndex 2UTR O 2 81
+	FrameIndex 2UTR P 2 82
+	FrameIndex 2UTR Q 2 83
+	FrameIndex 2UTR R 2 84
+	FrameIndex 2UTR S 2 85
+	FrameIndex 2UTR T 2 86
+	FrameIndex 2UTR U 2 87
+	FrameIndex 2UTR V 2 88
+	FrameIndex 2UTR W 2 89
+	FrameIndex 2UTR X 2 90
+	// TwirlEnd
+	FrameIndex 2UTR Y 2 91
+	FrameIndex 2UTR Z 2 92
+	FrameIndex 2UTR [ 2 93
+	FrameIndex 2UTR \ 2 94
+	FrameIndex 2UTR ] 2 95
+	FrameIndex 2UR2 A 2 96
+	FrameIndex 2UR2 B 2 97
+	FrameIndex 2UR2 C 2 98
+	FrameIndex 2UR2 D 2 99
+	FrameIndex 2UR2 E 2 100
+	FrameIndex 2UR2 F 2 101
+	FrameIndex 2UR2 G 2 102
+	FrameIndex 2UR2 H 2 103
+	FrameIndex 2UR2 I 2 104
+	FrameIndex 2UR2 J 2 105
+	FrameIndex 2UR2 K 2 106
+	// Whip
+	FrameIndex 2UTW A 2 107
+	FrameIndex 2UTW B 2 108
+	FrameIndex 2UTW C 2 109
+	FrameIndex 2UTW D 2 110
+	FrameIndex 2UTW E 2 111
+	FrameIndex 2UTW F 2 112
+	FrameIndex 2UTW G 2 113
+	FrameIndex 2UTW H 2 114
+	FrameIndex 2UTW I 2 115
+	FrameIndex 2UTW J 2 116
+	FrameIndex 2UTW K 2 117
+	FrameIndex 2UTW L 2 118
+	FrameIndex 2UTW M 2 119
+	FrameIndex 2UTW N 2 120
+	FrameIndex 2UTW O 2 121
+	FrameIndex 2UTW P 2 122
+	FrameIndex 2UTW Q 2 123
+	FrameIndex 2UTW R 2 124
+	FrameIndex 2UTW S 2 125
+	FrameIndex 2UTW T 2 126
+	FrameIndex 2UTW U 2 127
+	FrameIndex 2UTW V 2 128
+	FrameIndex 2UTW W 2 129
+	FrameIndex 2UTW X 2 130
+	FrameIndex 2UTW Y 2 131
+	FrameIndex 2UTW Z 2 132
+	FrameIndex 2UTW [ 2 133
+	FrameIndex 2UTW \ 2 134
+}
