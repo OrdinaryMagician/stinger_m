@@ -26,18 +26,18 @@ Model "Impaler"
 	Path "models"
 	Model 1 "ImpalerPickup_d.3d"
 	Skin 1 "JImpale1_.png"
-	Offset 8 0 6
+	Offset 6 0 4.5
 	PitchOffset -5
 	RollOffset 45
 	AngleOffset 180
-	Scale 0.2 -0.24 0.24
+	Scale 0.15 -0.18 0.18
 
 	FrameIndex IMPP B 1 0
 
 	PitchOffset 0
 	RollOffset 0
 	Scale 0.2 -0.2 0.24
-	Offset 8 0 12
+	Offset 6 0 9
 	ROTATING
 	FrameIndex IMPP A 1 0
 }

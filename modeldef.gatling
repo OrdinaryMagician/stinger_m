@@ -3,12 +3,12 @@ Model "SMiniGun"
 	Path "models"
 	Model 1 "SMiniPick_d.3d"
 	Skin 1 "Minigun_.png"
-	ZOffset 13
-	Scale 0.2 0.2 0.24
+	ZOffset 9
+	Scale 0.15 0.15 0.18
 
 	FrameIndex SMIP B 1 0
 
-	ZOffset 13
+	ZOffset 12
 	ROTATING
 	FrameIndex SMIP A 1 0
 }

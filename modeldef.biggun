@@ -32,13 +32,13 @@ Model "BigGun"
 	Path "models"
 	Model 1 "BigGPick_d.3d"
 	Skin 1 "JBigGun1_.png"
-	ZOffset 18
+	ZOffset 15
 	AngleOffset 90
-	Scale 0.12 0.12 0.144
+	Scale 0.1 0.1 0.12
 
 	FrameIndex BIGP B 1 0
 
-	ZOffset 20
+	ZOffset 16
 	ROTATING
 	FrameIndex BIGP A 1 0
 }
