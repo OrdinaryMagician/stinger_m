@@ -345,6 +345,7 @@ Class UnrealHUD : BaseStatusBar
 				for ( int j=0; j<aslots[i].Size(); j++ )
 				{
 					let amo = aslots[i][j];
+					if ( amo.Amount <= 0 ) continue;
 					AmmoBarSize = 16*min(1.0,amo.Amount/double(amo.MaxAmount));
 					CurX = HalfHUDX-3+realslot*6+(4./nammo)*cbar;
 					CurY = HalfHUDY+29-AmmoBarSize;

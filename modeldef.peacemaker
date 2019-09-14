@@ -1,3 +1,81 @@
+Model "Peacerocket"
+{
+	Path "models"
+	Model 0 "perock_d.3d"
+	SurfaceSkin 0 1 "Jpeace1.png"
+	PitchOffset -90
+	Scale 0.16 0.192 0.16
+	USEACTORPITCH
+	USEACTORROLL
+
+	FrameIndex PEAR A 0 0
+}
+
+Model "PeaceFragment"
+{
+	Path "models"
+	Model 0 "sfrag_d.3d"
+	Skin 0 "Jpeace1.png"
+	Scale 0.1 0.1 0.12
+	USEACTORPITCH
+	USEACTORROLL
+
+	FrameIndex CHIP A 0 0
+	FrameIndex CHIP B 0 1
+	FrameIndex CHIP C 0 2
+	FrameIndex CHIP D 0 3
+	FrameIndex CHIP E 0 4
+	FrameIndex CHIP F 0 5
+}
+
+Model "Peacebarrel"
+{
+	Path "models"
+	Model 0 "peace_d.3d"
+	Skin 0 "Jpeace1.png"
+	ZOffset 10
+	AngleOffset -45
+	Scale 0.16 -0.16 0.192
+	USEACTORPITCH
+	USEACTORROLL
+
+	// unfold
+	FrameIndex PEAM A 0 0
+	FrameIndex PEAM B 0 1
+	FrameIndex PEAM C 0 2
+	FrameIndex PEAM D 0 3
+	FrameIndex PEAM E 0 4
+	FrameIndex PEAM F 0 5
+	FrameIndex PEAM G 0 6
+	FrameIndex PEAM H 0 7
+	FrameIndex PEAM I 0 8
+	FrameIndex PEAM J 0 9
+	FrameIndex PEAM K 0 10
+	FrameIndex PEAM L 0 11
+	FrameIndex PEAM M 0 12
+	FrameIndex PEAM N 0 13
+	FrameIndex PEAM O 0 14
+	FrameIndex PEAM P 0 15
+	FrameIndex PEAM Q 0 16
+	FrameIndex PEAM R 0 17
+	FrameIndex PEAM S 0 18
+	FrameIndex PEAM T 0 19
+	FrameIndex PEAM U 0 20
+	FrameIndex PEAM V 0 21
+	FrameIndex PEAM W 0 22
+	FrameIndex PEAM X 0 23
+	FrameIndex PEAM Y 0 24
+	FrameIndex PEAM Z 0 25
+	FrameIndex PEAM [ 0 26
+	FrameIndex PEAM \ 0 27
+	FrameIndex PEAM ] 0 28
+	// launch
+	FrameIndex PEAL A 0 29
+	FrameIndex PEAL B 0 30
+	FrameIndex PEAL C 0 31
+	FrameIndex PEAL D 0 32
+}
+
 Model "Peacemaker"
 {
 	Path "models"
@@ -5,11 +83,76 @@ Model "Peacemaker"
 	Skin 1 "Jpeacehand1_.png"
 	RollOffset 90	// normally upright, but it's easier to tell apart from a deployed one this way
 	ZOffset 5
-	Scale 0.16 0.192 0.16
+	Scale 0.16 -0.192 0.16
 
 	FrameIndex PEAP B 1 0
 
 	ZOffset 9
 	ROTATING
 	FrameIndex PEAP A 1 0
+}
+
+Model "Peacemaker"
+{
+	Path "models"
+	Model 0 "peacehand_d.3d"
+	Skin 0 "Jpeacehand1.png"
+	AngleOffset -90
+	Scale 0.1 -0.1 0.1
+	Offset 7.5 -15 -7.5
+
+	// Select
+	FrameIndex PEAS A 0 0
+	FrameIndex PEAS B 0 1
+	FrameIndex PEAS C 0 2
+	FrameIndex PEAS D 0 3
+	FrameIndex PEAS E 0 4
+	FrameIndex PEAS F 0 5
+	FrameIndex PEAS G 0 6
+	FrameIndex PEAS H 0 7
+	FrameIndex PEAS I 0 8
+	FrameIndex PEAS J 0 9
+	FrameIndex PEAS K 0 10
+	FrameIndex PEAS L 0 11
+	FrameIndex PEAS M 0 12
+	FrameIndex PEAS N 0 13
+	FrameIndex PEAS O 0 14
+	FrameIndex PEAS P 0 15
+	FrameIndex PEAS Q 0 16
+	FrameIndex PEAS R 0 17
+	FrameIndex PEAS S 0 18
+	FrameIndex PEAS T 0 19
+	// Idle
+	FrameIndex PEAI A 0 20
+	// Down
+	FrameIndex PEAD A 0 22
+	FrameIndex PEAD B 0 23
+	FrameIndex PEAD C 0 24
+	FrameIndex PEAD D 0 25
+	FrameIndex PEAD E 0 26
+	FrameIndex PEAD F 0 27
+	FrameIndex PEAD G 0 28
+	FrameIndex PEAD H 0 29
+	FrameIndex PEAD I 0 30
+	// Throw
+	FrameIndex PEAF A 0 32
+	FrameIndex PEAF B 0 33
+	FrameIndex PEAF C 0 34
+	FrameIndex PEAF D 0 35
+	FrameIndex PEAF E 0 36
+	FrameIndex PEAF F 0 37
+	FrameIndex PEAF G 0 38
+	FrameIndex PEAF H 0 39
+	FrameIndex PEAF I 0 40
+	// Count (0-9)
+	FrameIndex PEAC A 0 43
+	FrameIndex PEAC B 0 44
+	FrameIndex PEAC C 0 45
+	FrameIndex PEAC D 0 46
+	FrameIndex PEAC E 0 47
+	FrameIndex PEAC F 0 48
+	FrameIndex PEAC G 0 49
+	FrameIndex PEAC H 0 50
+	FrameIndex PEAC I 0 51
+	FrameIndex PEAC J 0 52
 }

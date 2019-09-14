@@ -1527,15 +1527,56 @@ Class SentryItem : UnrealInventory
 		}
 		Vector3 origin = Owner.Vec2OffsetZ(0,0,Owner.player.viewz);
 		FLineTraceData d;
-		Owner.LineTrace(Owner.angle,90,Owner.pitch,TRF_ABSPOSITION,origin.z,origin.x,origin.y,data:d);
-		if ( d.HitType != TRACE_HitNone ) origin = d.HitLocation-d.HitDir*20;
-		else origin = d.HitLocation;
+		Owner.LineTrace(Owner.angle,80,Owner.pitch,TRF_ABSPOSITION,origin.z,origin.x,origin.y,data:d);
+		if ( d.HitType != TRACE_HitNone )
+		{
+			Vector3 normal = -d.HitDir;
+			if ( d.HitType == TRACE_HitFloor )
+			{
+				if ( d.Hit3DFloor ) normal = -d.Hit3DFloor.top.Normal;
+				else normal = d.HitSector.floorplane.Normal;
+			}
+			else if ( d.HitType == TRACE_HitCeiling )
+			{
+				if ( d.Hit3DFloor ) normal = -d.Hit3DFloor.bottom.Normal;
+				else normal = d.HitSector.ceilingplane.Normal;
+			}
+			else if ( d.HitType == TRACE_HitWall )
+			{
+				normal = (-d.HitLine.delta.y,d.HitLine.delta.x,0).unit();
+				if ( !d.LineSide ) normal *= -1;
+			}
+			origin = d.HitLocation+normal*20;
+		}
+		else origin = d.HitLocation-d.HitDir*20;
 		Owner.LineTrace(0,56,90,TRF_ABSPOSITION,origin.z,origin.x,origin.y,data:d);
 		origin = d.HitLocation;
 		let a = Spawn("MinigunSentryBase",origin);
 		if ( !a.TestMobjLocation() )
 		{
 			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$M_MSNOROOM"));
+			a.Destroy();
+			return false;
+		}
+		if ( a.pos.z-a.floorz > 50 )
+		{
+			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$M_MSNOFLOOR"));
+			a.Destroy();
+			return false;
+		}
+		F3DFloor ff = null;
+		for ( int i=0; i<a.floorsector.Get3DFloorCount(); i++ )
+		{
+			if ( a.floorsector.Get3DFloor(i).top.ZAtPoint(pos.xy) > floorz ) continue;
+			ff = a.floorsector.Get3DFLoor(i);
+			break;
+		}
+		Vector3 normal;
+		if ( ff ) normal = -ff.top.Normal;
+		else normal = a.floorsector.floorplane.Normal;
+		if ( normal.z < 0.9 )
+		{
+			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$M_MSNOFLAT"));
 			a.Destroy();
 			return false;
 		}
@@ -2213,15 +2254,56 @@ Class SentryGunItem : UnrealInventory
 		if ( pickup ) return false;
 		Vector3 origin = Owner.Vec2OffsetZ(0,0,Owner.player.viewz);
 		FLineTraceData d;
-		Owner.LineTrace(Owner.angle,90,Owner.pitch,TRF_ABSPOSITION,origin.z,origin.x,origin.y,data:d);
-		if ( d.HitType != TRACE_HitNone ) origin = d.HitLocation-d.HitDir*20;
-		else origin = d.HitLocation;
+		Owner.LineTrace(Owner.angle,60,Owner.pitch,TRF_ABSPOSITION,origin.z,origin.x,origin.y,data:d);
+		if ( d.HitType != TRACE_HitNone )
+		{
+			Vector3 normal = -d.HitDir;
+			if ( d.HitType == TRACE_HitFloor )
+			{
+				if ( d.Hit3DFloor ) normal = -d.Hit3DFloor.top.Normal;
+				else normal = d.HitSector.floorplane.Normal;
+			}
+			else if ( d.HitType == TRACE_HitCeiling )
+			{
+				if ( d.Hit3DFloor ) normal = -d.Hit3DFloor.bottom.Normal;
+				else normal = d.HitSector.ceilingplane.Normal;
+			}
+			else if ( d.HitType == TRACE_HitWall )
+			{
+				normal = (-d.HitLine.delta.y,d.HitLine.delta.x,0).unit();
+				if ( !d.LineSide ) normal *= -1;
+			}
+			origin = d.HitLocation+normal*20;
+		}
+		else origin = d.HitLocation-d.HitDir*20;
 		Owner.LineTrace(0,56,90,TRF_ABSPOSITION,origin.z,origin.x,origin.y,data:d);
 		origin = d.HitLocation;
 		let a = Spawn("SentryGun",origin);
 		if ( !a.TestMobjLocation() )
 		{
 			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$M_MSNOROOM"));
+			a.Destroy();
+			return false;
+		}
+		if ( a.pos.z-a.floorz > 50 )
+		{
+			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$M_MSNOFLOOR"));
+			a.Destroy();
+			return false;
+		}
+		F3DFloor ff = null;
+		for ( int i=0; i<a.floorsector.Get3DFloorCount(); i++ )
+		{
+			if ( a.floorsector.Get3DFloor(i).top.ZAtPoint(pos.xy) > floorz ) continue;
+			ff = a.floorsector.Get3DFLoor(i);
+			break;
+		}
+		Vector3 normal;
+		if ( ff ) normal = -ff.top.Normal;
+		else normal = a.floorsector.floorplane.Normal;
+		if ( normal.z < 0.9 )
+		{
+			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$M_MSNOFLAT"));
 			a.Destroy();
 			return false;
 		}

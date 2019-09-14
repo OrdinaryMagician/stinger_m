@@ -255,6 +255,14 @@ betamag/slide	oldmage
 betamag/whip	oldawhip
 betamag/hit	oldahit
 
+peace/select	peacesel
+peace/up	peaceup
+peace/set	peaceset
+peace/down	peacedn
+peace/throw	peacethr
+peace/open	peaceopn
+peace/fly	brufly1
+
 translator/event	transa3
 
 detector/start	detact

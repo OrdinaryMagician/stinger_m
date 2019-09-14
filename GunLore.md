@@ -252,13 +252,13 @@ faster by putting in more than one shell at a time.
 
 Standard-issue "room clearing" device manufactured by the Inuit Corporation.
 
-Primary fire: Deploy the device. Having landed on solid ground, it will open up
-and release the rockets one by one after a set delay.
+Primary fire: Deploy the device. Hold to increase the activation delay, up to
+9 seconds. Having landed on solid ground, it will wait and then open up and
+release the rockets one by one, after which it will self-destruct. Note that
+these rockets will chase after anything that gets close, so keep your distance.
 
-Secondary fire: Adjust the activation delay, up to 9 seconds.
-
-Note that these rockets will chase after anything that gets close, so keep your
-distance.
+Secondary fire: Same as before, but the device will instead self-destruct right
+away, causing a much bigger boom.
 
 ## Impaler
 

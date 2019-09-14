@@ -28,3 +28,15 @@ DamageType TarydiumCharge
 	// obituary for no instigator
 	Obituary = "$O_STINGERX2"
 }
+
+DamageType PeaceDeath
+{
+	// obituary for no instigator
+	Obituary = "$O_SPEACE"
+}
+
+DamageType PeaceBarrelDeath
+{
+	// obituary for no instigator
+	Obituary = "$O_SPEACEMK"
+}
