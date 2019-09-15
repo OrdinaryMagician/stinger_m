@@ -1,3 +1,15 @@
+Model "UTranslocatorModule"
+{
+	Path "models"
+	Model 0 "TeleportProj_d.3d"
+	Skin 0 "Ahand1.png"
+	Scale 0.03 0.03 0.036
+	AngleOffset 180
+	ZOffset 3
+
+	FrameIndex TMOD A 0 0
+}
+
 Model "UTranslocator"
 {
 	Path "models"
@@ -12,4 +24,135 @@ Model "UTranslocator"
 	ZOffset 12
 	ROTATING
 	FrameIndex TLCP A 1 0
+}
+
+Model "UTranslocator"
+{
+	Path "models"
+	Model 0 "TeleHand_d.3d"
+	SurfaceSkin 0 0 "Ahand1.png"
+	SurfaceSkin 0 1 "Automa1.png"
+	AngleOffset 180
+	Scale 0.1 -0.1 0.1
+	Offset -12 -20 -12
+
+	// Down
+	FrameIndex TLCD A 0 1
+	FrameIndex TLCD B 0 2
+	FrameIndex TLCD C 0 3
+	FrameIndex TLCD D 0 4
+	FrameIndex TLCD E 0 5
+	FrameIndex TLCD F 0 6
+	// Select
+	FrameIndex TLCS A 0 6
+	FrameIndex TLCS B 0 7
+	FrameIndex TLCS C 0 8
+	FrameIndex TLCS D 0 9
+	FrameIndex TLCS E 0 10
+	FrameIndex TLCS F 0 11
+	FrameIndex TLCS G 0 12
+	FrameIndex TLCS H 0 13
+	// Idle
+	FrameIndex TLCI A 0 14
+	FrameIndex TLCI B 0 15
+	FrameIndex TLCI C 0 16
+	FrameIndex TLCI D 0 17
+	FrameIndex TLCI E 0 18
+	FrameIndex TLCI F 0 19
+	FrameIndex TLCI G 0 20
+	// Twiddle
+	FrameIndex TLCT A 0 21
+	FrameIndex TLCT B 0 22
+	FrameIndex TLCT C 0 23
+	FrameIndex TLCT D 0 24
+	FrameIndex TLCT E 0 25
+	FrameIndex TLCT F 0 26
+	FrameIndex TLCT G 0 27
+	FrameIndex TLCT H 0 28
+	FrameIndex TLCT I 0 29
+	// Fire
+	FrameIndex TLCF A 0 30
+	FrameIndex TLCF B 0 31
+	FrameIndex TLCF C 0 32
+	FrameIndex TLCF D 0 33
+	FrameIndex TLCF E 0 34
+	FrameIndex TLCF F 0 35
+	FrameIndex TLCF G 0 36	// throw
+	FrameIndex TLCF H 0 37
+	FrameIndex TLCF I 0 38
+	FrameIndex TLCF J 0 39
+	FrameIndex TLCF K 0 40
+	FrameIndex TLCF L 0 41
+	FrameIndex TLCF M 0 42
+	FrameIndex TLCF N 0 43
+	FrameIndex TLCF O 0 44
+	FrameIndex TLCF P 0 45
+	FrameIndex TLCF Q 0 46
+	FrameIndex TLCF R 0 47
+	FrameIndex TLCF S 0 48	// pull up
+	FrameIndex TLCF T 0 49
+	FrameIndex TLCF U 0 50
+	FrameIndex TLCF V 0 51
+	FrameIndex TLCF W 0 52
+	FrameIndex TLCF X 0 53
+	FrameIndex TLCF Y 0 54
+	// Teleport
+	FrameIndex TLCA A 0 56
+	FrameIndex TLCA B 0 57
+	FrameIndex TLCA C 0 58
+	FrameIndex TLCA D 0 59
+	FrameIndex TLCA E 0 60
+	FrameIndex TLCA F 0 61	// activate
+	FrameIndex TLCA G 0 62
+	FrameIndex TLCA H 0 63
+	FrameIndex TLCA I 0 64
+	FrameIndex TLCA J 0 65
+	FrameIndex TLCA K 0 66
+	FrameIndex TLCA L 0 67
+	// Recall
+	FrameIndex TLCR A 0 69
+	FrameIndex TLCR B 0 70
+	FrameIndex TLCR C 0 71
+	FrameIndex TLCR D 0 72
+	FrameIndex TLCR E 0 73
+	FrameIndex TLCR F 0 74
+	FrameIndex TLCR G 0 75	// activate
+	FrameIndex TLCR H 0 76
+	FrameIndex TLCR I 0 77
+	FrameIndex TLCR J 0 78
+	FrameIndex TLCR K 0 79
+	FrameIndex TLCR L 0 80
+	FrameIndex TLCR M 0 81
+	// The Bird™
+	FrameIndex TLCB A 0 83
+	FrameIndex TLCB B 0 84
+	FrameIndex TLCB C 0 85
+	FrameIndex TLCB D 0 86
+	FrameIndex TLCB E 0 87
+	FrameIndex TLCB F 0 88
+	FrameIndex TLCB G 0 89
+	FrameIndex TLCB H 0 90
+	FrameIndex TLCB I 0 91
+	FrameIndex TLCB J 0 92
+	FrameIndex TLCB K 0 93
+	FrameIndex TLCB L 0 94
+	FrameIndex TLCB M 0 95
+	FrameIndex TLCB N 0 96
+	FrameIndex TLCB O 0 97
+	FrameIndex TLCB P 0 98
+	FrameIndex TLCB Q 0 99
+	FrameIndex TLCB R 0 100
+	FrameIndex TLCB S 0 101
+	FrameIndex TLCB T 0 102
+	FrameIndex TLCB U 0 103
+	FrameIndex TLCB V 0 104
+	FrameIndex TLCB W 0 105
+	FrameIndex TLCB X 0 106
+	FrameIndex TLCB Y 0 107	// pull up
+	FrameIndex TLCB Z 0 108
+	FrameIndex TLCB [ 0 109
+	FrameIndex TLCB \ 0 110
+	FrameIndex TLCB ] 0 111
+	FrameIndex TLB2 A 0 112
+	FrameIndex TLB2 B 0 113
 }

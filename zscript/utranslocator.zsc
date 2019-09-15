@@ -20,10 +20,115 @@ Class UTranslocatorAmmo : Ammo
 
 Class UTranslocatorModule : Actor
 {
+	Actor b;
+	bool alreadyhit;
+	double anglevel;
+
+	Default
+	{
+		Radius 2;
+		Height 2;
+		Speed 16;
+		PROJECTILE;
+		-NOGRAVITY;
+		+USEBOUNCESTATE;
+		+SKYEXPLODE;
+		+HITTRACER;
+		+MOVEWITHSECTOR;
+		+CANBOUNCEWATER;
+		+BLOCKASPLAYER;
+		-ALLOWBOUNCEONACTORS;
+		+DONTBOUNCEONSHOOTABLES;
+		+INTERPOLATEANGLES;
+		BounceType "Hexen";
+		BounceFactor 0.3;
+		WallBounceFactor 0.3;
+		Gravity 0.35;
+	}
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		if ( !target )
+		{
+			Destroy();
+			return;
+		}
+		b = Spawn("ModuleHitbox",pos);
+		b.master = self;
+		anglevel = FRandom[TeleHand](3,5)*RandomPick[TeleHand](-1,1);
+	}
+
+	override bool CanCollideWith( Actor other, bool passive )
+	{
+		return (other != tracer);
+	}
+
+	override void Tick()
+	{
+		Super.Tick();
+		if ( bAMBUSH && !Random[Transloc](0,40) )
+		{
+			A_PlaySound("transloc/spark");
+			int numpt = Random[Transloc](20,40);
+			for ( int i=0; i<numpt; i++ )
+			{
+				Vector3 pvel = (FRandom[Transloc](-1,1),FRandom[Transloc](-1,1),FRandom[Transloc](-1,1)).unit()*FRandom[Transloc](0.1,1.2);
+				let s = Spawn("UTSmoke",pos);
+				s.vel = pvel;
+				s.SetShade(Color(1,1,1)*Random[Transloc](128,192));
+			}
+			numpt = Random[Transloc](4,12);
+			for ( int i=0; i<numpt; i++ )
+			{
+				Vector3 pvel = (FRandom[Transloc](-1,1),FRandom[Transloc](-1,1),FRandom[Transloc](-1,1)).unit()*FRandom[Transloc](2,8);
+				let s = Spawn("UTSpark",pos);
+				s.vel = pvel;
+			}
+		}
+	}
+
+	States
+	{
+	Spawn:
+		TMOD A 1
+		{
+			angle += anglevel;
+		}
+		Wait;
+	Bounce:
+		TMOD A 0
+		{
+			if ( alreadyhit )
+			{
+				ClearBounce();
+				ExplodeMissile();
+			}
+			else
+			{
+				anglevel = FRandom[TeleHand](5,30)*RandomPick[TeleHand](-1,1);
+				A_PlaySound("transloc/bounce");
+				if ( BlockingFloor || (tracer && (pos.z >= tracer.pos.z+tracer.height) && tracer.bACTLIKEBRIDGE) ) alreadyhit = true;
+			}
+		}
+		Goto Spawn;
+	Death:
+		TMOD A -1
+		{
+			if ( tracer && !tracer.bACTLIKEBRIDGE )
+			{
+				SetOrigin(tracer.Vec2OffsetZ(0,0,pos.z),false);
+				vel.xy *= 0;
+			}
+		}
+		Stop;
+	}
 }
 
 Class UTranslocator : UnrealWeapon
 {
+	Actor module;
+
 	override bool TryPickup( in out Actor toucher )
 	{
 		if ( !sting_telegun ) return false;	// not allowed
@@ -36,6 +141,85 @@ Class UTranslocator : UnrealWeapon
 		if ( Owner ) Owner.RemoveInventory(self);
 		Destroy();
 	}
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		if ( Ammo1 ) Ammo1.Amount = module?1:2;
+	}
+	action void A_ThrowModule()
+	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		A_PlaySound("telehand/throw",CHAN_WEAPON);
+		invoker.FireEffect();
+		UTMainHandler.DoSwing(self,(FRandom[Translocator](0.2,-0.4),FRandom[Translocator](0.2,-0.7)),2,-0.3,3,SWING_Spring,2,3);
+		Vector3 x, y, z;
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x-8.0*y-12.0*z;
+		let p = Spawn("UTranslocatorModule",origin);
+		p.target = self;
+		p.angle = angle;
+		p.pitch = BulletSlope();
+		p.A_SetSize(radius);
+		Vector3 dir = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch));
+		dir.z += 0.35*(1-abs(dir.z));
+		p.vel = dir*p.speed;
+		invoker.module = p;
+	}
+	action void A_ReturnModule()
+	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		A_PlaySound("transloc/return",CHAN_WEAPON);
+		invoker.FireEffect();
+		UTMainHandler.DoSwing(self,(FRandom[Translocator](-0.2,-0.4),FRandom[Translocator](-0.2,0.7)),3,-1,2,SWING_Spring,2,2);
+		if ( invoker.module && invoker.module.bAMBUSH )
+		{
+			UTMainHandler.DoFlash(self,Color(255,255,255,255),50);
+			A_PlaySound("transloc/spark",CHAN_WEAPON);
+			DamageMobj(invoker,self,int.max,'Telefrag',DMG_THRUSTLESS);
+		}
+		if ( invoker.module ) invoker.module.Destroy();
+	}
+	action void A_Translocate()
+	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		if ( !invoker.module )
+		{
+			invoker.FireEffect();
+			A_PlaySound("transloc/return",CHAN_WEAPON);
+			return;
+		}
+		// check if there's enough space
+		Vector3 oldpos = pos, newpos = invoker.module.pos;
+		double modulefloorz = invoker.module.floorz, moduleceilingz = invoker.module.ceilingz;
+		bool bBroken = invoker.module.bAMBUSH;
+		invoker.module.Destroy();
+		invoker.FireEffect();
+		// squeeze down new z if ceiling is in the way
+		if ( (newpos.z+height > moduleceilingz) ) newpos.z = max(modulefloorz,moduleceilingz-height);
+		if ( Warp(self,newpos.x,newpos.y,newpos.z,flags:WARPF_ABSOLUTEPOSITION|WARPF_TESTONLY) && TeleportMove(newpos,true) )
+		{
+			A_PlaySound("flak/click",CHAN_WEAPON);
+			SpawnTeleportFog(oldpos,true,false);
+			SpawnTeleportFog(newpos,false,false);
+			player.fov = min(175,player.desiredfov+60);
+		}
+		else A_PlaySound("transloc/return",CHAN_WEAPON);
+		if ( bBroken )
+		{
+			UTMainHandler.DoFlash(self,Color(255,255,255,255),50);
+			A_PlaySound("transloc/spark",CHAN_WEAPON);
+			DamageMobj(invoker,self,int.max,'Telefrag',DMG_THRUSTLESS);
+		}
+	}
+	override void OnDestroy()
+	{
+		Super.OnDestroy();
+		if ( module ) module.Destroy();
+	}
+
 	Default
 	{
 		Tag "$T_TELEGUN";
@@ -50,6 +234,8 @@ Class UTranslocator : UnrealWeapon
 		UTWeapon.DropAmmo 2;
 		+WEAPON.NO_AUTO_SWITCH;
 		+WEAPON.CHEATNOTWEAPON;
+		+INVENTORY.UNDROPPABLE;
+		+INVENTORY.UNTOSSABLE;
 	}
 	States
 	{
@@ -58,5 +244,50 @@ Class UTranslocator : UnrealWeapon
 		Stop;
 		TLCP B -1;
 		Stop;
+	Select:
+		TLCS A 1 A_Raise(int.max);
+		Wait;
+	Ready:
+		TLCS ABCDEFGH 2 A_WeaponReady(WRF_NOFIRE);
+		Goto Idle;
+	Dummy:
+		TNT1 A 1 A_WeaponReady(WRF_ALLOWRELOAD);
+		Wait;
+	Idle:
+		TLCI A 0 A_Overlay(-9999,"Dummy");
+		TLCI ABCDEFG 20 A_Jump(16,"Twiddle");
+		Goto Idle+1;
+	Twiddle:
+		#### # 6 { invoker.special1 = Random[TeleHand](2,5); }
+		TLCT ABCDEFGHI 3 A_SetTics(invoker.special1);
+		Goto Idle+1;
+	Fire:
+		TLCF A 0 A_Overlay(-9999,"Null");
+		TLCF A 0 A_JumpIf(invoker.module,"Recall");
+		TLCF ABCDEF 2;
+		TLCF G 0 A_ThrowModule();
+		TLCF GHIJKLMNOPQRSTUVWXY 2;
+		Goto Idle;
+	Recall:
+		TLCR ABCDEF 2;
+		TLCR G 0 A_ReturnModule();
+		TLCR GHIJKLM 2;
+		Goto Idle;
+	AltFire:
+		TLCA A 0 A_Overlay(-9999,"Null");
+		TLCA A 0 A_JumpIf(!invoker.module,"Reload");
+		TLCA ABCDE 2;
+		TLCA A 0 A_Translocate();
+		TLCA FGHIJKL 2;
+		Goto Idle;
+	Reload:
+		TLCB A 0 A_Overlay(-9999,"Null");
+		TLCB ABCDEFGHIJKLMNOPQRSTUVWXYZ[\] 2;
+		TLB2 AB 2;
+		Goto Idle;
+	Deselect:
+		TLCD A 0 A_Overlay(-9999,"Null");
+		TLCD ABCDEF 1;
+		TLCD F 1 A_Lower(int.max);
 	}
 }

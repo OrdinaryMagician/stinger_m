@@ -263,6 +263,8 @@ peace/throw	peacethr
 peace/open	peaceopn
 peace/fly	brufly1
 
+telehand/throw	peacethr
+
 translator/event	transa3
 
 detector/start	detact

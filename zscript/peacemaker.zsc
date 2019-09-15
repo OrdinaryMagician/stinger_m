@@ -409,7 +409,11 @@ Class Peacemaker : UnrealWeapon
 		p.vel.z += 2.;
 		p.target = self;
 		if ( weap.Ammo1.Amount <= 0 ) player.SetPSprite(PSP_WEAPON,invoker.FindState("EmptyIdle"));
-		else player.SetPSprite(PSP_WEAPON,invoker.FindState("Ready"));
+		else
+		{
+			invoker.PlayUpSound(self);
+			player.SetPSprite(PSP_WEAPON,invoker.FindState("Ready"));
+		}
 	}
 	action void A_StartCount()
 	{

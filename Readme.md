@@ -30,6 +30,7 @@ Doom Tournament (currently the devel branch is required).
    - Restored flashlight
  - Minigun (slot 0) (replaces chaingun)
  - SMP 7243 (slot 0) (replaces bfg9000)
+ - Teleport Capsules (slot 1)
  - Protomag (slot 2) (replaces pistol)
    - Dual Protomags
  - Quadshot (slot 3) (replaces shotguns)
@@ -67,7 +68,6 @@ Doom Tournament (currently the devel branch is required).
 ## In progress
 
  - Razorclaw (slot 1) (replaces chainsaw)
- - Teleport Capsules (slot 1)
  - Stunner (slot 4) (replaces chainsaw)
  - Fireblaster (slot 5) (replaces rocket launcher)
  - Flamethrower (slot 6) (replaces plasma rifle)
