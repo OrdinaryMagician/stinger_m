@@ -165,6 +165,7 @@ Class BigGun : UnrealWeapon
 		Weapon.UpSound "big/select";
 		Weapon.SlotNumber 9;
 		Weapon.SelectionOrder 0;
+		Weapon.SlotPriority 0.8;
 		Weapon.AmmoType "BigAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "BigAmmo";

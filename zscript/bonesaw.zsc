@@ -48,6 +48,7 @@ Class Bonesaw : UnrealWeapon
 		Weapon.UpSound "bonesaw/select";
 		Weapon.SlotNumber 1;
 		Weapon.SelectionOrder 9;
+		Weapon.SlotPriority 0.9;
 		+WEAPON.MELEEWEAPON;
 		+FORCEPAIN;
 		+NOEXTREMEDEATH;

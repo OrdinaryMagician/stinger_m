@@ -41,3 +41,211 @@ Model "Impaler"
 	ROTATING
 	FrameIndex IMPP A 1 0
 }
+
+Model "Impaler"
+{
+	Path "models"
+	Model 2 "Impaler_d.3d"
+	SurfaceSkin 2 1 "JImpale1.png"
+	Scale 0.2 -0.2 0.2
+	AngleOffset 180
+	Offset 8 -15 -12
+	DONTCULLBACKFACES
+
+	// GemUp
+	FrameIndex IMGS A 2 42
+	FrameIndex IMGS B 2 43
+	FrameIndex IMGS C 2 44
+	FrameIndex IMGS D 2 45
+	FrameIndex IMGS E 2 46
+	// GemIdle
+	FrameIndex IMGI A 2 47
+	FrameIndex IMGI B 2 48
+	FrameIndex IMGI C 2 49
+	FrameIndex IMGI D 2 50
+	FrameIndex IMGI E 2 51
+	FrameIndex IMGI F 2 52
+	FrameIndex IMGI G 2 53
+	FrameIndex IMGI H 2 54
+	// GemDown
+	FrameIndex IMGD A 2 0
+	FrameIndex IMGD B 2 1
+	FrameIndex IMGD C 2 2
+	FrameIndex IMGD D 2 3
+	FrameIndex IMGD E 2 4
+	// GemAltFire
+	FrameIndex IMGA A 2 55
+	FrameIndex IMGA B 2 56
+	FrameIndex IMGA C 2 57
+	FrameIndex IMGA D 2 58
+	FrameIndex IMGA E 2 59
+	FrameIndex IMGA F 2 60
+	FrameIndex IMGA G 2 61
+	FrameIndex IMGA H 2 62
+	// GemAltHold
+	FrameIndex IMGA I 2 63
+	FrameIndex IMGA J 2 64
+	FrameIndex IMGA K 2 65
+	FrameIndex IMGA L 2 66
+	FrameIndex IMGA M 2 67
+	FrameIndex IMGA N 2 68
+	FrameIndex IMGA O 2 69
+	FrameIndex IMGA P 2 70
+	// GemAltRelease
+	FrameIndex IMGA Q 2 71
+	FrameIndex IMGA R 2 72
+	FrameIndex IMGA S 2 73
+	FrameIndex IMGA T 2 74
+	FrameIndex IMGA U 2 75
+	FrameIndex IMGA V 2 76
+	FrameIndex IMGA W 2 77
+	FrameIndex IMGA X 2 78
+}
+
+Model "Impaler"
+{
+	Path "models"
+	Model 3 "Impaler_d.3d"
+	SurfaceSkin 3 2 "ElecFX.png"
+	Scale 0.2 -0.2 0.2
+	AngleOffset 180
+	Offset 8 -15 -12
+	DONTCULLBACKFACES
+
+	// GemUp
+	FrameIndex IMZS A 3 42
+	FrameIndex IMZS B 3 43
+	FrameIndex IMZS C 3 44
+	FrameIndex IMZS D 3 45
+	FrameIndex IMZS E 3 46
+	// GemIdle
+	FrameIndex IMZI A 3 47
+	FrameIndex IMZI B 3 48
+	FrameIndex IMZI C 3 49
+	FrameIndex IMZI D 3 50
+	FrameIndex IMZI E 3 51
+	FrameIndex IMZI F 3 52
+	FrameIndex IMZI G 3 53
+	FrameIndex IMZI H 3 54
+	// GemDown
+	FrameIndex IMZD A 3 0
+	FrameIndex IMZD B 3 1
+	FrameIndex IMZD C 3 2
+	FrameIndex IMZD D 3 3
+	FrameIndex IMZD E 3 4
+	// GemAltFire
+	FrameIndex IMZA A 3 55
+	FrameIndex IMZA B 3 56
+	FrameIndex IMZA C 3 57
+	FrameIndex IMZA D 3 58
+	FrameIndex IMZA E 3 59
+	FrameIndex IMZA F 3 60
+	FrameIndex IMZA G 3 61
+	FrameIndex IMZA H 3 62
+	// GemAltHold
+	FrameIndex IMZA I 3 63
+	FrameIndex IMZA J 3 64
+	FrameIndex IMZA K 3 65
+	FrameIndex IMZA L 3 66
+	FrameIndex IMZA M 3 67
+	FrameIndex IMZA N 3 68
+	FrameIndex IMZA O 3 69
+	FrameIndex IMZA P 3 70
+	// GemAltRelease
+	FrameIndex IMZA Q 3 71
+	FrameIndex IMZA R 3 72
+	FrameIndex IMZA S 3 73
+	FrameIndex IMZA T 3 74
+	FrameIndex IMZA U 3 75
+	FrameIndex IMZA V 3 76
+	FrameIndex IMZA W 3 77
+	FrameIndex IMZA X 3 78
+}
+
+Model "Impaler"
+{
+	Path "models"
+	Model 0 "Impaler_d.3d"
+	SurfaceSkin 0 0 "JImpale1.png"
+	Scale 0.2 -0.2 0.2
+	AngleOffset 180
+	Offset 8 -15 -12
+
+	// GemToggle
+	FrameIndex IMPG A 0 0
+	FrameIndex IMPG B 0 1
+	FrameIndex IMPG C 0 2
+	FrameIndex IMPG D 0 3
+	FrameIndex IMPG E 0 4
+	// Down
+	FrameIndex IMPD A 0 5
+	FrameIndex IMPD B 0 6
+	FrameIndex IMPD C 0 7
+	FrameIndex IMPD D 0 8
+	FrameIndex IMPD E 0 9
+	FrameIndex IMPD F 0 10
+	// Select
+	FrameIndex IMPS A 0 10
+	FrameIndex IMPS B 0 11
+	FrameIndex IMPS C 0 12
+	FrameIndex IMPS D 0 13
+	FrameIndex IMPS E 0 14
+	FrameIndex IMPS F 0 15
+	// Idle
+	FrameIndex IMPI A 0 15
+	FrameIndex IMPI B 0 16
+	FrameIndex IMPI C 0 17
+	FrameIndex IMPI D 0 18
+	FrameIndex IMPI E 0 19
+	FrameIndex IMPI F 0 20
+	FrameIndex IMPI G 0 21
+	FrameIndex IMPI H 0 22
+	// Fire
+	FrameIndex IMPF A 0 23
+	FrameIndex IMPF B 0 24
+	FrameIndex IMPF C 0 25
+	FrameIndex IMPF D 0 26
+	FrameIndex IMPF E 0 27
+	FrameIndex IMPF F 0 28
+	FrameIndex IMPF G 0 29
+	FrameIndex IMPF H 0 30
+	FrameIndex IMPF I 0 31
+	// Stab
+	FrameIndex IMPM A 0 32
+	FrameIndex IMPM B 0 33
+	FrameIndex IMPM C 0 34
+	FrameIndex IMPM D 0 35
+	FrameIndex IMPM E 0 36
+	FrameIndex IMPM F 0 37
+	FrameIndex IMPM G 0 38
+	FrameIndex IMPM H 0 39
+	FrameIndex IMPM I 0 40
+	FrameIndex IMPM J 0 41
+	// AltFire
+	FrameIndex IMPA A 0 55
+	FrameIndex IMPA B 0 56
+	FrameIndex IMPA C 0 57
+	FrameIndex IMPA D 0 58
+	FrameIndex IMPA E 0 59
+	FrameIndex IMPA F 0 60
+	FrameIndex IMPA G 0 61
+	FrameIndex IMPA H 0 62
+	// AltHold
+	FrameIndex IMPA I 0 63
+	FrameIndex IMPA J 0 64
+	FrameIndex IMPA K 0 65
+	FrameIndex IMPA L 0 66
+	FrameIndex IMPA M 0 67
+	FrameIndex IMPA N 0 68
+	FrameIndex IMPA O 0 69
+	FrameIndex IMPA P 0 70
+	// AltRelease
+	FrameIndex IMPA Q 0 71
+	FrameIndex IMPA R 0 72
+	FrameIndex IMPA S 0 73
+	FrameIndex IMPA T 0 74
+	FrameIndex IMPA U 0 75
+	FrameIndex IMPA V 0 76
+	FrameIndex IMPA W 0 77
+	FrameIndex IMPA X 0 78
+}

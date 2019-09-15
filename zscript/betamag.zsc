@@ -276,6 +276,7 @@ Class Betamag : UnrealWeapon
 		Weapon.UpSound "betamag/select";
 		Weapon.SlotNumber 2;
 		Weapon.SelectionOrder 1;
+		Weapon.SlotPriority 0.9;
 		Weapon.AmmoType "UMiniAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "UMiniAmmo";

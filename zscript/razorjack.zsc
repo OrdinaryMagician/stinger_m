@@ -246,6 +246,7 @@ Class Razorjack : UnrealWeapon
 		Weapon.UpSound "ripper/select";
 		Weapon.SlotNumber 7;
 		Weapon.SelectionOrder 7;
+		Weapon.SlotPriority 1;
 		Weapon.AmmoType "RazorAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "RazorAmmo";

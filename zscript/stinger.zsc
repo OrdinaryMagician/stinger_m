@@ -494,6 +494,7 @@ Class Stinger : UnrealWeapon
 		Weapon.UpSound "stinger/select";
 		Weapon.SlotNumber 3;
 		Weapon.SelectionOrder 7;
+		Weapon.SlotPriority 1;
 		Weapon.AmmoType "StingerAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "StingerAmmo";

@@ -12,3 +12,138 @@ Model "Stunner"
 	ROTATING
 	FrameIndex STNP A 1 0
 }
+
+Model "Stunner"
+{
+	Path "models"
+	Model 2 "Stunner_d.3d"
+	SurfaceSkin 2 0 "Stunner.png"
+	AngleOffset -90
+	RollOffset -5
+	Scale 0.2 -0.2 0.2
+	Offset 0 -20 -12
+	DONTCULLBACKFACES
+
+	// Sparks
+	FrameIndex STFF A 2 3
+	FrameIndex STFF B 2 4
+	FrameIndex STFF C 2 5
+	FrameIndex STFF D 2 6
+	FrameIndex STFF E 2 7
+	FrameIndex STFF F 2 8
+	FrameIndex STFF G 2 9
+	FrameIndex STFF H 2 10
+	FrameIndex STFF I 2 11
+	FrameIndex STFF J 2 12
+	FrameIndex STFF K 2 13
+	FrameIndex STFF L 2 14
+	FrameIndex STFF M 2 15
+	FrameIndex STFF N 2 16
+	FrameIndex STFF O 2 17
+	FrameIndex STFF P 2 18
+	FrameIndex STFF Q 2 19
+	FrameIndex STFF R 2 20
+	FrameIndex STFF S 2 21
+}
+
+Model "Stunner"
+{
+	Path "models"
+	Model 0 "Stunner_d.3d"
+	SurfaceSkin 0 1 "Stunner.png"
+	AngleOffset -90
+	RollOffset -5
+	Scale 0.2 -0.2 0.2
+	Offset 0 -20 -12
+
+	// Idle
+	FrameIndex STNI A 0 1
+	// Fire
+	FrameIndex STNF A 0 2
+	FrameIndex STNF B 0 3
+	FrameIndex STNF C 0 4
+	FrameIndex STNF D 0 5
+	FrameIndex STNF E 0 6
+	FrameIndex STNF F 0 7
+	FrameIndex STNF G 0 8
+	FrameIndex STNF H 0 9
+	FrameIndex STNF I 0 10
+	FrameIndex STNF J 0 11
+	FrameIndex STNF K 0 12
+	FrameIndex STNF L 0 13
+	FrameIndex STNF M 0 14
+	FrameIndex STNF N 0 15
+	FrameIndex STNF O 0 16
+	FrameIndex STNF P 0 17
+	FrameIndex STNF Q 0 18
+	FrameIndex STNF R 0 19
+	FrameIndex STNF S 0 20
+	FrameIndex STNF T 0 21
+	// Release
+	FrameIndex STNR A 0 22
+	FrameIndex STNR B 0 23
+	FrameIndex STNR C 0 24
+	// Hold
+	FrameIndex STNH A 0 25
+	FrameIndex STNH B 0 26
+	FrameIndex STNH C 0 27
+	FrameIndex STNH D 0 28
+	FrameIndex STNH E 0 29
+	FrameIndex STNH F 0 30
+	FrameIndex STNH G 0 31
+	FrameIndex STNH H 0 32
+	FrameIndex STNH I 0 33
+	FrameIndex STNH J 0 34
+	FrameIndex STNH K 0 35
+	FrameIndex STNH L 0 36
+	FrameIndex STNH M 0 37
+	FrameIndex STNH N 0 38
+	FrameIndex STNH O 0 39
+	FrameIndex STNH P 0 40
+	FrameIndex STNH Q 0 41
+	FrameIndex STNH R 0 42
+	// Down
+	FrameIndex STND A 0 45
+	FrameIndex STND B 0 46
+	FrameIndex STND C 0 47
+	FrameIndex STND D 0 48
+	FrameIndex STND E 0 49
+	FrameIndex STND F 0 50
+	FrameIndex STND G 0 51
+	FrameIndex STND H 0 52
+	FrameIndex STND I 0 53
+	FrameIndex STND J 0 54
+	FrameIndex STND K 0 55
+	FrameIndex STND L 0 56
+	// Select
+	FrameIndex STNS A 0 56
+	FrameIndex STNS B 0 57
+	FrameIndex STNS C 0 58
+	FrameIndex STNS D 0 59
+	FrameIndex STNS E 0 60
+	FrameIndex STNS F 0 61
+	FrameIndex STNS G 0 62
+	FrameIndex STNS H 0 63
+	FrameIndex STNS I 0 64
+	FrameIndex STNS J 0 65
+	FrameIndex STNS K 0 66
+	FrameIndex STNS L 0 67
+	FrameIndex STNS M 0 68
+	FrameIndex STNS N 0 69
+	FrameIndex STNS O 0 70
+	FrameIndex STNS P 0 71
+	FrameIndex STNS Q 0 72
+	FrameIndex STNS R 0 73
+	FrameIndex STNS S 0 74
+	FrameIndex STNS T 0 75
+	FrameIndex STNS U 0 76
+	FrameIndex STNS V 0 77
+	FrameIndex STNS W 0 78
+	FrameIndex STNS X 0 79
+	// Release2
+	FrameIndex STR2 A 0 82
+	FrameIndex STR2 B 0 83
+	FrameIndex STR2 C 0 84
+	FrameIndex STR2 D 0 85
+	FrameIndex STR2 E 0 86
+}

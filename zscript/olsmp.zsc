@@ -221,6 +221,7 @@ Class OLSMP : UnrealWeapon
 		Weapon.UpSound "automag/select";
 		Weapon.SlotNumber 0;
 		Weapon.SelectionOrder 9;
+		Weapon.SlotPriority 0.95;
 		Weapon.AmmoType "OLSMPAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "OLSMPAmmo";

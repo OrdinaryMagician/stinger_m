@@ -668,6 +668,7 @@ Class UBioRifle : UnrealWeapon
 		Weapon.UpSound "ges/select";
 		Weapon.SlotNumber 8;
 		Weapon.SelectionOrder 8;
+		Weapon.SlotPriority 1;
 		Weapon.AmmoType "UBioAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "UBioAmmo";

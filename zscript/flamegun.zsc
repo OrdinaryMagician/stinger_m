@@ -15,6 +15,7 @@ Class FlameGun : UnrealWeapon
 		Weapon.UpSound "flamegun/select";
 		Weapon.SlotNumber 5;
 		Weapon.SelectionOrder 2;
+		Weapon.SlotPriority 0.9;
 		Weapon.AmmoType "FlameAmmo";
 		Weapon.AmmoUse 10;
 		Weapon.AmmoType2 "FlameAmmo";

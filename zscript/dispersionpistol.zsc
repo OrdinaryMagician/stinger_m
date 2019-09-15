@@ -73,8 +73,7 @@ Class DefaultAmmo : Ammo
 	{
 		Super.Tick();
 		if ( !Owner ) return;
-		if ( Amount < 10 ) rechargespeed = 1.1;
-		else rechargespeed = 0.11*Amount;
+		rechargespeed = max(1.1,0.11*Amount);
 		rechargephase += 1./rechargespeed;
 		if ( rechargephase < 35 ) return;
 		rechargephase = 0;
@@ -664,7 +663,8 @@ Class DispersionPistol : UnrealWeapon
 		Inventory.PickupMessage "$I_DPISTOL";
 		Weapon.UpSound "dpistol/select";
 		Weapon.SlotNumber 1;
-		Weapon.SelectionOrder 1;
+		Weapon.SelectionOrder 2;
+		Weapon.SlotPriority 1;
 		Weapon.AmmoType "DefaultAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "DefaultAmmo";

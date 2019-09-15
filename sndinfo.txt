@@ -265,6 +265,25 @@ peace/fly	brufly1
 
 telehand/throw	peacethr
 
+stun/select	stunsel
+stun/charge	stunchrg
+stun/fire	stunfire
+stun/hit	stunhit
+
+impaler/select	impsel
+impaler/gem	impidle
+impaler/gemdown	impdown
+impaler/fire	impalerf
+impaler/stab1	impstab1
+impaler/stab2	impstab2
+impaler/stab3	impstab3
+$random impaler/stab { impaler/stab1 impaler/stab2 impaler/stab3 }
+impaler/flesh	impflesh
+impaler/wall	impwall
+impaler/altfire	impboltl
+impaler/hit	imphit
+impaler/beam	ele04
+
 translator/event	transa3
 
 detector/start	detact

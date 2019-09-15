@@ -76,6 +76,7 @@ Class SMiniGun : UnrealWeapon
 		Weapon.UpSound "smini/select";
 		Weapon.SlotNumber 0;
 		Weapon.SelectionOrder 1;
+		Weapon.SlotPriority 0.9;
 		Weapon.AmmoType "SMiniAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "SMiniAmmo";

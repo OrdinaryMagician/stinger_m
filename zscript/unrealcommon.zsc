@@ -176,7 +176,37 @@ Class UPlayer : UTPlayer
 					if ( !player.weapons.LocateWeapon(type) ) continue;
 					readonly<Weapon> def = GetDefaultByType(type);
 					if ( (giveall == ALL_YESYES) || !def.bCheatNotWeapon )
+					{
 						GiveInventory(type,1,true);
+						if ( (type is 'Automag') && sting_automags )
+						{
+							// force akimbo
+							let t = FindInventory(type);
+							if ( t ) t.Amount = 2;
+						}
+						else if ( (type is 'Betamag') && sting_protomags )
+						{
+							// force akimbo
+							let t = FindInventory(type);
+							if ( t ) t.Amount = 2;
+						}
+						else if ( type is 'DispersionPistol' )
+						{
+							// force upgrade
+							let dsp = DispersionPistol(FindInventory('DispersionPistol'));
+							if ( dsp )
+							{
+								dsp.Ammo1.MaxAmount = 90;
+								if ( player.ReadyWeapon == dsp )
+									dsp.pendingupgrade = 4;
+								else
+								{
+									dsp.upgradelevel = 4;
+									dsp.MainUse = min(6,dsp.upgradelevel+1);
+								}
+							}
+						}
+					}
 				}
 			}
 			player.PendingWeapon = savedpending;
@@ -1154,6 +1184,14 @@ Class UnrealMainHandler : EventHandler
 			if ( t ) t.Use(false);
 		}
 	}
+	private static bool CmpWeapon( Class<Weapon> a, Class <Weapon> b )
+	{
+		let defa = GetDefaultByType(a);
+		let defb = GetDefaultByType(b);
+		if ( defa.SlotPriority <= defb.SlotPriority ) return true;
+		if ( defa.SlotNumber > defb.SlotNumber ) return true;
+		return false;
+	}
 	override void WorldLoaded( WorldEvent e )
 	{
 		// More "authentic" Unreal flavor of these edits
@@ -1167,8 +1205,9 @@ Class UnrealMainHandler : EventHandler
 			level.ReplaceTextures("uAlnWl2b","C_WAL19A",0);
 			level.ReplaceTextures("xAlnWl2b","C_WAL19F",0);
 		}
-		// populate ammo-by-slot array
-		AmmoSlots.Clear();
+		// populate weapons array
+		Array<Class<Weapon> > SortedWeapons;
+		SortedWeapons.Clear();
 		for ( int i=0; i<AllActorClasses.Size(); i++ )
 		{
 			let type = (class<Weapon>)(AllActorClasses[i]);
@@ -1179,6 +1218,31 @@ Class UnrealMainHandler : EventHandler
 			int wslot = def.SlotNumber;
 			if ( wslot == -1 ) continue;
 			if ( !def.AmmoType1 ) continue;
+			SortedWeapons.Push(type);
+		}
+		// sort weapons array
+		for ( int i=0; i<SortedWeapons.Size(); i++ )
+		{
+			int j = 1;
+			while ( j < SortedWeapons.Size() )
+			{
+				int k = j;
+				while ( (k > 0) && CmpWeapon(SortedWeapons[k-1],SortedWeapons[k]) )
+				{
+					Class<Weapon> tmp = SortedWeapons[k];
+					SortedWeapons[k] = SortedWeapons[k-1];
+					SortedWeapons[k-1] = tmp;
+					k--;
+				}
+				j++;
+			}
+		}
+		// populate ammo-by-slot array
+		AmmoSlots.Clear();
+		for ( int i=0; i<SortedWeapons.Size(); i++ )
+		{
+			readonly<Weapon> def = GetDefaultByType(SortedWeapons[i]);
+			int wslot = def.SlotNumber;
 			int found = -1;
 			for ( int j=0; j<AmmoSlots.Size(); j++ )
 			{

@@ -273,6 +273,7 @@ Class Automag : UnrealWeapon
 		Weapon.UpSound "automag/select";
 		Weapon.SlotNumber 2;
 		Weapon.SelectionOrder 2;
+		Weapon.SlotPriority 1;
 		Weapon.AmmoType "UMiniAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "UMiniAmmo";

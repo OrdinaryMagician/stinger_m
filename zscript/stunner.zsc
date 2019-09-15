@@ -14,8 +14,7 @@ Class StunnerAmmo : Ammo
 	{
 		Super.Tick();
 		if ( !Owner ) return;
-		if ( Amount < 10 ) rechargespeed = 1.1;
-		else rechargespeed = 0.11*Amount;
+		rechargespeed = max(2.,.2*Amount);
 		rechargephase += 1./rechargespeed;
 		if ( rechargephase < 7 ) return;
 		rechargephase = 0;
@@ -33,6 +32,66 @@ Class StunProj : Actor
 
 Class Stunner : UnrealWeapon
 {
+	double chargesize, count;
+	bool bCharging;
+
+	action void A_StunnerFire()
+	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		A_WeaponOffset(0,32);
+		invoker.bCharging = false;
+		if ( self is 'UTPlayer' )
+			UTPlayer(self).PlayAttacking3();
+		StunnerAmmo(weap.Ammo1).rechargephase = 0;
+		A_PlaySound("stun/fire",CHAN_WEAPON,Dampener.Active(self)?.4:1.);
+		double mult = Amplifier.GetMult(self,int(invoker.ChargeSize*50)+50);
+		invoker.FireEffect();
+		A_Overlay(-2,"Null");
+	}
+	action void A_BeginCharge()
+	{
+		let weap = Weapon(invoker);
+		invoker.bCharging = true;
+		weap.DepleteAmmo(weap.bAltFire,true,1);
+		invoker.count = 0;
+		invoker.chargesize = .6;
+		A_PlaySound("stun/charge",CHAN_WEAPON,Dampener.Active(self)?.15:1.);
+		A_Overlay(-2,"Sparks");
+		A_OverlayFlags(-2,PSPF_RenderStyle,true);
+		A_OverlayRenderStyle(-2,STYLE_Add);
+		StunnerAmmo(weap.Ammo1).rechargephase = 0;
+		if ( !Dampener.Active(self) ) A_AlertMonsters();
+	}
+	action State A_ChargeUp()
+	{
+		if ( !(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)) )
+			return ResolveState("Release");
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return ResolveState(null);
+		StunnerAmmo(weap.Ammo1).rechargephase = 0;
+		UTMainHandler.DoSwing(self,(FRandom[Stunner](-1,1),FRandom[Stunner](-1,1)),0.02*invoker.chargesize,0,2,SWING_Spring);
+		A_WeaponOffset(FRandom[Stunner](-1,1)*1.2*invoker.chargesize,32+FRandom[Stunner](-1,1)*1.2*invoker.chargesize);
+		if ( !Dampener.Active(self) ) A_AlertMonsters();
+		if ( invoker.chargesize >= 6. )
+		{
+			invoker.count += 1./35.;
+			if ( invoker.count > 1.5 ) return ResolveState("Release");
+			return ResolveState(null);
+		}
+		invoker.chargesize += 2./35.;
+		invoker.count += 1./35.;
+		if ( invoker.count < 0.14 ) return ResolveState(null);
+		invoker.count = 0;
+		if ( !(sv_infiniteammo || (FindInventory('PowerInfiniteAmmo',true))) )
+		{
+			if ( weap.Ammo1.Amount < 1 )
+				return ResolveState("Release");
+			weap.Ammo1.Amount--;
+		}
+		return ResolveState(null);
+	}
+
 	Default
 	{
 		Tag "$T_STUNNER";
@@ -40,6 +99,7 @@ Class Stunner : UnrealWeapon
 		Weapon.UpSound "stun/select";
 		Weapon.SlotNumber 4;
 		Weapon.SelectionOrder 9;
+		Weapon.SlotPriority 0.9;
 		Weapon.AmmoType "StunnerAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "StunnerAmmo";
@@ -53,6 +113,47 @@ Class Stunner : UnrealWeapon
 		STNP A -1;
 		Stop;
 		STNP B -1;
+		Stop;
+	Select:
+		STNS A 1 A_Raise(int.max);
+		Wait;
+	Ready:
+		STNS ABCDEFGHIJKLMNOPQRSTUVWX 2 A_WeaponReady(WRF_NOFIRE);
+		Goto Idle;
+	Idle:
+		STNI A 1
+		{
+			A_CheckReload();
+			let weap = Weapon(invoker);
+			if ( weap && weap.Ammo1.Amount > 0 ) A_WeaponReady();
+			else A_WeaponReady(WRF_NOFIRE);
+		}
+		Wait;
+	Fire:
+	AltFire:
+		#### # 2 A_BeginCharge();
+		STNF ABCDEFGHIJKLMNOPQRST 2 A_ChargeUp();
+		Goto Hold;
+	Hold:
+		STNH R 1 A_ChargeUp();
+		Wait;
+	Release:
+		#### # 2;
+		STNR A 0 A_StunnerFire();
+		STNR ABC 1;
+		STR2 ABCDE 2;
+		STNF TRPNLJHFDB 1 A_WeaponReady(WRF_NOSWITCH|WRF_DISABLESWITCH);
+		Goto Idle;
+	Deselect:
+		STND ABCDEFGHIJKL 1;
+		STND L 1 A_Lower(int.max);
+		Wait;
+	Sparks:
+		TNT1 A 8;
+		STFF ABCDEFGHIJKLMNOPQRS 2 Bright;
+		STFF J 0 A_JumpIf(invoker.chargesize>=5.,1);
+		Goto Sparks+10;
+		STFF JIHGFEDCBA 2 Bright;
 		Stop;
 	}
 }

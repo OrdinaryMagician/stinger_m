@@ -36,6 +36,7 @@ Class UFlamethrower : UnrealWeapon
 		Weapon.UpSound "flamet/select";
 		Weapon.SlotNumber 6;
 		Weapon.SelectionOrder 4;
+		Weapon.SlotPriority 0.9;
 		Weapon.AmmoType "FlameAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "FlameAmmo";

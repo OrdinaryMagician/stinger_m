@@ -775,6 +775,10 @@ HardwareShader Texture "models/Glass2.png"
 	Texture "masktex" "models/Glass2_m.png"
 	Texture "envtex" "models/NyLeve_env.png"
 }
+HardwareShader Texture "models/ElecFX.png"
+{
+	Shader "shaders/glsl/ElecFX.fp"
+}
 // PP shaders
 HardwareShader PostProcess scene
 {

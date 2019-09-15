@@ -291,6 +291,7 @@ Class UFlakCannon : UnrealWeapon
 		Weapon.UpSound "flak/select";
 		Weapon.SlotNumber 6;
 		Weapon.SelectionOrder 4;
+		Weapon.SlotPriority 1;
 		Weapon.AmmoType "UFlakBox";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "UFlakBox";

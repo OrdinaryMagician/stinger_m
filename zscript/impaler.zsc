@@ -45,6 +45,15 @@ Class ImpalerCharge : Ammo
 
 Class Impaler : UnrealWeapon
 {
+	bool HasGem;
+
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		if ( Owner.player.ReadyWeapon != self ) return;
+		let psp = Owner.player.FindPSprite(-2);
+		if ( psp ) psp.alpha = clamp(Ammo2.Amount/double(Ammo2.MaxAmount),0.,1.);
+	}
 	Default
 	{
 		Tag "$T_IMPALER";
@@ -52,6 +61,7 @@ Class Impaler : UnrealWeapon
 		Weapon.UpSound "impaler/select";
 		Weapon.SlotNumber 7;
 		Weapon.SelectionOrder 0;
+		Weapon.SlotPriority 0.9;
 		Weapon.AmmoType "ImpalerAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "ImpalerCharge";
@@ -69,5 +79,144 @@ Class Impaler : UnrealWeapon
 		Stop;
 		IMPP B -1;
 		Stop;
+	Select:
+		IMPS A 1 A_Raise(int.max);
+		Wait;
+	Ready:
+		IMPS ABCDEF 3 A_WeaponReady(WRF_NOFIRE);
+		IMPI A 0 A_JumpIfNoAmmo("Idle");
+		Goto Reload;
+	Dummy:
+		TNT1 A 1
+		{
+			let weap = Weapon(invoker);
+			int flags = 0;
+			if ( weap.Ammo1.Amount > 0 ) flags |= WRF_ALLOWRELOAD;
+			if ( weap.Ammo2.Amount <= 0 ) flags |= WRF_NOSECONDARY;
+			A_WeaponReady(flags);
+		}
+		Wait;
+	Idle:
+		IMPI A 0 A_Overlay(-9999,"Dummy");
+		IMPI ABCDEFGH 10;
+		Goto Idle+1;
+	Melee:
+		IMPM A 0 A_Overlay(-9999,"Null");
+		IMPM ABCDEFGHIJ 2;
+		Goto Idle;
+	Fire:
+		IMPF A 0
+		{
+			if ( !invoker.HasGem )
+				return ResolveState("Melee");
+			A_Overlay(-9999,"Null");
+			A_Overlay(-3,"Null");
+			A_Overlay(-2,"Null");
+			A_PlaySound("impaler/fire",CHAN_WEAPON);
+			invoker.HasGem = false;
+			return ResolveState(null);
+		}
+		IMPF ABCDEFGHI 2;
+		IMPI A 0 A_JumpIfNoAmmo("Idle");
+		Goto Reload;
+	AltFire:
+		IMPA A 0
+		{
+			if ( !invoker.HasGem )
+				return ResolveState("Melee");
+			A_Overlay(-9999,"Null");
+			A_Overlay(-3,"GemAltFire");
+			A_Overlay(-2,"ZapAltFire");
+			A_PlaySound("impaler/altfire",CHAN_WEAPON,looping:true);
+			return ResolveState(null);
+		}
+		IMPA ABCDEFGH 2;
+		Goto AltHold;
+	AltHold:
+		IMPA IJKLMNOP 2;
+		Goto AltRelease;
+	AltRelease:
+		IMPA Q 0
+		{
+			A_Overlay(-3,"GemAltRelease");
+			A_Overlay(-2,"ZapAltRelease");
+			A_PlaySound("impaler/gem",CHAN_WEAPON,looping:true);
+		}
+		IMPA QRSTUVWX 2;
+		Goto Idle;
+	Reload:
+		IMPG A 0
+		{
+			A_Overlay(-9999,"Null");
+			invoker.HasGem = !invoker.HasGem;
+			if ( invoker.HasGem )
+			{
+				A_Overlay(-3,"GemUp");
+				A_Overlay(-2,"ZapUp");
+				A_OverlayFlags(-2,PSPF_RenderStyle|PSPF_Alpha,true);
+				A_OverlayRenderStyle(-2,STYLE_Add);
+				A_PlaySound("impaler/gem",CHAN_WEAPON,looping:true);
+			}
+			else
+			{
+				A_Overlay(-3,"GemDown");
+				A_Overlay(-2,"ZapDown");
+				A_PlaySound("impaler/gemdown",CHAN_WEAPON);
+			}
+		}
+		IMPG ABCDE 2;
+		Goto Idle;
+	Deselect:
+		IMPD A 0 A_Overlay(-9999,"Null");
+		IMPD A 0 A_JumpIf(!invoker.HasGem,"FullDeselect");
+		IMPG A 0
+		{
+			invoker.HasGem = false;
+			A_Overlay(-3,"GemDown");
+			A_Overlay(-2,"ZapDown");
+			A_PlaySound("impaler/gemdown",CHAN_WEAPON);
+		}
+		IMPG ABCDE 2;
+		Goto FullDeselect;
+	FullDeselect:
+		IMPD ABCDEF 2;
+		IMPD F 1 A_Lower(int.max);
+		Wait;
+	GemUp:
+		IMGS ABCDE 2;
+		Goto GemIdle;
+	GemIdle:
+		IMGI ABCDEFGH 10;
+		Loop;
+	GemDown:
+		IMGD ABCDE 2;
+		Stop;
+	GemAltFire:
+		IMGA ABCDEFGH 2;
+		Goto GemAltHold;
+	GemAltHold:
+		IMGA IJKLMNOP 2;
+		Loop;
+	GemAltRelease:
+		IMGA QRSTUVWX 2;
+		Goto GemIdle;
+	ZapUp:
+		IMZS ABCDE 2 Bright;
+		Goto ZapIdle;
+	ZapIdle:
+		IMZI ABCDEFGH 10 Bright;
+		Loop;
+	ZapDown:
+		IMZD ABCDE 2 Bright;
+		Stop;
+	ZapAltFire:
+		IMZA ABCDEFGH 2 Bright;
+		Goto ZapAltHold;
+	ZapAltHold:
+		IMZA IJKLMNOP 2 Bright;
+		Loop;
+	ZapAltRelease:
+		IMZA QRSTUVWX 2 Bright;
+		Goto ZapIdle;
 	}
 }
