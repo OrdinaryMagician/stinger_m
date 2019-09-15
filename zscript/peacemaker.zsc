@@ -81,11 +81,14 @@ Class PeaceRocket : Actor
 	action void A_CheckForTargets()
 	{
 		let bi = BlockThingsIterator.Create(self,500);
+		double mindist = double.infinity;
 		while ( bi.Next() )
 		{
 			if ( !bi.Thing || (!bi.Thing.bISMONSTER && !bi.Thing.player) || (bi.Thing.Health <= 0) || (Distance3D(bi.Thing) > 500) || !CheckSight(bi.Thing) ) continue;
+			double dist = Distance3D(bi.Thing);
+			if ( dist > mindist ) break;
 			tracer = bi.Thing;
-			return;
+			mindist = dist;
 		}
 	}
 	action void A_SeekTargets()
