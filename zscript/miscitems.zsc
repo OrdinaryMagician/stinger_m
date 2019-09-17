@@ -266,7 +266,7 @@ Class VoiceBox : UnrealInventory
 		Tag "$T_VOICEBOX";
 		Inventory.PickupMessage "$I_VOICEBOX";
 		Inventory.Icon "I_VoiceB";
-		Inventory.MaxAmount 3;
+		Inventory.MaxAmount 2;
 		UnrealInventory.Charge 600;
 	}
 	override void DoEffect()
@@ -1117,7 +1117,7 @@ Class Forcefield : UnrealInventory
 		Tag "$T_FORCEFIELD";
 		Inventory.PickupMessage "$I_FORCEFIELD";
 		Inventory.Icon "I_ForceF";
-		Inventory.MaxAmount 5;
+		Inventory.MaxAmount 3;
 	}
 	override bool Use( bool pickup )
 	{
@@ -2082,8 +2082,8 @@ Class MinigunSentryBase : Actor
 		Tag "$T_SENTRY";
 		Health sentryhealth;
 		Mass int.max;
-		Radius 12;
-		Height 48;
+		Radius 8;
+		Height 46;
 		+SOLID;
 		+SHOOTABLE;
 		+NOBLOOD;
@@ -2245,7 +2245,7 @@ Class SentryGunItem : UnrealInventory
 	{
 		Tag "$T_OSENTRY";
 		Inventory.Icon "I_OSntry";
-		Inventory.MaxAmount 3;
+		Inventory.MaxAmount 2;
 		Inventory.PickupMessage "$I_OSENTRY";
 		Inventory.RespawnTics 1050;
 	}
@@ -2363,8 +2363,8 @@ Class SentryGun : Actor
 		Tag "$T_OSENTRY";
 		Health 50;
 		Mass int.max;
-		Radius 10;
-		Height 24;
+		Radius 6;
+		Height 18;
 		+SOLID;
 		+SHOOTABLE;
 		+NOBLOOD;

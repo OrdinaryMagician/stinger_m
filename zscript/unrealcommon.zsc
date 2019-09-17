@@ -761,6 +761,11 @@ Class UnrealWeapon : UTWeapon
 	{
 		origin.A_PlaySound(upsound,CHAN_WEAPON,Dampener.Active(origin)?.1:1.);
 	}
+	// For clips
+	virtual clearscope int, int, bool, bool GetClipAmount() const
+	{
+		return -1, -1, false, false;
+	}
 }
 
 Class UnrealStaticHandler : StaticEventHandler

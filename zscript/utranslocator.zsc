@@ -55,6 +55,7 @@ Class UTranslocatorModule : Actor
 			return;
 		}
 		b = Spawn("ModuleHitbox",pos);
+		b.A_SetSize(6,6);
 		b.master = self;
 		anglevel = FRandom[TeleHand](3,5)*RandomPick[TeleHand](-1,1);
 	}

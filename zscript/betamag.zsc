@@ -446,7 +446,7 @@ Class Betamag : UnrealWeapon
 	LeftReloadHold:
 		2UTI A 0
 		{
-			if ( !(player.cmd.buttons&BT_RELOAD) ) return ResolveState("LeftIdle");
+			if ( !((invoker.Ammo1.Amount<=0) && (player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK))) && !(player.cmd.buttons&BT_RELOAD) ) return ResolveState("LeftIdle");
 			invoker.slavewhip = false;
 			A_Overlay(-9998,null);
 			UTMainHandler.DoSwing(self,(FRandom[Betamag](0.4,0.5),FRandom[Betamag](0.2,0.3)),4,0,8,SWING_Spring,5);
@@ -468,7 +468,7 @@ Class Betamag : UnrealWeapon
 		2UTW N 0 A_BetamagWhip();
 		2UTW NOPQR 1;
 		2UTW STUVWXYZ[\ 2;
-		2UTI A 0 A_JumpIf(player.cmd.buttons&BT_RELOAD,"LeftReloadHold");
+		2UTI A 0 A_JumpIf((invoker.Ammo1.Amount<=0)&&(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK))||(player.cmd.buttons&BT_RELOAD),"LeftReloadHold");
 		Goto LeftIdle;
 	Zoom:
 		AUTR A 1
@@ -497,11 +497,17 @@ Class Betamag : UnrealWeapon
 		2UR2 ABCDEFGHIJK 1;
 		Goto LeftIdle;
 	Deselect:
-		AUTI A 1 { invoker.slavedown = true; }
-		AUTD A 0 A_Overlay(-9999,null);
-		AUTD A 0 A_JumpIf(invoker.slaveactive,"Deselect");
+		AUTD A 0
+		{
+			A_Overlay(-9999,null);
+			invoker.slavedown = true;
+		}
 		AUTD ABCDEFG 1;
-		AUTD G 1 A_Lower(int.max);
+		AUTD G 1
+		{
+			if ( !player.FindPSprite(2) )
+				A_Lower(int.max);
+		}
 		Wait;
 	LeftDeselect:
 		2UTD A 0

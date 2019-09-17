@@ -9,7 +9,7 @@ Class UInvisibility : UnrealInventory
 		Inventory.Icon "I_Invis";
 		Inventory.PickupMessage "$I_INVISIBILITY";
 		Inventory.RespawnTics 3500;
-		Inventory.MaxAmount 2;
+		Inventory.MaxAmount 1;
 		UnrealInventory.Charge 100;
 	}
 	override bool Use( bool pickup )
@@ -97,7 +97,7 @@ Class Amplifier : UnrealInventory
 		Inventory.Icon "I_Amp";
 		Inventory.PickupMessage "$I_AMPLIFIER";
 		Inventory.RespawnTics 3150;
-		Inventory.MaxAmount 2;
+		Inventory.MaxAmount 1;
 		UnrealInventory.Charge 1000;
 	}
 	static double GetMult( Actor Owner, int val )
@@ -194,10 +194,10 @@ Class UJumpBoots : UnrealInventory
 		+COUNTITEM;
 		+INVENTORY.BIGPOWERUP;
 		+INVENTORY.ALWAYSPICKUP;
-		Inventory.MaxAmount 3;
 		Inventory.Icon "I_Boots";
 		Inventory.PickupMessage "$I_LBOOTS";
 		Inventory.RespawnTics 1050;
+		Inventory.MaxAmount 1;
 		UnrealInventory.Charge 3;
 	}
 	override bool Use( bool pickup )

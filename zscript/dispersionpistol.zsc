@@ -479,6 +479,10 @@ Class DispersionPistol : UnrealWeapon
 	bool bCharging;
 	int MainUse, ChargeUse;
 
+	override int, int, bool, bool GetClipAmount()
+	{
+		return bCharging?min(5,int(chargesize+0.1)):-1, -1, false, false;
+	}
 	override void Tick()
 	{
 		Super.Tick();
@@ -714,15 +718,15 @@ Class DispersionPistol : UnrealWeapon
 		{
 			A_CheckReload();
 			let weap = Weapon(invoker);
-			if ( weap && weap.Ammo1.Amount > 0 ) A_WeaponReady();
+			if ( invoker.pendingupgrade > invoker.upgradelevel )
+				player.SetPSprite(PSP_WEAPON,ResolveState("Upgrade"));
+			else if ( weap && weap.Ammo1.Amount > 0 ) A_WeaponReady();
 			else A_WeaponReady(WRF_NOFIRE);
 		}
 		Wait;
 	Idle:
 		#### # 0
 		{
-			if ( invoker.pendingupgrade > invoker.upgradelevel )
-				return ResolveState("Upgrade");
 			A_Overlay(-9999,"Dummy");
 			if ( invoker.upgradelevel == 0 ) return ResolveState("Idle1");
 			else if ( invoker.upgradelevel == 1 ) return ResolveState("Idle2");
@@ -851,22 +855,22 @@ Class DispersionPistol : UnrealWeapon
 	Upgrade1:
 		#### # 0 A_PlaySound("dpistol/up1",CHAN_6,Dampener.Active(self)?.2:1.);
 		DPU1 ABCD 9;
-		DPI2 A 4;
+		DPI2 A 4 A_JumpIf(invoker.pendingupgrade>invoker.upgradelevel,"Upgrade");
 		Goto Idle;
 	Upgrade2:
 		#### # 0 A_PlaySound("dpistol/up2",CHAN_6,Dampener.Active(self)?.2:1.);
 		DPU2 ABCDEFGHI 9;
-		DPI3 A 4;
+		DPI3 A 4 A_JumpIf(invoker.pendingupgrade>invoker.upgradelevel,"Upgrade");
 		Goto Idle;
 	Upgrade3:
 		#### # 0 A_PlaySound("dpistol/up3",CHAN_6,Dampener.Active(self)?.2:1.);
 		DPU3 ABCDEFGHI 9;
-		DPI4 A 4;
+		DPI4 A 4 A_JumpIf(invoker.pendingupgrade>invoker.upgradelevel,"Upgrade");
 		Goto Idle;
 	Upgrade4:
 		#### # 0 A_PlaySound("dpistol/up4",CHAN_6,Dampener.Active(self)?.2:1.);
 		DPU4 ABCDEFGHI 9;
-		DPI5 A 4;
+		DPI5 A 4 A_JumpIf(invoker.pendingupgrade>invoker.upgradelevel,"Upgrade");
 		Goto Idle;
 	Select:
 		DPS1 A 1 A_Raise(int.max);

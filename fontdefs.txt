@@ -1,13 +1,26 @@
 U083Digits
 {
-	0 Zero083
-	1 One083
-	2 Two083
-	3 Three083
-	4 Four083
-	5 Five083
-	6 Six083
-	7 Seven083
-	8 Eight083
-	9 Nine083
+	0 "graphics/hud083/font/Zero083.png"
+	1 "graphics/hud083/font/One083.png"
+	2 "graphics/hud083/font/Two083.png"
+	3 "graphics/hud083/font/Three083.png"
+	4 "graphics/hud083/font/Four083.png"
+	5 "graphics/hud083/font/Five083.png"
+	6 "graphics/hud083/font/Six083.png"
+	7 "graphics/hud083/font/Seven083.png"
+	8 "graphics/hud083/font/Eight083.png"
+	9 "graphics/hud083/font/Nine083.png"
+}
+U083DigitsSmall
+{
+	0 "graphics/hud083/font/sZero083.png"
+	1 "graphics/hud083/font/sOne083.png"
+	2 "graphics/hud083/font/sTwo083.png"
+	3 "graphics/hud083/font/sThree083.png"
+	4 "graphics/hud083/font/sFour083.png"
+	5 "graphics/hud083/font/sFive083.png"
+	6 "graphics/hud083/font/sSix083.png"
+	7 "graphics/hud083/font/sSeven083.png"
+	8 "graphics/hud083/font/sEight083.png"
+	9 "graphics/hud083/font/sNine083.png"
 }

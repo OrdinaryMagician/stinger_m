@@ -35,6 +35,10 @@ Class Stunner : UnrealWeapon
 	double chargesize, count;
 	bool bCharging;
 
+	override int, int, bool, bool GetClipAmount()
+	{
+		return bCharging?min(6,int(chargesize)):-1, -1, false, false;
+	}
 	action void A_StunnerFire()
 	{
 		Weapon weap = Weapon(invoker);

@@ -41,7 +41,7 @@ Class UnrealHUD : BaseStatusBar
 	String OldArmor[6];
 	Class<Inventory> OldArmorType[6];
 	String OldKeys[7];
-	HUDFont mOldDigits;
+	HUDFont mOldDigits, mOldDigitsSmall;
 	Font OldLargeFont, OldSmallFont;
 
 	// Translations
@@ -85,6 +85,7 @@ Class UnrealHUD : BaseStatusBar
 		KeyIcons[5] = TexMan.CheckForTexture("I_SkullY",TexMan.Type_Any);
 		KeyIcons[6] = TexMan.CheckForTexture("I_KeyG",TexMan.Type_Any);
 		mOldDigits = HUDFont.Create(Font.GetFont('U083Digits'),26,Mono_CellLeft);
+		mOldDigitsSmall = HUDFont.Create(Font.GetFont('U083DigitsSmall'),13,Mono_CellLeft);
 		mMapFont = HUDFont.Create(WhiteFont);
 		OldLargeFont = Font.GetFont('UOldLargeFont');
 		OldSmallFont = Font.GetFont('UOldSmallFont');
@@ -448,12 +449,26 @@ Class UnrealHUD : BaseStatusBar
 		if ( !CPlayer.ReadyWeapon || !CPlayer.ReadyWeapon.Ammo1 ) return;
 		Font cfont = LargeFont;
 		if ( CPlayer.ReadyWeapon.Ammo1.Amount <= min(9,CPlayer.ReadyWeapon.Ammo1.MaxAmount/3) ) cfont = LargeRedFont;
+		int sec = -1, sec2 = -1;
+		bool red = false, red2 = false;
+		if ( CPlayer.ReadyWeapon is 'UnrealWeapon' )
+			[sec, sec2, red, red2] = UnrealWeapon(CPlayer.ReadyWeapon).GetClipAmount();
 		if ( !HudMode )
 		{
 			CurX -= cfont.StringWidth(String.Format("%d",CPlayer.ReadyWeapon.Ammo1.Amount))+2;
 			Screen.DrawText(cfont,Font.CR_UNTRANSLATED,CurX,CurY,String.Format("%d",CPlayer.ReadyWeapon.Ammo1.Amount),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+			double bx = CurX;
+			CurX = bx-MedFont.StringWidth(String.Format("%d",sec))-2;
+			CurY += cfont.GetHeight()-MedFont.GetHeight()-4;
+			if ( sec != -1 )
+				Screen.DrawText(MedFont,red?Font.CR_RED:Font.CR_UNTRANSLATED,CurX,CurY,String.Format("%d",sec),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+			CurX = bx-MedFont.StringWidth(String.Format("%d",sec2))-2;
+			CurY -= MedFont.GetHeight()+2;
+			if ( sec2 != -1 )
+				Screen.DrawText(MedFont,red2?Font.CR_RED:Font.CR_UNTRANSLATED,CurX,CurY,String.Format("%d",sec2),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
 		}
 		CurX = x;
+		CurY = y;
 		Screen.DrawTexture(IconBase,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
 		TextureID icon = CPlayer.ReadyWeapon.Icon.IsNull()?CPlayer.ReadyWeapon.Ammo1.Icon:CPlayer.ReadyWeapon.Icon;
 		// scale to fit
@@ -469,7 +484,16 @@ Class UnrealHUD : BaseStatusBar
 		CurY = Y+29;
 		if ( (HudMode != 1) && (HudMode != 2) && (HudMode != 4) )
 			Screen.DrawTexture(HudLine,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_WindowRightF,Min(28.*(CPlayer.ReadyWeapon.Ammo1.Amount/double(CPlayer.ReadyWeapon.Ammo1.MaxAmount)),28.));
-		// TODO secondary ammo display
+		if ( HudMode )
+		{
+			CurX = (x+30)-TinyFont.StringWidth(String.Format("%d",sec));
+			CurY = y+2;
+			if ( sec != -1 )
+				Screen.DrawText(red?TinyRedFont:TinyFont,Font.CR_UNTRANSLATED,CurX,CurY,String.Format("%d",sec),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+			CurX = x+3;
+			if ( sec2 != -1 )
+				Screen.DrawText(red2?TinyRedFont:TinyFont,Font.CR_UNTRANSLATED,CurX,CurY,String.Format("%d",sec2),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+		}
 	}
 
 	private void DrawHealth( double x, double y )
@@ -660,6 +684,13 @@ Class UnrealHUD : BaseStatusBar
 				break;
 			}
 		}
+		int sec = -1, sec2 = -1;
+		if ( CPlayer.ReadyWeapon && (CPlayer.ReadyWeapon is 'UnrealWeapon') )
+			[sec, sec2] = UnrealWeapon(CPlayer.ReadyWeapon).GetClipAmount();
+		if ( sec != -1 )
+			DrawString(mOldDigitsSmall,FormatNumber(sec,3),(633,378),DI_TEXT_ALIGN_RIGHT);
+		if ( sec2 != -1 )
+			DrawString(mOldDigitsSmall,FormatNumber(sec2,3),(556,378),DI_TEXT_ALIGN_LEFT);
 		for ( int i=0; i<6; i++ )
 		{
 			if ( !CPlayer.mo.CheckKeys(i+1,false,true) ) continue;

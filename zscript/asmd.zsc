@@ -310,6 +310,11 @@ Class ASMDHitbox : ShockHitbox
 			}
 		}
 	}
+	Default
+	{
+		Radius 6;
+		Height 12;
+	}
 }
 
 Class ASMDBall : Actor

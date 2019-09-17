@@ -297,6 +297,10 @@ Class Eightball : UnrealWeapon
 	int locktics;
 	bool bSingleRocket;
 
+	override int, int, bool, bool GetClipAmount()
+	{
+		return special1?special1:-1, -1, false, false;
+	}
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();

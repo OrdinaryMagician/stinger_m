@@ -579,6 +579,10 @@ Class UBioRifle : UnrealWeapon
 	double chargesize, count;
 	bool bCharging;
 
+	override int, int, bool, bool GetClipAmount()
+	{
+		return bCharging?min(5,int(chargesize+0.1)):-1, -1, false, false;
+	}
 	action void A_BioFire( bool bAlt = false )
 	{
 		Weapon weap = Weapon(invoker);
@@ -588,6 +592,7 @@ Class UBioRifle : UnrealWeapon
 			if ( weap.Ammo1.Amount <= 0 ) return;
 			if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		}
+		invoker.bCharging = false;
 		invoker.chargesize = min(invoker.chargesize,4.9);
 		if ( bAlt ) A_PlaySound("ges/fire",CHAN_WEAPON,Dampener.Active(self)?.17:1.,pitch:max(.5,1.35-invoker.chargesize/8.));
 		else A_PlaySound("ges/fire",CHAN_WEAPON,Dampener.Active(self)?.17:1.);
@@ -642,10 +647,7 @@ Class UBioRifle : UnrealWeapon
 			}
 		}
 		if ( !(player.cmd.buttons&BT_ALTATTACK) )
-		{
-			invoker.bCharging = false;
 			player.SetPSPrite(PSP_WEAPON,invoker.FindState("AltRelease"));
-		}
 	}
 	action void A_BeginCharge()
 	{
