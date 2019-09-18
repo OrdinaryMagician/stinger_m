@@ -12,6 +12,7 @@ DAMNUM_TYPECOLOR_STUNNED = "DamLightBlue";
 DAMNUM_TYPECOLOR_IMPALER = "DamMagenta";
 DAMNUM_TYPECOLOR_PEACEDEATH = "DamGold";
 DAMNUM_TYPECOLOR_PEACEBARRELDEATH = "DamGold";
+DAMNUM_TYPECOLOR_BIGSHOT = "DamGold";
 /* Obituaries */
 O_DPISTOL = "%o was killed by %k's Dispersion Pistol. What a loser!";
 O_AUTOMAG = "%o got gatted by %k's Automag.";
