@@ -155,7 +155,6 @@ Class QuadShot : UnrealWeapon
 		[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
 		double a, s;
 		Vector3 dir;
-		FLineTraceData d;
 		if ( bAlt )
 		{
 			A_QuakeEx(1,1,1,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);

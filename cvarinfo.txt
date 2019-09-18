@@ -87,5 +87,3 @@ server bool sting_bhold = false;	// biorifle can be held fully loaded
 server bool sting_razoraim = false;	// razorjack alt follows aim instead of
 					// being steered by player rotation
 server bool sting_biosplash = false;	// biorifle alt splashes like in ut
-server bool sting_impalerauto = false;	// impaler reloads automatically after
-					// primary fire

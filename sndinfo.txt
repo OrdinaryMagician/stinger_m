@@ -284,6 +284,14 @@ impaler/altfire	impboltl
 impaler/hit	imphit
 impaler/beam	ele04
 
+big/select	bigmsel
+big/fire	bigmfire
+big/dry		bigmdryf
+big/punch	bigmejct
+big/reload	bigmrelo
+big/shell	bigmshel
+big/blast	bigmhit
+
 translator/event	transa3
 
 detector/start	detact

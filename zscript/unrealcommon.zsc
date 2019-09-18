@@ -201,7 +201,7 @@ Class UPlayer : UTPlayer
 									dsp.pendingupgrade = 4;
 								else
 								{
-									dsp.upgradelevel = 4;
+									dsp.pendingupgrade = dsp.upgradelevel = 4;
 									dsp.MainUse = min(6,dsp.upgradelevel+1);
 								}
 							}

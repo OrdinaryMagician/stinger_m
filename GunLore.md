@@ -311,14 +311,16 @@ but that's a story for another time (and mod).
 
 ## Demolisher
 
-The signature handgun wielded by the Archangels, who lead the Bigman tribes
-living in the southern swamplands of Na Pali. Firing highly explosive, massive
-bullets, this truly is a force to be reckoned with.
+The Demolisher is the crowning achievement of Bigman gunsmithing. Built with
+the finest metals available on Na Pali, and engineered with love for one and
+only one thing: EXPLOSIONS.
 
 Primary fire: Single explosive shot, high recoil.
 
 Secondary fire: Rapid fire. A puny little human like you stands no chance
 against its recoil.
+
+Magazine holds 4 shots.
 
 ## Autocannon
 

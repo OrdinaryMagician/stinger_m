@@ -27,6 +27,30 @@ Model "BigAmmo3"
 	FrameIndex BIGA A 0 0
 }
 
+Model "FatRing"
+{
+	Path "models"
+	Model 0 "FatRing_d.3d"
+	Skin 0 "JRingEx1.png"
+	PitchOffset 90
+	Scale 1.2 1.0 1.0
+	DONTCULLBACKFACES
+	USEACTORPITCH
+	USEACTORROLL
+
+	FrameIndex FATR A 0 0
+	FrameIndex FATR B 0 1
+	FrameIndex FATR C 0 2
+	FrameIndex FATR D 0 3
+	FrameIndex FATR E 0 4
+	FrameIndex FATR F 0 5
+	FrameIndex FATR G 0 6
+	FrameIndex FATR H 0 7
+	FrameIndex FATR I 0 8
+	FrameIndex FATR J 0 9
+	FrameIndex FATR K 0 10
+}
+
 Model "BigGun"
 {
 	Path "models"
@@ -41,4 +65,195 @@ Model "BigGun"
 	ZOffset 16
 	ROTATING
 	FrameIndex BIGP A 1 0
+}
+
+Model "BigCasing"
+{
+	Path "models"
+	Model 0 "BigGShellC_d.3d"
+	Skin 0 "Jclip1.png"
+	Scale 0.12 0.1 0.1
+	PitchOffset 90
+	Offset 3 0 2
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 2
+
+	FrameIndex PCAS A 0 0
+}
+
+Model "BigGun"
+{
+	Path "models"
+	Model 2 "Flat_d.3d"
+	Skin 2 "BigMuz.png"
+	AngleOffset 90
+	PitchOffset 90
+	Scale 0.2 0.2 0.2
+	Offset 25 -60 -5
+
+	FrameIndex BGMF A 2 0
+}
+
+Model "BigGun"
+{
+	Path "models"
+	Model 0 "BigGun_d.3d"
+	SurfaceSkin 0 0 "JBigGun1.png"
+	SurfaceSkin 0 1 "Automa1.png"
+	AngleOffset -85
+	Scale 0.2 -0.1 0.2
+	Offset 7 -10 -3
+
+	// Still
+	FrameIndex BIGI A 0 0
+	// Down
+	FrameIndex BIGD A 0 1
+	FrameIndex BIGD B 0 2
+	FrameIndex BIGD C 0 3
+	FrameIndex BIGD D 0 4
+	FrameIndex BIGD E 0 5
+	FrameIndex BIGD F 0 6
+	FrameIndex BIGD G 0 7
+	FrameIndex BIGD H 0 8
+	FrameIndex BIGD I 0 9
+	FrameIndex BIGD J 0 10
+	FrameIndex BIGD K 0 11
+	// Select
+	FrameIndex BIGS A 0 11
+	FrameIndex BIGS B 0 12
+	FrameIndex BIGS C 0 13
+	FrameIndex BIGS D 0 14
+	FrameIndex BIGS E 0 15
+	FrameIndex BIGS F 0 16
+	FrameIndex BIGS G 0 17
+	FrameIndex BIGS H 0 18
+	FrameIndex BIGS I 0 19
+	// Twiddle1
+	FrameIndex BIGW A 0 20
+	FrameIndex BIGW B 0 21
+	FrameIndex BIGW C 0 22
+	FrameIndex BIGW D 0 23
+	FrameIndex BIGW E 0 24
+	FrameIndex BIGW F 0 25
+	FrameIndex BIGW G 0 26
+	FrameIndex BIGW H 0 27
+	FrameIndex BIGW I 0 28
+	FrameIndex BIGW J 0 29
+	FrameIndex BIGW K 0 30
+	FrameIndex BIGW L 0 31
+	FrameIndex BIGW M 0 32
+	FrameIndex BIGW N 0 33
+	FrameIndex BIGW O 0 34
+	// Twiddle2
+	FrameIndex BIGT A 0 35
+	FrameIndex BIGT B 0 36
+	FrameIndex BIGT C 0 37
+	FrameIndex BIGT D 0 38
+	FrameIndex BIGT E 0 39
+	FrameIndex BIGT F 0 40
+	FrameIndex BIGT G 0 41
+	FrameIndex BIGT H 0 42
+	FrameIndex BIGT I 0 43
+	FrameIndex BIGT J 0 44
+	FrameIndex BIGT K 0 45
+	FrameIndex BIGT L 0 46
+	FrameIndex BIGT M 0 47
+	FrameIndex BIGT N 0 48
+	FrameIndex BIGT O 0 49
+	FrameIndex BIGT P 0 50
+	FrameIndex BIGT Q 0 51
+	FrameIndex BIGT R 0 52
+	FrameIndex BIGT S 0 53
+	FrameIndex BIGT T 0 54
+	FrameIndex BIGT U 0 55
+	FrameIndex BIGT V 0 56
+	FrameIndex BIGT W 0 57
+	FrameIndex BIGT X 0 58
+	FrameIndex BIGT Y 0 59
+	// PreFire
+	FrameIndex BIGF A 0 60
+	FrameIndex BIGF B 0 61
+	// Fire
+	FrameIndex BIGF C 0 62
+	FrameIndex BIGF D 0 63
+	FrameIndex BIGF E 0 64
+	FrameIndex BIGF F 0 65
+	FrameIndex BIGF G 0 66
+	FrameIndex BIGF H 0 67
+	FrameIndex BIGF I 0 68
+	FrameIndex BIGF J 0 69
+	FrameIndex BIGF K 0 70
+	FrameIndex BIGF L 0 71
+	// EndFire
+	FrameIndex BIGF M 0 72
+	FrameIndex BIGF N 0 73
+	FrameIndex BIGF O 0 74
+	FrameIndex BIGF P 0 75
+	// Reload
+	FrameIndex BIGR A 0 76
+	FrameIndex BIGR B 0 77
+	FrameIndex BIGR C 0 78
+	FrameIndex BIGR D 0 79
+	FrameIndex BIGR E 0 80
+	FrameIndex BIGR F 0 81
+	FrameIndex BIGR G 0 82
+	FrameIndex BIGR H 0 83
+	FrameIndex BIGR I 0 84
+	FrameIndex BIGR J 0 85
+	FrameIndex BIGR K 0 86
+	FrameIndex BIGR L 0 87
+	FrameIndex BIGR M 0 88	// punch
+	FrameIndex BIGR N 0 89
+	FrameIndex BIGR O 0 90
+	FrameIndex BIGR P 0 91
+	FrameIndex BIGR Q 0 92
+	FrameIndex BIGR R 0 93
+	FrameIndex BIGR S 0 94
+	FrameIndex BIGR T 0 95
+	FrameIndex BIGR U 0 96
+	FrameIndex BIGR V 0 97
+	FrameIndex BIGR W 0 98
+	FrameIndex BIGR X 0 99	// drop
+	FrameIndex BIGR Y 0 100
+	FrameIndex BIGR Z 0 101
+	FrameIndex BIGR [ 0 102
+	FrameIndex BIGR \ 0 103
+	FrameIndex BIGR ] 0 104
+	FrameIndex BIR2 A 0 105
+	FrameIndex BIR2 B 0 106
+	FrameIndex BIR2 C 0 107
+	FrameIndex BIR2 D 0 108
+	FrameIndex BIR2 E 0 109
+	FrameIndex BIR2 F 0 110
+	FrameIndex BIR2 G 0 111	// load
+	FrameIndex BIR2 H 0 112
+	FrameIndex BIR2 I 0 113
+	FrameIndex BIR2 J 0 114
+	FrameIndex BIR2 K 0 115
+	FrameIndex BIR2 L 0 116
+	FrameIndex BIR2 M 0 117
+	FrameIndex BIR2 N 0 118
+	FrameIndex BIR2 O 0 119
+	FrameIndex BIR2 P 0 120	// reselect
+	FrameIndex BIR2 Q 0 121
+	FrameIndex BIR2 R 0 122
+	FrameIndex BIR2 S 0 123
+	FrameIndex BIR2 T 0 124
+	FrameIndex BIR2 U 0 125
+	FrameIndex BIR2 V 0 126
+	FrameIndex BIR2 W 0 127
+	FrameIndex BIR2 X 0 128
+	FrameIndex BIR2 Y 0 129
+	FrameIndex BIR2 Z 0 130
+	FrameIndex BIR2 [ 0 131
+	FrameIndex BIR2 \ 0 132
+	FrameIndex BIR2 ] 0 133
+	FrameIndex BIR3 A 0 134
+	FrameIndex BIR3 B 0 135
+	FrameIndex BIR3 C 0 136
+	FrameIndex BIR3 D 0 137
+	FrameIndex BIR3 E 0 138
+	FrameIndex BIR3 F 0 139
 }
