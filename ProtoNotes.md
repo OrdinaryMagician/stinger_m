@@ -24,6 +24,7 @@
    scratch sometime.
  - I forgot to re-add in the little bits of flesh/dried blood that hang from
    the blades, but I think it still looks fine like this.
+   Edit: I re-added them.
  - Same story as the Demolisher. The fact that these two only popped up in one
    third-party source for another game is really suspicious.
 

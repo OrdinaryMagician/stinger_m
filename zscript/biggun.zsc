@@ -128,10 +128,10 @@ Class BigBlast : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		A_Explode(200,250);
-		A_QuakeEx(4,4,4,10,0,400,"",QF_RELATIVE|QF_SCALEDOWN,falloff:200,rollintensity:0.2);
+		A_Explode(50+special1,150);
+		A_QuakeEx(4,4,4,10,0,300,"",QF_RELATIVE|QF_SCALEDOWN,falloff:150,rollintensity:0.2);
 		A_PlaySound("big/blast",CHAN_VOICE,pitch:FRandom[BigGun](0.8,1.2));
-		UTMainHandler.DoBlast(self,250,80000);
+		UTMainHandler.DoBlast(self,150,80000);
 		let r = Spawn("FatRing",pos);
 		r.angle = angle;
 		r.pitch = pitch;
@@ -200,8 +200,9 @@ Class BigTracer : LineTracer
 				ent.x = Results.HitVector;
 				ent.hitdamage = min(Results.HitActor.health,int(penetration));
 				hitlist.Push(ent);
-				penetration -= ent.hitdamage*.3;
-				if ( penetration <= 0 ) return TRACE_Abort;
+				penetration = max(0,penetration-ent.hitdamage*.2);
+				if ( (penetration <= 0) || (hitlist.Size() > 9) )
+					return TRACE_Abort;
 				return TRACE_Skip;
 			}
 			return TRACE_Skip;
@@ -316,7 +317,7 @@ Class BigGun : UnrealWeapon
 		if ( !invoker.t ) invoker.t = new("BigTracer");
 		invoker.t.ignoreme = self;
 		invoker.t.hitlist.Clear();
-		invoker.t.penetration = 1000.;
+		invoker.t.penetration = 200.;
 		invoker.t.Trace(origin,level.PointInSector(origin.xy),dir,10000.,0);
 		for ( int i=0; i<invoker.t.hitlist.Size(); i++ )
 		{
@@ -324,6 +325,7 @@ Class BigGun : UnrealWeapon
 			l.hitactor.DamageMobj(invoker,self,l.hitdamage,'BigShot',DMG_THRUSTLESS);
 			UTMainHandler.DoKnockback(l.hitactor,l.x,90000.);
 			let b = Spawn("BigBlast",l.hitlocation-l.x*8.);
+			b.special1 = l.hitdamage;
 			b.angle = atan2(l.x.y,l.x.x);
 			b.pitch = asin(-l.x.z);
 		}
@@ -346,6 +348,7 @@ Class BigGun : UnrealWeapon
 				if ( !invoker.t.Results.Side ) hitnormal *= -1;
 			}
 			let b = Spawn("BigBlast",invoker.t.Results.HitPos+hitnormal*8.);
+			b.special1 = int(invoker.t.penetration);
 			b.angle = atan2(hitnormal.y,hitnormal.x);
 			b.pitch = asin(-hitnormal.z);
 			if ( invoker.t.Results.HitLine ) invoker.t.Results.HitLine.RemoteActivate(self,invoker.t.Results.Side,SPAC_Impact,invoker.t.Results.HitPos);
