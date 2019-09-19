@@ -327,7 +327,7 @@ Magazine holds 4 shots.
 A barely portable weapon. Usually these are mounted on ships, you know...
 
 Primary fire: Shoots each barrel one at a time. A direct hit is pretty much
-lethal for unarmored targets.
+lethal for small targets.
 
 Secondary fire: Fires four barrels simultaneously. Watch out for the massive
 recoil.
