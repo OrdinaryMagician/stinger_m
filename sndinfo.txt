@@ -292,6 +292,11 @@ big/reload	bigmrelo
 big/shell	bigmshel
 big/blast	bigmhit
 
+smini/select	sminisel
+smini/fire	sminione
+smini/altfire	sminialt
+smini/endfire	sminiend
+
 translator/event	transa3
 
 detector/start	detact

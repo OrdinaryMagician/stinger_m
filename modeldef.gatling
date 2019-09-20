@@ -12,3 +12,76 @@ Model "SMiniGun"
 	ROTATING
 	FrameIndex SMIP A 1 0
 }
+
+Model "SMiniGun"
+{
+	Path "models"
+	Model 0 "SMinigun_d.3d"
+	Skin 0 "Minigun.png"
+	AngleOffset 180
+	Scale 0.1 -0.08 0.1
+	Offset 6 -18 -10
+
+	// Down
+	FrameIndex SMID A 0 1
+	FrameIndex SMID B 0 2
+	FrameIndex SMID C 0 3
+	FrameIndex SMID D 0 4
+	FrameIndex SMID E 0 5
+	FrameIndex SMID F 0 6
+	// Select
+	FrameIndex SMIS A 0 6
+	FrameIndex SMIS B 0 7
+	FrameIndex SMIS C 0 8
+	FrameIndex SMIS D 0 9
+	FrameIndex SMIS E 0 10
+	FrameIndex SMIS F 0 11
+	FrameIndex SMIS G 0 12
+	FrameIndex SMIS H 0 13
+	FrameIndex SMIS I 0 14
+	// Idle
+	FrameIndex SMII A 0 15
+	FrameIndex SMII B 0 16
+	FrameIndex SMII C 0 17
+	FrameIndex SMII D 0 18
+	FrameIndex SMII E 0 19
+	// Fire1
+	FrameIndex SMIF A 0 20
+	FrameIndex SMIF B 0 21
+	FrameIndex SMIF C 0 22
+	FrameIndex SMIF D 0 23
+	FrameIndex SMIF E 0 24
+	FrameIndex SMIF F 0 25
+	// Fire2
+	FrameIndex SMIF G 0 26
+	FrameIndex SMIF H 0 27
+	FrameIndex SMIF I 0 28
+	FrameIndex SMIF J 0 29
+	FrameIndex SMIF K 0 30
+	FrameIndex SMIF L 0 31
+	// Fire3
+	FrameIndex SMIF M 0 32
+	FrameIndex SMIF N 0 33
+	FrameIndex SMIF O 0 34
+	FrameIndex SMIF P 0 35
+	FrameIndex SMIF Q 0 36
+	FrameIndex SMIF R 0 37
+	// Fire4
+	FrameIndex SMIF S 0 38
+	FrameIndex SMIF T 0 39
+	FrameIndex SMIF U 0 40
+	FrameIndex SMIF V 0 41
+	FrameIndex SMIF W 0 42
+	FrameIndex SMIF X 0 43
+	// AltFire
+	FrameIndex SMIA A 0 44
+	FrameIndex SMIA B 0 45
+	FrameIndex SMIA C 0 46
+	FrameIndex SMIA D 0 47
+	FrameIndex SMIA E 0 48
+	FrameIndex SMIA F 0 49
+	FrameIndex SMIA G 0 50
+	FrameIndex SMIA H 0 51
+	FrameIndex SMIA I 0 52
+	FrameIndex SMIA J 0 53
+}

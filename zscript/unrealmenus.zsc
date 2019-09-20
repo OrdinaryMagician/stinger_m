@@ -1,17 +1,16 @@
 // draws unreal-style main menu
-Class ListMenuItemUnrealBg : ListMenuItem
+Class UnrealListMenu : ListMenu
 {
 	TextureID tex[3];
 
-	void Init( ListMenuDescriptor desc, String dummy )
+	override void Init( Menu parent, ListMenuDescriptor desc )
 	{
-		Super.Init(0,0);
+		Super.Init(parent,desc);
 		tex[0] = TexMan.CheckForTexture("graphics/rmetal.png",TexMan.Type_Any);
 		tex[1] = TexMan.CheckForTexture("graphics/menubarr.png",TexMan.Type_Any);
 		tex[2] = TexMan.CheckForTexture("graphics/unlogo.png",TexMan.Type_Any);
 	}
-
-	override void Drawer( bool selected )
+	override void Drawer()
 	{
 		double StartX = 0.5*CleanWidth_1-128;
 		int num = (CleanHeight_1/512)+1;
@@ -19,6 +18,30 @@ Class ListMenuItemUnrealBg : ListMenuItem
 			Screen.DrawTexture(tex[0],false,StartX*CleanXFac_1,512*CleanYFac_1*i,DTA_CleanNoMove_1,true);
 		Screen.DrawTexture(tex[1],false,StartX*CleanXFac_1,(CleanHeight_1-58)*CleanYFac_1,DTA_CleanNoMove_1,true,DTA_LegacyRenderStyle,STYLE_Add);
 		Screen.DrawTexture(tex[2],false,StartX*CleanXFac_1,(CleanHeight_1-52)*CleanYFac_1,DTA_CleanNoMove_1,true);
+		Super.Drawer();
+	}
+	override bool MouseEvent( int type, int x, int y )
+	{
+		int sel = -1;
+		if ( mFocusControl )
+		{
+			mFocusControl.MouseEvent(type,x,y);
+			return true;
+		}
+		else
+		{
+			for ( int i=0; i<mDesc.mItems.Size(); i++ )
+			{
+				if ( mDesc.mItems[i].CheckCoordinate(x,y) )
+				{
+					mDesc.mSelectedItem = i;
+					mDesc.mItems[i].MouseEvent(type,x,y);
+					return true;
+				}
+			}
+		}
+		mDesc.mSelectedItem = -1;
+		return true;
 	}
 }
 
@@ -67,14 +90,13 @@ Class ListMenuItemUnrealTextItem : ListMenuItemSelectable
 
 	override bool CheckCoordinate( int x, int y )
 	{
-		/*String str = StringTable.Localize(mText);
+		String str = StringTable.Localize(mText);
 		let fnt = (generic_ui||!mFont.CanPrint(str))?NewSmallFont:mFont;
 		int w = fnt.StringWidth(str);
 		int h = fnt.GetHeight();
-		double basex = floor(0.5*(CleanWidth_1-w));
-		double basey = floor(0.25*(CleanHeight_1-mSpacing*5));
-		return (mEnabled && (x >= basex) && (x < basex+w) && (y >= basey) && (y < basey+h));*/
-		return false;	// since we can't change the main menu class, this won't work anyway
+		double basex = floor(0.5*(CleanWidth_1-w))+mXPos;
+		double basey = floor(0.25*(CleanHeight_1-mSpacing*5))+mYPos;
+		return (mEnabled && (x >= basex) && (x < basex+w) && (y >= basey) && (y < basey+h));
 	}
 
 	override void DrawSelector( double xofs, double yofs, TextureID tex )

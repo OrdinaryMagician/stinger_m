@@ -117,8 +117,8 @@ OptionMenu "UnrealCreditsMenu"
 
 ListMenu "MainMenu"
 {
+	Class "UnrealListMenu"
 	LineSpacing 40
-	UnrealBg " "
 	Position 0, 0
 	UnrealTextItem "$MNU_NEWGAME", "n", "PlayerclassMenu"
 	UnrealTextItem "$MNU_OPTIONS", "o", "OptionsMenu"
@@ -133,8 +133,8 @@ ListMenu "MainMenu"
 
 ListMenu "MainMenuTextOnly"
 {
+	Class "UnrealListMenu"
 	LineSpacing 40
-	UnrealBg " "
 	Position 0, 0
 	UnrealTextItem "$MNU_NEWGAME", "n", "PlayerclassMenu"
 	UnrealTextItem "$MNU_OPTIONS", "o", "OptionsMenu"

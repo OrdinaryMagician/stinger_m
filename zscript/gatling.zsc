@@ -69,6 +69,28 @@ Class SMiniGun : UnrealWeapon
 			Destroy();
 		}
 	}
+	action void A_SMiniFire( bool bAlt = false )
+	{
+		if ( bAlt ) invoker.special1 = 0;
+		else
+		{
+			State which = ResolveState("FireOne");
+			if ( invoker.special1 == 1 ) which = ResolveState("FireTwo");
+			else if ( invoker.special1 == 2 ) which = ResolveState("FireThree");
+			else if ( invoker.special1 == 3 ) which = ResolveState("FireFour");
+			player.SetPSprite(PSP_WEAPON,which);
+			invoker.special1 = (invoker.special1%4)+1;
+		}
+		A_PlaySound(bAlt?"smini/altfire":"smini/fire",CHAN_WEAPON);
+		// TODO everything
+	}
+	action void A_Cooldown()
+	{
+		// TODO steam effect
+		invoker.special2--;
+		if ( invoker.special2 <= 0 )
+			player.SetPSprite(PSP_WEAPON,ResolveState("Idle"));
+	}
 	Default
 	{
 		Tag "$T_SMINI";
@@ -94,5 +116,66 @@ Class SMiniGun : UnrealWeapon
 		Stop;
 		SMIP B -1;
 		Stop;
+	Select:
+		SMIS A 1 A_Raise(int.max);
+		Wait;
+	Ready:
+		SMIS ABCDEFGHI 2 A_WeaponReady(WRF_NOFIRE);
+		Goto Idle;
+	Dummy:
+		TNT1 A 1
+		{
+			A_CheckReload();
+			A_WeaponReady();
+		}
+		Wait;
+	Idle:
+		SMII A 0 A_Overlay(-9999,"Dummy");
+		SMII ABCDE 20;
+		Goto Idle+1;
+	Fire:
+		SMIF A 0
+		{
+			A_Overlay(-9999,"Dummy");
+			A_SMiniFire(false);
+		}
+	FireOne:
+		SMIF ABCDEF 2;
+		SMII A 0 A_Refire("Fire");
+		Goto Release;
+	FireTwo:
+		SMIF GHIJKL 2;
+		SMII A 0 A_Refire("Fire");
+		Goto Release;
+	FireThree:
+		SMIF MNOPQR 2;
+		SMII A 0 A_Refire("Fire");
+		Goto Release;
+	FireFour:
+		SMIF STUVWX 2;
+		SMII A 0 A_Refire("Fire");
+		Goto Release;
+	AltFire:
+		SMIA A 0
+		{
+			A_Overlay(-9999,"Dummy");
+			A_SMiniFire(true);
+		}
+		SMIA ABCDEFGHIJ 3;
+		SMII A 0 A_Refire("AltFire");
+		Goto Release;
+	Release:
+		SMII A 0
+		{
+			A_PlaySound("smini/endfire",CHAN_ITEM);
+			invoker.special2 = 25;
+		}
+		SMII A 1 A_Cooldown();
+		Wait;
+	Deselect:
+		#### # 1 A_Overlay(-9999,"Null");
+		SMID ABCDEF 1;
+		SMID F 1 A_Lower(int.max);
+		Wait;
 	}
 }
