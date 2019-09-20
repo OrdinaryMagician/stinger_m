@@ -8,7 +8,7 @@ Class BigAmmo : Ammo
 		Inventory.Amount 10;
 		Inventory.MaxAmount 12;
 		Ammo.BackpackAmount 0;
-		Ammo.BackpackMaxAmount 24;
+		Ammo.BackpackMaxAmount 20;
 		Ammo.DropAmount 10;
 		Inventory.RespawnTics 2100;
 		+INVENTORY.IGNORESKILL;
@@ -131,6 +131,7 @@ Class BigBlast : Actor
 		A_Explode(50+special1,150);
 		A_QuakeEx(4,4,4,10,0,300,"",QF_RELATIVE|QF_SCALEDOWN,falloff:150,rollintensity:0.2);
 		A_PlaySound("big/blast",CHAN_VOICE,pitch:FRandom[BigGun](0.8,1.2));
+		A_SprayDecal("RazorBlast",-172);
 		UTMainHandler.DoBlast(self,150,80000);
 		let r = Spawn("FatRing",pos);
 		r.angle = angle;
@@ -364,17 +365,6 @@ Class BigGun : UnrealWeapon
 			s.alpha *= 0.6;
 		}
 	}
-	action void A_BigRefire( statelabel flash = null )
-	{
-		Weapon weap = Weapon(invoker);
-		if ( !weap || !player ) return;
-		if ( invoker.clipcount <= 0 )
-		{
-			A_ClearRefire();
-			return;
-		}
-		A_Refire(flash);
-	}
 	action bool A_BigCheckForReload( bool bDryFire = false )
 	{
 		let weap = Weapon(invoker);
@@ -481,6 +471,7 @@ Class BigGun : UnrealWeapon
 		BIGF DEF 2;
 		BIGF G 2 A_Eject();
 		BIGF HIJKLMNOP 2;
+		BIGI A 0 A_Refire("Fire");
 		Goto Idle;
 	AltFire:
 		BIGF A 0
@@ -495,9 +486,9 @@ Class BigGun : UnrealWeapon
 		BIGF DEF 1;
 		BIGF G 1 A_Eject();
 		BIGF HIJK 1;
-		BIGF L 0 A_BigRefire(1);
+		BIGF L 0 A_Refire(1);
 		Goto AltRelease;
-		BIGF L 1;
+		BIGF L 1 A_JumpIf(invoker.clipcount<=0,"AltRelease");
 		Goto AltHold;
 	AltRelease:
 		BIGF LMNOP 3;
@@ -515,6 +506,7 @@ Class BigGun : UnrealWeapon
 	Reload:
 		BIGR A 0
 		{
+			A_ClearRefire();
 			A_Overlay(-9999,"Null");
 			UTMainHandler.DoSwing(self,(FRandom[BigGun](0.7,0.3),FRandom[BigGun](0.4,0.3)),3,0,10,SWING_Spring,70,0.8);
 		}
@@ -570,6 +562,9 @@ Class BigGun : UnrealWeapon
 		BGMF A 2 Bright
 		{
 			let l = Spawn("SniperLight",pos);
+			l.args[0] = 255;
+			l.args[1] = 176;
+			l.args[2] = 16;
 			l.target = self;
 		}
 		Stop;

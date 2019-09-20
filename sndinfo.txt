@@ -296,6 +296,7 @@ smini/select	sminisel
 smini/fire	sminione
 smini/altfire	sminialt
 smini/endfire	sminiend
+smini/explode	sminiexp
 
 translator/event	transa3
 

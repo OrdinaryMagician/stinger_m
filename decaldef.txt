@@ -1,0 +1,9 @@
+decal SmallRocketBlast
+{
+	pic rcktblst
+	shade "00 00 00"
+	x-scale 0.2
+	y-scale 0.2
+	randomflipx
+	randomflipy
+}

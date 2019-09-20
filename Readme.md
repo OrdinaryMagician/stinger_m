@@ -36,6 +36,7 @@ Doom Tournament (currently the devel branch is required).
  - Quadshot (slot 3) (replaces shotguns)
  - Peacemaker (slot 8) (rare spawn in backpacks)
  - Demolisher (slot 9) (replaces bfg9000)
+ - Autocannon (slot 0) (replaces bfg9000)
  - Backpack (replaces backpack, identical to Doom Tournament version)
  - Unreal 1 HUD
  - Translator (has to be spawned in, since it would only be useful for mappers)
@@ -73,7 +74,6 @@ Doom Tournament (currently the devel branch is required).
  - Fireblaster (slot 5) (replaces rocket launcher)
  - Flamethrower (slot 6) (replaces plasma rifle)
  - Impaler (slot 7) (replaces plasma rifle)
- - Autocannon (slot 0) (replaces bfg9000)
 
 ## Planned
 

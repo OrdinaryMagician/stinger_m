@@ -4,9 +4,9 @@ Class SMiniAmmo : Ammo
 	{
 		Inventory.Icon "I_SMini";
 		Inventory.Amount 20;
-		Inventory.MaxAmount 40;
+		Inventory.MaxAmount 30;
 		Ammo.BackpackAmount 0;
-		Ammo.BackpackMaxAmount 80;
+		Ammo.BackpackMaxAmount 50;
 	}
 	override bool TryPickup( in out Actor toucher )
 	{
@@ -22,8 +22,100 @@ Class SMiniAmmo : Ammo
 	}
 }
 
-Class SMiniBlast : Actor
+Class SMiniXLight : PaletteLight
 {
+	Default
+	{
+		Args 0,0,0,50;
+		ReactionTime 15;
+	}
+}
+
+Class SMiniShell : FastProjectile
+{
+	Default
+	{
+		Obituary "$O_EIGHTBALL";
+		DamageType 'Shot';
+		DamageFunction 150;
+		Radius 4;
+		Height 4;
+		Speed 200;
+		+SKYEXPLODE;
+		+EXPLODEONWATER;
+		+FORCERADIUSDMG;
+		+NODAMAGETHRUST;
+		+INTERPOLATEANGLES;
+	}
+	override void Tick()
+	{
+		Vector3 oldpos = pos;
+		Super.Tick();
+		if ( isFrozen() || (CurState != FindState("Spawn")) ) return;
+		// spawn trail
+		Vector3 dir = level.Vec3Diff(oldpos,pos);
+		double dist = dir.length();
+		dir /= dir.length();
+		for ( double d=0; d<dist; d+=20 )
+		{
+			let s = Spawn("UTSmoke",level.Vec3Offset(oldpos,dir*d));
+			Vector3 pvel = (FRandom[ExploS](-1,1),FRandom[ExploS](-1,1),FRandom[ExploS](-1,1)).unit()*FRandom[ExploS](0.3,0.6);
+			s.alpha *= 0.4;
+			s.scale *= FRandom[ExploS](0.9,1.4);
+			s.SetShade(Color(1,1,1)*Random[ExploS](128,255));
+		}
+	}
+	action void A_ShellExplode()
+	{
+		bFORCEXYBILLBOARD = true;
+		A_SetRenderStyle(1.0,STYLE_Add);
+		A_NoGravity();
+		A_Explode(150,50,XF_HURTSOURCE|XF_EXPLICITDAMAGETYPE,damagetype:'exploded');
+		A_QuakeEx(4,4,4,10,0,250,"",QF_RELATIVE|QF_SCALEDOWN,falloff:120,rollintensity:0.2);
+		A_PlaySound("smini/explode",CHAN_VOICE,pitch:FRandom[SMini](0.8,1.2));
+		A_SprayDecal("SmallRocketBlast");
+		UTMainHandler.DoBlast(self,50,20000);
+		Scale *= FRandom[ExploS](0.8,1.1);
+		Scale.x *= RandomPick[ExploS](-1,1);
+		Scale.y *= RandomPick[ExploS](-1,1);
+		Vector3 dir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		int numpt = Random[ExploS](20,30);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (dir*3+(FRandom[ExploS](-1,1),FRandom[ExploS](-1,1),FRandom[ExploS](-1,1))).unit()*FRandom[ExploS](1,4);
+			let s = Spawn("UTSmoke",pos);
+			s.vel = pvel;
+			s.alpha *= 0.6;
+			s.scale *= FRandom[ExploS](0.9,2.0);
+			s.SetShade(Color(1,1,1)*Random[ExploS](128,255));
+		}
+		numpt = Random[ExploS](10,15);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[ExploS](-1,1),FRandom[ExploS](-1,1),FRandom[ExploS](-1,1)).unit()*FRandom[ExploS](2,6);
+			let s = Spawn("UTSpark",pos);
+			s.vel = pvel;
+		}
+		numpt = Random[ExploS](20,30);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[ExploS](-1,1),FRandom[ExploS](-1,1),FRandom[ExploS](-1,1)).unit()*FRandom[ExploS](2,12);
+			let s = Spawn("UTChip",pos);
+			s.vel = pvel;
+			s.scale *= FRandom[ExploS](0.9,2.7);
+		}
+		Spawn("SMiniXLight",pos);
+	}
+	States
+	{
+	Spawn:
+		SMIS A 1 { vel.z -= 0.002*gravity*cursector.gravity*level.gravity; }
+		Wait;
+	Death:
+		TNT1 A 0 A_ShellExplode();
+		SMXP ABCDEFGHIJKLMN 1 Bright;
+		Stop;
+	}
 }
 
 Class SMiniGun : UnrealWeapon
@@ -71,9 +163,43 @@ Class SMiniGun : UnrealWeapon
 	}
 	action void A_SMiniFire( bool bAlt = false )
 	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		if ( weap.Ammo1.Amount <= 0 ) return;
+		if ( !bAlt && !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
+		invoker.FireEffect();
+		UTMainHandler.DoFlash(self,Color(32,0,0,255),1);
+		A_QuakeEx(2,2,2,bAlt?5:3,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollintensity:0.12);
+		A_PlaySound(bAlt?"smini/altfire":"smini/fire",CHAN_WEAPON);
+		A_AlertMonsters();
+		if ( bAlt )
+		{
+			A_Overlay(-2,"MuzzleFlashA");
+			A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
+			A_OverlayRenderstyle(-2,STYLE_Add);
+		}
+		else
+		{
+			if ( invoker.special1 == 1 ) A_Overlay(-2,"MuzzleFlash2");
+			else if ( invoker.special1 == 2 ) A_Overlay(-2,"MuzzleFlash3");
+			else if ( invoker.special1 == 3 ) A_Overlay(-2,"MuzzleFlash4");
+			else A_Overlay(-2,"MuzzleFlash1");
+		}
+		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
+		A_OverlayRenderstyle(-2,STYLE_Add);
+		let l = Spawn("SniperLight",pos);
+		l.args[0] = 255;
+		l.args[1] = 192;
+		l.args[2] = 64;
+		l.target = self;
+		Vector2 basedir = (-0.2,0.);
 		if ( bAlt ) invoker.special1 = 0;
 		else
 		{
+			if ( invoker.special1 == 1 ) basedir = (-0.1,-0.2);
+			else if ( invoker.special1 == 2 ) basedir = (0.1,0.2);
+			else if ( invoker.special1 == 3 ) basedir = (-0.1,0.2);
+			else basedir = (0.1,-0.2);
 			State which = ResolveState("FireOne");
 			if ( invoker.special1 == 1 ) which = ResolveState("FireTwo");
 			else if ( invoker.special1 == 2 ) which = ResolveState("FireThree");
@@ -81,15 +207,35 @@ Class SMiniGun : UnrealWeapon
 			player.SetPSprite(PSP_WEAPON,which);
 			invoker.special1 = (invoker.special1%4)+1;
 		}
-		A_PlaySound(bAlt?"smini/altfire":"smini/fire",CHAN_WEAPON);
-		// TODO everything
-	}
-	action void A_Cooldown()
-	{
-		// TODO steam effect
-		invoker.special2--;
-		if ( invoker.special2 <= 0 )
-			player.SetPSprite(PSP_WEAPON,ResolveState("Idle"));
+		Vector3 x, y, z, x2, y2, z2;
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10.0*x+y*2-z*2);
+		for ( int i=0; i<(bAlt?4:1); i++ )
+		{
+			if ( bAlt && !weap.DepleteAmmo(weap.bAltFire,true,1) ) break;
+			UTMainHandler.DoSwing(self,basedir+(FRandom[SMini](-0.04,0.04),FRandom[SMini](-0.04,0.04)),FRandom[SMini](3,4),FRandom[SMini](-0.2,0.8),Random[SMini](2,4),SWING_Spring,Random[SMini](3,6),FRandom[SMini](1.5,2.3));
+			int pos = bAlt?i:invoker.special1;
+			origin = level.Vec3Offset(origin,x*(!(pos%2)?-1.5:1.5)+y*(pos<2?1.5:-1.5));
+			double a = FRandom[Minigun](0,360), s = FRandom[Minigun](0,bAlt?0.12:0.03);
+			[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
+			Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
+			vel -= dir*(player.onground?3:1.2);
+			vel.z += (player.onground?0.8:.1);
+			let p = Spawn("SMiniShell",origin);
+			p.angle = atan2(dir.y,dir.x);
+			p.pitch = asin(-dir.z);
+			p.vel = dir*p.speed;
+			p.target = self;
+		}
+		for ( int i=0; i<20; i++ )
+		{
+			let s = Spawn("UTStaticViewSmoke",origin);
+			UTViewSmoke(s).ofs = (10,2,-2);
+			UTViewSmoke(s).vvel += (FRandom[SMini](-0.05,0.5),FRandom[SMini](-0.2,0.2),FRandom[SMini](-0.2,0.2));
+			s.target = self;
+			s.scale *= 1.8;
+			s.alpha *= 0.6;
+		}
 	}
 	Default
 	{
@@ -102,11 +248,10 @@ Class SMiniGun : UnrealWeapon
 		Weapon.AmmoType "SMiniAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "SMiniAmmo";
-		Weapon.AmmoUse2 4;
+		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 20;
 		Inventory.RespawnTics 2100;
 		+INVENTORY.IGNORESKILL;
-		+WEAPON.NOAUTOFIRE;
 		UTWeapon.DropAmmo 4;
 	}
 	States
@@ -120,7 +265,16 @@ Class SMiniGun : UnrealWeapon
 		SMIS A 1 A_Raise(int.max);
 		Wait;
 	Ready:
-		SMIS ABCDEFGHI 2 A_WeaponReady(WRF_NOFIRE);
+		SMIS A 0
+		{
+			UTMainHandler.DoSwing(self,(FRandom[SMini](-0.3,-0.2),FRandom[SMini](0.4,0.5)),3,0,4,SWING_Spring,2,1.8);
+		}
+		SMIS ABC 2 A_WeaponReady(WRF_NOFIRE);
+		SMIS D 0
+		{
+			UTMainHandler.DoSwing(self,(FRandom[SMini](0.2,0.3),FRandom[SMini](-0.8,-1.2)),3,0,4,SWING_Spring,2,2.0);
+		}
+		SMIS DEFGHI 2 A_WeaponReady(WRF_NOFIRE);
 		Goto Idle;
 	Dummy:
 		TNT1 A 1
@@ -130,52 +284,104 @@ Class SMiniGun : UnrealWeapon
 		}
 		Wait;
 	Idle:
-		SMII A 0 A_Overlay(-9999,"Dummy");
+		#### # 8 A_Overlay(-9999,"Dummy");
 		SMII ABCDE 20;
 		Goto Idle+1;
 	Fire:
 		SMIF A 0
 		{
-			A_Overlay(-9999,"Dummy");
+			A_Overlay(-9999,"Null");
 			A_SMiniFire(false);
 		}
 	FireOne:
-		SMIF ABCDEF 2;
-		SMII A 0 A_Refire("Fire");
+		SMIF ABC 1;
+		SMIF DEF 2;
+		SMII A 0 A_JumpIfNoAmmo("Release");
+		SMII A 0 A_Refire();
 		Goto Release;
 	FireTwo:
-		SMIF GHIJKL 2;
-		SMII A 0 A_Refire("Fire");
+		SMIF GHI 1;
+		SMIF JKL 2;
+		SMII A 0 A_JumpIfNoAmmo("Release");
+		SMII A 0 A_Refire();
 		Goto Release;
 	FireThree:
-		SMIF MNOPQR 2;
-		SMII A 0 A_Refire("Fire");
+		SMIF MNO 1;
+		SMIF PQR 2;
+		SMII A 0 A_JumpIfNoAmmo("Release");
+		SMII A 0 A_Refire();
 		Goto Release;
 	FireFour:
-		SMIF STUVWX 2;
-		SMII A 0 A_Refire("Fire");
+		SMIF STU 1;
+		SMIF VWX 2;
+		SMII A 0 A_JumpIfNoAmmo("Release");
+		SMII A 0 A_Refire();
 		Goto Release;
 	AltFire:
 		SMIA A 0
 		{
-			A_Overlay(-9999,"Dummy");
+			A_Overlay(-9999,"Null");
 			A_SMiniFire(true);
 		}
-		SMIA ABCDEFGHIJ 3;
-		SMII A 0 A_Refire("AltFire");
+		SMIA A 1;
+		SMIA BCDE 2;
+		SMIA FGHIJ 3;
+		SMII A 0 A_JumpIfNoAmmo("Release");
+		SMII A 0 A_Refire();
 		Goto Release;
 	Release:
 		SMII A 0
 		{
+			A_ClearRefire();
 			A_PlaySound("smini/endfire",CHAN_ITEM);
+			A_Overlay(2,"Steam");
+			A_OverlayFlags(2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE|PSPF_ALPHA|PSPF_FORCEALPHA,true);
+			A_OverlayRenderstyle(2,STYLE_Add);
 			invoker.special2 = 25;
 		}
-		SMII A 1 A_Cooldown();
+		SMII A 1
+		{
+			A_OverlayAlpha(2,25./invoker.special2);
+			invoker.special2--;
+			return A_JumpIf(invoker.special2<=0,1);
+		}
 		Wait;
+		SMII A 1 A_Refire();
+		Goto Idle;
+	Steam:
+		SMIR A 3;
+		SMIR B 16;
+		SMIR CD 2;
+		SMIR A 1;
+		Stop;
 	Deselect:
-		#### # 1 A_Overlay(-9999,"Null");
-		SMID ABCDEF 1;
+		#### # 1
+		{
+			A_Overlay(-9999,"Null");
+			UTMainHandler.DoSwing(self,(FRandom[SMini](0.4,0.6),FRandom[SMini](-0.4,-0.2)),3,0,4,SWING_Spring,2,2.0);
+		}
+		SMID ABC 1;
+		SMID D 0
+		{
+			UTMainHandler.DoSwing(self,(FRandom[SMini](-0.3,-0.2),FRandom[SMini](0.4,0.5)),3,0,4,SWING_Spring,2,1.8);
+		}
+		SMID DEF 1;
 		SMID F 1 A_Lower(int.max);
 		Wait;
+	MuzzleFlash1:
+		SMMF A 3 Bright;
+		Stop;
+	MuzzleFlash2:
+		SMMF B 3 Bright;
+		Stop;
+	MuzzleFlash3:
+		SMMF C 3 Bright;
+		Stop;
+	MuzzleFlash4:
+		SMMF D 3 Bright;
+		Stop;
+	MuzzleFlashA:
+		SMMF E 3 Bright;
+		Stop;
 	}
 }

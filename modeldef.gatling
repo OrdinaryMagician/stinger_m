@@ -1,14 +1,26 @@
+Model "SMiniShell"
+{
+	Path "models"
+	Model 0 "SShell_d.3d"
+	Skin 0 "jsshell.png"
+	PitchOffset 90
+	PITCHFROMMOMENTUM
+	Scale -0.048 0.02 0.02
+
+	FrameIndex SMIS A 0 0
+}
+
 Model "SMiniGun"
 {
 	Path "models"
 	Model 1 "SMiniPick_d.3d"
 	Skin 1 "Minigun_.png"
-	ZOffset 9
-	Scale 0.15 0.15 0.18
+	ZOffset 12
+	Scale 0.18 0.18 0.216
 
 	FrameIndex SMIP B 1 0
 
-	ZOffset 12
+	ZOffset 15
 	ROTATING
 	FrameIndex SMIP A 1 0
 }
@@ -16,11 +28,50 @@ Model "SMiniGun"
 Model "SMiniGun"
 {
 	Path "models"
-	Model 0 "SMinigun_d.3d"
-	Skin 0 "Minigun.png"
+	Model 2 "Flat_d.3d"
+	Skin 2 "SMinMuz.png"
+	AngleOffset 90
+	PitchOffset 90
+	Scale 0.1 0.1 0.1
+
+	Offset 8 -60 -7
+	FrameIndex SMMF A 2 0
+	Offset 12 -60 -7
+	FrameIndex SMMF B 2 0
+	Offset 6 -60 -12
+	FrameIndex SMMF C 2 0
+	Offset 14 -60 -12
+	FrameIndex SMMF D 2 0
+
+	Scale 0.15 0.15 0.15
+	Offset 10 -60 -8
+	FrameIndex SMMF E 2 0
+}
+
+Model "SMiniGun"
+{
+	Path "models"
+	Model 3 "SMinigun_d.3d"
+	SurfaceSkin 3 0 "ShockSm.png"
 	AngleOffset 180
-	Scale 0.1 -0.08 0.1
-	Offset 6 -18 -10
+	Scale 0.12 -0.08 0.12
+	Offset 6 -18 -12
+	DONTCULLBACKFACES
+
+	FrameIndex SMIR A 3 54
+	FrameIndex SMIR B 3 55
+	FrameIndex SMIR C 3 56
+	FrameIndex SMIR D 3 57
+}
+
+Model "SMiniGun"
+{
+	Path "models"
+	Model 0 "SMinigun_d.3d"
+	SurfaceSkin 0 1 "Minigun.png"
+	AngleOffset 180
+	Scale 0.12 -0.08 0.12
+	Offset 6 -18 -12
 
 	// Down
 	FrameIndex SMID A 0 1
