@@ -298,6 +298,11 @@ smini/altfire	sminialt
 smini/endfire	sminiend
 smini/explode	sminiexp
 
+bonesaw/select	bsawsel
+bonesaw/claw	bsawstab
+bonesaw/spin	bsawloop
+bonesaw/spinend	bsawend
+
 translator/event	transa3
 
 detector/start	detact

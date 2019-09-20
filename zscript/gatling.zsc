@@ -35,7 +35,7 @@ Class SMiniShell : FastProjectile
 {
 	Default
 	{
-		Obituary "$O_EIGHTBALL";
+		Obituary "$O_SMINI";
 		DamageType 'Shot';
 		DamageFunction 150;
 		Radius 4;

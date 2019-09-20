@@ -13,3 +13,137 @@ Model "Bonesaw"
 	ROTATING
 	FrameIndex CSWP A 1 0
 }
+
+Model "Bonesaw"
+{
+	Path "models"
+	Model 0 "Bonesaw_d.3d"
+	Skin 0 "JBoneSw1.png"
+	Scale -0.1 -0.08 0.1
+	Offset 10 -20 -10
+
+	// Down
+	FrameIndex CSWD A 0 1
+	FrameIndex CSWD B 0 2
+	FrameIndex CSWD C 0 3
+	FrameIndex CSWD D 0 4
+	FrameIndex CSWD E 0 5
+	FrameIndex CSWD F 0 6
+	FrameIndex CSWD G 0 7
+	FrameIndex CSWD H 0 8
+	FrameIndex CSWD I 0 9
+	// Select
+	FrameIndex CSWS A 0 9
+	FrameIndex CSWS B 0 10
+	FrameIndex CSWS C 0 11
+	FrameIndex CSWS D 0 12
+	FrameIndex CSWS E 0 13
+	FrameIndex CSWS F 0 14
+	FrameIndex CSWS G 0 15
+	FrameIndex CSWS H 0 16
+	FrameIndex CSWS I 0 17
+	// Idle
+	FrameIndex CSWI A 0 18
+	FrameIndex CSWI B 0 19
+	FrameIndex CSWI C 0 20
+	FrameIndex CSWI D 0 21
+	FrameIndex CSWI E 0 22
+	// Twiddle
+	FrameIndex CSWT A 0 23
+	FrameIndex CSWT B 0 24
+	FrameIndex CSWT C 0 25
+	FrameIndex CSWT D 0 26
+	FrameIndex CSWT E 0 27
+	FrameIndex CSWT F 0 28
+	FrameIndex CSWT G 0 29
+	FrameIndex CSWT H 0 30
+	FrameIndex CSWT I 0 31
+	FrameIndex CSWT J 0 32
+	FrameIndex CSWT K 0 33
+	FrameIndex CSWT L 0 34
+	FrameIndex CSWT M 0 35
+	// AltFire
+	FrameIndex CSWA A 0 36
+	FrameIndex CSWA B 0 37
+	FrameIndex CSWA C 0 38
+	FrameIndex CSWA D 0 39
+	FrameIndex CSWA E 0 40
+	FrameIndex CSWA F 0 41
+	FrameIndex CSWA G 0 42
+	FrameIndex CSWA H 0 43
+	FrameIndex CSWA I 0 44
+	FrameIndex CSWA J 0 45
+	FrameIndex CSWA K 0 46
+	FrameIndex CSWA L 0 47
+	FrameIndex CSWA M 0 48
+	FrameIndex CSWA N 0 49
+	// Fire
+	FrameIndex CSWF A 0 50
+	FrameIndex CSWF B 0 51
+	FrameIndex CSWF C 0 52
+	FrameIndex CSWF D 0 53
+	FrameIndex CSWF E 0 54
+	FrameIndex CSWF F 0 55
+	FrameIndex CSWF G 0 56
+	FrameIndex CSWF H 0 57
+	FrameIndex CSWF I 0 58
+	FrameIndex CSWF J 0 59
+	FrameIndex CSWF K 0 60
+	FrameIndex CSWF L 0 61
+	FrameIndex CSWF M 0 62
+	FrameIndex CSWF N 0 63
+	FrameIndex CSWF O 0 64
+	FrameIndex CSWF P 0 65
+	FrameIndex CSWF Q 0 66
+	FrameIndex CSWF R 0 67
+	FrameIndex CSWF S 0 68
+	FrameIndex CSWF T 0 69
+	FrameIndex CSWF U 0 70
+	FrameIndex CSWF V 0 71
+	FrameIndex CSWF W 0 72
+	FrameIndex CSWF X 0 73
+	// Hold
+	FrameIndex CSWH A 0 74
+	FrameIndex CSWH B 0 75
+	FrameIndex CSWH C 0 76
+	FrameIndex CSWH D 0 77
+	FrameIndex CSWH E 0 78
+	FrameIndex CSWH F 0 79
+	FrameIndex CSWH G 0 80
+	FrameIndex CSWH H 0 81
+	FrameIndex CSWH I 0 82
+	FrameIndex CSWH J 0 83
+	FrameIndex CSWH K 0 84
+	FrameIndex CSWH L 0 85
+	FrameIndex CSWH M 0 86
+	FrameIndex CSWH N 0 87
+	FrameIndex CSWH O 0 88
+	FrameIndex CSWH P 0 89
+	FrameIndex CSWH Q 0 90
+	FrameIndex CSWH R 0 91
+	// Release
+	FrameIndex CSWR A 0 92
+	FrameIndex CSWR B 0 93
+	FrameIndex CSWR C 0 94
+	FrameIndex CSWR D 0 95
+	FrameIndex CSWR E 0 96
+	FrameIndex CSWR F 0 97
+	FrameIndex CSWR G 0 98
+	FrameIndex CSWR H 0 99
+	FrameIndex CSWR I 0 100
+	FrameIndex CSWR J 0 101
+	FrameIndex CSWR K 0 102
+	FrameIndex CSWR L 0 103
+	FrameIndex CSWR M 0 104
+	FrameIndex CSWR N 0 105
+	FrameIndex CSWR O 0 106
+	FrameIndex CSWR P 0 107
+	FrameIndex CSWR Q 0 108
+	FrameIndex CSWR R 0 109
+	FrameIndex CSWR S 0 110
+	FrameIndex CSWR T 0 111
+	FrameIndex CSWR U 0 112
+	FrameIndex CSWR V 0 113
+	FrameIndex CSWR W 0 114
+	FrameIndex CSWR X 0 115
+}
