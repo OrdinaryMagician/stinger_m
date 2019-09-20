@@ -190,6 +190,7 @@ Class Impaler : UnrealWeapon
 				A_Overlay(-2,"ZapDown");
 				A_PlaySound("impaler/gemdown",CHAN_WEAPON);
 			}
+			if ( self is 'UTPlayer' ) UTPlayer(self).PlayReloading();
 		}
 		IMPG ABCDE 2;
 		Goto Idle;

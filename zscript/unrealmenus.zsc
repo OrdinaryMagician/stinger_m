@@ -65,6 +65,18 @@ Class ListMenuItemUnrealTextItem : ListMenuItemSelectable
 		return max(1,fnt.StringWidth(StringTable.Localize(mText)));
 	}
 
+	override bool CheckCoordinate( int x, int y )
+	{
+		/*String str = StringTable.Localize(mText);
+		let fnt = (generic_ui||!mFont.CanPrint(str))?NewSmallFont:mFont;
+		int w = fnt.StringWidth(str);
+		int h = fnt.GetHeight();
+		double basex = floor(0.5*(CleanWidth_1-w));
+		double basey = floor(0.25*(CleanHeight_1-mSpacing*5));
+		return (mEnabled && (x >= basex) && (x < basex+w) && (y >= basey) && (y < basey+h));*/
+		return false;	// since we can't change the main menu class, this won't work anyway
+	}
+
 	override void DrawSelector( double xofs, double yofs, TextureID tex )
 	{
 		// nothing

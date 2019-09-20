@@ -303,8 +303,6 @@ projectile.
 Secondary fire: A slowly charged fireball costing 20 units of napalm. Deals
 more splash damage.
 
-Reload: Toggle between single shot and three-round burst fire for primary fire.
-
 Like its predecessor, the Fireblaster is obviously completely useless when
 water is involved. A very clever human scientist would eventually solve this,
 but that's a story for another time (and mod).

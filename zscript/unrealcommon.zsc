@@ -197,7 +197,7 @@ Class UPlayer : UTPlayer
 							if ( dsp )
 							{
 								dsp.Ammo1.MaxAmount = 90;
-								if ( player.ReadyWeapon == dsp )
+								if ( (player.ReadyWeapon == dsp) && (player.PendingWeapon == WP_NOCHANGE) )
 									dsp.pendingupgrade = 4;
 								else
 								{
@@ -261,8 +261,7 @@ Class UPlayer : UTPlayer
 		if ( ((player.ReadyWeapon is 'URifle') && !sting_rifle && (player.buttons&BT_ALTATTACK)) || ((player.ReadyWeapon is 'Peacemaker') && player.buttons&BT_ALTATTACK) )
 			return;
 		let psp = player.FindPSprite(PSP_WEAPON);
-		if ( ((player.ReadyWeapon is 'UBioRifle') && (player.buttons&BT_ALTATTACK))
-			|| (player.ReadyWeapon is 'Eightball')
+		if ( (player.ReadyWeapon is 'Eightball')
 			|| ((player.ReadyWeapon is 'DispersionPistol') && DispersionPistol(player.ReadyWeapon).bCharging)
 			|| ((player.ReadyWeapon is 'UBioRifle') && UBioRifle(player.ReadyWeapon).bCharging)
 			|| (player.ReadyWeapon is 'Razorjack') )
@@ -274,7 +273,7 @@ Class UPlayer : UTPlayer
 			&& psp.CurState.InStateSequence(player.ReadyWeapon.FindState("Hold")))
 			|| (player.ReadyWeapon is 'UFlamethrower') || (player.ReadyWeapon is 'UMinigun')
 			|| ((player.ReadyWeapon is 'Bonesaw') && player.buttons&BT_ATTACK)
-			|| ((player.ReadyWeapon is 'Impaler') && psp.CurState.InStateSequence(player.ReadyWeapon.FindState("AltHold"))) )
+			|| ((player.ReadyWeapon is 'Impaler') && player.buttons&BT_ALTATTACK) )
 		{
 			if ( !InStateSequence(CurState,FindState("MissileRep")) )
 				SetStateLabel("MissileRep");

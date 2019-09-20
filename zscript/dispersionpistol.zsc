@@ -21,13 +21,8 @@ Class WeaponPowerUp : Inventory
 		if ( dpis && (dpis.pendingupgrade < 4) )
 		{
 			dpis.pendingupgrade++;
-			if ( toucher.player && (toucher.player.ReadyWeapon == dpis) && (toucher.player.PendingWeapon == WP_NOCHANGE) )
-			{
-				let psp = toucher.player.FindPSprite(PSP_Weapon);
-				if ( toucher.player.WeaponState&WF_WEAPONREADY )
-					psp.SetState(dpis.FindState("Upgrade"));
-			}
-			else ScriptUtil.SetWeapon(toucher,"DispersionPistol");
+			if ( toucher.player && ((toucher.player.ReadyWeapon != dpis) || (player.PendingWeapon != WP_NOCHANGE)) )
+				ScriptUtil.SetWeapon(toucher,"DispersionPistol");
 		}
 		GoAwayAndDie();
 		return true;
@@ -694,30 +689,38 @@ Class DispersionPistol : UnrealWeapon
 			return ResolveState("Ready5");
 		}
 	Ready1:
-		DPS1 ABCDEFGHIJK 2;
-		DPI1 A 5;
+		DPS1 ABCDEFGHIJK 2 A_WeaponReady(WRF_NOFIRE);
+		DPI1 A 5 A_WeaponReady(WRF_NOFIRE);
 		Goto Idle;
 	Ready2:
-		DPS2 ABCDEFGHIJK 2;
-		DPI2 A 5;
+		DPS2 ABCDEFGHIJK 2 A_WeaponReady(WRF_NOFIRE);
+		DPI2 A 5 A_WeaponReady(WRF_NOFIRE);
 		Goto Idle;
 	Ready3:
-		DPS3 ABCDEFGHIJK 2;
-		DPI3 A 5;
+		DPS3 ABCDEFGHIJK 2 A_WeaponReady(WRF_NOFIRE);
+		DPI3 A 5 A_WeaponReady(WRF_NOFIRE);
 		Goto Idle;
 	Ready4:
-		DPS4 ABCDEFGHIJK 2;
-		DPI4 A 5;
+		DPS4 ABCDEFGHIJK 2 A_WeaponReady(WRF_NOFIRE);
+		DPI4 A 5 A_WeaponReady(WRF_NOFIRE);
 		Goto Idle;
 	Ready5:
-		DPS5 ABCDEFGHIJK 2;
-		DPI5 A 5;
+		DPS5 ABCDEFGHIJK 2 A_WeaponReady(WRF_NOFIRE);
+		DPI5 A 5 A_WeaponReady(WRF_NOFIRE);
 		Goto Idle;
 	Dummy:
 		TNT1 A 1
 		{
 			A_CheckReload();
 			let weap = Weapon(invoker);
+			if ( weap && weap.Ammo1.Amount > 0 ) A_WeaponReady();
+			else A_WeaponReady(WRF_NOFIRE);
+		}
+		TNT1 A 1
+		{
+			A_CheckReload();
+			let weap = Weapon(invoker);
+			// doing this on the first tic breaks the whole animation for some unexplainable reason
 			if ( invoker.pendingupgrade > invoker.upgradelevel )
 				player.SetPSprite(PSP_WEAPON,ResolveState("Upgrade"));
 			else if ( weap && weap.Ammo1.Amount > 0 ) A_WeaponReady();
