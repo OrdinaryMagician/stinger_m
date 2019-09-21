@@ -377,6 +377,40 @@ Object ForceField
 	Frame "FFPK" { light "FFIELDLIGHT" }
 }
 
+FlickerLight2 UFLAMGLIGHT1
+{
+	Color 0.3 1.0 0.2
+	Size 40
+	SecondarySize 48
+	Interval 0.1
+}
+FlickerLight2 UFLAMGLIGHT2
+{
+	Color 0.5 1.0 0.2
+	Size 56
+	SecondarySize 60
+	Interval 0.1
+}
+FlickerLight2 UFLAMGLIGHT3
+{
+	Color 0.4 1.0 0.2
+	Size 12
+	SecondarySize 16
+	Interval 0.1
+}
+Object UFireball
+{
+	Frame "FIRB" { light "UFLAMGLIGHT1" }
+}
+Object UFireball2
+{
+	Frame "FIRB" { light "UFLAMGLIGHT2" }
+}
+Object UFireballEmber
+{
+	Frame "FIRB" { light "UFLAMGLIGHT3" }
+}
+
 // Shaders / Brightmaps
 HardwareShader Texture "graphics/MenuBarr.png"
 {

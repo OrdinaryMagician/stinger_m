@@ -296,12 +296,10 @@ The weapon is completely useless if the user or target are underwater.
 Another Mercenary invention, and a direct evolution of the previously listed
 Flamethrower. Shoots green-ish fireballs stabilized by microgravity.
 
-Primary fire: A single, steady shot, followed by rapid three shot bursts in a
-horizontal arc if you keep the trigger held. Costs 10 units of napalm per
-projectile.
+Primary fire: Rapid, steady shots. Costs 10 units of napalm per projectile.
 
-Secondary fire: A slowly charged fireball costing 20 units of napalm. Deals
-more splash damage.
+Secondary fire: A slowly charged fireball costing 20 units of napalm. Spreads
+small embers on impact.
 
 Like its predecessor, the Fireblaster is obviously completely useless when
 water is involved. A very clever human scientist would eventually solve this,

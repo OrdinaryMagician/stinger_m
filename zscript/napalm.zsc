@@ -29,6 +29,8 @@ Class UNapalm : Actor
 
 Class UFlamethrower : UnrealWeapon
 {
+	bool bCharging;
+
 	Default
 	{
 		Tag "$T_FLAMETHROWER";

@@ -171,6 +171,7 @@ stinger/altfire	stingera
 stinger/hit	bladehit
 stinger/hit2	ricochet
 stinger/flesh	chunkhit
+$limit stinger/hit 16
 
 flak/click	click
 
@@ -197,6 +198,7 @@ dpistol/up3	number3
 dpistol/up4	number4
 dpistol/fly	dispfly
 dpistol/hit	dispex1
+$limit dpistol/hit 16
 
 amplifier/act	ampact
 amplifier/set	health1
@@ -291,17 +293,29 @@ big/punch	bigmejct
 big/reload	bigmrelo
 big/shell	bigmshel
 big/blast	bigmhit
+$limit big/blast 16
 
 smini/select	sminisel
 smini/fire	sminione
 smini/altfire	sminialt
 smini/endfire	sminiend
 smini/explode	sminiexp
+$limit smini/explode 16
 
 bonesaw/select	bsawsel
 bonesaw/claw	bsawstab
 bonesaw/spin	bsawloop
 bonesaw/spinend	bsawend
+
+flamegun/select	flamgsel
+flamegun/idle	flamgidl
+flamegun/start	flamgbeg
+flamegun/fire	flamgfir
+flamegun/end	flamgend
+flamegun/charge	flamgabg
+flamegun/alt	flamgalt
+flamegun/exp	expl04
+$limit flamegun/exp 16
 
 translator/event	transa3
 
