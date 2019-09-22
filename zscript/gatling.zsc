@@ -68,6 +68,7 @@ Class SMiniShell : FastProjectile
 	action void A_ShellExplode()
 	{
 		bFORCEXYBILLBOARD = true;
+		A_AlertMonsters();
 		A_SetRenderStyle(1.0,STYLE_Add);
 		A_NoGravity();
 		A_Explode(150,50,XF_HURTSOURCE|XF_EXPLICITDAMAGETYPE,damagetype:'exploded');

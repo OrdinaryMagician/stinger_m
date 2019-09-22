@@ -125,7 +125,7 @@ Class UFireball : Actor
 		{
 			A_PlaySound("flamegun/exp",CHAN_VOICE,pitch:1.2);
 			Spawn("UFireLight",pos);
-			A_Explode(GetMissileDamage(0,0),60,XF_HURTSOURCE);
+			A_Explode(GetMissileDamage(0,0),60);
 			UTMainHandler.DoBlast(self,60,9000);
 		}
 		A_SprayDecal("SmallRocketBlast");
@@ -184,7 +184,7 @@ Class UFireball2 : UFireball
 	action void A_FireballExplo2()
 	{
 		scale *= 2.;
-		A_Explode(GetMissileDamage(0,0),90,XF_HURTSOURCE);
+		A_Explode(GetMissileDamage(0,0),90);
 		UTMainHandler.DoBlast(self,90,12000);
 		Vector3 dir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
 		int numpt = Random[ExploS](10,15);

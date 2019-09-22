@@ -13,6 +13,48 @@ Model "Stunner"
 	FrameIndex STNP A 1 0
 }
 
+Model "StunTrail"
+{
+	Path "models"
+	Model 0 "FatRing_d.3d"
+	Skin 0 "JRingEx2.png"
+	PitchOffset 90
+	Scale 0.01 0.05 0.05
+	DONTCULLBACKFACES
+	USEACTORPITCH
+	USEACTORROLL
+
+	FrameIndex FATR A 0 11
+	FrameIndex FATR B 0 12
+	FrameIndex FATR C 0 13
+	FrameIndex FATR D 0 14
+	FrameIndex FATR E 0 15
+}
+
+Model "StunProj"
+{
+	Path "models"
+	Model 0 "FatRing_d.3d"
+	Skin 0 "JRingEx2.png"
+	PitchOffset 90
+	Scale 0.1 0.5 0.5
+	DONTCULLBACKFACES
+	USEACTORPITCH
+	USEACTORROLL
+
+	FrameIndex FATR A 0 0
+	FrameIndex FATR B 0 1
+	FrameIndex FATR C 0 2
+	FrameIndex FATR D 0 3
+	FrameIndex FATR E 0 4
+	FrameIndex FATR F 0 5
+	FrameIndex FATR G 0 6
+	FrameIndex FATR H 0 7
+	FrameIndex FATR I 0 8
+	FrameIndex FATR J 0 9
+	FrameIndex FATR K 0 10
+}
+
 Model "Stunner"
 {
 	Path "models"

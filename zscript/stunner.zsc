@@ -24,10 +24,247 @@ Class StunnerAmmo : Ammo
 
 Class StunTrail : Actor
 {
+	Default
+	{
+		RenderStyle "Add";
+		Radius 0.1;
+		Height 0;
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+		+DONTSPLASH;
+		+NOTELEPORT;
+		+FORCEXYBILLBOARD;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( isFrozen() ) return;
+		A_FadeOut(1./11.,0);
+	}
+	States
+	{
+	Spawn:
+		FATR ABCDE 3 Bright;
+		Stop;
+	}
+}
+
+Class StunLight : PaletteLight
+{
+	Default
+	{
+		Tag "DYellow";
+	}
+}
+
+Class StunTracer : LineTracer
+{
+	Actor owner, ignore;
+
+	override ETraceStatus TraceCallback()
+	{
+		if ( Results.HitType == TRACE_HitActor )
+		{
+			if ( (Results.HitActor == owner) || (Results.HitActor == ignore) ) return TRACE_Skip;
+			if ( Results.HitActor.bSHOOTABLE ) return TRACE_Stop;
+			return TRACE_Skip;
+		}
+		else if ( (Results.HitType == TRACE_HitWall) && (Results.Tier == TIER_Middle) )
+		{
+			if ( !Results.HitLine.sidedef[1] || (Results.HitLine.Flags&(Line.ML_BlockHitscan|Line.ML_BlockEverything)) )
+				return TRACE_Stop;
+			return TRACE_Skip;
+		}
+		return TRACE_Stop;
+	}
 }
 
 Class StunProj : Actor
 {
+	StunTracer t;
+	Vector3 tracedir;
+	bool moving;
+	double totaldist;
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		t = new("StunTracer");
+		t.owner = target;
+		t.ignore = self;
+		moving = true;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( isFrozen() ) return;
+		if ( !moving )
+		{
+			A_FadeOut(1/19.,0);
+			return;
+		}
+		// step trace
+		tracedir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		t.Trace(pos,cursector,tracedir,500,0);
+		totaldist += t.Results.Distance;
+		// spawn particles
+		for ( int i=10; i<t.Results.Distance; i+=80 )
+			Spawn("StunLight",Vec3Offset(tracedir.x*i,tracedir.y*i,tracedir.z*i));
+		for ( int i=0; i<t.Results.Distance; i+=4 )
+		{
+			Vector3 pofs = tracedir*FRandom[Stunner](0,2)+(FRandom[Stunner](-.5,.5),FRandom[Stunner](-.5,.5),FRandom[Stunner](-.5,.5));
+			let s = Spawn("UTSpark",Vec3Offset(tracedir.x*i+pofs.x,tracedir.y*i+pofs.y,tracedir.z*i+pofs.z));
+			s.scale *= 0.2;
+			s.bNOGRAVITY = true;
+			s.vel = (FRandom[Stunner](-.3,.3),FRandom[Stunner](-.3,.3),FRandom[Stunner](-.3,.3));
+		}
+		for ( int i=10; i<t.Results.Distance; i+=20 )
+		{
+			let s = Spawn("StunTrail",Vec3Offset(tracedir.x*i,tracedir.y*i,tracedir.z*i));
+			s.angle = angle;
+			s.pitch = pitch;
+		}
+		if ( totaldist >= 10000.0 )
+		{
+			// reposition and explode on air
+			SetOrigin(t.Results.HitPos-t.Results.HitVector*4,false);
+			StunExplode();
+		}
+		else if ( t.Results.HitType == TRACE_HitNone )
+		{
+			// reposition
+			SetOrigin(t.Results.HitPos+t.Results.HitVector,false);
+			angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
+			pitch = asin(-t.Results.HitVector.z);
+		}
+		else if ( t.Results.HitType == TRACE_HitActor )
+		{
+			// reposition and explode on actor
+			SetOrigin(t.Results.HitPos-t.Results.HitVector*4,false);
+			StunExplode();
+			Actor a = t.Results.HitActor;
+			a.DamageMobj(self,target,max(1,int(1.1*specialf1)),'jolted',DMG_USEANGLE,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
+			if ( !a.bDONTTHRUST )
+			{
+				UTMainHandler.DoKnockback(a,t.Results.HitVector,(bAMBUSH?-22000:26000)*specialf1);
+				a.vel.z += 2.*specialf1;
+			}
+			angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
+			pitch = asin(-t.Results.HitVector.z);
+		}
+		else
+		{
+			// reposition and explode on wall
+			SetOrigin(t.Results.HitPos-t.Results.HitVector*4,false);
+			A_SprayDecal("ShockMark",16);
+			Vector3 HitNormal = t.Results.HitVector;
+			if ( t.Results.HitType == TRACE_HitWall )
+			{
+				t.Results.HitLine.RemoteActivate(target,t.Results.Side,SPAC_Impact,pos);
+				// calculate normal
+				HitNormal = (-t.Results.HitLine.delta.y,t.Results.HitLine.delta.x,0).unit();
+				if ( t.Results.Side == 0 ) HitNormal *= -1;
+			}
+			else if ( t.Results.HitType == TRACE_HitFloor )
+			{
+				if ( t.Results.ffloor ) HitNormal = -t.Results.ffloor.top.Normal;
+				else HitNormal = t.Results.HitSector.floorplane.Normal;
+			}
+			else if ( t.Results.HitType == TRACE_HitCeiling )
+			{
+				if ( t.Results.ffloor ) HitNormal = -t.Results.ffloor.bottom.Normal;
+				else HitNormal = t.Results.HitSector.ceilingplane.Normal;
+			}
+			StunExplode();
+			angle = atan2(HitNormal.y,HitNormal.x);
+			pitch = asin(-HitNormal.z);
+		}
+	}
+	void StunExplode()
+	{
+		moving = false;
+		SetStateLabel("Death");
+		A_Explode(int(0.6*specialf1),50);
+		A_QuakeEx(1,1,1,3,0,250,"",QF_RELATIVE|QF_SCALEDOWN,falloff:120,rollintensity:0.2);
+		A_PlaySound("stun/hit",CHAN_VOICE,pitch:FRandom[Stunner](1.5,1.9)-0.08*specialf1);
+		UTMainHandler.DoBlast(self,50,(bAMBUSH?-7000:11000)*specialf1);
+		Vector3 dir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		int numpt = Random[ExploS](10,15);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[ExploS](-1,1),FRandom[ExploS](-1,1),FRandom[ExploS](-1,1)).unit()*FRandom[ExploS](2,6);
+			let s = Spawn("UTSpark",pos);
+			s.scale *= 0.2;
+			s.bNOGRAVITY = true;
+			s.vel = pvel;
+		}
+	}
+	Default
+	{
+		Obituary "$O_STUNNER";
+		RenderStyle "Add";
+		DamageType 'jolted';
+		Radius 0;
+		Height 0.1;
+		+NOGRAVITY;
+		+NOCLIP;
+		+DONTSPLASH;
+		+FORCERADIUSDMG;
+		+NODAMAGETHRUST;
+		+NOTELEPORT;
+		+FORCEXYBILLBOARD;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A -1;
+		Stop;
+	Death:
+		FATR ABCDEFGHIJK 2 Bright;
+		Stop;
+	}
+}
+
+Class StunnerImpact : Actor
+{
+	Default
+	{
+		Radius 0.1;
+		Height 0;
+		+NOGRAVITY;
+		+NOCLIP;
+		+DONTSPLASH;
+		+NOTELEPORT;
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		A_SprayDecal("WallCrack",20);
+		int numpt = Random[Stunner](10,20);
+		Vector3 x = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (-x+(FRandom[Stunner](-.8,.8),FRandom[Stunner](-.8,.8),FRandom[Stunner](-.8,.8))).unit()*FRandom[Stunner](0.1,1.2);
+			let s = Spawn("UTSmoke",pos);
+			s.vel = pvel;
+			s.SetShade(Color(1,1,1)*Random[Stunner](128,192));
+		}
+		numpt = Random[Stunner](4,10);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[Stunner](-1,1),FRandom[Stunner](-1,1),FRandom[Stunner](-1,1)).unit()*FRandom[Stunner](2,8);
+			let s = Spawn("UTSpark",pos);
+			s.vel = pvel;
+		}
+		numpt = Random[Stunner](4,12);
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pvel = (FRandom[Stunner](-1,1),FRandom[Stunner](-1,1),FRandom[Stunner](-1,1)).unit()*FRandom[Stunner](2,8);
+			let s = Spawn("UTChip",pos);
+			s.vel = pvel;
+		}
+		Destroy();
+	}
 }
 
 Class Stunner : UnrealWeapon
@@ -48,10 +285,49 @@ Class Stunner : UnrealWeapon
 		if ( self is 'UTPlayer' )
 			UTPlayer(self).PlayAttacking3();
 		StunnerAmmo(weap.Ammo1).rechargephase = 0;
-		A_PlaySound("stun/fire",CHAN_WEAPON,Dampener.Active(self)?.4:1.);
+		A_PlaySound("stun/fire",CHAN_WEAPON,Dampener.Active(self)?.4:1.,pitch:1.2-invoker.chargesize*0.06);
 		double mult = Amplifier.GetMult(self,int(invoker.ChargeSize*50)+50);
 		invoker.FireEffect();
+		A_QuakeEx(1+int(0.5*invoker.chargesize),1+int(0.5*invoker.chargesize),1+int(0.5*invoker.chargesize),5+int(1.2*invoker.chargesize),0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05+0.01*invoker.chargesize);
+		UTMainHandler.DoSwing(self,(FRandom[Stunner](-0.04,0.04),FRandom[Stunner](-0.9,-0.4)),1+invoker.chargesize*0.3,-0.1,3,SWING_Spring,3,2.5);
 		A_Overlay(-2,"Null");
+		Vector3 x, y, z;
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),x*10-z*5);
+		let p = Spawn("StunProj",origin);
+		p.angle = angle;
+		p.pitch = BulletSlope();
+		p.target = self;
+		p.specialf1 = invoker.chargesize*mult;
+		p.bAMBUSH = weap.bAltFire;
+		FLineTraceData d;
+		LineTrace(angle,60,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
+		if ( d.HitType == TRACE_HitActor )
+		{
+			int dmg = int(5*invoker.chargesize);
+			if ( d.HitLocation.z >= (d.HitActor.pos.z+d.HitActor.height*0.81) )
+				dmg = d.HitActor.DamageMobj(invoker,self,dmg*2,'Decapitated',DMG_THRUSTLESS);
+			else dmg = d.HitActor.DamageMobj(invoker,self,dmg,'impact',DMG_THRUSTLESS);
+			UTMainHandler.DoKnockback(d.HitActor,x,4000*invoker.chargesize);
+			if ( d.HitActor.bNOBLOOD )
+			{
+				let p = Spawn("StunnerImpact",d.HitLocation-d.HitDir*4);
+				p.angle = atan2(d.HitDir.y,d.HitDir.x);
+				p.pitch = asin(-d.HitDir.z);
+			}
+			else
+			{
+				d.HitActor.TraceBleed(dmg,invoker);
+				d.HitActor.SpawnBlood(d.HitLocation,atan2(d.HitDir.y,d.HitDir.x)+180,dmg);
+			}
+		}
+		else if ( d.HitType != TRACE_HitNone )
+		{
+			let p = Spawn("StunnerImpact",d.HitLocation-d.HitDir*4);
+			p.angle = atan2(d.HitDir.y,d.HitDir.x);
+			p.pitch = asin(-d.HitDir.z);
+			if ( d.HitType == TRACE_HitWall ) d.HitLine.RemoteActivate(self,d.LineSide,SPAC_Impact,d.HitLocation-d.HitDir*4);
+		}
 	}
 	action void A_BeginCharge()
 	{

@@ -167,8 +167,6 @@ Any targets unlucky enough to stand in its way will be pushed away.
 Secondary fire: "Inverts the polarity" of the charge, which results in the
 complete opposite effect, causing targets to instead be pulled towards you.
 
-The secondary fire can be useful to pick up items that are way out of reach.
-
 Since the charge rod rapidly extends on shoot, both fire modes additionally
 deal considerable melee damage to anything that's too close.
 
