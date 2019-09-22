@@ -813,6 +813,10 @@ HardwareShader Texture "models/ElecFX.png"
 {
 	Shader "shaders/glsl/ElecFX.fp"
 }
+HardwareShader Texture "models/FlametFX.png"
+{
+	Shader "shaders/glsl/FlametFX.fp"
+}
 // PP shaders
 HardwareShader PostProcess scene
 {

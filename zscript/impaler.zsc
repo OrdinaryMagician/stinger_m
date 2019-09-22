@@ -106,6 +106,7 @@ Class Impaler : UnrealWeapon
 		IMPI A 0
 		{
 			let weap = Weapon(invoker);
+			invoker.HasGem = false;
 			if ( (invoker.ClipCount>=0) || (weap.Ammo1.Amount > 0) )
 				return ResolveState("Reload");
 			return ResolveState("Idle");

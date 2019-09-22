@@ -15,7 +15,8 @@ Model "UFlamethrower"
 {
 	Path "models"
 	Model 1 "FlameTPick_d.3d"
-	Skin 1 "JNapalm1_.png"
+	SurfaceSkin 1 0 "JNapalm1_.png"
+	SurfaceSkin 1 1 "Flamet_.png"
 	ZOffset 10
 	AngleOffset -90
 	Scale 0.1 0.1 0.12
@@ -30,16 +31,254 @@ Model "UFlamethrower"
 Model "UFlamethrower"
 {
 	Path "models"
-	Model 3 "FlameTOldPick_d.3d"
-	SurfaceSkin 3 0 "JNapalm1_.png"
-	SurfaceSkin 3 1 "Flamet_.png"
-	ZOffset 10
+	Model 2 "FlameT_d.3d"
+	SurfaceSkin 2 2 "FlametFX.png"
 	AngleOffset -90
-	Scale 0.1 0.1 0.12
+	Scale 0.1 -0.06 0.1
+	Offset 5 -8 -6
 
-	FrameIndex OFLP B 3 0
+	// Down
+	FrameIndex FLFD A 2 1
+	FrameIndex FLFD B 2 2
+	FrameIndex FLFD C 2 3
+	FrameIndex FLFD D 2 4
+	// Select
+	FrameIndex FLFS A 2 16
+	FrameIndex FLFS B 2 17
+	FrameIndex FLFS C 2 18
+	FrameIndex FLFS D 2 19
+	// Idle
+	FrameIndex FLFI A 2 20
+	FrameIndex FLFI B 2 21
+	FrameIndex FLFI C 2 22
+	FrameIndex FLFI D 2 23
+	FrameIndex FLFI E 2 24
+	FrameIndex FLFI F 2 25
+	FrameIndex FLFI G 2 26
+	// PreFire
+	FrameIndex FLFF A 2 27
+	FrameIndex FLFF B 2 28
+	FrameIndex FLFF C 2 29
+	FrameIndex FLFF D 2 30
+	FrameIndex FLFF E 2 31
+	// Fire
+	FrameIndex FLFF F 2 32
+	FrameIndex FLFF G 2 33
+	FrameIndex FLFF H 2 34
+	FrameIndex FLFF I 2 35
+	FrameIndex FLFF J 2 36
+	FrameIndex FLFF K 2 37
+	// PostFire
+	FrameIndex FLFF L 2 38
+	FrameIndex FLFF M 2 39
+	FrameIndex FLFF N 2 40
+	FrameIndex FLFF O 2 41
+	FrameIndex FLFF P 2 42
+	// AltFireStart
+	FrameIndex FLFA A 2 43
+	FrameIndex FLFA B 2 44
+	FrameIndex FLFA C 2 45
+	FrameIndex FLFA D 2 46
+	FrameIndex FLFA E 2 47
+	// AltFireRep
+	FrameIndex FLFA F 2 48
+	FrameIndex FLFA G 2 49
+	FrameIndex FLFA H 2 50
+	FrameIndex FLFA I 2 51
+	FrameIndex FLFA J 2 52
+	FrameIndex FLFA K 2 53
+	FrameIndex FLFA L 2 54
+	// AltFireRelease
+	FrameIndex FLFA M 2 55
+	FrameIndex FLFA N 2 56
+	FrameIndex FLFA O 2 57
+	FrameIndex FLFA P 2 58
+	FrameIndex FLFA Q 2 59
+	FrameIndex FLFA R 2 60
+	FrameIndex FLFA S 2 61
+	FrameIndex FLFA T 2 62
+	FrameIndex FLFA U 2 63
+	FrameIndex FLFA V 2 64
+	FrameIndex FLFA W 2 65
+	FrameIndex FLFA X 2 66
+	// AltFireEnd
+	FrameIndex FLFA Y 2 67
+	FrameIndex FLFA Z 2 68
+	FrameIndex FLFA [ 2 69
+	FrameIndex FLFA \ 2 70
+	FrameIndex FLFA ] 2 71
+	FrameIndex FFA2 A 2 72
+	FrameIndex FFA2 B 2 73
+	FrameIndex FFA2 C 2 74
+	FrameIndex FFA2 D 2 75
+	// Twiddle
+	FrameIndex FLFT A 2 76
+	FrameIndex FLFT B 2 77
+	FrameIndex FLFT C 2 78
+	FrameIndex FLFT D 2 79
+	FrameIndex FLFT E 2 80
+	FrameIndex FLFT F 2 81
+	FrameIndex FLFT G 2 82
+	FrameIndex FLFT H 2 83
+	FrameIndex FLFT I 2 84
+	FrameIndex FLFT J 2 85
+	FrameIndex FLFT K 2 86
+	FrameIndex FLFT L 2 87
+	FrameIndex FLFT M 2 88
+	FrameIndex FLFT N 2 89
+	FrameIndex FLFT O 2 90
+	FrameIndex FLFT P 2 91
+	FrameIndex FLFT Q 2 92
+	FrameIndex FLFT R 2 93
+	FrameIndex FLFT S 2 94
+	FrameIndex FLFT T 2 95
+	FrameIndex FLFT U 2 96
+	FrameIndex FLFT V 2 97
+	FrameIndex FLFT W 2 98
+	FrameIndex FLFT X 2 99
+	FrameIndex FLFT Y 2 100
+	FrameIndex FLFT Z 2 101
+	FrameIndex FLFT [ 2 102
+	FrameIndex FLFT \ 2 103
+	FrameIndex FLFT ] 2 104
+	FrameIndex FFT2 A 2 105
+	FrameIndex FFT2 B 2 106
+	FrameIndex FFT2 C 2 107
+	FrameIndex FFT2 D 2 108
+	FrameIndex FFT2 E 2 109
+	FrameIndex FFT2 F 2 110
+}
 
-	ZOffset 12
-	ROTATING
-	FrameIndex OFLP A 3 0
+Model "UFlamethrower"
+{
+	Path "models"
+	Model 0 "FlameT_d.3d"
+	SurfaceSkin 0 0 "Flamet.png"
+	SurfaceSkin 0 1 "Automa1.png"
+	AngleOffset -90
+	Scale 0.1 -0.06 0.1
+	Offset 5 -8 -6
+
+	// Down
+	FrameIndex FLMD A 0 1
+	FrameIndex FLMD B 0 2
+	FrameIndex FLMD C 0 3
+	FrameIndex FLMD D 0 4
+	FrameIndex FLMD E 0 5
+	FrameIndex FLMD F 0 6
+	FrameIndex FLMD G 0 7
+	FrameIndex FLMD H 0 8
+	FrameIndex FLMD I 0 9
+	FrameIndex FLMD J 0 10
+	// Select
+	FrameIndex FLMS A 0 10
+	FrameIndex FLMS B 0 11
+	FrameIndex FLMS C 0 12
+	FrameIndex FLMS D 0 13
+	FrameIndex FLMS E 0 14
+	FrameIndex FLMS F 0 15
+	FrameIndex FLMS G 0 16
+	FrameIndex FLMS H 0 17
+	FrameIndex FLMS I 0 18
+	FrameIndex FLMS J 0 19
+	// Idle
+	FrameIndex FLMI A 0 20
+	FrameIndex FLMI B 0 21
+	FrameIndex FLMI C 0 22
+	FrameIndex FLMI D 0 23
+	FrameIndex FLMI E 0 24
+	FrameIndex FLMI F 0 25
+	FrameIndex FLMI G 0 26
+	// PreFire
+	FrameIndex FLMF A 0 27
+	FrameIndex FLMF B 0 28
+	FrameIndex FLMF C 0 29
+	FrameIndex FLMF D 0 30
+	FrameIndex FLMF E 0 31
+	// Fire
+	FrameIndex FLMF F 0 32
+	FrameIndex FLMF G 0 33
+	FrameIndex FLMF H 0 34
+	FrameIndex FLMF I 0 35
+	FrameIndex FLMF J 0 36
+	FrameIndex FLMF K 0 37
+	// PostFire
+	FrameIndex FLMF L 0 38
+	FrameIndex FLMF M 0 39
+	FrameIndex FLMF N 0 40
+	FrameIndex FLMF O 0 41
+	FrameIndex FLMF P 0 42
+	// AltFireStart
+	FrameIndex FLMA A 0 43
+	FrameIndex FLMA B 0 44
+	FrameIndex FLMA C 0 45
+	FrameIndex FLMA D 0 46
+	FrameIndex FLMA E 0 47
+	// AltFireRep
+	FrameIndex FLMA F 0 48
+	FrameIndex FLMA G 0 49
+	FrameIndex FLMA H 0 50
+	FrameIndex FLMA I 0 51
+	FrameIndex FLMA J 0 52
+	FrameIndex FLMA K 0 53
+	FrameIndex FLMA L 0 54
+	// AltFireRelease
+	FrameIndex FLMA M 0 55
+	FrameIndex FLMA N 0 56
+	FrameIndex FLMA O 0 57
+	FrameIndex FLMA P 0 58
+	FrameIndex FLMA Q 0 59
+	FrameIndex FLMA R 0 60
+	FrameIndex FLMA S 0 61
+	FrameIndex FLMA T 0 62
+	FrameIndex FLMA U 0 63
+	FrameIndex FLMA V 0 64
+	FrameIndex FLMA W 0 65
+	FrameIndex FLMA X 0 66
+	// AltFireEnd
+	FrameIndex FLMA Y 0 67
+	FrameIndex FLMA Z 0 68
+	FrameIndex FLMA [ 0 69
+	FrameIndex FLMA \ 0 70
+	FrameIndex FLMA ] 0 71
+	FrameIndex FLA2 A 0 72
+	FrameIndex FLA2 B 0 73
+	FrameIndex FLA2 C 0 74
+	FrameIndex FLA2 D 0 75
+	// Twiddle
+	FrameIndex FLMT A 0 76
+	FrameIndex FLMT B 0 77
+	FrameIndex FLMT C 0 78
+	FrameIndex FLMT D 0 79
+	FrameIndex FLMT E 0 80
+	FrameIndex FLMT F 0 81
+	FrameIndex FLMT G 0 82
+	FrameIndex FLMT H 0 83
+	FrameIndex FLMT I 0 84
+	FrameIndex FLMT J 0 85
+	FrameIndex FLMT K 0 86
+	FrameIndex FLMT L 0 87
+	FrameIndex FLMT M 0 88
+	FrameIndex FLMT N 0 89
+	FrameIndex FLMT O 0 90
+	FrameIndex FLMT P 0 91
+	FrameIndex FLMT Q 0 92
+	FrameIndex FLMT R 0 93
+	FrameIndex FLMT S 0 94
+	FrameIndex FLMT T 0 95
+	FrameIndex FLMT U 0 96
+	FrameIndex FLMT V 0 97
+	FrameIndex FLMT W 0 98
+	FrameIndex FLMT X 0 99
+	FrameIndex FLMT Y 0 100
+	FrameIndex FLMT Z 0 101
+	FrameIndex FLMT [ 0 102
+	FrameIndex FLMT \ 0 103
+	FrameIndex FLMT ] 0 104
+	FrameIndex FLT2 A 0 105
+	FrameIndex FLT2 B 0 106
+	FrameIndex FLT2 C 0 107
+	FrameIndex FLT2 D 0 108
+	FrameIndex FLT2 E 0 109
+	FrameIndex FLT2 F 0 110
 }

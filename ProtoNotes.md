@@ -59,6 +59,8 @@
    changes to accomodate for it. I still think the texture sucks. It should be
    switchable, just like how you can change weapon sprites in Smooth Doom.
  - Ammo is just a recolored explosive barrel.
+ - Decided to default to the old model instead of the new one.
+ - Need to re-add the flame.
 
 ### Quadshot
 

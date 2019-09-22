@@ -317,6 +317,14 @@ flamegun/alt	flamgalt
 flamegun/exp	expl04
 $limit flamegun/exp 16
 
+flamet/select	flamtsel
+flamet/idle	flamtidl
+flamet/down	flamtide
+flamet/fire	flamtfir
+flamet/fireend	flamtstp
+flamet/charge	flamtchg
+flamet/altfire	flamtalt
+
 translator/event	transa3
 
 detector/start	detact

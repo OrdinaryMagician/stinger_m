@@ -19,6 +19,14 @@ Class FlameAmmo : Ammo
 	}
 }
 
+Class UFlameTrail : Actor
+{
+}
+
+Class OnFire : Thinker
+{
+}
+
 Class UFlame : Actor
 {
 }
@@ -30,7 +38,75 @@ Class UNapalm : Actor
 Class UFlamethrower : UnrealWeapon
 {
 	bool bCharging;
+	double ChargeSize, Count;
 
+	override Inventory CreateTossable( int amt )
+	{
+		if ( Owner.player && (Owner.player.ReadyWeapon == self) )
+			Owner.A_PlaySound("flamet/down",CHAN_6,Dampener.Active(self)?.1:1.);
+		return Super.CreateTossable(amt);
+	}
+	action void A_FireFlame()
+	{
+		let weap = Weapon(invoker);
+		if ( (weap.Ammo1.Amount <= 0) || !(player.cmd.buttons&BT_ATTACK) )
+		{
+			player.SetPSPrite(PSP_WEAPON,invoker.FindState("Release"));
+			return;
+		}
+		invoker.count += 10./TICRATE;
+		while ( invoker.count > 1. )
+		{
+			weap.DepleteAmmo(weap.bAltFire,true,1);
+			invoker.count -= 1.;
+		}
+	}
+	action void A_BeginFlame()
+	{
+		let weap = Weapon(invoker);
+		weap.DepleteAmmo(weap.bAltFire,true,1);
+		invoker.count = 0;
+		A_PlaySound("flamet/fire",CHAN_WEAPON,Dampener.Active(self)?.1:1.,true);
+		A_Overlay(-9999,"Dummy2");
+	}
+	action void A_BeginCharge()
+	{
+		let weap = Weapon(invoker);
+		weap.DepleteAmmo(weap.bAltFire,true,1);
+		invoker.count = invoker.chargesize = 0;
+		A_PlaySound("flamet/charge",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+		A_Overlay(-9999,"Dummy3");
+	}
+	action void A_ChargeUp()
+	{
+		let weap = Weapon(invoker);
+		if ( (invoker.chargesize < 4.9) && (weap.Ammo1.Amount > 0) )
+		{
+			invoker.count += 40./TICRATE;
+			while ( invoker.count > 1. )
+			{
+				invoker.chargesize += 0.05;
+				weap.DepleteAmmo(weap.bAltFire,true,1);
+				invoker.count -= 1.;
+			}
+		}
+		double ox = FRandom[Flamet](-1,1)*invoker.chargesize*0.3;
+		double oy = FRandom[Flamet](-1,1)*invoker.chargesize*0.3;
+		A_WeaponOffset(ox,32+oy);
+		A_OverlayOffset(-2,-ox,-oy);
+		A_SoundVolume(CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+		if ( (weap.Ammo1.Amount <= 0) || (invoker.chargesize >= 4.9) || !(player.cmd.buttons&BT_ALTATTACK) )
+			player.SetPSPrite(PSP_WEAPON,invoker.FindState("AltRelease"));
+	}
+	action void A_FireNapalm()
+	{
+		A_Overlay(-9999,"Null");
+		A_WeaponOffset(0,32);
+		A_OverlayOffset(-2,0,0);
+		invoker.bCharging = false;
+		A_PlaySound("flamet/altfire",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+		if ( self is 'UTPlayer' ) UTPlayer(self).PlayAttacking3();
+	}
 	Default
 	{
 		Tag "$T_FLAMETHROWER";
@@ -42,20 +118,161 @@ Class UFlamethrower : UnrealWeapon
 		Weapon.AmmoType "FlameAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "FlameAmmo";
-		Weapon.AmmoUse2 30;
+		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 100;
 		UTWeapon.DropAmmo 50;
 	}
 	States
 	{
 	Spawn:
-		FLMP A 1 A_JumpIf(sting_flamet,2);
+		FLMP A -1;
+		Stop;
+		FLMP B -1;
+		Stop;
+	Select:
+		FLMS A 1 A_Raise(int.max);
 		Wait;
-		FLMP B 1 A_JumpIf(sting_flamet,2);
+	Ready:
+		FLMS ABCDEF 2 A_WeaponReady(WRF_NOFIRE);
+		FLMS G 0
+		{
+			A_PlaySound("flamet/idle",CHAN_6,Dampener.Active(self)?.1:1.,true);
+			A_Overlay(-2,"FlameReady");
+			A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
+			A_OverlayRenderStyle(-2,STYLE_Add);
+		}
+		FLMS GHIJ 2 A_WeaponReady(WRF_NOFIRE);
+		Goto Idle;
+	Dummy:
+		TNT1 A 1
+		{
+			A_CheckReload();
+			A_WeaponReady();
+		}
 		Wait;
-		OFLP A 1 A_JumpIf(!sting_flamet,"Spawn");
+	Idle:
+		FLMI A 0 A_Overlay(-9999,"Dummy");
+		FLMI ABCDEFG 12 A_SoundVolume(CHAN_6,Dampener.Active(self)?.1:1.);
+		FLMI A 0 A_Jump(20,"Twiddle");
+		Goto Idle+1;
+	Twiddle:
+		#### # 2
+		{
+			A_SoundVolume(CHAN_6,Dampener.Active(self)?.1:1.);
+			player.SetPSprite(-2,ResolveState("FlameTwiddle"));
+		}
+		FLMT ABCDEFGHIJKLMNOPQRSTUVWXYZ[\] 2 A_SoundVolume(CHAN_6,Dampener.Active(self)?.1:1.);
+		FLT2 ABCDEF 2 A_SoundVolume(CHAN_6,Dampener.Active(self)?.1:1.);
+		Goto Idle+1;
+	Fire:
+		#### # 2
+		{
+			A_Overlay(-9999,"Null");
+			player.SetPSprite(-2,ResolveState("FlameFire"));
+		}
+		FLMF ABCDE 2;
+		FLMF F 0 A_BeginFlame();
+		Goto Hold;
+	Dummy2:
+		TNT1 A 1 A_FireFlame();
 		Wait;
-		OFLP B 1 A_JumpIf(!sting_flamet,"Spawn+1");
+	Hold:
+		FLMF FGHIJK 2 A_SoundVolume(CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+		Loop;
+	Release:
+		#### # 2
+		{
+			A_Overlay(-9999,"Null");
+			player.SetPSprite(-2,ResolveState("FlameRelease"));
+			A_PlaySound("flamet/fireend",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+			A_ClearRefire();
+		}
+		FLMF MNOP 2;
+		Goto Idle;
+	AltFire:
+		#### # 2
+		{
+			A_Overlay(-9999,"Null");
+			player.SetPSprite(-2,ResolveState("FlameAltFire"));
+			invoker.bCharging = true;
+		}
+		FLMA ABCDE 2;
+		FLMA F 0 A_BeginCharge();
+		Goto AltHold;
+	Dummy3:
+		TNT1 A 1 A_ChargeUp();
 		Wait;
+	AltHold:
+		FLMA FIGHLKGJHLGFHJGILHFKGFKHIGKGHL 10;
+		Loop;
+	AltRelease:
+		FLMA M 0
+		{
+			A_FireNapalm();
+			player.SetPSprite(-2,ResolveState("FlameAltRelease"));
+		}
+		FLMA MNOPQRSTUVWX 2;
+		FLMA Y 0
+		{
+			if ( invoker.CheckAmmo(1,false,true) )
+				A_Refire("GotoAltHold");
+		}
+		FLMA Y 0 A_ClearRefire();
+		FLMA YZ[\] 2;
+		FLA2 ABCD 2;
+		Goto Idle;
+	GotoAltHold:
+		FLMA Y 0
+		{
+			player.SetPSprite(-2,ResolveState("FlameAltHold"));
+		}
+		Goto AltHold;
+	Deselect:
+		#### # 1
+		{
+			A_Overlay(-9999,"Null");
+			A_PlaySound("flamet/down",CHAN_6,Dampener.Active(self)?.1:1.);
+			player.SetPSprite(-2,ResolveState("FlameDeselect"));
+		}
+		FLMD ABCDEFHIJ 1;
+		FLMD J 1 A_Lower(int.max);
+		Wait;
+	FlameReady:
+		FLFS ABCD 2 Bright;
+		Goto FlameIdle;
+	FlameIdle:
+		FLFI ABCDEFG 12 Bright;
+		Loop;
+	FlameTwiddle:
+		#### # 2 Bright;
+		FLFT ABCDEFGHIJKLMNOPQRSTUVWXYZ[\] 2 Bright;
+		FFT2 ABCDEF 2 Bright;
+		Goto FlameIdle;
+	FlameFire:
+		#### # 1 Bright;
+		FLFF ABCDE 2 Bright;
+		Goto FlameHold;
+	FlameHold:
+		FLFF FGHIJK 2 Bright;
+		Loop;
+	FlameRelease:
+		#### # 2 Bright;
+		FLFF MNOP 2 Bright;
+		Goto FlameIdle;
+	FlameAltFire:
+		#### # 2 Bright;
+		FLFA ABCDE 2 Bright;
+		Goto FlameAltHold;
+	FlameAltHold:
+		FLFA FIGHLKGJHLGFHJGILHFKGFKHIGKGHL 10 Bright;
+		Loop;
+	FlameAltRelease:
+		FLFA MNOPQRSTUVWXYZ[\] 2 Bright;
+		FFA2 ABCD 2 Bright;
+		Goto FlameIdle;
+	FlameDeselect:
+		#### # 1 Bright;
+		FLFD ABCD 2 Bright;
+		Stop;
 	}
 }
