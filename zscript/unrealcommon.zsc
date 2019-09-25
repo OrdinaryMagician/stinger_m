@@ -1204,7 +1204,7 @@ Class UnrealMainHandler : EventHandler
 		if ( (level.GetChecksum() ~== "959A613006CC3AA912C4A22908B7566A") || (level.GetChecksum() ~== "0EADB2F82732A968B8513E4DC6138439") )
 		{
 			S_ChangeMusic("Cyrene");
-			TextureID sky95 = TexMan.CheckForTexture("95Bg",TexMan.Type_Any);
+			TextureID sky95 = TexMan.CheckForTexture("Sky95",TexMan.Type_Any);
 			level.ChangeSky(sky95,sky95);
 			level.ReplaceTextures("rClfFlr0","C_flr19",0);
 			level.ReplaceTextures("rClfBas0","C_wal19k",0);

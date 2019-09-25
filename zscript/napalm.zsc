@@ -19,16 +19,263 @@ Class FlameAmmo : Ammo
 	}
 }
 
-Class UFlameTrail : Actor
-{
-}
-
 Class OnFire : Thinker
 {
+	Actor victim, instigator;
+	int amount, cnt;
+
+	override void Tick()
+	{
+		if ( !victim )
+		{
+			Destroy();
+			return;
+		}
+		if ( victim.waterlevel > 0 )
+		{
+			victim.A_RemoveLight('OnFireLight');
+			amount -= victim.waterlevel**2;
+		}
+		else victim.A_AttachLight('OnFireLight',DynamicLight.RandomFlickerLight,Color(4,2,0)*clamp(amount,0,63),int(max(victim.radius,victim.height))+60+min(amount/4,40),int(max(victim.radius,victim.height))+60+min(amount/4,40)+8,DynamicLight.LF_ATTENUATE,(0,0,victim.height/2),0.1);
+		if ( victim.Health <= 0 ) amount = min(amount,100);
+		if ( !(level.maptime%3) )
+			amount -= ((victim.Health>0)?1:2);
+		if ( amount < -10 )
+		{
+			victim.A_RemoveLight('OnFireLight');
+			Destroy();
+			return;
+		}
+		if ( amount <= 0 ) return;
+		if ( cnt > 0 ) cnt--;
+		else
+		{
+			cnt = 10;
+			if ( victim.bSHOOTABLE && (victim.Health > 0) )
+				victim.DamageMobj(instigator.FindInventory("UFlamethrower"),instigator,max(1,amount*(victim.bBOSS?0.05:0.15)),'Fire',DMG_THRUSTLESS);
+			if ( !victim )
+			{
+				Destroy();
+				return;
+			}
+		}
+		if ( level.maptime%5 ) return;
+		int numpt = clamp(int(Random[FlameT](2,4)*amount*0.02),1,4);
+		double mult = max(victim.radius,victim.height)/30.;
+		numpt = int(max(1,numpt*mult));
+		for ( int i=0; i<numpt; i++ )
+		{
+			Vector3 pos = victim.Vec3Offset(FRandom[FlameT](-victim.radius,victim.radius)*0.8,FRandom[FlameT](-victim.radius,victim.radius)*0.8,FRandom[FlameT](victim.height*0.2,victim.height*0.8));
+			double ang = FRandom[FlameT](0,360);
+			double pt = FRandom[FlameT](-90,90);
+			let c = victim.Spawn("UFlameTrail",pos);
+			c.scale *= max(1.,mult*0.35);
+			c.vel = victim.vel*0.5+(cos(ang)*cos(pt),sin(ang)*cos(pt),-sin(pt))*FRandom[FlameT](.5,2);
+			c.master = instigator;
+			c.tracer = victim;
+		}
+	}
+
+	static void Apply( Actor victim, Actor instigator, int amount )
+	{
+		if ( amount <= 0 ) return;
+		if ( victim is 'ShredCorpseHitbox' ) return;
+		let ti = ThinkerIterator.Create("OnFire",STAT_USER);
+		OnFire t;
+		while ( t = OnFire(ti.Next()) )
+		{
+			if ( t.victim != victim ) continue;
+			if ( instigator ) t.instigator = instigator;
+			t.amount = min(500,t.amount+amount);
+			t.cnt = min(t.cnt,3);
+			return;
+		}
+		t = new("ONFire");
+		t.ChangeStatNum(STAT_USER);
+		t.victim = victim;
+		t.instigator = instigator;
+		t.amount = amount;
+		t.cnt = 1;
+	}
+
+	static bool IsOnFire( Actor victim )
+	{
+		let ti = ThinkerIterator.Create("OnFire",STAT_USER);
+		OnFire t;
+		while ( t = OnFire(ti.Next()) )
+		{
+			if ( t.victim != victim ) continue;
+			return (t.amount>0);
+		}
+		return false;
+	}
+}
+
+Class UFlameLight : PaletteLight
+{
+	Default
+	{
+		Tag "Ampd";
+		Args 0,0,0,40;
+		ReactionTime 40;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		Args[0] /= 5;
+		Args[1] /= 5;
+		Args[2] /= 5;
+		Args[3] += 4;
+		if ( !target || (target.waterlevel > 0) )
+		{
+			Destroy();
+			return;
+		}
+		SetOrigin(target.pos,true);
+	}
+}
+Class UFlameTrailLight : PaletteLight
+{
+	Default
+	{
+		Tag "Ampd";
+		Args 0,0,0,80;
+		ReactionTime 20;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		Args[0] /= 9;
+		Args[1] /= 9;
+		Args[2] /= 9;
+		if ( !target || (target.waterlevel > 0) )
+		{
+			Destroy();
+			return;
+		}
+		SetOrigin(target.pos,true);
+	}
 }
 
 Class UFlame : Actor
 {
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		let l = Spawn("UFlameLight",pos);
+		l.target = self;
+		Scale.x *= RandomPick[ExploS](-1,1);
+		Scale.y *= RandomPick[ExploS](-1,1);
+	}
+	bool TraceCheck( Actor other )
+	{
+		Vector3 to;
+		double len;
+		FLineTraceData d;
+		to = level.Vec3Diff(pos,other.pos);
+		len = to.length();
+		to /= len;
+		if ( !LineTrace(atan2(to.y,to.x),len,asin(-to.z),TRF_THRUACTORS) ) return true;
+		to = level.Vec3Diff(pos,other.Vec3Offset(0,0,other.height/2));
+		len = to.length();
+		to /= len;
+		if ( !LineTrace(atan2(to.y,to.x),len,asin(-to.z),TRF_THRUACTORS) ) return true;
+		to = level.Vec3Diff(pos,other.Vec3Offset(0,0,other.height));
+		len = to.length();
+		to /= len;
+		if ( !LineTrace(atan2(to.y,to.x),len,asin(-to.z),TRF_THRUACTORS) ) return true;
+		return false;
+	}
+	action void A_Flame()
+	{
+		if ( waterlevel > 0 )
+			vel *= 0.9;
+		else
+		{
+			vel *= 0.98;
+			vel.z += 0.2;
+		}
+		if ( waterlevel > 0 ) bINVISIBLE = true;
+		if ( !Random[FlameT](0,int(30*(0.4-alpha))) && (!bINVISIBLE || (waterlevel > 0)) )
+		{
+			let s = Spawn("UTSmoke",pos+vel);
+			s.vel = (FRandom[FlameT](-0.2,0.2),FRandom[FlameT](-0.2,0.2),FRandom[FlameT](-0.2,0.2));
+			s.vel += vel*0.2;
+			s.alpha *= 0.4;
+			s.scale *= 2.5;
+		}
+		if ( bAMBUSH && !sting_flametspread ) return;
+		if ( Random[FlameT](0,int(12*(0.4-alpha))) ) return;
+		double rad = bAMBUSH?10:60;
+		if ( !bAMBUSH ) rad += 90*(0.4-alpha);
+		let bt = BlockThingsIterator.Create(self,rad+200);
+		while ( bt.Next() )
+		{
+			let t = bt.Thing;
+			if ( !t || !t.bSHOOTABLE || (t.Health <= 0) || (t == tracer) || (!bAMBUSH && (t == master) && (GetAge() < 6)) || (Distance3D(t) > rad+t.radius) || !invoker.TraceCheck(t) ) continue;
+			int amt = max(1,int(alpha*15));
+			if ( bAMBUSH && OnFire.IsOnFire(t) ) amt /= 2;
+			OnFire.Apply(t,master,amt);
+		}
+	}
+	Default
+	{
+		RenderStyle "Add";
+		Speed 20;
+		Radius 4;
+		Height 4;
+		Alpha 0.4;
+		Scale 0.1;
+		+NOBLOCKMAP;
+		+NOGRAVITY;
+		+NOFRICTION;
+		+SLIDESONWALLS;
+		+ACTIVATEPCROSS;
+		+ACTIVATEIMPACT;
+		+NOTELEPORT;
+		+FORCEXYBILLBOARD;
+		+DROPOFF;
+		+NOBLOCKMONST;
+	}
+	States
+	{
+	Spawn:
+		SEXP AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQRRSSTT 1 Bright
+		{
+			A_Flame();
+			A_SetScale(scale.x*1.08);
+			A_FadeOut(0.01);
+		}
+		Stop;
+	}
+}
+
+Class UFlameTrail : UFlame
+{
+	override void PostBeginPlay()
+	{
+		Actor.PostBeginPlay();
+		Scale.x *= RandomPick[ExploS](-1,1);
+		Scale.y *= RandomPick[ExploS](-1,1);
+	}
+	Default
+	{
+		Speed 2;
+		Alpha 0.3;
+		Scale 0.6;
+		+AMBUSH;
+	}
+	States
+	{
+	Spawn:
+		SEXP AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQRRSSTT 1 Bright
+		{
+			A_Flame();
+			A_SetScale(scale.x*0.98);
+			A_FadeOut(0.01);
+		}
+		Stop;
+	}
 }
 
 Class UNapalm : Actor
@@ -46,6 +293,13 @@ Class UFlamethrower : UnrealWeapon
 			Owner.A_PlaySound("flamet/down",CHAN_6,Dampener.Active(self)?.1:1.);
 		return Super.CreateTossable(amt);
 	}
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		if ( Owner.player.ReadyWeapon != self ) return;
+		let psp = Owner.player.FindPSprite(-2);
+		if ( psp ) psp.alpha = (Owner.waterlevel>2)?.0:1.;
+	}
 	action void A_FireFlame()
 	{
 		let weap = Weapon(invoker);
@@ -60,6 +314,20 @@ Class UFlamethrower : UnrealWeapon
 			weap.DepleteAmmo(weap.bAltFire,true,1);
 			invoker.count -= 1.;
 		}
+		invoker.FireEffect();
+		A_AlertMonsters();
+		UTMainHandler.DoFlash(self,Color(32,255,128,0),1);
+		Vector3 x, y, z, x2, y2, z2;
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+2.5*y-2*z);
+		Actor p = Spawn("UFlame",origin);
+		double a = FRandom[FlameT](0,360), s = FRandom[FlameT](0,.05);
+		[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
+		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
+		p.angle = atan2(dir.y,dir.x);
+		p.pitch = asin(-dir.z);
+		p.vel = vel*0.5+(cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed*FRandom[FlameT](0.8,1.4);
+		p.master = self;
 	}
 	action void A_BeginFlame()
 	{
@@ -121,6 +389,7 @@ Class UFlamethrower : UnrealWeapon
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 100;
 		UTWeapon.DropAmmo 50;
+		+NOEXTREMEDEATH;
 	}
 	States
 	{
@@ -138,7 +407,7 @@ Class UFlamethrower : UnrealWeapon
 		{
 			A_PlaySound("flamet/idle",CHAN_6,Dampener.Active(self)?.1:1.,true);
 			A_Overlay(-2,"FlameReady");
-			A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
+			A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE|PSPF_ALPHA|PSPF_FORCEALPHA,true);
 			A_OverlayRenderStyle(-2,STYLE_Add);
 		}
 		FLMS GHIJ 2 A_WeaponReady(WRF_NOFIRE);
