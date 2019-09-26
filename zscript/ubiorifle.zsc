@@ -69,7 +69,8 @@ Class UBioGel : Actor
 		Super.PostBeginPlay();
 		vel.z += 3;
 		deadtimer = 105;
-		A_AttachLight('BioLight',DynamicLight.PointLight,"40FF80",int(8*scale.x),int(8*scale.x));
+		l = Spawn("BioLight",pos);
+		l.target = self;
 		rollvel = FRandom[GES](10,30)*RandomPick[GES](-1,1);
 		pitchvel = FRandom[GES](10,30)*RandomPick[GES](-1,1);
 		yawvel = FRandom[GES](10,30)*RandomPick[GES](-1,1);
@@ -430,7 +431,6 @@ Class UBioGel : Actor
 	{
 		A_NoGravity();
 		A_Stop();
-		A_RemoveLight('BioLight');
 		A_SetRenderStyle(1.,STYLE_Add);
 		if ( invoker.b ) invoker.b.Destroy();
 		let s = Spawn("BioXLight",pos);
@@ -552,7 +552,6 @@ Class UBioGlob : UBioGel
 			if ( numsplash-- <= 0 ) return;
 			Vector3 dir = (ofs+(FRandom[GES](-.8,.8),FRandom[GES](-.8,.8),FRandom[GES](-.8,.8))).unit();
 			A_SetScale(scale.x-0.15);
-			A_AttachLight('BioLight',DynamicLight.PointLight,"40FF80",int(8*scale.x),int(8*scale.x));
 			let d = Spawn("UBioSplash",pos+ofs*4);
 			d.target = target;
 			d.master = self;

@@ -10,6 +10,14 @@ Class PeaceAmmo : Ammo
 	}
 }
 
+Class PeaceLight : RocketLight
+{
+	Default
+	{
+		Args 255,128,112,32;
+	}
+}
+
 Class PeaceTrail : Actor
 {
 	Default
@@ -27,14 +35,14 @@ Class PeaceTrail : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		A_AttachLight('RocketLight',DynamicLight.PointLight,Color(255,128,112),32,32);
+		let l = Spawn("PeaceLight",pos);
+		l.target = self;
 	}
 	override void Tick()
 	{
 		Super.Tick();
 		if ( !target || !target.bMISSILE )
 		{
-			A_RemoveLight('RocketLight');
 			Destroy();
 			return;
 		}

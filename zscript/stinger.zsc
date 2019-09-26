@@ -224,9 +224,29 @@ Class TarydiumExplosion : Actor
 	}
 }
 
+Class TDebuffLight : PointLightAttenuated
+{
+	TarydiumDebuff dbf;
+
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !dbf || !dbf.victim )
+		{
+			Destroy();
+			return;
+		}
+		Args[0] = min(dbf.Amount,64);
+		Args[1] = min(dbf.Amount*3,192);
+		Args[2] = min(dbf.Amount*4,255);
+		Args[3] = int(max(dbf.victim.radius,dbf.victim.height))+60+min(dbf.amount/4,40);
+		SetOrigin(dbf.Victim.Vec3Offset(0,0,dbf.Victim.Height/2),true);
+	}
+}
+
 Class TarydiumDebuff : Thinker
 {
-	Actor victim, instigator;
+	Actor victim, instigator, lite;
 	int amount;	// accumulated damage for the explosion
 	Vector3 oldvel;
 	bool wasonair, reentrant;
@@ -238,7 +258,15 @@ Class TarydiumDebuff : Thinker
 			BlowUp();
 			return;
 		}
-		victim.A_AttachLight('TDEBUFFLIGHT',DynamicLight.PointLight,Color(1,3,4)*min(amount,63),int(max(victim.radius,victim.height))+60+min(amount/4,40),0,DynamicLight.LF_ATTENUATE,(0,0,victim.height/2));
+		if ( !lite )
+		{
+			lite = Actor.Spawn("TDebuffLight",victim.pos);
+			TDebuffLight(lite).dbf = self;
+			lite.Args[0] = min(Amount,64);
+			lite.Args[1] = min(Amount*3,192);
+			lite.Args[2] = min(Amount*4,255);
+			lite.Args[3] = int(max(victim.radius,victim.height))+60+min(amount/4,40);
+		}
 		if ( Random[Stinger](0,amount) > 100 )
 		{
 			amount += 30;
@@ -254,12 +282,6 @@ Class TarydiumDebuff : Thinker
 		b.special1 = amount;
 		b.scale *= 1.+min(1.5,amount*0.02);
 		Destroy();
-	}
-
-	override void OnDestroy()
-	{
-		Super.OnDestroy();
-		if ( victim ) victim.A_RemoveLight('TDEBUFFLIGHT');
 	}
 
 	override void Tick()

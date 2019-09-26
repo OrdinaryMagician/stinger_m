@@ -169,6 +169,26 @@ Class RazorBlade : Actor
 	}
 }
 
+Class RazorLight : DynamicLight
+{
+	Default
+	{
+		Args 160, 0, 240, 40;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !target )
+		{
+			Destroy();
+			return;
+		}
+		Args[0] = int(160*target.alpha);
+		Args[2] = int(240*target.alpha);
+		SetOrigin(target.pos,true);
+	}
+}
+
 Class RazorBladeTrail : Actor
 {
 	Default
@@ -181,11 +201,16 @@ Class RazorBladeTrail : Actor
 		Radius 0.1;
 		Height 0;
 	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		let l = Spawn("RazorLight",pos);
+		l.target = self;
+	}
 	override void Tick()
 	{
 		if ( !target || target.InStateSequence(target.CurState,target.ResolveState("Death")) )
 		{
-			A_RemoveLight('RazorLight');
 			Destroy();
 			return;
 		}
@@ -194,7 +219,6 @@ Class RazorBladeTrail : Actor
 		pitch = target.pitch;
 		roll = target.roll;
 		alpha = min(target.vel.length()/target.speed,1.);
-		A_AttachLight('RazorLight',DynamicLight.PointLight,Color(2,0,3)*int(80*alpha),80,80);
 	}
 	States
 	{

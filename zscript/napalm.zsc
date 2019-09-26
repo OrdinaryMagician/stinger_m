@@ -19,10 +19,30 @@ Class FlameAmmo : Ammo
 	}
 }
 
+Class OnFireLight : DynamicLight
+{
+	OnFire of;
+
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !of || !of.victim )
+		{
+			Destroy();
+			return;
+		}
+		Args[0] = clamp(of.Amount*4,0,255);
+		Args[1] = clamp(of.Amount*2,0,128);
+		Args[3] = int(max(of.victim.radius,of.victim.height))+60+clamp(of.amount/8,0,80);
+		SetOrigin(of.Victim.Vec3Offset(0,0,of.Victim.Height/2),true);
+	}
+}
+
 Class OnFire : Thinker
 {
-	Actor victim, instigator;
-	int amount, cnt;
+	Actor victim, instigator, lite;
+	int amount, cnt, delay;
+	bool forcespread;
 
 	override void Tick()
 	{
@@ -33,16 +53,14 @@ Class OnFire : Thinker
 		}
 		if ( victim.waterlevel > 0 )
 		{
-			victim.A_RemoveLight('OnFireLight');
-			amount -= victim.waterlevel**2;
+			if ( lite ) lite.Destroy();
+			amount -= int(victim.waterlevel**2);
 		}
-		else victim.A_AttachLight('OnFireLight',DynamicLight.RandomFlickerLight,Color(4,2,0)*clamp(amount,0,63),int(max(victim.radius,victim.height))+60+min(amount/4,40),int(max(victim.radius,victim.height))+60+min(amount/4,40)+8,DynamicLight.LF_ATTENUATE,(0,0,victim.height/2),0.1);
 		if ( victim.Health <= 0 ) amount = min(amount,100);
 		if ( !(level.maptime%3) )
 			amount -= ((victim.Health>0)?1:2);
 		if ( amount < -10 )
 		{
-			victim.A_RemoveLight('OnFireLight');
 			Destroy();
 			return;
 		}
@@ -52,13 +70,14 @@ Class OnFire : Thinker
 		{
 			cnt = 10;
 			if ( victim.bSHOOTABLE && (victim.Health > 0) )
-				victim.DamageMobj(instigator.FindInventory("UFlamethrower"),instigator,max(1,amount*(victim.bBOSS?0.05:0.15)),'Fire',DMG_THRUSTLESS);
+				victim.DamageMobj(instigator.FindInventory("UFlamethrower"),instigator,max(1,int(amount*(victim.bBOSS?0.05:0.15))),'Fire',DMG_THRUSTLESS);
 			if ( !victim )
 			{
 				Destroy();
 				return;
 			}
 		}
+		if ( delay > 0 ) delay--;
 		if ( level.maptime%5 ) return;
 		int numpt = clamp(int(Random[FlameT](2,4)*amount*0.02),1,4);
 		double mult = max(victim.radius,victim.height)/30.;
@@ -71,12 +90,21 @@ Class OnFire : Thinker
 			let c = victim.Spawn("UFlameTrail",pos);
 			c.scale *= max(1.,mult*0.35);
 			c.vel = victim.vel*0.5+(cos(ang)*cos(pt),sin(ang)*cos(pt),-sin(pt))*FRandom[FlameT](.5,2);
-			c.master = instigator;
-			c.tracer = victim;
+		}
+		if ( !sting_flametspread && !forcespread ) return;
+		// spread to nearby actors
+		let bt = BlockThingsIterator.Create(victim);
+		while ( bt.Next() )
+		{
+			let t = bt.Thing;
+			if ( !t || !t.bSHOOTABLE || (t.Health <= 0) || (t == victim) || ((t == instigator) && (delay > 0)) || (victim.Distance3D(t) > victim.radius+t.radius+20) || !victim.CheckSight(t) ) continue;
+			int amt = max(1,amount/10);
+			if ( IsOnFire(t) ) amt = min(5,amt);
+			Apply(t,instigator,amt);
 		}
 	}
 
-	static void Apply( Actor victim, Actor instigator, int amount )
+	static void Apply( Actor victim, Actor instigator, int amount, bool forcespread = false, int delay = 0 )
 	{
 		if ( amount <= 0 ) return;
 		if ( victim is 'ShredCorpseHitbox' ) return;
@@ -96,6 +124,11 @@ Class OnFire : Thinker
 		t.instigator = instigator;
 		t.amount = amount;
 		t.cnt = 1;
+		// for napalm gel
+		t.forcespread = forcespread;
+		t.delay = delay;
+		t.lite = Actor.Spawn("OnFireLight",victim.pos);
+		OnFireLight(t.lite).of = t;
 	}
 
 	static bool IsOnFire( Actor victim )
@@ -134,57 +167,19 @@ Class UFlameLight : PaletteLight
 		SetOrigin(target.pos,true);
 	}
 }
-Class UFlameTrailLight : PaletteLight
-{
-	Default
-	{
-		Tag "Ampd";
-		Args 0,0,0,80;
-		ReactionTime 20;
-	}
-	override void Tick()
-	{
-		Super.Tick();
-		Args[0] /= 9;
-		Args[1] /= 9;
-		Args[2] /= 9;
-		if ( !target || (target.waterlevel > 0) )
-		{
-			Destroy();
-			return;
-		}
-		SetOrigin(target.pos,true);
-	}
-}
 
 Class UFlame : Actor
 {
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		let l = Spawn("UFlameLight",pos);
-		l.target = self;
+		if ( waterlevel <= 0 )
+		{
+			let l = Spawn("UFlameLight",pos);
+			l.target = self;
+		}
 		Scale.x *= RandomPick[ExploS](-1,1);
 		Scale.y *= RandomPick[ExploS](-1,1);
-	}
-	bool TraceCheck( Actor other )
-	{
-		Vector3 to;
-		double len;
-		FLineTraceData d;
-		to = level.Vec3Diff(pos,other.pos);
-		len = to.length();
-		to /= len;
-		if ( !LineTrace(atan2(to.y,to.x),len,asin(-to.z),TRF_THRUACTORS) ) return true;
-		to = level.Vec3Diff(pos,other.Vec3Offset(0,0,other.height/2));
-		len = to.length();
-		to /= len;
-		if ( !LineTrace(atan2(to.y,to.x),len,asin(-to.z),TRF_THRUACTORS) ) return true;
-		to = level.Vec3Diff(pos,other.Vec3Offset(0,0,other.height));
-		len = to.length();
-		to /= len;
-		if ( !LineTrace(atan2(to.y,to.x),len,asin(-to.z),TRF_THRUACTORS) ) return true;
-		return false;
 	}
 	action void A_Flame()
 	{
@@ -204,17 +199,15 @@ Class UFlame : Actor
 			s.alpha *= 0.4;
 			s.scale *= 2.5;
 		}
-		if ( bAMBUSH && !sting_flametspread ) return;
-		if ( Random[FlameT](0,int(12*(0.4-alpha))) ) return;
-		double rad = bAMBUSH?10:60;
-		if ( !bAMBUSH ) rad += 90*(0.4-alpha);
-		let bt = BlockThingsIterator.Create(self,rad+200);
+		if ( bAMBUSH ) return;
+		if ( Random[FlameT](0,int(12*(0.5-alpha))) ) return;
+		double rad = 60+80*int(0.4-alpha);
+		let bt = BlockThingsIterator.Create(self,rad);
 		while ( bt.Next() )
 		{
 			let t = bt.Thing;
-			if ( !t || !t.bSHOOTABLE || (t.Health <= 0) || (t == tracer) || (!bAMBUSH && (t == master) && (GetAge() < 6)) || (Distance3D(t) > rad+t.radius) || !invoker.TraceCheck(t) ) continue;
+			if ( !t || !t.bSHOOTABLE || (t.Health <= 0) || (t == tracer) || ((t == master) && (GetAge() < 6)) || (Distance3D(t) > rad+t.radius) ) continue;
 			int amt = max(1,int(alpha*15));
-			if ( bAMBUSH && OnFire.IsOnFire(t) ) amt /= 2;
 			OnFire.Apply(t,master,amt);
 		}
 	}
@@ -293,6 +286,12 @@ Class UFlamethrower : UnrealWeapon
 			Owner.A_PlaySound("flamet/down",CHAN_6,Dampener.Active(self)?.1:1.);
 		return Super.CreateTossable(amt);
 	}
+	override void OwnerDied()
+	{
+		if ( Owner.player && (Owner.player.ReadyWeapon == self) )
+			Owner.A_PlaySound("flamet/down",CHAN_6,Dampener.Active(self)?.1:1.);
+		Super.OwnerDied();
+	}
 	override void DoEffect()
 	{
 		Super.DoEffect();
@@ -334,6 +333,7 @@ Class UFlamethrower : UnrealWeapon
 		let weap = Weapon(invoker);
 		weap.DepleteAmmo(weap.bAltFire,true,1);
 		invoker.count = 0;
+		invoker.special1 = 0;
 		A_PlaySound("flamet/fire",CHAN_WEAPON,Dampener.Active(self)?.1:1.,true);
 		A_Overlay(-9999,"Dummy2");
 	}
