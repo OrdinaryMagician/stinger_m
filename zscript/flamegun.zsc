@@ -175,6 +175,8 @@ Class UFireball2 : UFireball
 {
 	Default
 	{
+		Radius 8;
+		Height 8;
 		DamageFunction 50;
 		Speed 5;
 		UFireball.SpreadFactor 0.35;

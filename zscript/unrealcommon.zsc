@@ -196,7 +196,7 @@ Class UPlayer : UTPlayer
 							let dsp = DispersionPistol(FindInventory('DispersionPistol'));
 							if ( dsp )
 							{
-								dsp.Ammo1.MaxAmount = 90;
+								dsp.Ammo1.Amount = dsp.Ammo1.MaxAmount = 90;
 								if ( (player.ReadyWeapon == dsp) && (player.PendingWeapon == WP_NOCHANGE) )
 									dsp.pendingupgrade = 4;
 								else

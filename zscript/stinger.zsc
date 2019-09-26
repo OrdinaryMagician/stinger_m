@@ -277,7 +277,7 @@ Class TarydiumDebuff : Thinker
 	void BlowUp()
 	{
 		reentrant = true;
-		let b = victim.Spawn("TarydiumExplosion",victim.Vec3Offset(0,0,victim.height/2));
+		let b = victim.Spawn("TarydiumExplosion",victim.Vec3Offset(0,0,victim.default.height/2));
 		b.target = instigator;
 		b.special1 = amount;
 		b.scale *= 1.+min(1.5,amount*0.02);

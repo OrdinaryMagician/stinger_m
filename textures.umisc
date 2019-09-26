@@ -1,10 +1,3 @@
-Texture "BLKNESS",64,64
-{
-	Patch "MFLR8_1",0,0
-	{
-		Blend "#000000",1.0
-	}
-}
 Sprite "UARMA0",1,1{}
 Sprite "ASBSA0",1,1{}
 Sprite "TOXSA0",1,1{}

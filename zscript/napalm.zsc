@@ -213,9 +213,9 @@ Class UFlame : Actor
 		{
 			let s = Spawn("UTSmoke",pos);
 			s.vel = (FRandom[FlameT](-0.2,0.2),FRandom[FlameT](-0.2,0.2),FRandom[FlameT](-0.2,0.2));
-			s.vel += vel*0.6;
+			s.vel += vel*0.3;
 			s.alpha *= alpha*4;
-			s.scale = scale*(.5+GetAge()/6.);
+			s.scale *= 0.5+abs(scale.x)*(.5+GetAge()/6.);
 			Destroy();
 			return;
 		}
@@ -223,9 +223,9 @@ Class UFlame : Actor
 		{
 			let s = Spawn("UTSmoke",pos);
 			s.vel = (FRandom[FlameT](-0.2,0.2),FRandom[FlameT](-0.2,0.2),FRandom[FlameT](-0.2,0.2));
-			s.vel += vel*0.6;
+			s.vel += vel*0.3;
 			s.alpha *= alpha*4;
-			s.scale = scale*(.5+GetAge()/6.);
+			s.scale *= 0.5+abs(scale.x)*(.5+GetAge()/6.);
 		}
 		if ( bAMBUSH ) return;
 		if ( Random[FlameT](0,int(20*((default.alpha+0.1)-alpha))) ) return;

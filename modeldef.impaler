@@ -21,12 +21,80 @@ Model "ImpalerAmmo2"
 	FrameIndex IAMO A 0 0
 }
 
+Model "ImpalerBurstBolt"
+{
+	Path "models"
+	Model 0 "PBolt_d.3d"
+	Offset 5.0125 0 0
+	Scale 0.050125 0.1025 0.123
+	AngleOffset 90
+	DONTCULLBACKFACES
+	USEACTORPITCH
+	USEACTORROLL
+
+	Skin 0 "ibolt0.png"
+	FrameIndex PBLT A 0 0
+	Skin 0 "ibolt1.png"
+	FrameIndex PBLT B 0 0
+	Skin 0 "ibolt2.png"
+	FrameIndex PBLT C 0 0
+	Skin 0 "ibolt3.png"
+	FrameIndex PBLT D 0 0
+	Skin 0 "ibolt4.png"
+	FrameIndex PBLT E 0 0
+}
+
+Model "ImpalerBolt"
+{
+	Path "models"
+	Model 0 "PBolt_d.3d"
+	Offset 10.125 0 0
+	Scale 0.10125 0.2025 0.243
+	AngleOffset 90
+	DONTCULLBACKFACES
+	USEACTORPITCH
+	USEACTORROLL
+
+	Skin 0 "ibolt0.png"
+	FrameIndex PBLT A 0 0
+	Skin 0 "ibolt1.png"
+	FrameIndex PBLT B 0 0
+	Skin 0 "ibolt2.png"
+	FrameIndex PBLT C 0 0
+	Skin 0 "ibolt3.png"
+	FrameIndex PBLT D 0 0
+	Skin 0 "ibolt4.png"
+	FrameIndex PBLT E 0 0
+}
+
+Model "StarterImpalerBolt"
+{
+	Path "models"
+	Model 0 "SBolt_d.3d"
+	Offset 10.125 0 0
+	Scale 0.10125 0.2025 0.243
+	AngleOffset 90
+	DONTCULLBACKFACES
+	USEACTORPITCH
+	USEACTORROLL
+
+	Skin 0 "sibolt0.png"
+	FrameIndex PBLT A 0 0
+	Skin 0 "sibolt1.png"
+	FrameIndex PBLT B 0 0
+	Skin 0 "sibolt2.png"
+	FrameIndex PBLT C 0 0
+	Skin 0 "sibolt3.png"
+	FrameIndex PBLT D 0 0
+	Skin 0 "sibolt4.png"
+	FrameIndex PBLT E 0 0
+}
 Model "ImpalerChunk"
 {
 	Path "models"
 	Model 0 "burstx_d.3d"
 	Skin 0 "JIBurst1.png"
-	Scale 0.2 0.2 0.24
+	Scale 0.4 0.4 0.48
 	USEACTORPITCH
 	USEACTORROLL
 

@@ -411,6 +411,35 @@ Object UFireballEmber
 	Frame "FIRB" { light "UFLAMGLIGHT3" }
 }
 
+PointLight IMPALERLIGHT
+{
+	Color 1.0 0.2 0.8
+	Size 50
+	Attenuate 1
+}
+Object ImpalerProjectile
+{
+	Frame "TPRJA" { light "IMPALERLIGHT" }
+}
+
+FlickerLight2 IBOLTLIGHT
+{
+	Color 0.5 0.1 0.5
+	Size 40
+	SecondarySize 48
+	Interval 0.1
+	Offset 0 0 20
+	Attenuate 1
+}
+Object ImpalerBolt
+{
+	Frame "PBLT" { light "IBOLTLIGHT" }
+}
+Object StarterImpalerBolt
+{
+	Frame "PBLT" { light "IBOLTLIGHT" }
+}
+
 // Shaders / Brightmaps
 HardwareShader Texture "graphics/MenuBarr.png"
 {

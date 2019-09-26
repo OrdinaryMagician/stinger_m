@@ -284,6 +284,7 @@ impaler/flesh	impflesh
 impaler/wall	impwall
 impaler/altfire	impboltl
 impaler/hit	imphit
+impaler/fly	impfly
 impaler/beam	ele04
 
 big/select	bigmsel

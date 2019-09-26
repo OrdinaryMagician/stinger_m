@@ -3,7 +3,7 @@
 The Unreal 1 counterpart to Doom Tournament. Adds Unreal 1 weapons and items
 (including dummied out stuff and others).
 
-This mod requires GZDoom g4.3pre-79-gbcef44051 or later, and runs on top of
+This mod requires GZDoom g4.3pre-125-g021e548db or later, and runs on top of
 Doom Tournament (currently the devel branch is required).
 
 ## Currently Implemented
@@ -38,6 +38,7 @@ Doom Tournament (currently the devel branch is required).
  - Stunner (slot 4) (replaces chainsaw)
  - Fireblaster (slot 5) (replaces rocket launcher)
  - Flamethrower (slot 6) (replaces plasma rifle)
+ - Impaler (slot 7) (replaces plasma rifle)
  - Peacemaker (slot 8) (rare spawn in backpacks)
  - Demolisher (slot 9) (replaces bfg9000)
  - Autocannon (slot 0) (replaces bfg9000)
@@ -73,7 +74,7 @@ Doom Tournament (currently the devel branch is required).
 
 ## In progress
 
- - Impaler (slot 7) (replaces plasma rifle)
+ - Beta testing
 
 ## Planned
 
