@@ -31,6 +31,110 @@ Class ImpalerAmmo2 : ImpalerAmmo
 	}
 }
 
+Class ImpalerChunk : StingerChunk
+{
+	override void Tick()
+	{
+		Super.Tick();
+		if ( isFrozen() ) return;
+		let c = Spawn("UTSmoke",pos);
+		c.vel = vel*.3;
+		c.SetShade(Color(4,1,3)*Random[Impaler](48,63));
+		c.bBRIGHT = true;
+		c.alpha *= .5*alpha;
+		c.scale *= .5*scale.x;
+	}
+}
+
+Class ImpalerBurstLight : PaletteLight
+{
+	Default
+	{
+		Tag "ImpExpl";
+		Args 0,0,0,50;
+		ReactionTime 15;
+	}
+}
+
+Class ImpalerProjectile : Actor
+{
+	Default
+	{
+		Obituary "$O_IMPALER1";
+		DamageType 'Impaler';
+		Speed 30;
+		Radius 4;
+		Height 4;
+		PROJECTILE;
+		+SKYEXPLODE;
+		+EXPLODEONWATER;
+		+FORCERADIUSDMG;
+		+NODAMAGETHRUST;
+	}
+	action void A_ImpalerHit()
+	{
+		bFORCEXYBILLBOARD = true;
+		scale *= 2.+special1*0.01;
+		A_AlertMonsters();
+		A_SetRenderStyle(1.,STYLE_Add);
+		A_NoGravity();
+		A_Explode(90+special1,120+special1/2);
+		UTMainHandler.DoBlast(self,120+special1/2,40000);
+		A_QuakeEx(2,2,2,5,0,250+special1/2,"",QF_RELATIVE|QF_SCALEDOWN,falloff:120+special1/2,rollintensity:0.2);
+		A_PlaySound("impaler/hit",CHAN_VOICE);
+		A_SprayDecal("WallCrack",20);
+		Spawn("ImpalerBurstLight",pos);
+		double ang, pt;
+		int numpt = Random[Impaler](4,8);
+		for ( int i=0; i<numpt; i++ )
+		{
+			ang = FRandom[Impaler](0,360);
+			pt = FRandom[Impaler](-90,90);
+			let c = Spawn("ImpalerChunk",pos);
+			c.angle = ang;
+			c.pitch = pt;
+			c.vel = (cos(ang)*cos(pt),sin(ang)*cos(pt),-sin(pt))*FRandom[Impaler](3,9);
+		}
+		numpt = Random[Impaler](6,12);
+		for ( int i=0; i<numpt; i++ )
+		{
+			ang = FRandom[Impaler](0,360);
+			pt = FRandom[Impaler](-90,90);
+			let c = Spawn("UTSmoke",pos);
+			c.vel = (cos(ang)*cos(pt),sin(ang)*cos(pt),-sin(pt))*FRandom[Impaler](.3,.8);
+			c.SetShade(Color(4,1,3)*Random[Impaler](48,63));
+			c.bBRIGHT = true;
+			c.alpha *= .5;
+		}
+	}
+	States
+	{
+	Spawn:
+		TPRJ A -1;
+		Stop;
+	Death:
+		TNT1 A 0 A_ImpalerHit();
+		TNT1 A 0 A_Jump(256,"Explo1","Explo2","Explo3");
+	Explo1:
+		IEX1 ABCDEFGHIJKLM 1 Bright;
+		Stop;
+	Explo2:
+		IEX2 ABCDEFGHIJKLM 1 Bright;
+		Stop;
+	Explo3:
+		IEX3 ABCDEFGHIJKLM 1 Bright;
+		Stop;
+	}
+}
+
+Class ImpalerLight : EnforcerLight
+{
+	Default
+	{
+		args 255,128,224,80;
+	}
+}
+
 Class Impaler : UnrealWeapon
 {
 	int ClipCount;
@@ -48,9 +152,24 @@ Class Impaler : UnrealWeapon
 		A_Overlay(-9999,"Null");
 		A_Overlay(-3,"Null");
 		A_Overlay(-2,"Null");
-		A_PlaySound("impaler/fire",CHAN_WEAPON);
+		A_PlaySound("impaler/fire",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+		invoker.FireEffect();
+		UTMainHandler.DoFlash(self,Color(16,224,64,255),1);
+		UTMainHandler.DoSwing(self,(FRandom[Impaler](-0.1,-0.2),FRandom[Impaler](-0.1,0.1)),4,-1.5,2,SWING_Spring,2,2);
+		if ( !Dampener.Active(self) ) A_AlertMonsters();
+		A_QuakeEx(1,1,1,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		invoker.HasGem = false;
 		invoker.ClipCount = -1;
+		Vector3 x, y, z;
+		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+4*y-4*z);
+		Actor p = Spawn("ImpalerProjectile",origin);
+		p.angle = angle;
+		p.pitch = BulletSlope();
+		p.roll = FRandom[Impaler](0,360);
+		p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed;
+		p.target = self;
+		p.special1 = invoker.clipcount*3;
 	}
 	action void A_StartBeam()
 	{
@@ -60,6 +179,52 @@ Class Impaler : UnrealWeapon
 	}
 	action void A_StopBeam()
 	{
+	}
+	private action bool TryHit( double angle, int dmg )
+	{
+		FTranslatedLineTarget t;
+		double slope = AimLineAttack(angle,DEFMELEERANGE*1.5,t,0.,ALF_CHECK3D);
+		FLineTraceData d;
+		Vector3 x, y, z, origin;
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),y*4-z*4);
+		LineTrace(angle,DEFMELEERANGE*1.5,slope,TRF_ABSPOSITION,origin.z,origin.x,origin.y,data:d);
+		if ( d.HitType != TRACE_HitNone )
+		{
+			if ( d.HitType == TRACE_HitActor )
+			{
+				if ( d.HitLocation.z >= (d.HitActor.pos.z+d.HitActor.height*0.8) )
+					dmg = d.HitActor.DamageMobj(invoker,self,dmg*2,'Decapitated',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
+				else dmg = d.HitActor.DamageMobj(invoker,self,dmg,'slashed',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
+				UTMainHandler.DoKnockback(d.HitActor,d.HitDir,12000);
+				if ( d.HitActor.player ) d.HitActor.A_QuakeEx(2,2,2,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);
+				if ( !d.HitActor.bNOBLOOD )
+				{
+					d.HitActor.TraceBleed(dmg,invoker);
+					d.HitActor.SpawnBlood(d.HitLocation,atan2(d.HitDir.y,d.HitDir.x)+180,dmg);
+				}
+			}
+			else if ( d.HitType == TRACE_HitWall )
+				d.HitLine.RemoteActivate(self,d.LineSide,SPAC_Impact,d.HitLocation-d.HitDir*4);
+			A_QuakeEx(1,1,1,3,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
+			if ( !d.HitActor || d.HitActor.bNOBLOOD )
+			{
+				A_PlaySound("impaler/wall",CHAN_WEAPON);
+				let p = Spawn("SawImpact",d.HitLocation-d.HitDir*4);
+				p.angle = atan2(d.HitDir.y,d.HitDir.x);
+				p.pitch = asin(-d.HitDir.z);
+			}
+			else A_PlaySound("impaler/flesh",CHAN_WEAPON);
+			A_AlertMonsters();
+			A_QuakeEx(1,1,1,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.06);
+			return true;
+		}
+		return false;
+	}
+	action void A_Stab()
+	{
+		UTMainHandler.DoSwing(self,(FRandom[Impaler](-1,1),FRandom[Impaler](-1,1)),0.3,-0.2,2,SWING_Spring,0,2);
+		for ( int i=0; i<8; i++ ) if ( TryHit(angle+i*(45./16),15) || TryHit(angle-i*(45./16),15) ) return;
 	}
 	override void DoEffect()
 	{
@@ -127,8 +292,14 @@ Class Impaler : UnrealWeapon
 		IMPI ABCDEFGH 10;
 		Goto Idle+1;
 	Melee:
-		IMPM A 0 A_Overlay(-9999,"Null");
-		IMPM ABCDEFGHIJ 2;
+		IMPM A 2
+		{
+			A_Overlay(-9999,"Null");
+			A_PlaySound("impaler/stab",CHAN_WEAPON);
+		}
+		IMPM BC 2;
+		IMPM D 2 A_Stab();
+		IMPM EFGHIJ 2;
 		Goto Idle;
 	Fire:
 		IMPF A 0
@@ -247,5 +418,12 @@ Class Impaler : UnrealWeapon
 	ZapAltRelease:
 		IMZA QRSTUVWX 2 Bright;
 		Goto ZapIdle;
+	MuzzleFlash:
+		IMFF A 3 Bright
+		{
+			let l = Spawn("ImpalerLight",pos);
+			l.target = self;
+		}
+		Stop;
 	}
 }

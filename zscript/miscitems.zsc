@@ -28,6 +28,8 @@ Class UnrealBackpack : BackpackItem replaces Backpack
 			if ( !isvalid ) continue;
 			let ammoitem = Ammo(other.FindInventory(type));
 			int amount = GetDefaultByType(type).BackpackAmount;
+			// don't give these at all
+			if ( (amount <= 0) && (GetDefaultByType(type).BackpackMaxAmount == GetDefaultByType(type).MaxAmount) ) continue;
 			// extra ammo in baby mode and nightmare mode
 			if ( !bIgnoreSkill ) amount = int(amount*G_SkillPropertyFloat(SKILLP_AmmoFactor));
 			if ( amount < 0 ) amount = 0;

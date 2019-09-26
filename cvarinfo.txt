@@ -66,16 +66,16 @@ user bool sting_transext = false;	// use an extended translator graphic
 					// thanks Kynikoss for this, it's much
 					// better than the trash garbage mods
 					// use
-server bool sting_olsmp = false;	// adds the stupid oldskool SMP 7243 to
+server bool sting_olsmp = true;		// adds the stupid oldskool SMP 7243 to
 					// the BFG/Redeemer replacement pool
 					// this weapon is dumb, but just for
 					// the sake of completion it's there as
 					// an option
-server bool sting_msentry = false;	// allows the new Minigun Sentry, which
+server bool sting_msentry = true;	// allows the new Minigun Sentry, which
 					// is an original creation for this mod
-server bool sting_dubious = false;	// allows weapons of dubious origin
+server bool sting_dubious = true;	// allows weapons of dubious origin
 					// (Demolisher, Razorclaw, Autocannon)
-server bool sting_autoscuba = false;	// SCUBA gear toggles automatically
+server bool sting_autoscuba = true;	// SCUBA gear toggles automatically
 					// when needed
 server bool sting_ehold = false;	// eightball can be held fully loaded
 					// for up to 2 seconds

@@ -5,9 +5,9 @@ Class FlameAmmo : Ammo
 		Tag "$T_FLAMEAMMO";
 		Inventory.Icon "I_Napalm";
 		Inventory.PickupMessage "$I_FLAMEAMMO";
-		Inventory.Amount 75;
+		Inventory.Amount 60;
 		Inventory.MaxAmount 450;
-		Ammo.BackpackAmount 0;
+		Ammo.BackpackAmount 30;
 		Ammo.BackpackMaxAmount 900;
 		Ammo.DropAmount 30;
 	}
@@ -65,7 +65,7 @@ Class OnFire : Thinker
 				amount--;
 				amount -= int(victim.vel.length()/10);
 			}
-			amount -= int(abs(actor.deltaangle(victim.angle,oangle))/30);
+			if ( victim.player ) amount -= int(abs(actor.deltaangle(victim.angle,oangle))/30);
 			oangle = victim.angle;
 		}
 		if ( (victim is 'UNapalm') && victim.InStateSequence(victim.CurState,victim.FindState("XDeath")) )
@@ -146,6 +146,7 @@ Class OnFire : Thinker
 		t.delay = delay;
 		t.lite = Actor.Spawn("OnFireLight",victim.pos);
 		OnFireLight(t.lite).of = t;
+		t.oangle = victim.angle;
 		return t;
 	}
 

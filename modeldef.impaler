@@ -21,6 +21,38 @@ Model "ImpalerAmmo2"
 	FrameIndex IAMO A 0 0
 }
 
+Model "ImpalerChunk"
+{
+	Path "models"
+	Model 0 "burstx_d.3d"
+	Skin 0 "JIBurst1.png"
+	Scale 0.2 0.2 0.24
+	USEACTORPITCH
+	USEACTORROLL
+
+	FrameIndex CHIP A 0 0
+	FrameIndex CHIP B 0 1
+	FrameIndex CHIP C 0 2
+	FrameIndex CHIP D 0 3
+	FrameIndex CHIP E 0 4
+	FrameIndex CHIP F 0 5
+	FrameIndex CHIP G 0 6
+	FrameIndex CHIP H 0 7
+	FrameIndex CHIP I 0 8
+}
+
+Model "ImpalerProjectile"
+{
+	Path "models"
+	Model 0 "ImpalerProj_d.3d"
+	Skin 0 "JImpale1.png"
+	Scale 0.15 0.15 0.18
+	PITCHFROMMOMENTUM
+	USEACTORROLL
+
+	FrameIndex TPRJ A 0 0
+}
+
 Model "Impaler"
 {
 	Path "models"
