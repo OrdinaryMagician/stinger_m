@@ -324,6 +324,7 @@ flamet/fire	flamtfir
 flamet/fireend	flamtstp
 flamet/charge	flamtchg
 flamet/altfire	flamtalt
+napalm/hit	naplmhit
 
 translator/event	transa3
 

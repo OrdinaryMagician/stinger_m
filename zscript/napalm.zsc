@@ -33,7 +33,7 @@ Class OnFireLight : DynamicLight
 		}
 		Args[0] = clamp(of.Amount*4,0,255);
 		Args[1] = clamp(of.Amount*2,0,128);
-		Args[3] = int(max(of.victim.radius,of.victim.height))+60+clamp(of.amount/8,0,80);
+		Args[3] = int(max(of.victim.radius,of.victim.height)*2.+20+clamp(of.amount/5,0,80));
 		SetOrigin(of.Victim.Vec3Offset(0,0,of.Victim.Height/2),true);
 	}
 }
@@ -43,6 +43,7 @@ Class OnFire : Thinker
 	Actor victim, instigator, lite;
 	int amount, cnt, delay;
 	bool forcespread;
+	double oangle;
 
 	override void Tick()
 	{
@@ -57,19 +58,28 @@ Class OnFire : Thinker
 			amount -= int(victim.waterlevel**2);
 		}
 		if ( victim.Health <= 0 ) amount = min(amount,100);
-		if ( !(level.maptime%3) )
-			amount -= ((victim.Health>0)?1:2);
-		if ( amount < -10 )
+		if ( !(victim is 'UNapalm') )
+		{
+			if ( !(level.maptime%3) )
+			{
+				amount--;
+				amount -= int(victim.vel.length()/10);
+			}
+			amount -= int(abs(actor.deltaangle(victim.angle,oangle))/30);
+			oangle = victim.angle;
+		}
+		if ( (victim is 'UNapalm') && victim.InStateSequence(victim.CurState,victim.FindState("XDeath")) )
+			amount = min(amount-3,100);
+		if ( amount < -30 )
 		{
 			Destroy();
 			return;
 		}
-		if ( amount <= 0 ) return;
 		if ( cnt > 0 ) cnt--;
 		else
 		{
 			cnt = 10;
-			if ( victim.bSHOOTABLE && (victim.Health > 0) )
+			if ( victim.bSHOOTABLE && (victim.Health > 0) && (amount > 0) )
 				victim.DamageMobj(instigator.FindInventory("UFlamethrower"),instigator,max(1,int(amount*(victim.bBOSS?0.05:0.15))),'Fire',DMG_THRUSTLESS);
 			if ( !victim )
 			{
@@ -81,17 +91,24 @@ Class OnFire : Thinker
 		if ( level.maptime%5 ) return;
 		int numpt = clamp(int(Random[FlameT](2,4)*amount*0.02),1,4);
 		double mult = max(victim.radius,victim.height)/30.;
-		numpt = int(max(1,numpt*mult));
+		numpt = int(max(1,numpt*mult**.5));
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pos = victim.Vec3Offset(FRandom[FlameT](-victim.radius,victim.radius)*0.8,FRandom[FlameT](-victim.radius,victim.radius)*0.8,FRandom[FlameT](victim.height*0.2,victim.height*0.8));
 			double ang = FRandom[FlameT](0,360);
 			double pt = FRandom[FlameT](-90,90);
-			let c = victim.Spawn("UFlameTrail",pos);
-			c.scale *= max(1.,mult*0.35);
-			c.vel = victim.vel*0.5+(cos(ang)*cos(pt),sin(ang)*cos(pt),-sin(pt))*FRandom[FlameT](.5,2);
+			if ( amount > 0 )
+			{
+				let c = victim.Spawn("UFlameTrail",pos);
+				c.scale *= max(.3,mult*0.5);
+				c.vel = victim.vel*0.5+(cos(ang)*cos(pt),sin(ang)*cos(pt),-sin(pt))*FRandom[FlameT](.5,2.)*c.scale.x;
+			}
+			let s = victim.Spawn("UTSmoke",pos);
+			s.scale *= max(1.,1.6*mult);
+			s.alpha *= min(amount+30,100)*0.02;
+			s.vel = victim.vel*0.5+(cos(ang)*cos(pt),sin(ang)*cos(pt),-sin(pt))*FRandom[FlameT](.2,.6)*s.scale.x;
 		}
-		if ( !sting_flametspread && !forcespread ) return;
+		if ( (!sting_flametspread && !forcespread) || (amount <= 0) ) return;
 		// spread to nearby actors
 		let bt = BlockThingsIterator.Create(victim);
 		while ( bt.Next() )
@@ -104,10 +121,10 @@ Class OnFire : Thinker
 		}
 	}
 
-	static void Apply( Actor victim, Actor instigator, int amount, bool forcespread = false, int delay = 0 )
+	static OnFire Apply( Actor victim, Actor instigator, int amount, bool forcespread = false, int delay = 0 )
 	{
-		if ( amount <= 0 ) return;
-		if ( victim is 'ShredCorpseHitbox' ) return;
+		if ( amount <= 0 ) return null;
+		if ( victim is 'ShredCorpseHitbox' ) return null;
 		let ti = ThinkerIterator.Create("OnFire",STAT_USER);
 		OnFire t;
 		while ( t = OnFire(ti.Next()) )
@@ -115,20 +132,21 @@ Class OnFire : Thinker
 			if ( t.victim != victim ) continue;
 			if ( instigator ) t.instigator = instigator;
 			t.amount = min(500,t.amount+amount);
-			t.cnt = min(t.cnt,3);
-			return;
+			t.cnt = min(t.cnt,5);
+			return t;
 		}
 		t = new("ONFire");
 		t.ChangeStatNum(STAT_USER);
 		t.victim = victim;
 		t.instigator = instigator;
-		t.amount = amount;
+		t.amount = min(500,amount);
 		t.cnt = 1;
 		// for napalm gel
 		t.forcespread = forcespread;
 		t.delay = delay;
 		t.lite = Actor.Spawn("OnFireLight",victim.pos);
 		OnFireLight(t.lite).of = t;
+		return t;
 	}
 
 	static bool IsOnFire( Actor victim )
@@ -155,10 +173,10 @@ Class UFlameLight : PaletteLight
 	override void Tick()
 	{
 		Super.Tick();
-		Args[0] /= 5;
-		Args[1] /= 5;
-		Args[2] /= 5;
-		Args[3] += 4;
+		Args[0] /= 10;
+		Args[1] /= 10;
+		Args[2] /= 10;
+		Args[3] += 3;
 		if ( !target || (target.waterlevel > 0) )
 		{
 			Destroy();
@@ -188,26 +206,35 @@ Class UFlame : Actor
 		else
 		{
 			vel *= 0.98;
-			vel.z += 0.2;
+			vel.z += 0.2*abs(scale.x);
 		}
-		if ( waterlevel > 0 ) bINVISIBLE = true;
-		if ( !Random[FlameT](0,int(30*(0.4-alpha))) && (!bINVISIBLE || (waterlevel > 0)) )
+		if ( waterlevel > 0 )
 		{
-			let s = Spawn("UTSmoke",pos+vel);
+			let s = Spawn("UTSmoke",pos);
 			s.vel = (FRandom[FlameT](-0.2,0.2),FRandom[FlameT](-0.2,0.2),FRandom[FlameT](-0.2,0.2));
-			s.vel += vel*0.2;
-			s.alpha *= 0.4;
-			s.scale *= 2.5;
+			s.vel += vel*0.6;
+			s.alpha *= alpha*4;
+			s.scale = scale*(.5+GetAge()/6.);
+			Destroy();
+			return;
+		}
+		if ( !Random[FlameT](0,int(40*(default.alpha-alpha))) )
+		{
+			let s = Spawn("UTSmoke",pos);
+			s.vel = (FRandom[FlameT](-0.2,0.2),FRandom[FlameT](-0.2,0.2),FRandom[FlameT](-0.2,0.2));
+			s.vel += vel*0.6;
+			s.alpha *= alpha*4;
+			s.scale = scale*(.5+GetAge()/6.);
 		}
 		if ( bAMBUSH ) return;
-		if ( Random[FlameT](0,int(12*(0.5-alpha))) ) return;
-		double rad = 60+80*int(0.4-alpha);
+		if ( Random[FlameT](0,int(20*((default.alpha+0.1)-alpha))) ) return;
+		double rad = 60+120*int(0.2-alpha);
 		let bt = BlockThingsIterator.Create(self,rad);
 		while ( bt.Next() )
 		{
 			let t = bt.Thing;
 			if ( !t || !t.bSHOOTABLE || (t.Health <= 0) || (t == tracer) || ((t == master) && (GetAge() < 6)) || (Distance3D(t) > rad+t.radius) ) continue;
-			int amt = max(1,int(alpha*15));
+			int amt = max(1,int(alpha*10));
 			OnFire.Apply(t,master,amt);
 		}
 	}
@@ -217,7 +244,7 @@ Class UFlame : Actor
 		Speed 20;
 		Radius 4;
 		Height 4;
-		Alpha 0.4;
+		Alpha 0.2;
 		Scale 0.1;
 		+NOBLOCKMAP;
 		+NOGRAVITY;
@@ -237,7 +264,7 @@ Class UFlame : Actor
 		{
 			A_Flame();
 			A_SetScale(scale.x*1.08);
-			A_FadeOut(0.01);
+			A_FadeOut(0.005);
 		}
 		Stop;
 	}
@@ -266,6 +293,7 @@ Class UFlameTrail : UFlame
 			A_Flame();
 			A_SetScale(scale.x*0.98);
 			A_FadeOut(0.01);
+			vel.z += 0.1;
 		}
 		Stop;
 	}
@@ -273,6 +301,460 @@ Class UFlameTrail : UFlame
 
 Class UNapalm : Actor
 {
+	enum EHitType
+	{
+		HIT_NONE,
+		HIT_WALL,
+		HIT_CEILING,
+		HIT_FLOOR
+	};
+	int hittype;
+	int deadtimer, dttimer;
+	Line atline;
+	int atside;
+	int atpart;
+	int atplane;
+	Sector atsector;
+	double atz;
+	double rollvel, pitchvel, yawvel;
+	Vector3	normal;
+	Actor atbridge;
+	bool onbridge;
+	Vector3 atbridgeofs;
+	OnFire myfire;
+	Actor lasthit;
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		vel.z += 3;
+		deadtimer = 105;
+		rollvel = FRandom[FlameT](10,30)*RandomPick[FlameT](-1,1);
+		pitchvel = FRandom[FlameT](10,30)*RandomPick[FlameT](-1,1);
+		yawvel = FRandom[FlameT](10,30)*RandomPick[FlameT](-1,1);
+		if ( waterlevel <= 0 ) myfire = OnFire.Apply(self,target,int(120*scale.x),true,6);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( isFrozen() ) return;
+		if ( !bNOGRAVITY )
+		{
+			roll += rollvel;
+			pitch += pitchvel;
+			pitch += yawvel;
+			if ( waterlevel > 0 )
+			{
+				vel.xy *= 0.98;
+				rollvel *= 0.98;
+				pitchvel *= 0.98;
+				yawvel *= 0.98;
+			}
+		}
+		if ( !Random[FlameT](0,2) )
+		{
+			Vector3 pvel = (FRandom[FlameT](-1,1),FRandom[FlameT](-1,1),FRandom[FlameT](-1,1)).unit()*FRandom[FlameT](0.2,0.4);
+			let s = Spawn("UTSmoke",pos+normal);
+			s.vel = pvel+vel*0.25+normal*0.5;
+			s.scale *= scale.x;
+			s.alpha *= scale.x;
+			if ( InStateSequence(CurState,FindState("XDeath")) )
+				s.scale *= (12-frame)/12.;
+		}
+		if ( onbridge )	// attempt to follow the movement of the bridge (if it's moving)
+		{
+			if ( atbridge )
+			{
+				if ( !Warp(atbridge,atbridgeofs.x,atbridgeofs.y,atbridgeofs.z,0,WARPF_ABSOLUTEOFFSET|WARPF_USECALLERANGLE|WARPF_COPYINTERPOLATION) )
+					deadtimer = min(deadtimer,0);
+			}
+			else deadtimer = 0;
+		}
+		if ( atline )	// attempt to follow the movement of the line
+		{
+			if ( atpart == 1 )
+			{
+				if ( atline.flags&Line.ML_DONTPEGTOP ) SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside].sector.GetPlaneTexZ(1)),true);
+				else SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside?0:1].sector.GetPlaneTexZ(1)),true);
+			}
+			else if ( atpart == -1 )
+			{
+				if ( atline.flags&Line.ML_DONTPEGBOTTOM ) SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside].sector.GetPlaneTexZ(0)),true);
+				else SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside?0:1].sector.GetPlaneTexZ(0)),true);
+			}
+			else if ( atline.flags&Line.ML_DONTPEGBOTTOM ) SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside].sector.GetPlaneTexZ(0)),true);
+			else SetOrigin(Vec2OffsetZ(0,0,atz+atline.sidedef[atside].sector.GetPlaneTexZ(1)),true);
+			if ( (pos.z > ceilingz) || (pos.z < floorz) ) deadtimer = min(deadtimer,0);
+		}
+		else if ( atsector )	// attempt to follow the movement of the plane
+		{
+			SetOrigin(Vec2OffsetZ(0,0,atz+atsector.GetPlaneTexZ(atplane)),true);
+			if ( ceilingz-floorz <= 2 ) deadtimer = min(deadtimer,0);
+		}
+		if ( (deadtimer-- <= 0) && !InStateSequence(CurState,FindState("XDeath")) )
+			SetStateLabel("XDeath");
+	}
+	// align self to what surface was hit
+	// TODO handle plane collision within the very border between two
+	// sectors (most noticeable with moving 3d floors)
+	virtual void AlignSelf()
+	{
+		F3DFloor ff;
+		bINTERPOLATEANGLES = false;
+		bHITOWNER = true;
+		A_NoGravity();
+		A_Stop();
+		A_SetSize(0.1,0);
+		if ( tracer && tracer.bSHOOTABLE ) OnFire.Apply(tracer,target,myfire?myfire.Amount:10);
+		if ( tracer && tracer.bACTLIKEBRIDGE )
+		{
+			atbridge = tracer;
+			onbridge = true;
+			if ( (pos.x+radius) <= (atbridge.pos.x-atbridge.radius) )
+			{
+				// west side
+				normal = (-1,0,0);
+				SetOrigin((atbridge.pos.x-atbridge.radius,pos.y,pos.z),false);
+				atbridgeofs = pos-atbridge.pos;
+				angle = 180;
+				pitch = 0;
+				roll = 180;	// otherwise it slides upwards (UT changes roll like this too)
+				if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+				else hittype = HIT_WALL;
+			}
+			else if ( (pos.x-radius) >= (atbridge.pos.x+atbridge.radius) )
+			{
+				// east side
+				normal = (1,0,0);
+				SetOrigin((atbridge.pos.x+atbridge.radius,pos.y,pos.z),false);
+				atbridgeofs = pos-atbridge.pos;
+				angle = 0;
+				pitch = 0;
+				roll = 180;	// otherwise it slides upwards (UT changes roll like this too)
+				if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+				else hittype = HIT_WALL;
+			}
+			else if ( (pos.y+radius) <= (atbridge.pos.y-atbridge.radius) )
+			{
+				// north side
+				normal = (0,-1,0);
+				SetOrigin((pos.x,atbridge.pos.y-atbridge.radius,pos.z),false);
+				atbridgeofs = pos-atbridge.pos;
+				angle = 270;
+				pitch = 0;
+				roll = 180;	// otherwise it slides upwards (UT changes roll like this too)
+				if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+				else hittype = HIT_WALL;
+			}
+			else if ( (pos.y-radius) >= (atbridge.pos.y+atbridge.radius) )
+			{
+				// south side
+				normal = (0,1,0);
+				SetOrigin((pos.x,atbridge.pos.y+atbridge.radius,pos.z),false);
+				atbridgeofs = pos-atbridge.pos;
+				angle = 90;
+				pitch = 0;
+				roll = 180;	// otherwise it slides upwards (UT changes roll like this too)
+				if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+				else hittype = HIT_WALL;
+			}
+			else if ( pos.z >= (atbridge.pos.z+atbridge.height) )
+			{
+				// top of actor
+				normal = (0,0,1);
+				SetOrigin((pos.x,pos.y,atbridge.pos.z+atbridge.height),false);
+				atbridgeofs = pos-atbridge.pos;
+				pitch = -90;
+				angle = 0;
+				roll = FRandom[FlameT](0,360);
+				hittype = HIT_FLOOR;
+			}
+			else if ( (pos.z+height) <= atbridge.pos.z )
+			{
+				// bottom of actor
+				normal = (0,0,-1);
+				SetOrigin((pos.x,pos.y,atbridge.pos.z),false);
+				pitch = 90;
+				angle = 0;
+				roll = FRandom[FlameT](0,360);
+				if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+				else hittype = HIT_CEILING;
+			}
+			else
+			{
+				// inside of actor, just shove to the top or bottom based on our Z velocity
+				if ( vel.z <= 0 )
+				{
+					normal = (0,0,1);
+					SetOrigin((pos.x,pos.y,atbridge.pos.z+atbridge.height),false);
+					atbridgeofs = pos-atbridge.pos;
+					pitch = -90;
+					angle = 0;
+					roll = FRandom[FlameT](0,360);
+					hittype = HIT_FLOOR;
+				}
+				else
+				{
+					normal = (0,0,-1);
+					SetOrigin((pos.x,pos.y,atbridge.pos.z),false);
+					pitch = 90;
+					angle = 0;
+					roll = FRandom[FlameT](0,360);
+					if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+					else hittype = HIT_CEILING;
+				}
+			}
+		}
+		else if ( BlockingFloor )
+		{
+			// find closest 3d floor for its normal
+			for ( int i=0; i<BlockingFloor.Get3DFloorCount(); i++ )
+			{
+				if ( !(BlockingFloor.Get3DFloor(i).top.ZAtPoint(pos.xy) ~== floorz) ) continue;
+				ff = BlockingFloor.Get3DFLoor(i);
+				break;
+			}
+			if ( ff )
+			{
+				normal = -ff.top.Normal;
+				atsector = ff.model;
+				atplane = 1;
+			}
+			else
+			{
+				normal = BlockingFloor.floorplane.Normal;
+				atsector = BlockingFloor;
+				atplane = 0;
+			}
+			pitch = asin(-normal.z);
+			angle = atan2(normal.y,normal.x);
+			roll = FRandom[FlameT](0,360);
+			SetOrigin((pos.x,pos.y,floorz)+normal*0.5,false);
+			atz = pos.z-atsector.GetPlaneTexZ(atplane);
+			hittype = HIT_FLOOR;
+		}
+		else if ( BlockingCeiling )
+		{
+			// find closest 3d floor for its normal
+			for ( int i=0; i<BlockingCeiling.Get3DFloorCount(); i++ )
+			{
+				if ( !(BlockingCeiling.Get3DFloor(i).bottom.ZAtPoint(pos.xy) ~== ceilingz) ) continue;
+				ff = BlockingCeiling.Get3DFloor(i);
+				break;
+			}
+			if ( ff )
+			{
+				normal = -ff.bottom.Normal;
+				atsector = ff.model;
+				atplane = 0;
+			}
+			else
+			{
+				normal = BlockingCeiling.ceilingplane.Normal;
+				atsector = BlockingCeiling;
+				atplane = 1;
+			}
+			pitch = asin(-normal.z);
+			angle = atan2(normal.y,normal.x);
+			roll = FRandom[FlameT](0,360);
+			SetOrigin((pos.x,pos.y,ceilingz)+normal*0.5,false);
+			atz = pos.z-atsector.GetPlaneTexZ(atplane);
+			if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+			else if ( normal dot (0,0,-1) > 0.7 )
+				hittype = HIT_CEILING;
+			else hittype = HIT_FLOOR;
+		}
+		else if ( BlockingLine )
+		{
+			atline = BlockingLine;
+			normal = (-BlockingLine.delta.y,BlockingLine.delta.x,0).unit();
+			atside = 1;
+			if ( !BlockingLine.sidedef[1] || (CurSector == BlockingLine.frontsector) )
+			{
+				atside = 0;
+				normal *= -1;
+			}
+			Vector3 orig = (BlockingLine.v1.p.x,BlockingLine.v1.p.y,0);
+			Vector3 onwall = pos-(normal dot (pos-orig))*normal;
+			SetOrigin(onwall+normal*0.5,false);
+			// attempt to guess line part (upper/mid/lower)
+			if ( !atline.sidedef[1] ) atpart = 0;	// mid
+			else if ( atline.sidedef[atside?0:1].sector.ceilingplane.ZAtPoint(pos.xy) < pos.z ) atpart = 1;	// upper
+			else if ( atline.sidedef[atside?0:1].sector.floorplane.ZAtPoint(pos.xy) > (pos.z+height) ) atpart = -1;	// lower
+			else
+			{
+				atpart = 0;
+				// check if we're touching a 3d floor line
+				Sector backsector = atline.sidedef[atside?0:1].sector;
+				for ( int i=0; i<backsector.Get3DFloorCount(); i++ )
+				{
+					if ( backsector.Get3DFloor(i).bottom.ZAtPoint(pos.xy) > (pos.z+height) ) continue;
+					if ( backsector.Get3DFloor(i).top.ZAtPoint(pos.xy) < pos.z ) continue;
+					ff = backsector.Get3DFloor(i);
+					break;
+				}
+				// attach to it
+				if ( ff )
+				{
+					atline = ff.master;
+					atside = 0;
+				}
+			}
+			if ( atpart == 1 )
+			{
+				if ( atline.flags&Line.ML_DONTPEGTOP ) atz = pos.z-atline.sidedef[atside].sector.GetPlaneTexZ(1);
+				else atz = pos.z-atline.sidedef[atside?0:1].sector.GetPlaneTexZ(1);
+			}
+			else if ( atpart == -1 )
+			{
+				if ( atline.flags&Line.ML_DONTPEGBOTTOM ) atz = pos.z-atline.sidedef[atside].sector.GetPlaneTexZ(0);
+				else atz = pos.z-atline.sidedef[atside?0:1].sector.GetPlaneTexZ(0);
+			}
+			else if ( atline.flags&Line.ML_DONTPEGBOTTOM ) atz = pos.z-atline.sidedef[atside].sector.GetPlaneTexZ(0);
+			else atz = pos.z-atline.sidedef[atside].sector.GetPlaneTexZ(1);
+			angle = atan2(normal.y,normal.x);
+			pitch = 0;
+			roll = 180;	// otherwise it slides upwards (UT changes roll like this too)
+			if ( waterlevel > 0 ) hittype = HIT_FLOOR;
+			else hittype = HIT_WALL;
+		}
+		A_PlaySound("napalm/hit",CHAN_BODY,min(1.,scale.x));
+	}
+	action void A_DropDrip()
+	{
+		let d = Spawn("UNapalmSplash",pos+invoker.normal*2*scale.x);
+		d.target = target;
+		d.angle = angle;
+		d.pitch = pitch;
+		d.roll = roll;
+		d.master = self;
+		d.scale = scale*0.5;
+		d.vel.z -= 6;
+	}
+	override int DoSpecialDamage( Actor target, int damage, Name damagetype )
+	{
+		if ( target != lasthit )
+		{
+			OnFire.Apply(target,self.target,myfire?myfire.Amount:1);
+			lasthit = target;
+		}
+		return damage;
+	}
+	Default
+	{
+		Obituary "$O_FLAMETHROWER";
+		DamageFunction 1;
+		DamageType 'Fire';
+		Radius 4;
+		Height 4;
+		Speed 15;
+		Gravity 0.35;
+		PROJECTILE;
+		-NOGRAVITY;
+		+SKYEXPLODE;
+		+EXPLODEONWATER;
+		+FORCERADIUSDMG;
+		+FORCEXYBILLBOARD;
+		+MOVEWITHSECTOR;
+		+NODAMAGETHRUST;
+		+HITTRACER;
+		+INTERPOLATEANGLES;
+		+NOFRICTION;
+		+RIPPER;
+		+BLOODLESSIMPACT;
+	}
+	States
+	{
+	Spawn:
+		GELF ABCDEFGHIJKLM 1;
+		Loop;
+	Death:
+		GELH A 1 AlignSelf();
+		GELH BCDEFGHIJ 1;
+		GELH J 1 A_SetTics(Random[FlameT](10,30));
+		GELH J -1
+		{
+			invoker.deadtimer = Random[FlameT](250,300);
+			if ( invoker.hittype == HIT_WALL ) return ResolveState("Slide");
+			else if ( invoker.hittype == HIT_CEILING ) return ResolveState("Drip");
+			return ResolveState(null);
+		}
+		Stop;
+	Drip:
+		GELD ABCDEFGH 4;
+		GELD I 4 A_DropDrip();
+		GELD JKLM 4;
+		GELH J -1;
+		Stop;
+	Slide:
+		GELS ABCDEF 3;
+		GELS G -1;
+		Stop;
+	XDeath:
+		GELX ABCDEFGHIJKL 4;
+		Stop;
+	}
+}
+
+Class UNapalmGlob : UNapalm
+{
+	int numsplash;
+
+	override void AlignSelf()
+	{
+		Super.AlignSelf();
+		if ( Scale.x > 1 ) numsplash = int(8*Scale.x)-1;
+	}
+	override void OnDestroy()
+	{
+		Vector3 ofs = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		while ( numsplash > 0 )
+		{
+			for ( int i=0; i<2; i++ )
+			{
+				if ( numsplash-- <= 0 ) return;
+				Vector3 dir = (ofs+(FRandom[FlameT](-.8,.8),FRandom[FlameT](-.8,.8),FRandom[FlameT](-.8,.8))).unit();
+				A_SetScale(scale.x-0.05);
+				let d = Spawn("UNapalmSplash",pos+ofs*4);
+				d.target = target;
+				d.master = self;
+				d.scale *= FRandom[FlameT](0.5,0.7);
+				d.angle = atan2(dir.y,dir.x);
+				d.pitch = -asin(dir.z);
+				d.vel = (cos(d.angle)*cos(d.pitch),sin(d.angle)*cos(d.pitch),-sin(d.pitch))*d.speed*FRandom[FlameT](0.3,0.5)*scale.x;
+				d.vel.z -= 2;
+			}
+		}
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( isFrozen() ) return;
+		Vector3 ofs = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		for ( int i=0; i<2; i++ )
+		{
+			if ( numsplash-- <= 0 ) return;
+			Vector3 dir = (ofs+(FRandom[FlameT](-.8,.8),FRandom[FlameT](-.8,.8),FRandom[FlameT](-.8,.8))).unit();
+			A_SetScale(scale.x-0.05);
+			let d = Spawn("UNapalmSplash",pos+ofs*4);
+			d.target = target;
+			d.master = self;
+			d.scale *= FRandom[FlameT](0.5,0.7);
+			d.angle = atan2(dir.y,dir.x);
+			d.pitch = -asin(dir.z);
+			d.vel = (cos(d.angle)*cos(d.pitch),sin(d.angle)*cos(d.pitch),-sin(d.pitch))*d.speed*FRandom[FlameT](0.3,0.5)*scale.x;
+			d.vel.z -= 2;
+		}
+	}
+}
+
+Class UNapalmSplash : UNapalm
+{
+	override void AlignSelf()
+	{
+		Super.AlignSelf();
+		if ( hittype == HIT_CEILING ) hittype = HIT_FLOOR;
+	}
 }
 
 Class UFlamethrower : UnrealWeapon
@@ -280,6 +762,10 @@ Class UFlamethrower : UnrealWeapon
 	bool bCharging;
 	double ChargeSize, Count;
 
+	override int, int, bool, bool GetClipAmount()
+	{
+		return bCharging?min(5,int(chargesize+0.1)):-1, -1, false, false;
+	}
 	override Inventory CreateTossable( int amt )
 	{
 		if ( Owner.player && (Owner.player.ReadyWeapon == self) )
@@ -318,15 +804,32 @@ Class UFlamethrower : UnrealWeapon
 		UTMainHandler.DoFlash(self,Color(32,255,128,0),1);
 		Vector3 x, y, z, x2, y2, z2;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+2.5*y-2*z);
-		Actor p = Spawn("UFlame",origin);
-		double a = FRandom[FlameT](0,360), s = FRandom[FlameT](0,.05);
-		[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
-		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
-		p.angle = atan2(dir.y,dir.x);
-		p.pitch = asin(-dir.z);
-		p.vel = vel*0.5+(cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed*FRandom[FlameT](0.8,1.4);
-		p.master = self;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),15*x+2.3*y-2.7*z);
+		for ( int i=0; i<2; i++ )
+		{
+			double a = FRandom[FlameT](0,360), s = FRandom[FlameT](0,.05);
+			[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
+			Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
+			Actor p = Spawn("UFlame",origin);
+			if ( p.waterlevel > 0 )
+			{
+				p.Destroy();
+				s = FRandom[FlameT](0,.12);
+				dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
+				p = Spawn("UNapalmSplash",origin);
+				p.scale *= 0.2;
+				p.angle = atan2(dir.y,dir.x);
+				p.pitch = asin(-dir.z);
+				p.vel = vel*.5+(cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed*FRandom[FlameT](0.3,0.6);
+				p.vel.z -= 3;
+				p.target = self;
+				continue;
+			}
+			p.angle = atan2(dir.y,dir.x);
+			p.pitch = asin(-dir.z);
+			p.vel = vel*.1+(cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed*FRandom[FlameT](0.8,1.4);
+			p.master = self;
+		}
 	}
 	action void A_BeginFlame()
 	{
@@ -368,15 +871,40 @@ Class UFlamethrower : UnrealWeapon
 	}
 	action void A_FireNapalm()
 	{
+		Weapon weap = Weapon(invoker);
+		if ( !weap ) return;
+		invoker.FireEffect();
+		A_AlertMonsters();
+		UTMainHandler.DoFlash(self,Color(32,255,128,0),1);
 		A_Overlay(-9999,"Null");
 		A_WeaponOffset(0,32);
 		A_OverlayOffset(-2,0,0);
 		invoker.bCharging = false;
-		A_PlaySound("flamet/altfire",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+		A_PlaySound("flamet/altfire",CHAN_WEAPON,Dampener.Active(self)?.1:1.,pitch:max(.5,1.2-invoker.chargesize/10.));
 		if ( self is 'UTPlayer' ) UTPlayer(self).PlayAttacking3();
+		A_QuakeEx(1+int(0.5*invoker.chargesize),1+int(0.5*invoker.chargesize),1+int(0.5*invoker.chargesize),5+int(1.2*invoker.chargesize),0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05+0.01*invoker.chargesize);
+		Vector3 x, y, z;
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+2.3*y-2.7*z);
+		Actor p = Spawn("UNapalmGlob",origin);
+		p.A_SetScale(0.5+invoker.chargesize/3.5);
+		UTMainHandler.DoSwing(self,(FRandom[FlameT](-0.6,-1.3),FRandom[FlameT](-0.9,-0.2)),1+invoker.chargesize*0.3,-0.1,3,SWING_Spring,3,2);
+		p.angle = angle;
+		p.pitch = BulletSlope();
+		p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed;
+		p.target = self;
+		for ( int i=0; i<12; i++ )
+		{
+			let s = Spawn("UTViewSpark",origin);
+			UTViewSpark(s).ofs = (10,2.3,-2.7);
+			s.target = self;
+			UTViewSpark(s).vvel += (FRandom[FlameT](0.8,1.6),FRandom[FlameT](-0.5,0.5),FRandom[FlameT](-0.5,0.5));
+		}
+		invoker.chargesize = 0;
 	}
 	Default
 	{
+		Obituary "$O_FLAMETHROWER";
 		Tag "$T_FLAMETHROWER";
 		Inventory.PickupMessage "$I_FLAMETHROWER";
 		Weapon.UpSound "flamet/select";

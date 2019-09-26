@@ -477,6 +477,7 @@ Class UBioGel : Actor
 		+NODAMAGETHRUST;
 		+HITTRACER;
 		+INTERPOLATEANGLES;
+		+NOFRICTION;
 	}
 	States
 	{

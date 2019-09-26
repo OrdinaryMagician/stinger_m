@@ -37,6 +37,7 @@ Doom Tournament (currently the devel branch is required).
  - Quadshot (slot 3) (replaces shotguns)
  - Stunner (slot 4) (replaces chainsaw)
  - Fireblaster (slot 5) (replaces rocket launcher)
+ - Flamethrower (slot 6) (replaces plasma rifle)
  - Peacemaker (slot 8) (rare spawn in backpacks)
  - Demolisher (slot 9) (replaces bfg9000)
  - Autocannon (slot 0) (replaces bfg9000)
@@ -72,7 +73,6 @@ Doom Tournament (currently the devel branch is required).
 
 ## In progress
 
- - Flamethrower (slot 6) (replaces plasma rifle)
  - Impaler (slot 7) (replaces plasma rifle)
 
 ## Planned
