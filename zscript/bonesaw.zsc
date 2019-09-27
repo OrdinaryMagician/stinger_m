@@ -96,10 +96,12 @@ Class Bonesaw : UnrealWeapon
 		invoker.special1++;
 		if ( invoker.special1 < 5 ) return;
 		invoker.special1 = 0;
+		invoker.FireEffect();
 		for ( int i=0; i<8; i++ ) if ( TryHit(angle+i*(45./16),5) || TryHit(angle-i*(45./16),5) ) return;
 	}
 	action void A_Clamp()
 	{
+		invoker.FireEffect();
 		for ( int i=0; i<8; i++ ) if ( TryHit(angle+i*(45./16),20) || TryHit(angle-i*(45./16),20) ) return;
 	}
 	Default

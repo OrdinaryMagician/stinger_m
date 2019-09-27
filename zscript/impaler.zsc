@@ -829,6 +829,7 @@ Class Impaler : UnrealWeapon
 	}
 	action void A_Stab()
 	{
+		invoker.FireEffect();
 		UTMainHandler.DoSwing(self,(FRandom[Impaler](-1,1),FRandom[Impaler](-1,1)),0.3,-0.2,2,SWING_Spring,0,2);
 		for ( int i=0; i<8; i++ ) if ( TryHit(angle+i*(45./16),15) || TryHit(angle-i*(45./16),15) ) return;
 	}

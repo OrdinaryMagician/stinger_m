@@ -267,7 +267,7 @@ Class URifle : UnrealWeapon
 		SRFF ABCDEFGHIJ 2;
 		Goto Idle;
 	ZoomedFire:
-		SRSI A 20 A_RifleFire(true);
+		TNT1 A 20 A_RifleFire(true);
 		Goto ZoomedIdle;
 	AltFire:
 		SRFF A 0 A_JumpIf(!sting_rifle,"Zoom");
@@ -285,21 +285,26 @@ Class URifle : UnrealWeapon
 		SRFI A 3;
 		Goto Idle;
 	ZoomedAltFire:
-		SRSI A 7 A_RifleFire(true,true);
-		SRSI A 0 A_JumpIfNoAmmo("ZoomedAltFireEnd");
-		SRSI A 7 A_RifleFire(true,true);
-		SRSI A 0 A_JumpIfNoAmmo("ZoomedAltFireEnd");
-		SRSI A 7 A_RifleFire(true,true);
+		TNT1 A 7 A_RifleFire(true,true);
+		TNT1 A 0 A_JumpIfNoAmmo("ZoomedAltFireEnd");
+		TNT1 A 7 A_RifleFire(true,true);
+		TNT1 A 0 A_JumpIfNoAmmo("ZoomedAltFireEnd");
+		TNT1 A 7 A_RifleFire(true,true);
 	ZoomedAltFireEnd:
-		SRSI A 6;
+		TNT1 A 6;
 		Goto Idle;
 	Reload:
+		SRFI A 0 A_JumpIf(invoker.sniperzoom>1.0,"ZoomedReload");
 		SRFI A 8 A_ToggleLight();
+		Goto Idle;
+	ZoomedReload:
+		TNT1 A 8 A_ToggleLight();
 		Goto Idle;
 	Zoom:
 		SRSU A 0 A_JumpIf(invoker.sniperzoom>1.0,"ZoomOut");
 		SRSU A 0 A_PlaySound("rifle/scopeon",CHAN_ITEM,.5);
 		SRSU ABCDEFGHIJKLMN 1;
+		SRSI A 0;
 		Goto ZoomHold;
 	ZoomHold:
 		TNT1 A 1
@@ -313,12 +318,14 @@ Class URifle : UnrealWeapon
 	ZoomOut:
 		SRSD A 0 A_ZoomFactor(invoker.sniperzoom=1.0,ZOOM_INSTANT);
 		SRSD A 0 A_PlaySound("rifle/scopeoff",CHAN_ITEM,.5);
+		SRSI A 1;
 		SRSD ABCDEFGHIJKLMNO 1;
 		Goto Idle;
 	Deselect:
 		SRFD A 0 A_JumpIf(invoker.sniperzoom<=1.0,"Deselect2");
 		SRSD A 0 A_ZoomFactor(invoker.sniperzoom=1.0,ZOOM_INSTANT);
 		SRSD A 0 A_PlaySound("rifle/scopeoff",CHAN_ITEM,.5);
+		SRSI A 1;
 		SRSD ABCDEFGHIJKLMNO 1;
 	Deselect2:
 		SRFD A 0

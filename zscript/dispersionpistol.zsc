@@ -21,7 +21,7 @@ Class WeaponPowerUp : Inventory
 		if ( dpis && (dpis.pendingupgrade < 4) )
 		{
 			dpis.pendingupgrade++;
-			if ( toucher.player && ((toucher.player.ReadyWeapon != dpis) || (player.PendingWeapon != WP_NOCHANGE)) )
+			if ( toucher.player && ((toucher.player.ReadyWeapon != dpis) || (toucher.player.PendingWeapon != WP_NOCHANGE)) )
 				ScriptUtil.SetWeapon(toucher,"DispersionPistol");
 		}
 		GoAwayAndDie();
