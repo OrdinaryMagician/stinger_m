@@ -953,7 +953,7 @@ Class Impaler : UnrealWeapon
 			player.SetPSprite(-3,invoker.FindState("GemAltRelease"));
 			player.SetPSprite(-2,invoker.FindState("ZapAltRelease"));
 			A_StopBeam();
-			A_PlaySound("impaler/gem",CHAN_WEAPON,looping:true);
+			A_PlaySound("impaler/altend",CHAN_WEAPON,looping:true);
 		}
 		IMPA QRSTUVWX 2;
 		Goto Idle;

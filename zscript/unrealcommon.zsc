@@ -860,6 +860,7 @@ Class AmmoUsedInSlot
 Class UnrealMainHandler : EventHandler
 {
 	Array<AmmoUsedInSlot> AmmoSlots;
+	transient int slotflash[10];	// used by the 0.83 hud
 
 	override void WorldThingDamaged( WorldEvent e )
 	{
@@ -1189,6 +1190,8 @@ Class UnrealMainHandler : EventHandler
 			let t = players[e.player].mo.FindInventory("UTranslator");
 			if ( t ) t.Use(false);
 		}
+		else if ( e.Name ~== "Bar083SlotFlash" )
+			slotflash[e.Args[0]] = gametic+20;
 	}
 	private static bool CmpWeapon( Class<Weapon> a, Class <Weapon> b )
 	{

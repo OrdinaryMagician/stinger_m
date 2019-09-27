@@ -113,7 +113,7 @@ Class Amplifier : UnrealInventory
 	{
 		if ( pickup ) return false;
 		bActive = !bActive;
-		Owner.A_PlaySound("amplifier/set",CHAN_ITEM);
+		Owner.A_PlaySound(bActive?"amplifier/set":"amplifier/unset",CHAN_ITEM);
 		return false;
 	}
 	override void DoEffect()

@@ -78,6 +78,9 @@ Doom Tournament (currently the devel branch is required).
 
 ## Planned
 
+ - Impaler "slice" animation for melee alt
+ - Separate proto content into an add-on (if people want)
+
  - RTNP add-on
  - Monster pack (someday)
  - Map pack (maybe? who knows)

@@ -332,7 +332,8 @@ Class UnrealHUD : BaseStatusBar
 			for ( int i=0; i<10; i++ )
 			{
 				Font cfont = TinyFont;
-				if ( cwslot == i ) cfont = TinyWhiteFont;
+				if ( (pwslot != -1) && (pwslot == i) || (pwslot == -1) && (cwslot == i) )
+					cfont = TinyWhiteFont;
 				int realslot = i?i:10;
 				CurX = HalfHUDX-3+realslot*6;
 				CurY = HalfHUDY+4;
@@ -616,6 +617,14 @@ Class UnrealHUD : BaseStatusBar
 		}
 	}
 
+	override void ReceivedWeapon( Weapon weapn )
+	{
+		Super.ReceivedWeapon(weapn);
+		if ( weapn.SlotNumber == -1 ) return;
+		// fuckin' hell
+		EventHandler.SendNetworkEvent("Bar083SlotFlash",weapn.SlotNumber);
+	}
+
 	private void DrawUnrealBar()
 	{
 		// 0.83 status bar, just for funsies
@@ -646,7 +655,16 @@ Class UnrealHUD : BaseStatusBar
 		{
 			if ( !CPlayer.HasWeaponsInSlot(i) ) continue;
 			bool used = (CPlayer.ReadyWeapon&&(CPlayer.ReadyWeapon.SlotNumber==i));
-			DrawImage("Slot083",(slotofs[i],342),DI_ITEM_OFFSETS,used?1.:.8);
+			if ( CPlayer.PendingWeapon && (CPlayer.PendingWeapon != WP_NOCHANGE) )
+				used = (CPlayer.PendingWeapon.SlotNumber==i);
+			DrawImage(used?"Used083":"Slot083",(slotofs[i],342),DI_ITEM_OFFSETS);
+		}
+		let hnd = UnrealMainHandler(EventHandler.Find("UnrealMainHandler"));
+		if ( hnd )
+		{
+			for ( int i=0; i<10; i++ )
+				if ( hnd.slotflash[i] > gametic )
+					DrawImage("Flsh083",(slotofs[i],342),DI_ITEM_OFFSETS,(hnd.slotflash[i]-gametic+FracTic)/20.);
 		}
 		DrawString(mOldDigits,FormatNumber(CPlayer.health,3),(358,366),DI_TEXT_ALIGN_RIGHT);
 		int ArmorAmount = 0, CurAbs = -1;

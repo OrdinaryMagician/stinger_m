@@ -191,6 +191,7 @@ ffield/hit	ffieldh2
 
 dpistol/select	disppick
 dpistol/fire	dispshot
+dpistol/altfire	dispshot
 dpistol/charge	powerup3
 dpistol/up1	number1
 dpistol/up2	number2
@@ -202,6 +203,7 @@ $limit dpistol/hit 16
 
 amplifier/act	ampact
 amplifier/set	health1
+amplifier/unset	health1
 
 flare/on	flares1
 flare/loop	flarel1
@@ -283,6 +285,7 @@ $random impaler/stab { impaler/stab1 impaler/stab2 impaler/stab3 }
 impaler/flesh	impflesh
 impaler/wall	impwall
 impaler/altfire	impboltl
+impaler/altend	impbolte
 impaler/hit	imphit
 impaler/fly	impfly
 impaler/beam	ele04

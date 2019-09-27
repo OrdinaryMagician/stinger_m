@@ -975,7 +975,11 @@ Class UFlamethrower : UnrealWeapon
 		TNT1 A 1 A_FireFlame();
 		Wait;
 	Hold:
-		FLMF FGHIJK 2 A_SoundVolume(CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+		FLMF FGHIJK 2
+		{
+			A_SoundVolume(CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+			A_SoundVolume(CHAN_6,Dampener.Active(self)?.02:.2);
+		}
 		Loop;
 	Release:
 		#### # 2
@@ -983,6 +987,7 @@ Class UFlamethrower : UnrealWeapon
 			A_Overlay(-9999,"Null");
 			player.SetPSprite(-2,ResolveState("FlameRelease"));
 			A_PlaySound("flamet/fireend",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+			A_SoundVolume(CHAN_6,Dampener.Active(self)?.1:1.);
 			A_ClearRefire();
 		}
 		FLMF MNOP 2;
