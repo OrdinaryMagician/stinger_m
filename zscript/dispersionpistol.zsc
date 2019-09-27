@@ -489,7 +489,6 @@ Class DispersionPistol : UnrealWeapon
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
-		DefaultAmmo(weap.Ammo1).rechargephase = ((weap.Ammo1.Amount>0)?0:30);
 		A_PlaySound("dpistol/fire",CHAN_WEAPON,Dampener.Active(self)?.4:1.,pitch:1.2);
 		double mult = Amplifier.GetMult(self,80);
 		invoker.FireEffect();
@@ -504,6 +503,7 @@ Class DispersionPistol : UnrealWeapon
 			}
 			else weap.Ammo1.Amount -= invoker.MainUse;
 		}
+		DefaultAmmo(weap.Ammo1).rechargephase = ((weap.Ammo1.Amount>0)?0:30);
 		switch ( ulevel )
 		{
 		case 0:
