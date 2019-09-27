@@ -548,7 +548,7 @@ Class Stinger : UnrealWeapon
 		if ( !Dampener.Active(self) ) A_AlertMonsters();
 		A_QuakeEx(1,1,1,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+5.0*x+8.0*y-8.0*z;
 		Actor p = Spawn("StingerProjectile",origin);
 		p.angle = angle;
@@ -593,9 +593,9 @@ Class Stinger : UnrealWeapon
 		if ( !Dampener.Active(self) ) A_AlertMonsters();
 		A_QuakeEx(1,1,1,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
-		[x, y, z] = dt_Matrix4.GetAxes(pitch,angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = (pos.x,pos.y,player.viewz)+5.0*x+8.0*y-8.0*z;
-		[x, y, z] = dt_Matrix4.GetAxes(BulletSlope(),angle,roll);
+		[x, y, z] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
 		Actor p;
 		double a, s;
 		Vector3 dir;
