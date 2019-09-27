@@ -64,10 +64,9 @@ Class DefaultAmmo : Ammo
 		Ammo.BackpackAmount 0;
 		Ammo.BackpackMaxAmount 50;
 	}
-	override void Tick()
+	override void DoEffect()
 	{
 		Super.Tick();
-		if ( !Owner ) return;
 		rechargespeed = max(1.1,0.11*Amount);
 		rechargephase += 1./rechargespeed;
 		if ( rechargephase < 35 ) return;
@@ -341,8 +340,8 @@ Class DispersionAmmo : Actor
 		a = Spawn(invoker.ExploClass,pos);
 		a.A_SetScale(min(0.8+invoker.mult*0.8,2.5));
 		if ( !bAMBUSH ) return;
-		UTMainHandler.DoBlast(self,120,6000);
-		A_Explode(GetMissileDamage(0,0),120);
+		UTMainHandler.DoBlast(self,80,6000);
+		A_Explode(GetMissileDamage(0,0),80);
 	}
 	override void PostBeginPlay()
 	{
@@ -478,9 +477,9 @@ Class DispersionPistol : UnrealWeapon
 	{
 		return bCharging?min(5,int(chargesize+0.1)):-1, -1, false, false;
 	}
-	override void Tick()
+	override void DoEffect()
 	{
-		Super.Tick();
+		Super.DoEffect();
 		if ( MainUse < 1 ) MainUse = 1;
 		if ( sting_dpistol ) ChargeUse = 1;
 		else ChargeUse = max(1,MainUse/2);
@@ -490,7 +489,7 @@ Class DispersionPistol : UnrealWeapon
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
-		DefaultAmmo(weap.Ammo1).rechargephase = 0;
+		DefaultAmmo(weap.Ammo1).rechargephase = ((weap.Ammo1.Amount>0)?0:30);
 		A_PlaySound("dpistol/fire",CHAN_WEAPON,Dampener.Active(self)?.4:1.,pitch:1.2);
 		double mult = Amplifier.GetMult(self,80);
 		invoker.FireEffect();
@@ -569,7 +568,7 @@ Class DispersionPistol : UnrealWeapon
 		invoker.bCharging = false;
 		if ( self is 'UTPlayer' )
 			UTPlayer(self).PlayAttacking3();
-		DefaultAmmo(weap.Ammo1).rechargephase = 0;
+		DefaultAmmo(weap.Ammo1).rechargephase = ((weap.Ammo1.Amount>0)?0:30);
 		A_PlaySound("dpistol/altfire",CHAN_WEAPON,Dampener.Active(self)?.4:1.);
 		double mult = Amplifier.GetMult(self,int(invoker.ChargeSize*50)+50);
 		invoker.FireEffect();
@@ -636,25 +635,47 @@ Class DispersionPistol : UnrealWeapon
 			ViewASMDSpark(s).vvel += (FRandom[ASMD](0.5,2.0),FRandom[ASMD](-1.5,1.5),FRandom[ASMD](-1.5,1.5));
 		}
 	}
-	action bool A_DispCharge()
+	void UpdateSelectionOrder()
+	{
+		switch ( pendingupgrade )
+		{
+		case 0:
+			SelectionOrder = default.SelectionOrder;
+			break;
+		case 1:
+			SelectionOrder = 6400;
+			break;
+		case 2:
+			SelectionOrder = 5000;
+			break;
+		case 3:
+			SelectionOrder = 2700;
+			break;
+		case 4:
+		default:
+			SelectionOrder = 1800;
+			break;
+		}
+	}
+	action State A_DispCharge( statelabel next )
 	{
 		Weapon weap = Weapon(invoker);
-		if ( !weap ) return false;
+		if ( !weap ) return ResolveState(null);
 		DefaultAmmo(weap.Ammo1).rechargephase = 0;
 		UTMainHandler.DoSwing(self,(FRandom[DPistol](-1,1),FRandom[DPistol](-1,1)),0.02*invoker.chargesize,0,2,SWING_Spring);
 		A_WeaponOffset(FRandom[DPistol](-1,1)*1.2*invoker.chargesize,32+FRandom[DPistol](-1,1)*1.2*invoker.chargesize);
 		if ( !Dampener.Active(self) ) A_AlertMonsters();
 		invoker.chargesize += (2.-invoker.upgradelevel*0.15)/35.;
 		invoker.count += 1./35.;
-		if ( invoker.count < 0.3 ) return false;
+		if ( invoker.count < 0.3 ) return ResolveState(null);
 		invoker.count = 0;
-		if ( invoker.chargesize >= 5. ) return true;
+		if ( invoker.chargesize >= 5. ) return ResolveState(next);
 		if ( !(sv_infiniteammo || (FindInventory('PowerInfiniteAmmo',true))) )
 		{
-			if ( weap.Ammo1.Amount < invoker.ChargeUse ) return true;
+			if ( weap.Ammo1.Amount < invoker.ChargeUse ) return ResolveState(next);
 			weap.Ammo1.Amount -= invoker.ChargeUse;
 		}
-		return false;
+		return ResolveState(null);
 	}
 	Default
 	{
@@ -662,13 +683,15 @@ Class DispersionPistol : UnrealWeapon
 		Inventory.PickupMessage "$I_DPISTOL";
 		Weapon.UpSound "dpistol/select";
 		Weapon.SlotNumber 1;
-		Weapon.SelectionOrder 2;
+		Weapon.SelectionOrder 7700;
 		Weapon.SlotPriority 1;
 		Weapon.AmmoType "DefaultAmmo";
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "DefaultAmmo";
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 50;
+		Weapon.MinSelectionAmmo1 10;
+		Weapon.MinSelectionAmmo2 10;
 		UTWeapon.DropAmmo 25;
 		+WEAPON.WIMPY_WEAPON;
 	}
@@ -804,40 +827,40 @@ Class DispersionPistol : UnrealWeapon
 			return ResolveState("AltFire5");
 		}
 	AltFire1:
-		#### # 1 A_JumpIf(A_DispCharge(),2);
-		#### # 0 A_ReFire("AltFire1");
+		#### # 1 A_DispCharge(1);
+		Wait;
 	AltRelease1:
 		#### # 3 A_DispAltFire();
 		DPF1 ABC 8;
 		DPI1 A 6;
 		Goto Idle;
 	AltFire2:
-		#### # 1 A_JumpIf(A_DispCharge(),2);
-		#### # 0 A_ReFire("AltFire2");
+		#### # 1 A_DispCharge(1);
+		Wait;
 	AltRelease2:
 		#### # 3 A_DispAltFire();
 		DPF2 ABC 8;
 		DPI2 A 6;
 		Goto Idle;
 	AltFire3:
-		#### # 1 A_JumpIf(A_DispCharge(),2);
-		#### # 0 A_ReFire("AltFire3");
+		#### # 1 A_DispCharge(1);
+		Wait;
 	AltRelease3:
 		#### # 3 A_DispAltFire();
 		DPF3 ABC 8;
 		DPI3 A 6;
 		Goto Idle;
 	AltFire4:
-		#### # 1 A_JumpIf(A_DispCharge(),2);
-		#### # 0 A_ReFire("AltFire4");
+		#### # 1 A_DispCharge(1);
+		Wait;
 	AltRelease4:
 		#### # 3 A_DispAltFire();
 		DPF4 ABC 8;
 		DPI4 A 6;
 		Goto Idle;
 	AltFire5:
-		#### # 1 A_JumpIf(A_DispCharge(),2);
-		#### # 0 A_ReFire("AltFire5");
+		#### # 1 A_DispCharge(1);
+		Wait;
 	AltRelease5:
 		#### # 3 A_DispAltFire();
 		DPF5 ABC 8;
@@ -848,6 +871,7 @@ Class DispersionPistol : UnrealWeapon
 		{
 			A_Overlay(-9999,"Null");
 			invoker.MainUse = min(6,invoker.upgradelevel+1);
+			invoker.UpdateSelectionOrder();
 			invoker.upgradelevel++;
 			if ( invoker.upgradelevel == 0 ) return ResolveState("Idle");
 			else if ( invoker.upgradelevel == 1 ) return ResolveState("Upgrade1");

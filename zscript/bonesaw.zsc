@@ -97,12 +97,12 @@ Class Bonesaw : UnrealWeapon
 		if ( invoker.special1 < 5 ) return;
 		invoker.special1 = 0;
 		invoker.FireEffect();
-		for ( int i=0; i<8; i++ ) if ( TryHit(angle+i*(45./16),5) || TryHit(angle-i*(45./16),5) ) return;
+		for ( int i=0; i<8; i++ ) if ( TryHit(angle+i*(45./16),6) || TryHit(angle-i*(45./16),6) ) return;
 	}
 	action void A_Clamp()
 	{
 		invoker.FireEffect();
-		for ( int i=0; i<8; i++ ) if ( TryHit(angle+i*(45./16),20) || TryHit(angle-i*(45./16),20) ) return;
+		for ( int i=0; i<8; i++ ) if ( TryHit(angle+i*(45./16),30) || TryHit(angle-i*(45./16),30) ) return;
 	}
 	Default
 	{
@@ -110,11 +110,9 @@ Class Bonesaw : UnrealWeapon
 		Inventory.PickupMessage "$I_RAZORCLAW";
 		Weapon.UpSound "bonesaw/select";
 		Weapon.SlotNumber 1;
-		Weapon.SelectionOrder 9;
+		Weapon.SelectionOrder 5500;
 		Weapon.SlotPriority 0.9;
 		+WEAPON.MELEEWEAPON;
-		+FORCEPAIN;
-		+NOEXTREMEDEATH;
 	}
 	States
 	{

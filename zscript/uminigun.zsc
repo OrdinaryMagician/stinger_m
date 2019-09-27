@@ -149,7 +149,7 @@ Class UMinigun : UnrealWeapon
 		Inventory.PickupMessage "$I_MINIGUN";
 		Weapon.UpSound "minigun/select";
 		Weapon.SlotNumber 0;
-		Weapon.SelectionOrder 10;
+		Weapon.SelectionOrder 500;
 		Weapon.SlotPriority 1;
 		Weapon.AmmoType "UMiniAmmo";
 		Weapon.AmmoUse 1;

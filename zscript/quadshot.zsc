@@ -81,21 +81,22 @@ Class QuadshotTracer : LineTracer
 
 Class QuadShot : UnrealWeapon
 {
-	int ClipCount;
+	int ClipCount, HeldShells;
+	bool ClipOut;
 	QuadshotTracer t;
 
 	property ClipCount : ClipCount;
 
 	override int, int, bool, bool GetClipAmount()
 	{
-		return ClipCount, -1, (ClipCount<2), false;
+		return ClipOut?-1:ClipCount, -1, (ClipCount<2), false;
 	}
 
 	action void ProcessTraceHit( Linetracer t )
 	{
 		if ( t.Results.HitType == TRACE_HitActor )
 		{
-			int dmg = Random[Quadshot](4,8);
+			int dmg = 11;
 			FlakAccumulator.Accumulate(t.Results.HitActor,dmg,invoker,self,'shot');
 			double mm = 2400;
 			UTMainHandler.DoKnockback(t.Results.HitActor,t.Results.HitVector+(0,0,0.025),mm*FRandom[Quadshot](0.4,1.2));
@@ -257,7 +258,7 @@ Class QuadShot : UnrealWeapon
 		Inventory.PickupMessage "$I_QUADSHOT";
 		Weapon.UpSound "quadshot/select";
 		Weapon.SlotNumber 3;
-		Weapon.SelectionOrder 2;
+		Weapon.SelectionOrder 1400;
 		Weapon.SlotPriority 0.9;
 		Weapon.AmmoType "UShells";
 		Weapon.AmmoUse 1;
@@ -279,6 +280,12 @@ Class QuadShot : UnrealWeapon
 		QUAS A 1 A_Raise(int.max);
 		Wait;
 	Ready:
+		QUAS A 0
+		{
+			invoker.clipout = false;
+			invoker.clipcount += invoker.heldshells;
+			invoker.heldshells = 0;
+		}
 		QUAS ABCDEFGHIJK 2 A_WeaponReady(WRF_NOFIRE);
 		Goto Idle;
 	Dummy:
@@ -288,7 +295,7 @@ Class QuadShot : UnrealWeapon
 			if ( !A_QuadshotCheckForReload() )
 			{
 				let weap = Weapon(invoker);
-				if ( invoker.clipcount < min(weap.Ammo1.Amount,invoker.default.clipcount) )
+				if ( (invoker.clipcount < invoker.default.clipcount) && (invoker.Ammo1.Amount > 0) )
 					A_WeaponReady(WRF_ALLOWRELOAD);
 				else A_WeaponReady();
 			}
@@ -359,25 +366,25 @@ Class QuadShot : UnrealWeapon
 		QUAR LMNOPQRSTU 1;
 		QUAR V 0
 		{
+			invoker.clipout = true;
 			A_DropShells();
 			let weap = Weapon(invoker);
-			invoker.special1 = min(weap.Ammo1.Amount,invoker.default.clipcount);
-			invoker.special2 = invoker.special1-invoker.clipcount;
-			invoker.clipcount = -1;
 		}
 		QUAR VWXYZ[\] 1;
 		QUR2 ABCDEFGHIJKLMNOPQR 1;
 		QUR2 S 0
 		{
+			invoker.clipout = false;
+			invoker.heldshells = invoker.clipcount;
+			invoker.clipcount = 0;
 			A_PlaySound("quadshot/load",CHAN_6,Dampener.Active(self)?.1:1.);
 			let weap = Weapon(invoker);
-			invoker.clipcount = 0;
-			if ( invoker.special1 > 0 )
+			for ( int i=0; i<2; i++ )
 			{
-				weap.Ammo1.Amount -= min(2,invoker.special2);
-				invoker.clipcount += min(2,invoker.special1);
-				invoker.special1 = max(0,invoker.special1-2);
-				invoker.special2 = max(0,invoker.special2-2);
+				if ( (invoker.clipcount >= 4) || (invoker.heldshells+weap.Ammo1.Amount <= 0) ) continue;
+				invoker.clipcount++;
+				if ( invoker.heldshells > 0 ) invoker.heldshells--;
+				else weap.Ammo1.Amount--;
 			}
 			if ( self is 'UTPlayer' )
 				UTPlayer(self).PlayReloading();
@@ -388,12 +395,12 @@ Class QuadShot : UnrealWeapon
 		{
 			A_PlaySound("quadshot/load",CHAN_6,Dampener.Active(self)?.1:1.);
 			let weap = Weapon(invoker);
-			if ( invoker.special1 > 0 )
+			for ( int i=0; i<2; i++ )
 			{
-				weap.Ammo1.Amount -= min(2,invoker.special2);
-				invoker.clipcount += min(2,invoker.special1);
-				invoker.special1 = max(0,invoker.special1-2);
-				invoker.special2 = max(0,invoker.special2-2);
+				if ( (invoker.clipcount >= 4) || (invoker.heldshells+weap.Ammo1.Amount <= 0) ) continue;
+				invoker.clipcount++;
+				if ( invoker.heldshells > 0 ) invoker.heldshells--;
+				else weap.Ammo1.Amount--;
 			}
 			if ( self is 'UTPlayer' )
 				UTPlayer(self).PlayReloading();

@@ -669,7 +669,7 @@ Class UBioRifle : UnrealWeapon
 		Inventory.PickupMessage "$I_BIORIFLE";
 		Weapon.UpSound "ges/select";
 		Weapon.SlotNumber 8;
-		Weapon.SelectionOrder 8;
+		Weapon.SelectionOrder 1300;
 		Weapon.SlotPriority 1;
 		Weapon.AmmoType "UBioAmmo";
 		Weapon.AmmoUse 1;

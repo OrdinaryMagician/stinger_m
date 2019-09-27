@@ -453,7 +453,7 @@ Class Peacemaker : UnrealWeapon
 		Inventory.PickupMessage "$I_PEACE";
 		Weapon.UpSound "peace/select";
 		Weapon.SlotNumber 8;
-		Weapon.SelectionOrder 1;
+		Weapon.SelectionOrder 1050;
 		Weapon.SlotPriority 0.9;
 		Weapon.AmmoType "PeaceAmmo";
 		Weapon.AmmoUse 1;

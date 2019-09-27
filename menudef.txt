@@ -51,6 +51,7 @@ OptionMenu "UnrealOptionMenu"
 	Option "$STING_RAZORAIM", "sting_razoraim", "YesNo"
 	Option "$STING_BIOSPLASH", "sting_biosplash", "YesNo"
 	Option "$STING_FLAMETSPREAD", "sting_flametspread", "YesNo"
+	Option "$STING_IMPSELF", "sting_impself", "YesNo"
 }
 
 AddOptionMenu "OptionsMenu"

@@ -34,7 +34,7 @@ Class RazorBlade : Actor
 		Radius 2;
 		Height 2;
 		Speed 25;
-		DamageFunction (int((30+special1*5)*((DamageType=='Decapitated')?3.5:1.0)));
+		DamageFunction (int((30+special1*10)*((DamageType=='Decapitated')?3.5:1.0)));
 		DamageType 'Shredded';
 		Obituary "$O_RAZORJACK";
 		BounceType "Hexen";
@@ -269,7 +269,7 @@ Class Razorjack : UnrealWeapon
 		Inventory.PickupMessage "$I_RAZORJACK";
 		Weapon.UpSound "ripper/select";
 		Weapon.SlotNumber 7;
-		Weapon.SelectionOrder 7;
+		Weapon.SelectionOrder 1500;
 		Weapon.SlotPriority 1;
 		Weapon.AmmoType "RazorAmmo";
 		Weapon.AmmoUse 1;

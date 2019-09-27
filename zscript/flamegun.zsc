@@ -177,7 +177,7 @@ Class UFireball2 : UFireball
 	{
 		Radius 8;
 		Height 8;
-		DamageFunction 50;
+		DamageFunction 60;
 		Speed 5;
 		UFireball.SpreadFactor 0.35;
 		UFireball.NumSmokes 2;
@@ -283,7 +283,7 @@ Class FlameGun : UnrealWeapon
 		Inventory.PickupMessage "$I_FLAMEGUN";
 		Weapon.UpSound "flamegun/select";
 		Weapon.SlotNumber 5;
-		Weapon.SelectionOrder 2;
+		Weapon.SelectionOrder 1200;
 		Weapon.SlotPriority 0.9;
 		Weapon.AmmoType "FlameAmmo";
 		Weapon.AmmoUse 10;
@@ -356,7 +356,8 @@ Class FlameGun : UnrealWeapon
 		TNT1 A 1
 		{
 			A_CheckReload();
-			A_WeaponReady();
+			if ( invoker.Ammo1.Amount >= 30 ) A_WeaponReady();
+			else A_WeaponReady(WRF_NOSECONDARY);
 		}
 		Wait;
 	Idle:

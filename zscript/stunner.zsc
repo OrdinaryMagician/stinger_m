@@ -10,10 +10,9 @@ Class StunnerAmmo : Ammo
 		Ammo.BackpackAmount 0;
 		Ammo.BackpackMaxAmount 50;
 	}
-	override void Tick()
+	override void DoEffect()
 	{
 		Super.Tick();
-		if ( !Owner ) return;
 		rechargespeed = max(2.,.2*Amount);
 		rechargephase += 1./rechargespeed;
 		if ( rechargephase < 7 ) return;
@@ -143,7 +142,7 @@ Class StunProj : Actor
 			SetOrigin(t.Results.HitPos-t.Results.HitVector*4,false);
 			StunExplode();
 			Actor a = t.Results.HitActor;
-			a.DamageMobj(self,target,max(1,int(1.1*specialf1)),'jolted',DMG_USEANGLE,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
+			a.DamageMobj(self,target,max(1,int(4*specialf1)),'jolted',DMG_USEANGLE,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
 			if ( !a.bDONTTHRUST )
 			{
 				UTMainHandler.DoKnockback(a,t.Results.HitVector,(bAMBUSH?-22000:26000)*specialf1);
@@ -274,7 +273,7 @@ Class Stunner : UnrealWeapon
 
 	override int, int, bool, bool GetClipAmount()
 	{
-		return bCharging?min(6,int(chargesize)):-1, -1, false, false;
+		return bCharging?min(5,int(chargesize)):-1, -1, false, false;
 	}
 	action void A_StunnerFire()
 	{
@@ -284,7 +283,7 @@ Class Stunner : UnrealWeapon
 		invoker.bCharging = false;
 		if ( self is 'UTPlayer' )
 			UTPlayer(self).PlayAttacking3();
-		StunnerAmmo(weap.Ammo1).rechargephase = 0;
+		StunnerAmmo(weap.Ammo1).rechargephase = ((weap.Ammo1.Amount>0)?0:5);
 		A_PlaySound("stun/fire",CHAN_WEAPON,Dampener.Active(self)?.4:1.,pitch:1.2-invoker.chargesize*0.06);
 		double mult = Amplifier.GetMult(self,int(invoker.ChargeSize*50)+50);
 		invoker.FireEffect();
@@ -353,15 +352,15 @@ Class Stunner : UnrealWeapon
 		UTMainHandler.DoSwing(self,(FRandom[Stunner](-1,1),FRandom[Stunner](-1,1)),0.02*invoker.chargesize,0,2,SWING_Spring);
 		A_WeaponOffset(FRandom[Stunner](-1,1)*1.2*invoker.chargesize,32+FRandom[Stunner](-1,1)*1.2*invoker.chargesize);
 		if ( !Dampener.Active(self) ) A_AlertMonsters();
-		if ( invoker.chargesize >= 6. )
+		if ( invoker.chargesize >= 5. )
 		{
 			invoker.count += 1./35.;
 			if ( invoker.count > 1.5 ) return ResolveState("Release");
 			return ResolveState(null);
 		}
-		invoker.chargesize += 2./35.;
-		invoker.count += 1./35.;
-		if ( invoker.count < 0.14 ) return ResolveState(null);
+		invoker.chargesize += 2.4/35.;
+		invoker.count += 1.2/35.;
+		if ( invoker.count < 0.24 ) return ResolveState(null);
 		invoker.count = 0;
 		if ( !(sv_infiniteammo || (FindInventory('PowerInfiniteAmmo',true))) )
 		{
@@ -378,7 +377,7 @@ Class Stunner : UnrealWeapon
 		Inventory.PickupMessage "$I_STUNNER";
 		Weapon.UpSound "stun/select";
 		Weapon.SlotNumber 4;
-		Weapon.SelectionOrder 9;
+		Weapon.SelectionOrder 8000;
 		Weapon.SlotPriority 0.9;
 		Weapon.AmmoType "StunnerAmmo";
 		Weapon.AmmoUse 1;
@@ -386,6 +385,7 @@ Class Stunner : UnrealWeapon
 		Weapon.AmmoUse2 1;
 		Weapon.AmmoGive 50;
 		UTWeapon.DropAmmo 50;
+		+WEAPON.WIMPY_WEAPON;
 	}
 	States
 	{

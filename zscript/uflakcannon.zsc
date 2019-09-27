@@ -290,7 +290,7 @@ Class UFlakCannon : UnrealWeapon
 		Inventory.PickupMessage "$I_FLAKCANNON";
 		Weapon.UpSound "flak/select";
 		Weapon.SlotNumber 6;
-		Weapon.SelectionOrder 4;
+		Weapon.SelectionOrder 1100;
 		Weapon.SlotPriority 1;
 		Weapon.AmmoType "UFlakBox";
 		Weapon.AmmoUse 1;

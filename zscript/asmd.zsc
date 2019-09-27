@@ -745,7 +745,7 @@ Class ASMD : UnrealWeapon
 		Inventory.PickupMessage "$I_ASMD";
 		Weapon.UpSound "shock/select";
 		Weapon.SlotNumber 4;
-		Weapon.SelectionOrder 4;
+		Weapon.SelectionOrder 2000;
 		Weapon.SlotPriority 1;
 		Weapon.AmmoType "ASMDAmmo";
 		Weapon.AmmoUse 1;

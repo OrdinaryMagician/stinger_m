@@ -223,7 +223,7 @@ Class URifle : UnrealWeapon
 		Inventory.PickupMessage "$I_RIFLE";
 		Weapon.UpSound "sniper/select";
 		Weapon.SlotNumber 9;
-		Weapon.SelectionOrder 9;
+		Weapon.SelectionOrder 900;
 		Weapon.SlotPriority 1;
 		Weapon.AmmoType "URifleAmmo";
 		Weapon.AmmoUse 1;

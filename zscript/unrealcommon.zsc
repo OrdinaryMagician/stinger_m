@@ -203,6 +203,7 @@ Class UPlayer : UTPlayer
 								{
 									dsp.pendingupgrade = dsp.upgradelevel = 4;
 									dsp.MainUse = min(6,dsp.upgradelevel+1);
+									dsp.UpdateSelectionOrder();
 								}
 							}
 						}
@@ -255,6 +256,7 @@ Class UPlayer : UTPlayer
 
 	override void PlayAttacking()
 	{
+		if ( player.Health <= 0 ) return;
 		// no animation if crouched
 		if ( (player && (player.mo == self)) && (player.crouchdir == -1) ) return;
 		// check weapon type

@@ -267,21 +267,18 @@ Class ImpalerBolt : Actor
 			if ( !(GetAge()%5) )
 			{
 				UTMainHandler.DoKnockback(t.hitlist[i].hitactor,t.hitlist[i].x,500*specialf1**2);
-				t.hitlist[i].hitactor.DamageMobj(self,target,int(2*specialf1**3),'Impaler',DMG_THRUSTLESS);
+				t.hitlist[i].hitactor.DamageMobj(self,target,int(10*specialf1**1.5),'Impaler',DMG_THRUSTLESS);
 			}
 			if ( start.Hitlist.Find(t.HitList[i].HitActor) == start.HitList.Size() )
 				start.Hitlist.Push(t.HitList[i].HitActor);
 		}
 		// seeking
-		double closest = 500;
+		double closest = 500*specialf1;
 		if ( tracer )
 		{
-			double closest = Distance3D(tracer);
-			if ( (closest > 500) || (tracer.Health <= 0) )
-			{
+			double tdist = Distance3D(tracer);
+			if ( (tdist > closest) || (tracer.Health <= 0) )
 				tracer = null;
-				closest = 500;
-			}
 		}
 		let bt = BlockThingsIterator.Create(self,closest);
 		while ( bt.Next() )
@@ -358,14 +355,14 @@ Class ImpalerBolt : Actor
 				next.special2 = special2+1;
 				next.specialf1 = max(1.,specialf1);
 				next.oldx = dir;
-				next.bHITOWNER = true;
+				next.bHITOWNER = !sting_impself;
 			}
 			else
 			{
 				next.tracer = tracer;
 				next.special1 = special1+1;
 				next.specialf1 = max(1.,specialf1);
-				next.bHITOWNER = true;
+				next.bHITOWNER = !sting_impself;
 				next.UpdateBeam(self,t.Results.HitPos+normal,dir);
 			}
 			if ( t.Results.HitType != TRACE_HitNone )
@@ -373,7 +370,6 @@ Class ImpalerBolt : Actor
 				if ( !weffect ) weffect = Spawn("ImpalerBoltHit",t.Results.HitPos+normal*4);
 				weffect.SetOrigin(t.Results.HitPos+normal*4,true);
 				weffect.sprite = weffect.GetSpriteIndex('IHIT');
-
 			}
 			else if ( weffect ) weffect.Destroy();
 			return;
@@ -547,9 +543,9 @@ Class ImpalerProjectile : Actor
 		A_AlertMonsters();
 		A_SetRenderStyle(1.,STYLE_Add);
 		A_NoGravity();
-		A_Explode(50+special1/2,120+special1/5);
-		UTMainHandler.DoBlast(self,120+special1/5,40000);
-		A_QuakeEx(2,2,2,5,0,250+special1/5,"",QF_RELATIVE|QF_SCALEDOWN,falloff:120+special1/2,rollintensity:0.2);
+		A_Explode(50+special1/2,80+special1/5);
+		UTMainHandler.DoBlast(self,80+special1/5,40000);
+		A_QuakeEx(2,2,2,5,0,150+special1/5,"",QF_RELATIVE|QF_SCALEDOWN,falloff:80+special1/2,rollintensity:0.2);
 		A_PlaySound("impaler/hit",CHAN_VOICE);
 		A_SprayDecal("ShockMark",20);
 		let l = Spawn("ImpalerBurstLight",pos);
@@ -734,9 +730,10 @@ Class Impaler : UnrealWeapon
 		if ( !(invoker.special1%15) )
 		{
 			if ( invoker.ClipCount <= 0 ) return;
+			double mul = Amplifier.GetMult(self,10);
 			if ( invoker.beam )
-				invoker.beam.specialf1 = Amplifier.GetMult(self,10);
-			invoker.clipcount--;
+				invoker.beam.specialf1 = mul;
+			invoker.clipcount = max(0,invoker.clipcount-int(mul));
 		}
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(16,255,32,255),3);
@@ -836,6 +833,8 @@ Class Impaler : UnrealWeapon
 	override void DoEffect()
 	{
 		Super.DoEffect();
+		if ( (Ammo1.Amount <= 0) && (ClipCount <= 0) ) SelectionOrder = 6600;
+		else SelectionOrder = default.SelectionOrder;
 		if ( Owner.player.ReadyWeapon != self ) return;
 		if ( (Owner.waterlevel > 2) && !(level.maptime%5) )
 			ClipCount = max(0,ClipCount-1);
@@ -853,7 +852,7 @@ Class Impaler : UnrealWeapon
 		Inventory.PickupMessage "$I_IMPALER";
 		Weapon.UpSound "impaler/select";
 		Weapon.SlotNumber 7;
-		Weapon.SelectionOrder 0;
+		Weapon.SelectionOrder 700;
 		Weapon.SlotPriority 0.9;
 		Weapon.AmmoType "ImpalerAmmo";
 		Weapon.AmmoUse 1;

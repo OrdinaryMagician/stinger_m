@@ -23,6 +23,7 @@ Class Automag : UnrealWeapon
 {
 	int ClipCount, SlaveClipCount;
 	bool SlaveActive, SlaveDown, SlaveReload, SlaveAltFire, SlaveSpin;
+	bool ClipOut, SlaveClipOut;
 	int SlaveRefire;
 	double AltAccuracy;
 
@@ -31,8 +32,8 @@ Class Automag : UnrealWeapon
 
 	override int, int, bool, bool GetClipAmount()
 	{
-		if ( Amount > 1 ) return ClipCount, SlaveClipCount, (ClipCount<5), (SlaveClipCount<5);
-		return ClipCount, -1, (ClipCount<5), false;
+		if ( Amount > 1 ) return ClipOut?-1:ClipCount, SlaveClipOut?-1:SlaveClipCount, (ClipCount<5), (SlaveClipCount<5);
+		return ClipOut?-1:ClipCount, -1, (ClipCount<5), false;
 	}
 	override bool HandlePickup( Inventory item )
 	{
@@ -252,7 +253,20 @@ Class Automag : UnrealWeapon
 	override void OwnerDied()
 	{
 		Super.OwnerDied();
-		slaverefire = 0;
+		slavespin = slavereload = slaverefire = 0;
+		if ( Owner.player.ReadyWeapon != self ) return;
+		let psp = Owner.player.FindPSprite(2);
+		if ( psp )
+		{
+			slaveactive = false;
+			Owner.player.SetPSprite(2,ResolveState("LeftDeselect"));
+		}
+	}
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		if ( Amount > 1 ) SelectionOrder = 1250;
+		else SelectionOrder = default.SelectionOrder;
 	}
 	override void Tick()
 	{
@@ -288,7 +302,7 @@ Class Automag : UnrealWeapon
 		Inventory.InterHubAmount 2;
 		Weapon.UpSound "automag/select";
 		Weapon.SlotNumber 2;
-		Weapon.SelectionOrder 2;
+		Weapon.SelectionOrder 2800;
 		Weapon.SlotPriority 1;
 		Weapon.AmmoType "UMiniAmmo";
 		Weapon.AmmoUse 1;
@@ -312,9 +326,13 @@ Class Automag : UnrealWeapon
 	Ready:
 		AUTS A 0
 		{
+			invoker.slaveclipout = invoker.clipout = false;
 			invoker.slavedown = false;
 			if ( !invoker.slaveactive && (CountInv("Automag") > 1) )
+			{
+				invoker.slavespin = invoker.slavereload = invoker.slaverefire = 0;
 				A_Overlay(2,"LeftReady");
+			}
 		}
 		AUTS ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 A_WeaponReady(WRF_NOFIRE);
 		AUS2 ABCD 1 A_WeaponReady(WRF_NOFIRE);
@@ -347,20 +365,19 @@ Class Automag : UnrealWeapon
 		{
 			A_CheckReload();
 			if ( (invoker.clipcount <= 0) && (invoker.Ammo1.Amount > 0) ) player.SetPSprite(PSP_WEAPON,ResolveState("Reload"));
-			else if ( ((invoker.clipcount < min(invoker.default.clipcount,invoker.Ammo1.Amount)) || (invoker.slaveclipcount < min(invoker.default.slaveclipcount,invoker.Ammo1.Amount))) ) A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM);
+			else if ( ((invoker.clipcount < invoker.default.clipcount) || (invoker.slaveclipcount < invoker.default.slaveclipcount)) && (invoker.Ammo1.Amount > 0) ) A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM);
 			else A_WeaponReady(WRF_ALLOWZOOM);
-			if ( !invoker.slaveactive && (CountInv("Automag") > 1) ) A_Overlay(2,"LeftReady");
+			if ( !invoker.slaveactive && (CountInv("Automag") > 1) )
+			{
+				invoker.slavespin = invoker.slavereload = invoker.slaverefire = 0;
+				A_Overlay(2,"LeftReady");
+			}
 		}
 		Wait;
 	LeftDummy:
 		TNT1 A 1
 		{
-			if ( health <= 0 )
-			{
-				invoker.slaveactive = false;
-				player.SetPSprite(2,ResolveState("LeftDeselect"));
-			}
-			else if ( invoker.slavereload ) player.SetPSprite(2,ResolveState("LeftReload"));
+			if ( invoker.slavereload ) player.SetPSprite(2,ResolveState("LeftReload"));
 			else if ( invoker.slavedown ) player.SetPSprite(2,ResolveState("LeftDeselect"));
 			else if ( invoker.slavespin ) player.SetPSprite(2,ResolveState("LeftZoom"));
 			else A_LeftWeaponReady();
@@ -474,17 +491,16 @@ Class Automag : UnrealWeapon
 	Reload:
 		AUTR A 0
 		{
-			if ( invoker.clipcount>=min(invoker.default.clipcount,invoker.Ammo1.Amount) )
+			if ( invoker.clipcount >= invoker.default.clipcount )
 			{
-				invoker.slavereload = (invoker.slaveactive&&(invoker.slaveclipcount < min(invoker.default.slaveclipcount,invoker.Ammo1.Amount)))||(invoker.slaveclipcount <= 0);
+				invoker.slavereload = (invoker.slaveactive&&(invoker.slaveclipcount<invoker.default.slaveclipcount)&&(invoker.Ammo1.Amount>0));
 				return ResolveState("Idle");
 			}
 			return ResolveState(null);
 		}
 		AUTR A 0
 		{
-			invoker.special1 = min(invoker.default.clipcount,invoker.Ammo1.Amount)-invoker.clipcount;
-			invoker.clipcount = -1;
+			invoker.clipout = true;
 			A_Overlay(-9999,null);
 			A_PlaySound("automag/click",CHAN_WEAPON,!Dampener.Active(self)?1.:.1);
 		}
@@ -492,25 +508,26 @@ Class Automag : UnrealWeapon
 		AUTD ABCD 1;
 		AUTD E 30
 		{
-			invoker.clipcount = Min(invoker.default.clipcount,invoker.Ammo1.Amount);
-			invoker.Ammo1.Amount -= invoker.special1;
+			invoker.clipout = false;
+			let aadd = min(invoker.Ammo1.Amount,invoker.default.clipcount-invoker.clipcount);
+			invoker.clipcount += aadd;
+			invoker.Ammo1.Amount -= aadd;
 			A_PlaySound("automag/reload",CHAN_WEAPON,!Dampener.Active(self)?1.:.1);
 			if ( self is 'UTPlayer' )
 				UTPlayer(self).PlayReloading();
-			invoker.slavereload = (invoker.slaveactive&&(invoker.slaveclipcount < min(invoker.default.slaveclipcount,invoker.Ammo1.Amount)))||(invoker.slaveclipcount <= 0);
+			invoker.slavereload = (invoker.slaveactive&&(invoker.slaveclipcount<invoker.default.slaveclipcount)&&(invoker.Ammo1.Amount>0));
 		}
 		AUTS A 0 A_PlaySound("automag/select",CHAN_WEAPON,!Dampener.Active(self)?1.:.1);
 		Goto Ready;
 	LeftReload:
 		2UTR A 0
 		{
-			if ( invoker.slaveclipcount>=min(invoker.default.slaveclipcount,invoker.Ammo1.Amount) )
+			if ( invoker.slaveclipcount >= invoker.default.slaveclipcount )
 			{
 				invoker.slavereload = 0;
 				return ResolveState("LeftIdle");
 			}
-			invoker.special2 = min(invoker.default.slaveclipcount,invoker.Ammo1.Amount)-invoker.slaveclipcount;
-			invoker.slaveclipcount = -1;
+			invoker.slaveclipout = true;
 			A_Overlay(-9998,null);
 			A_PlaySound("automag/click",CHAN_6,!Dampener.Active(self)?1.:.1);
 			return ResolveState(null);
@@ -519,8 +536,10 @@ Class Automag : UnrealWeapon
 		2UTD ABCD 1;
 		2UTD E 30
 		{
-			invoker.slaveclipcount = Min(invoker.default.slaveclipcount,invoker.Ammo1.Amount);
-			invoker.Ammo1.Amount -= invoker.special2;
+			invoker.slaveclipout = false;
+			let aadd = min(invoker.Ammo1.Amount,invoker.default.slaveclipcount-invoker.slaveclipcount);
+			invoker.slaveclipcount += aadd;
+			invoker.Ammo1.Amount -= aadd;
 			A_PlaySound("automag/reload",CHAN_6,!Dampener.Active(self)?1.:.1);
 			if ( self is 'UTPlayer' )
 				UTPlayer(self).PlayReloading();

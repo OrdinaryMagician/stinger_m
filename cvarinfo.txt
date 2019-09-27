@@ -86,3 +86,4 @@ server bool sting_razoraim = false;	// razorjack alt follows aim instead of
 server bool sting_biosplash = false;	// biorifle alt splashes like in ut
 server bool sting_flametspread = false;	// targets on fire spread the flames
 					// to anyone nearby (may be op)
+server bool sting_impself = false;	// disable impaler beam self-hit

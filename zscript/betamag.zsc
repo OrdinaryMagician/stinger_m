@@ -115,7 +115,7 @@ Class Betamag : UnrealWeapon
 		{
 			if ( d.HitType == TRACE_HitActor )
 			{
-				int dmg = Random[Betamag](1,10)<<1;
+				int dmg = 15;
 				dmg = d.HitActor.DamageMobj(invoker,self,dmg,'Melee',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
 				UTMainHandler.DoKnockback(d.HitActor,d.HitDir,35000);
 				if ( d.HitActor.player ) d.HitActor.A_QuakeEx(2,2,2,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);
@@ -244,7 +244,21 @@ Class Betamag : UnrealWeapon
 	override void OwnerDied()
 	{
 		Super.OwnerDied();
-		slaverefire = 0;
+		slavespin = slavewhip = slaverefire = 0;
+		if ( Owner.player.ReadyWeapon != self ) return;
+		let psp = Owner.player.FindPSprite(2);
+		if ( psp )
+		{
+			slaveactive = false;
+			Owner.player.SetPSprite(2,ResolveState("LeftDeselect"));
+		}
+	}
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		if ( Ammo1.Amount <= 0 ) SelectionOrder = 6800;
+		else if ( Amount > 1 ) SelectionOrder = 2200;
+		else SelectionOrder = default.SelectionOrder;
 	}
 	override void Tick()
 	{
@@ -275,7 +289,7 @@ Class Betamag : UnrealWeapon
 		Inventory.InterHubAmount 2;
 		Weapon.UpSound "betamag/select";
 		Weapon.SlotNumber 2;
-		Weapon.SelectionOrder 1;
+		Weapon.SelectionOrder 3000;
 		Weapon.SlotPriority 0.9;
 		Weapon.AmmoType "UMiniAmmo";
 		Weapon.AmmoUse 1;
@@ -301,7 +315,10 @@ Class Betamag : UnrealWeapon
 		{
 			invoker.slavedown = false;
 			if ( !invoker.slaveactive && (CountInv("Betamag") > 1) )
+			{
+				invoker.slavespin = invoker.slavewhip = invoker.slaverefire = 0;
 				player.setpsprite(2,ResolveState("LeftReady"));
+			}
 		}
 		AUTS ABCDEFGHIJK 2 A_WeaponReady(WRF_NOFIRE);
 	Idle:
@@ -334,18 +351,16 @@ Class Betamag : UnrealWeapon
 		{
 			A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM);
 			if ( !invoker.slaveactive && (CountInv("Betamag") > 1) )
+			{
+				invoker.slavespin = invoker.slavewhip = invoker.slaverefire = 0;
 				player.setpsprite(2,ResolveState("LeftReady"));
+			}
 		}
 		Wait;
 	LeftDummy:
 		TNT1 A 1
 		{
-			if ( health <= 0 )
-			{
-				invoker.slaveactive = false;
-				player.setpsprite(2,ResolveState("LeftDeselect"));
-			}
-			else if ( invoker.slavedown ) player.setpsprite(2,ResolveState("LeftDeselect"));
+			if ( invoker.slavedown ) player.setpsprite(2,ResolveState("LeftDeselect"));
 			else if ( invoker.slavewhip ) player.setpsprite(2,ResolveState("LeftReload"));
 			else if ( invoker.slavespin ) player.setpsprite(2,ResolveState("LeftZoom"));
 			else A_LeftWeaponReady();

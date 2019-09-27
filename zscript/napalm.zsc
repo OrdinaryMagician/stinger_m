@@ -61,10 +61,7 @@ Class OnFire : Thinker
 		if ( !(victim is 'UNapalm') )
 		{
 			if ( !(level.maptime%3) )
-			{
 				amount--;
-				amount -= int(victim.vel.length()/10);
-			}
 			if ( victim.player ) amount -= int(abs(actor.deltaangle(victim.angle,oangle))/30);
 			oangle = victim.angle;
 		}
@@ -910,7 +907,7 @@ Class UFlamethrower : UnrealWeapon
 		Inventory.PickupMessage "$I_FLAMETHROWER";
 		Weapon.UpSound "flamet/select";
 		Weapon.SlotNumber 6;
-		Weapon.SelectionOrder 4;
+		Weapon.SelectionOrder 300;
 		Weapon.SlotPriority 0.9;
 		Weapon.AmmoType "FlameAmmo";
 		Weapon.AmmoUse 1;

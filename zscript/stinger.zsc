@@ -515,7 +515,7 @@ Class Stinger : UnrealWeapon
 		Inventory.PickupMessage "$I_STINGER";
 		Weapon.UpSound "stinger/select";
 		Weapon.SlotNumber 3;
-		Weapon.SelectionOrder 7;
+		Weapon.SelectionOrder 2500;
 		Weapon.SlotPriority 1;
 		Weapon.AmmoType "StingerAmmo";
 		Weapon.AmmoUse 1;
@@ -599,12 +599,12 @@ Class Stinger : UnrealWeapon
 		Actor p;
 		double a, s;
 		Vector3 dir;
-		for ( int i=0; i<4; i++ )
+		for ( int i=0; i<5; i++ )
 		{
 			if ( weap.Ammo1.Amount <= 0 ) return;
 			if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 			a = FRandom[Stinger](0,360);
-			s = FRandom[Stinger](0,0.08);
+			s = FRandom[Stinger](0,(i>0)?.08:0.);	// first shot always accurate
 			dir = (x+y*cos(a)*s+z*sin(a)*s).unit();
 			p = Spawn("StingerProjectile",origin);
 			p.angle = atan2(dir.y,dir.x);
