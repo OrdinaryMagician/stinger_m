@@ -314,7 +314,7 @@ Class FlameGun : UnrealWeapon
 		Vector3 x, y, z;
 		double a, s;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10*x+3*y-z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+3*y-z);
 		Actor p = Spawn(bAlt?"UFireball2":"UFireball",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();

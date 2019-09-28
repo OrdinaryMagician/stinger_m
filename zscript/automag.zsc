@@ -177,10 +177,10 @@ Class Automag : UnrealWeapon
 		}
 		Vector3 x, y, z, x2, y2, z2;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x);
 		int ydir = slave?-1:1;
-		if ( alt ) origin = origin-z*3.0+ydir*y*1.0;
-		else origin = origin-z*1.0+ydir*y*4.0;
+		if ( alt ) origin = level.Vec3Offset(origin,-z*3+ydir*y);
+		else origin = level.Vec3Offset(origin,-z+ydir*y*4);
 		double a = FRandom[Automag](0,360), s = FRandom[Automag](0,alt?invoker.altaccuracy:0.01);
 		[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
@@ -236,7 +236,7 @@ Class Automag : UnrealWeapon
 			s.target = self;
 			s.alpha *= 0.5;
 		}
-		origin += x*8.0+ydir*y*6.0-z*2.0;
+		origin = level.Vec3Offset(origin,x*8+ydir*y*6-z*2);
 		let c = Spawn("UCasing",origin);
 		c.vel = x*FRandom[Junk](-1.5,1.5)+y*ydir*FRandom[Junk](2,4)+z*FRandom[Junk](2,3);
 	}

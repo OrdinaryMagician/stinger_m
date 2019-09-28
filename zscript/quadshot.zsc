@@ -51,6 +51,7 @@ Class QCasing : UCasing
 Class QuadshotTracer : LineTracer
 {
 	Actor ignoreme;
+	Array<HitListEntry> hitlist;
 
 	override ETraceStatus TraceCallback()
 	{
@@ -63,9 +64,17 @@ Class QuadshotTracer : LineTracer
 				// getgibhealth isn't clearscope, fuck
 				int gibhealth = -int(Results.HitActor.GetSpawnHealth()*gameinfo.gibfactor);
 				if ( Results.HitActor.GibHealth != int.min ) gibhealth = -abs(Results.HitActor.GibHealth);
-				// go through actors that are already gibbed
+				// if gibbed, go through without dealing more damage
 				if ( Results.HitActor.health-amt <= gibhealth ) return TRACE_Skip;
-				return TRACE_Stop;
+				let ent = new("HitListEntry");
+				ent.hitactor = Results.HitActor;
+				ent.hitlocation = Results.HitPos;
+				ent.x = Results.HitVector;
+				hitlist.Push(ent);
+				// go right on through if dead
+				if ( Results.HitActor.health-amt <= 0 ) return TRACE_Skip;
+				// stap
+				return TRACE_Abort;
 			}
 			return TRACE_Skip;
 		}
@@ -92,28 +101,28 @@ Class QuadShot : UnrealWeapon
 		return ClipOut?-1:ClipCount, -1, (ClipCount<2), false;
 	}
 
-	action void ProcessTraceHit( Linetracer t )
+	action void ProcessTraceHit( QuadshotTracer t )
 	{
-		if ( t.Results.HitType == TRACE_HitActor )
+		for ( int i=0; i<t.HitList.Size(); i++ )
 		{
 			int dmg = 11;
-			FlakAccumulator.Accumulate(t.Results.HitActor,dmg,invoker,self,'shot');
+			FlakAccumulator.Accumulate(t.HitList[i].HitActor,dmg,invoker,self,'shot');
 			double mm = 2400;
-			UTMainHandler.DoKnockback(t.Results.HitActor,t.Results.HitVector+(0,0,0.025),mm*FRandom[Quadshot](0.4,1.2));
-			if ( t.Results.HitActor.bNOBLOOD )
+			UTMainHandler.DoKnockback(t.HitList[i].HitActor,t.HitList[i].x+(0,0,0.025),mm*FRandom[Quadshot](0.4,1.2));
+			if ( t.HitList[i].HitActor.bNOBLOOD )
 			{
-				let p = Spawn("BulletImpact",t.Results.HitPos);
+				let p = Spawn("BulletImpact",t.HitList[i].HitLocation);
 				p.scale *= FRandom[Quadshot](0.2,0.4);
-				p.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x)+180;
-				p.pitch = asin(t.Results.HitVector.z);
+				p.angle = atan2(t.HitList[i].x.y,t.HitList[i].x.x)+180;
+				p.pitch = asin(t.HitList[i].x.z);
 			}
 			else
 			{
-				t.Results.HitActor.TraceBleed(dmg,self);
-				t.Results.HitActor.SpawnBlood(t.Results.HitPos,atan2(t.Results.HitVector.y,t.Results.HitVector.x)+180,dmg);
+				t.HitList[i].HitActor.TraceBleed(dmg,self);
+				t.HitList[i].HitActor.SpawnBlood(t.HitList[i].HitLocation,atan2(t.HitList[i].x.y,t.HitList[i].x.x)+180,dmg);
 			}
 		}
-		else if ( t.Results.HitType != TRACE_HitNone )
+		if ( t.Results.HitType != TRACE_HitNone )
 		{
 			Vector3 hitnormal = -t.Results.HitVector;
 			if ( t.Results.HitType == TRACE_HitFloor )
@@ -174,6 +183,7 @@ Class QuadShot : UnrealWeapon
 					dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
 					if ( !invoker.t ) invoker.t = new("QuadshotTracer");
 					invoker.t.ignoreme = self;
+					invoker.t.hitlist.Clear();
 					invoker.t.Trace(origin,CurSector,dir,10000,0);
 					ProcessTraceHit(invoker.t);
 				}
@@ -194,6 +204,7 @@ Class QuadShot : UnrealWeapon
 				dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
 				if ( !invoker.t ) invoker.t = new("QuadshotTracer");
 				invoker.t.ignoreme = self;
+				invoker.t.hitlist.Clear();
 				invoker.t.Trace(origin,CurSector,dir,10000,0);
 				ProcessTraceHit(invoker.t);
 			}

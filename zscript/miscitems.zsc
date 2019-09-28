@@ -289,8 +289,7 @@ Class VoiceBox : UnrealInventory
 		if ( pickup || bActive ) return false;
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(Owner.pitch,Owner.angle,Owner.roll);
-		Vector3 origin = Owner.Vec2OffsetZ(0,0,Owner.player.viewz);
-		origin = level.Vec3Offset(origin,x*20.-z*8.);
+		Vector3 origin = level.Vec3Offset(Owner.Vec2OffsetZ(0,0,Owner.player.viewz),x*20-z*8);
 		box = Spawn("VoiceBoxActive",origin);
 		box.ReactionTime = Charge;
 		box.vel = x*9.;
@@ -489,7 +488,7 @@ Class Flare : UnrealInventory
 		if ( pickup ) return false;
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(Owner.pitch,Owner.angle,Owner.roll);
-		Vector3 origin = level.Vec3Offset(Owner.Vec2OffsetZ(0,0,Owner.player.viewz),x*10.-z*8.);
+		Vector3 origin = level.Vec3Offset(Owner.Vec2OffsetZ(0,0,Owner.player.viewz),x*10-z*8);
 		let a = Spawn("FlareThrown",origin);
 		a.target = Owner;
 		a.angle = Owner.angle;
@@ -764,7 +763,7 @@ Class BetaFlare : UnrealInventory
 		if ( pickup || bActive || (charge < defaultcharge) ) return false;
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(Owner.pitch,Owner.angle,Owner.roll);
-		Vector3 origin = level.Vec3Offset(Owner.Vec2OffsetZ(0,0,Owner.player.viewz),x*10.-z*8.);
+		Vector3 origin = level.Vec3Offset(Owner.Vec2OffsetZ(0,0,Owner.player.viewz),x*10-z*8);
 		let a = Spawn(ThrownClass,origin);
 		a.target = Owner;
 		a.angle = Owner.angle;
@@ -1127,7 +1126,7 @@ Class Forcefield : UnrealInventory
 		Vector3 origin = Owner.Vec2OffsetZ(0,0,Owner.player.viewz);
 		FLineTraceData d;
 		Owner.LineTrace(Owner.angle,90,Owner.pitch,TRF_ABSPOSITION,origin.z,origin.x,origin.y,data:d);
-		if ( d.HitType != TRACE_HitNone ) origin = d.HitLocation-d.HitDir*(GetDefaultByType("ForceFieldEffect").radius+8);
+		if ( d.HitType != TRACE_HitNone ) origin = level.Vec3Offset(d.HitLocation,-d.HitDir*(GetDefaultByType("ForceFieldEffect").radius+8));
 		else origin = d.HitLocation;
 		Owner.LineTrace(0,GetDefaultByType("ForceFieldEffect").height/2,90,TRF_ABSPOSITION,origin.z,origin.x,origin.y,data:d);
 		origin = d.HitLocation;
@@ -1270,7 +1269,7 @@ Class UFlashLight1 : DynamicLight
 			Destroy();
 			return;
 		}
-		if ( target.player ) SetOrigin((target.pos.x,target.pos.y,target.player.viewz),true);
+		if ( target.player ) SetOrigin(target.Vec2OffsetZ(0,0,target.player.viewz),true);
 		else SetOrigin(target.vec3Offset(0,0,target.height*0.75),true);
 		A_SetAngle(target.angle,SPF_INTERPOLATE);
 		A_SetPitch(target.pitch,SPF_INTERPOLATE);
@@ -1548,9 +1547,9 @@ Class SentryItem : UnrealInventory
 				normal = (-d.HitLine.delta.y,d.HitLine.delta.x,0).unit();
 				if ( !d.LineSide ) normal *= -1;
 			}
-			origin = d.HitLocation+normal*20;
+			origin = level.Vec3Offset(d.HitLocation,normal*20);
 		}
-		else origin = d.HitLocation-d.HitDir*20;
+		else origin = level.Vec3Offset(d.HitLocation,-d.HitDir*20);
 		Owner.LineTrace(0,56,90,TRF_ABSPOSITION,origin.z,origin.x,origin.y,data:d);
 		origin = d.HitLocation;
 		let a = Spawn("MinigunSentryBase",origin);
@@ -2275,9 +2274,9 @@ Class SentryGunItem : UnrealInventory
 				normal = (-d.HitLine.delta.y,d.HitLine.delta.x,0).unit();
 				if ( !d.LineSide ) normal *= -1;
 			}
-			origin = d.HitLocation+normal*20;
+			origin = level.Vec3Offset(d.HitLocation,normal*20);
 		}
-		else origin = d.HitLocation-d.HitDir*20;
+		else origin = level.Vec3Offset(d.HitLocation,-d.HitDir*20);
 		Owner.LineTrace(0,56,90,TRF_ABSPOSITION,origin.z,origin.x,origin.y,data:d);
 		origin = d.HitLocation;
 		let a = Spawn("SentryGun",origin);

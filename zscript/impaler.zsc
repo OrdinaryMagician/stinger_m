@@ -489,7 +489,7 @@ Class StarterImpalerBolt : ImpalerBolt
 		if ( target.player )
 		{
 			[x, y, z] = dt_CoordUtil.GetAxes(target.pitch,target.angle,target.roll);
-			origin = target.Vec2OffsetZ(0,0,target.player.viewz)+15*x+2*y-2.5*z;
+			origin = level.Vec3Offset(target.Vec2OffsetZ(0,0,target.player.viewz),15*x+2*y-2.5*z);
 		}
 		else origin = target.Vec3Offset(0,0,target.missileheight);
 		SetOrigin(origin,true);
@@ -770,8 +770,8 @@ Class Impaler : UnrealWeapon
 	}
 	override void OwnerDied()
 	{
-		Super.OwnerDied();
 		if ( beam ) beam.Destroy();
+		Super.OwnerDied();
 	}
 	override void DetachFromOwner()
 	{
@@ -780,8 +780,8 @@ Class Impaler : UnrealWeapon
 	}
 	override void OnDestroy()
 	{
-		Super.OnDestroy();
 		if ( beam ) beam.Destroy();
+		Super.OnDestroy();
 	}
 	private action bool TryHit( double angle, int dmg )
 	{

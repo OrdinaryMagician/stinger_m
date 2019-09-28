@@ -764,16 +764,16 @@ Class UFlamethrower : UnrealWeapon
 	{
 		return bCharging?min(5,int(chargesize+0.1)):-1, -1, false, false;
 	}
-	override Inventory CreateTossable( int amt )
+	override void DetachFromOwner()
 	{
-		if ( Owner.player && (Owner.player.ReadyWeapon == self) )
-			Owner.A_PlaySound("flamet/down",CHAN_6,Dampener.Active(self)?.1:1.);
-		return Super.CreateTossable(amt);
+		Owner.A_StopSound(CHAN_6);
+		A_PlaySound("flamet/down",CHAN_6);
+		Super.DetachFromOwner();
 	}
 	override void OwnerDied()
 	{
 		if ( Owner.player && (Owner.player.ReadyWeapon == self) )
-			Owner.A_PlaySound("flamet/down",CHAN_6,Dampener.Active(self)?.1:1.);
+			Owner.A_StopSound(CHAN_6);
 		Super.OwnerDied();
 	}
 	override void DoEffect()

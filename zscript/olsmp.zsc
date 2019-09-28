@@ -72,10 +72,6 @@ Class OLSMP : UnrealWeapon
 	{
 		return ClipCount, -1, (ClipCount<35), false;
 	}
-	override void PlayUpSound( Actor origin )
-	{
-		origin.A_PlaySound(upsound,CHAN_WEAPON,Dampener.Active(origin)?.1:1.,pitch:0.8);
-	}
 	override bool TryPickup( in out Actor toucher )
 	{
 		if ( !sting_olsmp ) return false;	// not allowed
@@ -157,8 +153,8 @@ Class OLSMP : UnrealWeapon
 			vel -= x*(player.onground?2.2:1.);
 			vel.z += (player.onground?.5:.15);
 		}
-		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+10.0*x;
-		origin = origin-z*1.0+y*4.0;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x);
+		origin = level.Vec3Offset(origin,-z+y*4);
 		double a = FRandom[Automag](0,360), s = FRandom[Automag](0,alt?(0.05+invoker.altaccuracy):0.05);
 		[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
@@ -213,7 +209,7 @@ Class OLSMP : UnrealWeapon
 			s.target = self;
 			s.alpha *= 0.5;
 		}
-		origin += x*8.0+y*6.0-z*2.0;
+		origin = level.Vec3Offset(origin,x*8+y*6-z*2);
 		let c = Spawn("UCasing",origin);
 		c.vel = x*FRandom[Junk](-1.5,1.5)+y*FRandom[Junk](2,4)+z*FRandom[Junk](2,3);
 	}

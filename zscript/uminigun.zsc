@@ -59,7 +59,7 @@ Class UMinigun : UnrealWeapon
 		if ( !alt ) MinigunLight(l).cnt--;
 		Vector3 x, y, z, x2, y2, z2;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = pos+(0,0,player.viewheight)+10.0*x+y*3.0-z*3.0;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewheight),10*x+y*3-z*3);
 		double a = FRandom[Minigun](0,360), s = FRandom[Minigun](0,alt?0.05:0.02);
 		[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
@@ -111,7 +111,7 @@ Class UMinigun : UnrealWeapon
 		}
 		if ( !Random[Minigun](0,1) )
 		{
-			let t = Spawn("MinigunTracer",origin+x*20.0);
+			let t = Spawn("MinigunTracer",level.Vec3Offset(origin,x*20));
 			t.angle = atan2(dir.y,dir.x);
 			t.pitch = asin(-dir.z);
 			MinigunTracer(t).dest = d.HitLocation;
@@ -125,7 +125,7 @@ Class UMinigun : UnrealWeapon
 			UTViewSmoke(s).vvel += (FRandom[Minigun](0.2,0.8),FRandom[Minigun](-0.3,0.3),FRandom[Minigun](-0.3,0.3));
 			s.target = self;
 		}
-		origin += x*4.0+y*3.0-z*12.0;
+		origin = level.Vec3Offset(origin,x*4+y*3-z*12);
 		let c = Spawn("UCasing",origin);
 		c.vel = x*FRandom[Junk](-1.5,1.5)-y*FRandom[Junk](2,4)+z*FRandom[Junk](-2,1);
 	}

@@ -156,7 +156,7 @@ Class UTranslocator : UnrealWeapon
 		UTMainHandler.DoSwing(self,(FRandom[Translocator](0.2,-0.4),FRandom[Translocator](0.2,-0.7)),2,-0.3,3,SWING_Spring,2,3);
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x-8.0*y-12.0*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x-8*y-12*z);
 		let p = Spawn("UTranslocatorModule",origin);
 		p.target = self;
 		p.angle = angle;

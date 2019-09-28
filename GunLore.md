@@ -15,8 +15,7 @@ until the end of time.
 
 ## Automag
 
-A very reliable gunpowder-based firearm, chambered in 9mm. Magazine feeds off
-two 10-round clips in tandem.
+A very reliable gunpowder-based firearm, chambered in 9mm. Mag holds 20 shots.
 
 Primary fire: The typical. Hold for automatic fire.
 
@@ -205,11 +204,8 @@ space on the destination, as this process will cancel itself otherwise.
 Apparently, living matter sometimes doesn't seem to trigger the safeguard, and
 the device will happily teleport you into the guts of whatever critter is in
 the way, resulting in a gory shower, and a very traumatic experience for
-first-timers.
-
-You can use the secondary fire while both modules are still in your posession,
-however all this will do is allow you to show others what you think of them
-making fun of your "fanny pack". Reload also does this.
+first-timers. If you don't have a module out, you'll just flip the bird at
+whatever's in front of you. Reload also does this.
 
 ## Protomag
 
@@ -237,14 +233,12 @@ A serious man once said "double the gun, double your fun", so clearly, doubling
 what already has been doubled would make things even more fun, right? This
 four-barrel beast of a gun is not to be underestimated.
 
-Primary fire: Shoots the first barrel, pump afterwards to rotate to the next
-barrel. Moderate damage, short spread.
+Primary fire: Shoots one barrel. Moderate damage, short spread.
 
 Secondary fire: Shoots all loaded barrels at once. Deadly if fully loaded, but
 the spread is much wider.
 
-Has to be reloaded after four shots. A skilled user may be able to reload
-faster by putting in more than one shell at a time.
+Make sure to have some cover ready while reloading, because it takes some time.
 
 ## Peacemaker
 
@@ -264,13 +258,13 @@ A powerful energy weapon that uses enriched Tarydium crystals. Wielded by
 members of the Krall Dark Angel clan.
 
 Primary fire: Releases the currently held crystal, upon contact with any
-solid object or surface it will explode violently.
+solid object or surface it will explode spectacularly (depends on charge).
 
 Secondary fire: Redirects the energy contained within the crystal into an
 unstable beam of energy that arcs between any living creatures in front of the
 user.
 
-Reload: Loads a new crystal onto the weapon, or unloads the currently held one.
+Reload: Manually switches between projectile and melee mode.
 
 If no crystal is loaded, both fire modes will be replaced with a stab.
 
@@ -283,9 +277,9 @@ Primary fire: Ejects a stream of fire up to a range of 40ft. Built-in cooling
 prevents the weapon from overheating, so you can keep spraying for as long as
 you want.
 
-Secondary fire: Charges up and shoots a blob of unignited napalm. It will stick
-to anything it touches, and ignite immediately when in contact with fire or
-explosives.
+Secondary fire: Charges up and shoots an ignited blob of napalm. On impact with
+any surface it will splash little bits of itself around. Anyone who touches the
+stuff will immediately catch on fire.
 
 The weapon is completely useless if the user or target are underwater.
 

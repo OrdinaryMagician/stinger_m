@@ -168,10 +168,10 @@ Class Betamag : UnrealWeapon
 		}
 		Vector3 x, y, z, x2, y2, z2;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10.0*x);
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x);
 		int ydir = slave?-1:1;
 		if ( alt ) origin = level.Vec3Offset(origin,-z*2.5+ydir*y*1.5);
-		else origin = level.Vec3Offset(origin,-z*1.5+ydir*y*2.0);
+		else origin = level.Vec3Offset(origin,-z*1.5+ydir*y*2);
 		double a = FRandom[Betamag](0,360), s = FRandom[Betamag](0,alt?invoker.altaccuracy:0.01);
 		[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
@@ -227,7 +227,7 @@ Class Betamag : UnrealWeapon
 			s.target = self;
 			s.alpha *= 0.5;
 		}
-		origin = level.Vec3Offset(origin,x*5.0+ydir*y*8.0-z*2.0);
+		origin = level.Vec3Offset(origin,x*5+ydir*y*8-z*2);
 		let c = Spawn(slave?"BCasing2":"BCasing",origin);
 		c.vel = x*FRandom[Junk](-1.5,1.5)+y*ydir*FRandom[Junk](2,4)+z*FRandom[Junk](2,3);
 	}
@@ -241,17 +241,27 @@ Class Betamag : UnrealWeapon
 		Super.Travelled();
 		slaveactive = false;
 	}
+	override void DetachFromOwner()
+	{
+		Owner.A_StopSound(CHAN_ITEM);
+		Owner.A_StopSound(CHAN_6);
+		Owner.A_StopSound(CHAN_7);
+		Super.DetachFromOwner();
+	}
 	override void OwnerDied()
 	{
-		Super.OwnerDied();
 		slavespin = slavewhip = slaverefire = 0;
-		if ( Owner.player.ReadyWeapon != self ) return;
+		if ( !Owner.player || (Owner.player.ReadyWeapon != self) ) return;
+		Owner.A_StopSound(CHAN_ITEM);
+		Owner.A_StopSound(CHAN_6);
+		Owner.A_StopSound(CHAN_7);
 		let psp = Owner.player.FindPSprite(2);
 		if ( psp )
 		{
 			slaveactive = false;
 			Owner.player.SetPSprite(2,ResolveState("LeftDeselect"));
 		}
+		Super.OwnerDied();
 	}
 	override void DoEffect()
 	{

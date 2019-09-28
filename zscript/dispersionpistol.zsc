@@ -544,7 +544,7 @@ Class DispersionPistol : UnrealWeapon
 		A_QuakeEx(2,2,2,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10*x+3*y-3*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+3*y-3*z);
 		Actor p = Spawn(proj,origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();
@@ -616,7 +616,7 @@ Class DispersionPistol : UnrealWeapon
 		A_QuakeEx(qs,qs,qs,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10*x+3*y-3*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+3*y-3*z);
 		Actor p = Spawn(proj,origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();

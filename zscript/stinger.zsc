@@ -137,8 +137,8 @@ Class ViewStingerChunk : StingerChunk
 		}
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(target.pitch,target.angle,target.roll);
-		Vector3 origin = x*ofs.x+y*ofs.y+z*ofs.z+(0,0,target.player.viewz);
-		SetOrigin(target.Vec2OffsetZ(origin.x,origin.y,origin.z),true);
+		Vector3 origin = level.Vec3Offset(target.Vec2OffsetZ(0,0,target.player.viewz),x*ofs.x+y*ofs.y+z*ofs.z);
+		SetOrigin(origin,true);
 		bInvisible = (players[consoleplayer].camera != target);
 		if ( isFrozen() ) return;
 		ofs += vvel;
@@ -549,7 +549,7 @@ Class Stinger : UnrealWeapon
 		A_QuakeEx(1,1,1,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = Vec2OffsetZ(0,0,player.viewz)+5.0*x+8.0*y-8.0*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),5*x+8*y-8*z);
 		Actor p = Spawn("StingerProjectile",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();
@@ -594,7 +594,7 @@ Class Stinger : UnrealWeapon
 		A_QuakeEx(1,1,1,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+5.0*x+8.0*y-8.0*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),5*x+8*y-8*z);
 		[x, y, z] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
 		Actor p;
 		double a, s;

@@ -210,7 +210,7 @@ Class SMiniGun : UnrealWeapon
 		}
 		Vector3 x, y, z, x2, y2, z2;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10.0*x+y*2-z*2);
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+y*2-z*2);
 		for ( int i=0; i<(bAlt?4:1); i++ )
 		{
 			if ( bAlt && !weap.DepleteAmmo(weap.bAltFire,true,1) ) break;

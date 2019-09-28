@@ -201,7 +201,7 @@ Class UFlakCannon : UnrealWeapon
 		Vector3 x, y, z;
 		double a, s;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+5.0*y-4.0*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+5*y-4*z);
 		[x, y, z] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
 		Vector3 offsets[8];	// vanilla adds these to each chunk
 		offsets[0] = (0,0,0);
@@ -260,7 +260,7 @@ Class UFlakCannon : UnrealWeapon
 		Vector3 x, y, z;
 		double a, s;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10.0*x+5.0*y-4.0*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+5*y-4*z);
 		Actor p = Spawn("UFlakSlug",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();

@@ -388,7 +388,7 @@ Class Eightball : UnrealWeapon
 		Vector3 x, y, z, x2, y2, z2;
 		double a, s;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
-		Vector3 origin = (pos.x,pos.y,player.viewz)+10*x-2*z;
+		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x-2*z);
 		[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
 		Actor p;
 		if ( weap.bAltFire )
@@ -399,7 +399,7 @@ Class Eightball : UnrealWeapon
 				a = FRandom[Eightball](0,360);
 				s = FRandom[Eightball](0,(num>1)?12:0);
 				Vector3 dir = (x2+cos(a)*y2*s*0.004+sin(a)*z2*s*0.004).unit();
-				p = Spawn("UGrenade",origin+cos(a)*y*s+sin(a)*z*s);
+				p = Spawn("UGrenade",level.Vec3Offset(origin,cos(a)*y*s+sin(a)*z*s));
 				p.vel = x*(vel dot x)*0.4 + dir*p.speed*FRandom[Eightball](1.0,1.2);
 				p.vel.z += 3.5;
 				p.target = self;
@@ -408,7 +408,7 @@ Class Eightball : UnrealWeapon
 		else if ( num <= 1 )
 		{
 			// single rocket
-			p = Spawn("URocket",origin+cos(a)*y*s+sin(a)*z*s);
+			p = Spawn("URocket",level.Vec3Offset(origin,cos(a)*y*s+sin(a)*z*s));
 			p.vel = x2*p.speed;
 			p.target = self;
 			p.tracer = invoker.LockedTarget;
@@ -421,7 +421,7 @@ Class Eightball : UnrealWeapon
 			s = (num>1)?6:0;
 			for ( int i=0; i<num; i++ )
 			{
-				p = Spawn("URocket",origin+cos(a)*y*s+sin(a)*z*s);
+				p = Spawn("URocket",level.Vec3Offset(origin,cos(a)*y*s+sin(a)*z*s));
 				p.vel = x2*p.speed;
 				p.target = self;
 				p.tracer = invoker.LockedTarget;
@@ -436,7 +436,7 @@ Class Eightball : UnrealWeapon
 			s = -range*0.5;
 			for ( int i=0; i<num; i++ )
 			{
-				p = Spawn("URocket",origin+sin(s)*y);
+				p = Spawn("URocket",level.Vec3Offset(origin,sin(s)*y));
 				p.vel = (x2+sin(s)*y2).unit()*p.speed;
 				p.target = self;
 				p.tracer = invoker.LockedTarget;
