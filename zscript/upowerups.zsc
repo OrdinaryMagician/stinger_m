@@ -360,7 +360,7 @@ Class MotionDetector : UnrealInventory
 		for ( int i=0; i<nearscan.Size(); i++ )
 		{
 			Vector2 absofs = level.Vec2Diff(Owner.pos.xy,nearscan[i].pos.xy);
-			absofs *= (96./512.);
+			absofs *= (96./1024.);
 			double ang = Owner.angle-90;
 			Vector2 relofs = (absofs.x*cos(ang)+absofs.y*sin(ang),-absofs.y*cos(ang)+absofs.x*sin(ang));
 			if ( max(abs(relofs.x),abs(relofs.y)) > 48. ) continue;
@@ -389,7 +389,7 @@ Class MotionDetector : UnrealInventory
 		else if ( !bActive && tracer ) tracer.Destroy();
 		if ( !bActive ) return;
 		nearscan.Clear();
-		let bi = BlockThingsIterator.Create(Owner,512);
+		let bi = BlockThingsIterator.Create(Owner,1024);
 		while ( bi.Next() )
 		{
 			if ( !bi.Thing || (bi.Thing == Owner) || !bi.Thing.bISMONSTER || bi.Thing.Health <= 0 ) continue;

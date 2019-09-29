@@ -202,7 +202,7 @@ Class UMinigun : UnrealWeapon
 			A_PlaySound("umini/fire",CHAN_WEAPON,Dampener.Active(self)?.1:1.,true);
 		}
 		MGNF ABCDEFGHIJKLMNO 1 A_FireBullet(false);
-		MGNF A 0 A_JumpIf(invoker.bAltFire,1);
+		MGNF A 0 A_JumpIf(player.cmd.buttons&BT_ALTATTACK,1);
 		Goto Hold+1;
 	AltHold:
 		MGNA A 0

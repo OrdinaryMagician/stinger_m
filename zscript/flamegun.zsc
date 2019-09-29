@@ -53,7 +53,7 @@ Class UFireball : Actor
 	Default
 	{
 		DamageType 'Fire';
-		DamageFunction 30;
+		DamageFunction 10;
 		Radius 4;
 		Height 4;
 		Speed 15;
@@ -121,7 +121,12 @@ Class UFireball : Actor
 	{
 		A_SetRenderStyle(1.,STYLE_Add);
 		A_NoGravity();
-		if ( !bAMBUSH )
+		if ( bAMBUSH )
+		{
+			A_Explode(GetMissileDamage(0,0),20);
+			UTMainHandler.DoBlast(self,20,3000);
+		}
+		else
 		{
 			A_PlaySound("flamegun/exp",CHAN_VOICE,pitch:1.2);
 			Spawn("UFireLight",pos);
@@ -177,7 +182,7 @@ Class UFireball2 : UFireball
 	{
 		Radius 8;
 		Height 8;
-		DamageFunction 60;
+		DamageFunction 20;
 		Speed 5;
 		UFireball.SpreadFactor 0.35;
 		UFireball.NumSmokes 2;
@@ -388,7 +393,16 @@ Class FlameGun : UnrealWeapon
 		}
 		FGNF G 0 A_ClearRefire();
 		FGNF GHIJ 2;
-		FGNT A 0 A_PlaySound("flamegun/end",CHAN_6,Dampener.Active(self)?.1:1.);
+		FGNT A 0
+		{
+			if ( invoker.CheckAmmo(0,false,true) && (waterlevel < 2) )
+				A_Refire("Fire");
+		}
+		FGNT A 0
+		{
+			A_PlaySound("flamegun/end",CHAN_6,Dampener.Active(self)?.1:1.);
+			A_ClearRefire();
+		}
 		FGNT ABCDEFGHIJKLM 2;
 		Goto Idle;
 	Refire:

@@ -220,6 +220,11 @@ Class ImpalerBoltHit : Actor
 		+NOTELEPORT;
 		Scale 0.3;
 	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( !master ) Destroy();
+	}
 	States
 	{
 	Spawn:
@@ -264,16 +269,16 @@ Class ImpalerBolt : Actor
 		t.Trace(pos,cursector,x,beamsize,0);
 		for ( int i=0; i<t.HitList.Size(); i++ )
 		{
-			if ( !(GetAge()%5) )
+			if ( !(GetAge()%15) )
 			{
 				UTMainHandler.DoKnockback(t.hitlist[i].hitactor,t.hitlist[i].x,500*specialf1**2);
-				t.hitlist[i].hitactor.DamageMobj(self,target,int(10*specialf1**1.5),'Impaler',DMG_THRUSTLESS);
+				t.hitlist[i].hitactor.DamageMobj(self,target,int(max(5,10*specialf1**1.5)),'Impaler',DMG_THRUSTLESS);
 			}
-			if ( start.Hitlist.Find(t.HitList[i].HitActor) == start.HitList.Size() )
+			if ( start && (start.Hitlist.Find(t.HitList[i].HitActor) == start.HitList.Size()) )
 				start.Hitlist.Push(t.HitList[i].HitActor);
 		}
 		// seeking
-		double closest = 500*specialf1;
+		double closest = max(200,500*specialf1);
 		if ( tracer )
 		{
 			double tdist = Distance3D(tracer);
@@ -284,7 +289,7 @@ Class ImpalerBolt : Actor
 		while ( bt.Next() )
 		{
 			let a = bt.Thing;
-			if ( !a || !a.bSHOOTABLE || !a.bISMONSTER || (a.Health <= 0) || target.IsFriend(a) || !CheckSight(a) || (start.Hitlist.Find(a) < start.HitList.Size()) ) continue;
+			if ( !a || !a.bSHOOTABLE || !a.bISMONSTER || (a.Health <= 0) || target.IsFriend(a) || !CheckSight(a) || (start && (start.Hitlist.Find(a) < start.HitList.Size())) ) continue;
 			Vector3 dirto = level.Vec3Diff(pos,a.Vec3Offset(0,0,a.height/2));
 			double dist = dirto.length();
 			dirto /= dist;
@@ -341,7 +346,7 @@ Class ImpalerBolt : Actor
 			s.scale *= .4;
 			s.vel = (FRandom[Impaler](-1,1),FRandom[Impaler](-1,1),FRandom[Impaler](-1,1)).unit()*FRandom[Impaler](.2,.8);
 		}
-		if ( (special1 < int(10*specialf1)) && (special2 < int(40*specialf1**.5)) && (start.hitlist.Size() < int(4*specialf1)) && (waterlevel <= 0) )
+		if ( (special1 < int(max(5,10*specialf1))) && (special2 < int(max(20,40*specialf1**.5))) && (start && (start.hitlist.Size() < int(max(4,4*specialf1)))) && (waterlevel <= 0) )
 		{
 			if ( !next )
 			{
@@ -353,7 +358,7 @@ Class ImpalerBolt : Actor
 				next.tracer = tracer;
 				next.special1 = special1+1;
 				next.special2 = special2+1;
-				next.specialf1 = max(1.,specialf1);
+				next.specialf1 = specialf1;
 				next.oldx = dir;
 				next.bHITOWNER = !sting_impself;
 			}
@@ -361,20 +366,28 @@ Class ImpalerBolt : Actor
 			{
 				next.tracer = tracer;
 				next.special1 = special1+1;
-				next.specialf1 = max(1.,specialf1);
+				next.specialf1 = specialf1;
 				next.bHITOWNER = !sting_impself;
 				next.UpdateBeam(self,t.Results.HitPos+normal,dir);
 			}
 			if ( t.Results.HitType != TRACE_HitNone )
 			{
-				if ( !weffect ) weffect = Spawn("ImpalerBoltHit",t.Results.HitPos+normal*4);
+				if ( !weffect )
+				{
+					weffect = Spawn("ImpalerBoltHit",t.Results.HitPos+normal*4);
+					weffect.master = self;
+				}
 				weffect.SetOrigin(t.Results.HitPos+normal*4,true);
 				weffect.sprite = weffect.GetSpriteIndex('IHIT');
 			}
 			else if ( weffect ) weffect.Destroy();
 			return;
 		}
-		if ( !weffect ) weffect = Spawn("ImpalerBoltHit",t.Results.HitPos+normal*4);
+		if ( !weffect )
+		{
+			weffect = Spawn("ImpalerBoltHit",t.Results.HitPos+normal*4);
+			weffect.master = self;
+		}
 		if ( t.Results.HitType != TRACE_HitNone ) weffect.sprite = weffect.GetSpriteIndex('IHIT');
 		else weffect.sprite = weffect.GetSpriteIndex('ICAP');
 		weffect.SetOrigin(t.Results.HitPos+normal*4,true);
@@ -738,7 +751,10 @@ Class Impaler : UnrealWeapon
 			if ( invoker.ClipCount <= 0 ) return;
 			double mul = Amplifier.GetMult(self,10);
 			if ( invoker.beam )
+			{
 				invoker.beam.specialf1 = mul;
+				invoker.beam.specialf1 *= .5+clamp(invoker.clipcount/double(invoker.default.clipcount),.0,.5);
+			}
 			invoker.clipcount = max(0,invoker.clipcount-int(mul));
 		}
 		invoker.FireEffect();
@@ -897,7 +913,7 @@ Class Impaler : UnrealWeapon
 		{
 			let weap = Weapon(invoker);
 			int flags = 0;
-			if ( weap.Ammo1.Amount > 0 ) flags |= WRF_ALLOWRELOAD;
+			if ( (weap.Ammo1.Amount > 0) || (invoker.ClipCount > 0) ) flags |= WRF_ALLOWRELOAD;
 			if ( invoker.HasGem && ((invoker.ClipCount <= 0) || (waterlevel >= 2)) ) flags |= WRF_NOSECONDARY;
 			A_WeaponReady(flags);
 		}

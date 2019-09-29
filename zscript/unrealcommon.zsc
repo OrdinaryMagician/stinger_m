@@ -919,7 +919,7 @@ Class UnrealMainHandler : EventHandler
 		}
 		else if ( (e.Replacee == 'Shotgun') || (e.Replacee == 'SuperShotgun') || (e.Replacee == 'Crossbow') )
 		{
-			if ( !Random[Replacements](0,3) )
+			if ( !Random[Replacements](0,3) && (e.Replacee != 'SuperShotgun') )
 			{
 				if ( !Random[Replacements](0,2) ) e.Replacement = 'Betamag';
 				else e.Replacement = 'Automag';
@@ -946,7 +946,7 @@ Class UnrealMainHandler : EventHandler
 		{
 			if ( !Random[Replacements](0,3) )
 			{
-				if ( !Random[Replacements](0,2) ) e.Replacement = 'UFlamethrower';
+				if ( Random[Replacements](0,1) ) e.Replacement = 'UFlamethrower';
 				else e.Replacement = 'FlameGun';
 			}
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'UFlakCannon';
