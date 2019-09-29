@@ -258,15 +258,17 @@ A powerful energy weapon that uses enriched Tarydium crystals. Wielded by
 members of the Krall Dark Angel clan.
 
 Primary fire: Releases the currently held crystal, upon contact with any
-solid object or surface it will explode spectacularly (depends on charge).
+solid object or surface it will explode spectacularly depending on its charge.
+Its effects and damage are severely weakened when underwater.
 
 Secondary fire: Redirects the energy contained within the crystal into an
 unstable beam of energy that arcs between any living creatures in front of the
-user.
+user. Doesn't work underwater.
 
-Reload: Manually switches between projectile and melee mode.
+Reload: Manually loads/unloads the crystal. Useful if you need to go for a
+swim and don't want to lose that precious charge.
 
-If no crystal is loaded, both fire modes will be replaced with a stab.
+With no crystal loaded, both fire modes will be replaced with a melee attack.
 
 ## Flamethrower
 

@@ -132,7 +132,8 @@ Class Bonesaw : UnrealWeapon
 		Wait;
 	Idle:
 		#### # 2 A_Overlay(-9999,"Dummy");
-		CSWI ABCDE 15 A_Jump(32,"Twiddle");
+		CSWI ABCDE 15;
+		CSWI A 0 A_Jump(32,"Twiddle");
 		Goto Idle+1;
 	Twiddle:
 		#### # 2;

@@ -284,7 +284,7 @@ Class ImpalerBolt : Actor
 		while ( bt.Next() )
 		{
 			let a = bt.Thing;
-			if ( !a || !a.bSHOOTABLE || !a.bISMONSTER || (a.Health <= 0) || !CheckSight(a) || (start.Hitlist.Find(a) < start.HitList.Size()) ) continue;
+			if ( !a || !a.bSHOOTABLE || !a.bISMONSTER || (a.Health <= 0) || target.IsFriend(a) || !CheckSight(a) || (start.Hitlist.Find(a) < start.HitList.Size()) ) continue;
 			Vector3 dirto = level.Vec3Diff(pos,a.Vec3Offset(0,0,a.height/2));
 			double dist = dirto.length();
 			dirto /= dist;
@@ -341,7 +341,7 @@ Class ImpalerBolt : Actor
 			s.scale *= .4;
 			s.vel = (FRandom[Impaler](-1,1),FRandom[Impaler](-1,1),FRandom[Impaler](-1,1)).unit()*FRandom[Impaler](.2,.8);
 		}
-		if ( (special1 < int(10*specialf1)) && (special2 < int(40*specialf1**.5)) && (start.hitlist.Size() < int(4*specialf1)) )
+		if ( (special1 < int(10*specialf1)) && (special2 < int(40*specialf1**.5)) && (start.hitlist.Size() < int(4*specialf1)) && (waterlevel <= 0) )
 		{
 			if ( !next )
 			{
@@ -612,6 +612,12 @@ Class ImpalerProjectile : Actor
 	Spawn:
 		TPRJ A 1
 		{
+			if ( waterlevel > 0 )
+			{
+				let b = Spawn("UTBubble",pos);
+				b.vel = vel*0.5;
+				special1 = -30;
+			}
 			roll += 15.;
 			double ang, pt;
 			int numpt;
@@ -676,7 +682,7 @@ Class Impaler : UnrealWeapon
 
 	override int, int, bool, bool GetClipAmount()
 	{
-		return ClipCount, -1, (ClipCount<10), false;
+		return HasGem?ClipCount:-1, -1, (ClipCount<10), false;
 	}
 	action void A_ImpalerFire()
 	{
@@ -836,7 +842,7 @@ Class Impaler : UnrealWeapon
 		if ( (Ammo1.Amount <= 0) && (ClipCount <= 0) ) SelectionOrder = 6600;
 		else SelectionOrder = default.SelectionOrder;
 		if ( Owner.player.ReadyWeapon != self ) return;
-		if ( (Owner.waterlevel > 2) && !(level.maptime%5) )
+		if ( (Owner.waterlevel > 2) && !(level.maptime%5) && HasGem )
 			ClipCount = max(0,ClipCount-1);
 		let psp = Owner.player.FindPSprite(-2);
 		if ( psp ) psp.alpha = clamp(ClipCount/double(default.ClipCount),0.,1.);
@@ -849,6 +855,7 @@ Class Impaler : UnrealWeapon
 	Default
 	{
 		Tag "$T_IMPALER";
+		Obituary "$O_IMPALERHIT";
 		Inventory.PickupMessage "$I_IMPALER";
 		Weapon.UpSound "impaler/select";
 		Weapon.SlotNumber 7;
@@ -891,7 +898,7 @@ Class Impaler : UnrealWeapon
 			let weap = Weapon(invoker);
 			int flags = 0;
 			if ( weap.Ammo1.Amount > 0 ) flags |= WRF_ALLOWRELOAD;
-			if ( invoker.HasGem && (invoker.ClipCount <= 0) ) flags |= WRF_NOSECONDARY;
+			if ( invoker.HasGem && ((invoker.ClipCount <= 0) || (waterlevel >= 2)) ) flags |= WRF_NOSECONDARY;
 			A_WeaponReady(flags);
 		}
 		Wait;
@@ -943,7 +950,7 @@ Class Impaler : UnrealWeapon
 		{
 			A_DrainAmmo();
 			invoker.special1++;
-			return A_JumpIf((invoker.ClipCount<=0)||!(player.cmd.buttons&BT_ALTATTACK),"AltRelease");
+			return A_JumpIf((invoker.ClipCount<=0)||!(player.cmd.buttons&BT_ALTATTACK)||(waterlevel>=2),"AltRelease");
 		}
 		Loop;
 	AltRelease:

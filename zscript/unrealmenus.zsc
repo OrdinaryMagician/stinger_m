@@ -25,11 +25,16 @@ Class UnrealListMenu : ListMenu
 		int sel = -1;
 		if ( mFocusControl )
 		{
+			x = ((x-(screen.GetWidth()/2))/CleanXfac)+160;
+			y = ((y-(screen.GetHeight()/2))/CleanYfac)+100;
 			mFocusControl.MouseEvent(type,x,y);
 			return true;
 		}
 		else
 		{
+			// menu uses different scaling
+			x /= CleanXfac_1;
+			y /= CleanYfac_1;
 			for ( int i=0; i<mDesc.mItems.Size(); i++ )
 			{
 				if ( mDesc.mItems[i].CheckCoordinate(x,y) )

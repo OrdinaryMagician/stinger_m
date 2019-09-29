@@ -482,6 +482,7 @@ Class Flare : UnrealInventory
 		Inventory.PickupMessage "$I_FLARES";
 		Inventory.Icon "I_Flare";
 		Inventory.MaxAmount 20;
+		+UNREALINVENTORY.UNLIMITEDCOPIES;
 	}
 	override bool Use( bool pickup )
 	{
@@ -2160,9 +2161,9 @@ Class MinigunSentryBase : Actor
 	{
 		if ( !user.player || !InStateSequence(CurState,FindState("Idle")) ) return false;
 		if ( abs(DeltaAngle(angle,AngleTo(user))) < 120 ) return false;
-		if ( deathmatch || !master )
+		if ( !master || ((user != master) && master.IsHostile(user)) )
 		{
-			if ( master && (user != master) && master.CheckLocalView() )
+			if ( master && master.CheckLocalView() )
 				Console.Printf(StringTable.Localize("$M_SENTRYHIJACK"));
 			if ( SentryItem.TransferOwnership(user,self) )
 				return false;	// on first touch only transfer ownership
@@ -2404,8 +2405,7 @@ Class SentryGun : Actor
 	bool IsEnemy( Actor a )
 	{
 		if ( !a || !a.bSHOOTABLE || !a.bISMONSTER || (a.Health <= 0) ) return false;
-		if ( deathmatch ) return ((a != master) && (a.master != master));
-		return (!bFRIENDLY || (!a.bFRIENDLY && !a.player));
+		return IsHostile(a);
 	}
 	bool HasTarget()
 	{

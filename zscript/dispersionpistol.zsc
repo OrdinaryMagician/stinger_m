@@ -661,6 +661,7 @@ Class DispersionPistol : UnrealWeapon
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return ResolveState(null);
+		if ( !(player.cmd.buttons&BT_ALTATTACK) ) return ResolveState(next);
 		DefaultAmmo(weap.Ammo1).rechargephase = 0;
 		UTMainHandler.DoSwing(self,(FRandom[DPistol](-1,1),FRandom[DPistol](-1,1)),0.02*invoker.chargesize,0,2,SWING_Spring);
 		A_WeaponOffset(FRandom[DPistol](-1,1)*1.2*invoker.chargesize,32+FRandom[DPistol](-1,1)*1.2*invoker.chargesize);
@@ -787,28 +788,28 @@ Class DispersionPistol : UnrealWeapon
 		}
 	Fire1:
 		#### # 3 A_DispFire();
-		DPF1 ABC 5;
-		DPI1 A 5 A_Refire("Fire1");
+		DPF1 ABC 3;
+		DPI1 A 3 A_Refire("Fire1");
 		Goto Idle;
 	Fire2:
 		#### # 3 A_DispFire();
-		DPF2 ABC 5;
-		DPI2 A 5 A_Refire("Fire2");
+		DPF2 ABC 4;
+		DPI2 A 3 A_Refire("Fire2");
 		Goto Idle;
 	Fire3:
 		#### # 3 A_DispFire();
-		DPF3 ABC 5;
-		DPI3 A 5 A_Refire("Fire3");
+		DPF3 ABC 6;
+		DPI3 A 3 A_Refire("Fire3");
 		Goto Idle;
 	Fire4:
 		#### # 3 A_DispFire();
-		DPF4 ABC 5;
-		DPI4 A 5 A_Refire("Fire4");
+		DPF4 ABC 8;
+		DPI4 A 3 A_Refire("Fire4");
 		Goto Idle;
 	Fire5:
 		#### # 3 A_DispFire();
-		DPF5 ABC 5;
-		DPI5 A 5 A_Refire("Fire5");
+		DPF5 ABC 10;
+		DPI5 A 3 A_Refire("Fire5");
 		Goto Idle;
 	AltFire:
 		#### # 0
@@ -831,40 +832,40 @@ Class DispersionPistol : UnrealWeapon
 		Wait;
 	AltRelease1:
 		#### # 3 A_DispAltFire();
-		DPF1 ABC 8;
-		DPI1 A 6;
+		DPF1 ABC 6;
+		DPI1 A 3;
 		Goto Idle;
 	AltFire2:
 		#### # 1 A_DispCharge(1);
 		Wait;
 	AltRelease2:
 		#### # 3 A_DispAltFire();
-		DPF2 ABC 8;
-		DPI2 A 6;
+		DPF2 ABC 6;
+		DPI2 A 3;
 		Goto Idle;
 	AltFire3:
 		#### # 1 A_DispCharge(1);
 		Wait;
 	AltRelease3:
 		#### # 3 A_DispAltFire();
-		DPF3 ABC 8;
-		DPI3 A 6;
+		DPF3 ABC 6;
+		DPI3 A 3;
 		Goto Idle;
 	AltFire4:
 		#### # 1 A_DispCharge(1);
 		Wait;
 	AltRelease4:
 		#### # 3 A_DispAltFire();
-		DPF4 ABC 8;
-		DPI4 A 6;
+		DPF4 ABC 6;
+		DPI4 A 3;
 		Goto Idle;
 	AltFire5:
 		#### # 1 A_DispCharge(1);
 		Wait;
 	AltRelease5:
 		#### # 3 A_DispAltFire();
-		DPF5 ABC 8;
-		DPI5 A 6;
+		DPF5 ABC 6;
+		DPI5 A 3;
 		Goto Idle;
 	Upgrade:
 		#### # 1

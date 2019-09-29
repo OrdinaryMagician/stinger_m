@@ -356,8 +356,10 @@ Class FlameGun : UnrealWeapon
 		TNT1 A 1
 		{
 			A_CheckReload();
-			if ( invoker.Ammo1.Amount >= 30 ) A_WeaponReady();
-			else A_WeaponReady(WRF_NOSECONDARY);
+			int flags = (waterlevel>=2)?WRF_NOFIRE:0;
+			if ( invoker.Ammo1.Amount < 30 )
+				flags |= WRF_NOSECONDARY;
+			A_WeaponReady(flags);
 		}
 		Wait;
 	Idle:
@@ -381,7 +383,7 @@ Class FlameGun : UnrealWeapon
 		FGNF CDEF 1;
 		FGNF G 0
 		{
-			if ( invoker.CheckAmmo(0,false,true) )
+			if ( invoker.CheckAmmo(0,false,true) && (waterlevel < 2) )
 				A_Refire("Refire");
 		}
 		FGNF G 0 A_ClearRefire();

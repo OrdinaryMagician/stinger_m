@@ -179,6 +179,7 @@ Class Seeds : UnrealInventory
 		Inventory.PickupMessage "$I_SEEDS";
 		Inventory.Icon "I_Seed";
 		Inventory.MaxAmount 20;
+		+UNREALINVENTORY.UNLIMITEDCOPIES;
 	}
 	override bool Use( bool pickup )
 	{

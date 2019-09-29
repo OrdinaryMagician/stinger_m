@@ -80,6 +80,12 @@ Doom Tournament (currently the devel branch is required).
 
  - Impaler "slice" animation for melee alt
  - Separate proto content into an add-on (if people want)
+ - Alternate flamethrower secondary that behaves more like the Unreal Bible
+   describes (unlit blobs at a rate of 4 per second that catch on fire with
+   explosions/lava/etc).
+ - Alternate Impaler primary that follows the Bible (laser shots from the
+   crystal), shifts crystal shooting to pressing both buttons at once.
+ - Actual Bonesaw?
 
  - RTNP add-on
  - Monster pack (someday)

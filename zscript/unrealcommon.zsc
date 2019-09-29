@@ -643,6 +643,7 @@ Class UnrealInventory : Inventory
 	Property Charge : DefaultCharge;
 
 	FlagDef DrawSpecial : UItemFlags, 0;	// hud draws special1 as amount
+	FlagDef UnlimitedCopies : UItemFlags, 1;	// can pick up unlimited copies
 
 	// Drawstuffs under HUD
 	virtual ui void PreRender( double lbottom ) {}
@@ -666,7 +667,8 @@ Class UnrealInventory : Inventory
 	{
 		Super.AttachToOwner(other);
 		if ( !Charge ) Charge = DefaultCharge;
-		InterHubAmount = MaxAmount;	// it's annoying to set this per-subclass
+		// it's annoying to set this per-subclass
+		InterHubAmount = bUNLIMITEDCOPIES?int.max:MaxAmount;
 	}
 	override bool HandlePickup( Inventory item )
 	{
@@ -681,17 +683,35 @@ Class UnrealInventory : Inventory
 					// if there's charge to spare, increase amount
 					if ( addcharge > charge )
 					{
-						Amount = min(MaxAmount,Amount+item.Amount);
+						if ( (Amount > 0) && (Amount+item.Amount < 0) ) Amount = int.max;
+						Amount = min(bUNLIMITEDCOPIES?int.max:MaxAmount,Amount+item.Amount);
 						charge = addcharge-charge;
 					}
 				}
-				else Amount = min(MaxAmount,Amount+item.Amount);	// fully charged new copy, just increase
+				else
+				{
+					if ( (Amount > 0) && (Amount+item.Amount < 0) ) Amount = int.max;
+					Amount = min(bUNLIMITEDCOPIES?int.max:MaxAmount,Amount+item.Amount);	// fully charged new copy, just increase
+				}
 			}
 			else Charge = DefaultCharge;	// reset charge
 			item.bPickupGood = true;
 			return true;
 		}
-		return Super.HandlePickup(item);
+		if ( item.GetClass() == GetClass() )
+		{
+			if ( (Amount < MaxAmount) || bUNLIMITEDCOPIES || (sv_unlimited_pickup && !item.ShouldStay()) )
+			{
+				if ( (Amount > 0) && (Amount+item.Amount < 0) )
+					Amount = int.max;
+				else Amount += item.Amount;
+				if ( Amount > MaxAmount && !sv_unlimited_pickup && !bUNLIMITEDCOPIES )
+					Amount = MaxAmount;
+				item.bPickupGood = true;
+			}
+			return true;
+		}
+		return false;
 	}
 	override void Tick()
 	{
