@@ -53,7 +53,7 @@ Class UFireball : Actor
 	Default
 	{
 		DamageType 'Fire';
-		DamageFunction 10;
+		DamageFunction 20;
 		Radius 4;
 		Height 4;
 		Speed 15;
@@ -182,7 +182,7 @@ Class UFireball2 : UFireball
 	{
 		Radius 8;
 		Height 8;
-		DamageFunction 20;
+		DamageFunction 50;
 		Speed 5;
 		UFireball.SpreadFactor 0.35;
 		UFireball.NumSmokes 2;
