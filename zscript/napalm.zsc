@@ -1025,6 +1025,8 @@ Class UFlamethrower : UnrealWeapon
 	GotoAltHold:
 		FLMA Y 0
 		{
+			invoker.bCharging = true;
+			A_BeginCharge();
 			player.SetPSprite(-2,ResolveState("FlameAltHold"));
 		}
 		Goto AltHold;

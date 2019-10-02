@@ -50,7 +50,7 @@ Class Betamag : UnrealWeapon
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap || !player ) return;
-		if ( invoker.altaccuracy < 0.1 ) invoker.altaccuracy += 0.015;
+		if ( invoker.altaccuracy < 0.05 ) invoker.altaccuracy += 0.01;
 		if ( slave )
 		{
 			if ( weap.Ammo1.Amount <= 0 )
@@ -172,14 +172,14 @@ Class Betamag : UnrealWeapon
 		int ydir = slave?-1:1;
 		if ( alt ) origin = level.Vec3Offset(origin,-z*2.5+ydir*y*1.5);
 		else origin = level.Vec3Offset(origin,-z*1.5+ydir*y*2);
-		double a = FRandom[Betamag](0,360), s = FRandom[Betamag](0,alt?invoker.altaccuracy:0.01);
+		double a = FRandom[Betamag](0,360), s = FRandom[Betamag](0,alt?invoker.altaccuracy:0.);
 		[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
 		FLineTraceData d;
 		LineTrace(atan2(dir.y,dir.x),10000,asin(-dir.z),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = 10;
+			int dmg = 14;
 			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'shot',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
 			double mm = 3000;
 			if ( FRandom[Betamag](0,1) < 0.2 ) mm *= 5;
