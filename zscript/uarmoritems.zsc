@@ -247,3 +247,32 @@ Class PowerShield : UnrealArmor
 		Stop;
 	}
 }
+
+Class UArmorBonus : UArmor
+{
+	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
+	{
+		absorb = Clamp(Amount-50,25,100);
+		Super.AbsorbDamage(damage,damageType,newdamage);
+	}
+	Default
+	{
+		Tag "$T_ARMORBONUS";
+		+COUNTITEM;
+		+INVENTORY.ALWAYSPICKUP;
+		Inventory.Amount 5;
+		Inventory.MaxAmount 200;
+		Inventory.InterHubAmount 200;
+		UTArmor.ArmorAbsorption 25;
+		UnrealArmor.AbsorptionPriority 1;
+		Inventory.PickupMessage "$I_ARMORBONUS";
+		Inventory.PickupSound "misc/u1armor";
+		Inventory.Icon "I_Bonus";
+	}
+	States
+	{
+	Spawn:
+		XANH A -1;
+		Stop;
+	}
+}

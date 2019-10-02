@@ -38,8 +38,8 @@ Class UnrealHUD : BaseStatusBar
 	// 0.83 HUD stuff
 	String OldAmmo[19];
 	Class<Inventory> OldAmmoType[19];
-	String OldArmor[6];
-	Class<Inventory> OldArmorType[6];
+	String OldArmor[7];
+	Class<Inventory> OldArmorType[7];
 	String OldKeys[7];
 	HUDFont mOldDigits, mOldDigitsSmall;
 	Font OldLargeFont, OldSmallFont;
@@ -134,12 +134,14 @@ Class UnrealHUD : BaseStatusBar
 		OldArmor[3] = "Tox083";
 		OldArmor[4] = "Belt083";
 		OldArmor[5] = "Pbelt083";
+		OldArmor[6] = "Bonus083";
 		OldArmorType[0] = "UArmor";
 		OldArmorType[1] = "KevlarSuit";
 		OldArmorType[2] = "AsbestosSuit";
 		OldArmorType[3] = "ToxinSuit";
 		OldArmorType[4] = "ShieldBelt";
 		OldArmorType[5] = "PowerShield";
+		OldArmorType[6] = "UArmorBonus";
 		OldKeys[0] = "Redk083";
 		OldKeys[1] = "Bluek083";
 		OldKeys[2] = "Goldk083";

@@ -846,6 +846,10 @@ HardwareShader Texture "models/FlametFX.png"
 {
 	Shader "shaders/glsl/FlametFX.fp"
 }
+HardwareShader Texture "models/shield.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
 // PP shaders
 HardwareShader PostProcess scene
 {

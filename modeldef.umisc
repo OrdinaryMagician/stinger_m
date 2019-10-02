@@ -786,3 +786,14 @@ Model "SCUBAGear"
 
 	FrameIndex SCUB A 0 0
 }
+
+Model "UArmorBonus"
+{
+	Path "models"
+	Model 0 "ubonus_d.3d"
+	Skin 0 "shield.png"
+	Scale 0.08 -0.08 0.096
+	AngleOffset 90
+
+	FrameIndex XANH A 0 0
+}

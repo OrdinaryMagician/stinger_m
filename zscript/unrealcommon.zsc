@@ -143,6 +143,7 @@ Class UPlayer : UTPlayer
 				if ( !(AllActorClasses[i].GetParentClass() is "UnrealArmor") ) continue;
 				let item = Inventory(Spawn(AllActorClasses[i]));
 				item.ClearCounters();	// don't increase item counts
+				item.Amount = item.MaxAmount;
 				if ( !item.CallTryPickup(self) ) item.Destroy();
 			}
 			if ( !giveall ) return;
@@ -761,13 +762,39 @@ Class UTeleportFog : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		Spawn("UTTeleportLight",pos+(0,0,16));
-		A_PlaySound ("misc/teleport");
+		Spawn("UTTeleportLight",Vec3Offset(0,0,16));
+		A_PlaySound("misc/teleport",volume:.5);
+		Spawn("UTeleportParticles",Vec3Offset(0,0,16));
 	}
 	States
 	{
 	Spawn:
 		TNT1 A 1;
+		Stop;
+	}
+}
+
+Class UTeleportParticles : UTParticleMesh
+{
+	Default
+	{
+		Tag "telepo;UTeleParticle";
+		Args 21;
+		ReactionTime 35;
+		XScale 0.06;
+		YScale 0.16;
+	}
+}
+Class UTeleParticle : UTMeshParticle
+{
+	Default
+	{
+		Scale 0.2;
+	}
+	States
+	{
+	Spawn:
+		TPNT A -1 Bright;
 		Stop;
 	}
 }
@@ -892,9 +919,11 @@ Class UnrealMainHandler : EventHandler
 		TarydiumDebuff t;
 		while ( t = TarydiumDebuff(ti.Next()) )
 		{
-			if ( (t.victim != e.Thing) || t.reentrant ) continue;	// make sure to skip any debuffs that already blew up to prevent infinite recursion on chain reactions
-			t.Amount += e.Damage/2;
-			t.BlowUp();
+			if ( (t.victim != e.Thing) || t.exploding ) continue;	// make sure to skip any debuffs that already blew up to prevent infinite recursion on chain reactions
+			t.Amount += e.Damage;
+			// stunner/asmd and others deal extra explosive charge
+			if ( e.DamageType == 'jolted' ) t.Amount += 50+e.Damage;
+			t.exploding = true;
 			break;
 		}
 	}
@@ -1082,21 +1111,21 @@ Class UnrealMainHandler : EventHandler
 		else if ( e.Replacee == 'RadSuit' ) e.Replacement = 'UJumpBoots';
 		else if ( e.Replacee == 'ArtiFly' ) e.Replacement = 'UJumpBoots';
 		else if ( (e.Replacee == 'Backpack') || (e.Replacee == 'BagOfHolding') ) e.Replacement = 'UnrealBackpack';
-		else if ( (e.Replacee == 'ArmorBonus') || (e.Replacee == 'ArtiTimeBomb') ) e.Replacement = 'Flare';
+		else if ( (e.Replacee == 'ArmorBonus') || (e.Replacee == 'ArtiTimeBomb') )
+		{
+			if ( Random[Replacements](0,3) ) e.Replacement = 'UArmorBonus';
+			else e.Replacement = 'Flare';
+		}
 		else if ( (e.Replacee == 'HealthBonus') || (e.Replacee == 'CrystalVial') ) e.Replacement = 'Bandages';
 		else if ( (e.Replacee == 'GreenArmor') || (e.Replacee == 'Silvershield') ) e.Replacement = 'KevlarSuit';
 		else if ( (e.Replacee == 'BlueArmor') || (e.Replacee == 'EnchantedShield') ) e.Replacement = 'UArmor';
-		else if ( e.Replacee == 'Stimpack' )
+		else if ( (e.Replacee == 'Stimpack') || (e.Replacee == 'ArtiHealth') )
 		{
-			if ( !Random[Replacements](0,2) )  e.Replacement = 'UHealth';
+			if ( Random[Replacements](0,1) ) e.Replacement = 'UHealth';
+			else if ( Random[Replacements](0,2) ) e.Replacement = 'NaliFruit';
 			else e.Replacement = 'Seeds';
 		}
 		else if ( e.Replacee == 'Medikit' ) e.Replacement = 'UHealth';
-		else if ( e.Replacee == 'ArtiHealth' )
-		{
-			if ( !Random[Replacements](0,2) ) e.Replacement = 'UHealth';
-			else e.Replacement = 'Seeds';
-		}
 		else if ( e.Replacee == 'ArtiTeleport' )
 		{
 			// I have no idea what to replace this with, so just have some random stuff
@@ -1121,7 +1150,7 @@ Class UnrealMainHandler : EventHandler
 				e.Replacement = 'VoiceBox';
 				break;
 			case 6:
-				e.Replacement = 'SentryItem';
+				e.Replacement = 'SentryGunItem';
 				break;
 			case 7:
 				e.Replacement = 'Peacemaker';

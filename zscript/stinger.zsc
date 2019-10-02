@@ -173,9 +173,14 @@ Class TarydiumExplosion : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		A_Explode(special1,int(90*scale.x));
-		UTMainHandler.DoBlast(self,90*scale.x,90000);
-		A_PlaySound("flare/explode");
+		A_Explode(max(10,special1),90+special1);
+		UTMainHandler.DoBlast(self,90+special1,900*special1);
+		UTMainHandler.DoBlast(self,200+special1,200*special1);	// hurtless secondary blast, so stuff that's pretty close by gets pushed away
+										// (just going off the novels here, it's supposed to be pretty strong)
+		A_QuakeEx(clamp(special1/6,2,9),clamp(special1/6,2,9),clamp(special1/6,2,9),10,0,300+special1*2,"",QF_RELATIVE|QF_SCALEDOWN,falloff:200+special1*2,rollIntensity:0.12);
+		SetOrigin(Vec3Offset(0,0,16),false);
+		A_PlaySound("stinger/explode",CHAN_VOICE,pitch:FRandom[Stinger](0.8,1.5));
+		A_PlaySound("stinger/explode",CHAN_ITEM,pitch:FRandom[Stinger](0.8,1.5));
 		let l = Spawn("TarydiumExLight",pos);
 		l.args[3] = int(60*scale.x);
 		scale.x *= RandomPick[Stinger](-1,1);
@@ -236,10 +241,10 @@ Class TDebuffLight : PointLightAttenuated
 			Destroy();
 			return;
 		}
-		Args[0] = min(dbf.Amount,64);
-		Args[1] = min(dbf.Amount*3,192);
-		Args[2] = min(dbf.Amount*4,255);
-		Args[3] = int(max(dbf.victim.radius,dbf.victim.height))+60+min(dbf.amount/4,40);
+		Args[0] = int(min(dbf.Amount,64));
+		Args[1] = int(min(dbf.Amount*3,192));
+		Args[2] = int(min(dbf.Amount*4,255));
+		Args[3] = int(max(dbf.victim.radius,dbf.victim.height)+60+min(dbf.amount/4,40));
 		SetOrigin(dbf.Victim.Vec3Offset(0,0,dbf.Victim.Height/2),true);
 	}
 }
@@ -247,53 +252,58 @@ Class TDebuffLight : PointLightAttenuated
 Class TarydiumDebuff : Thinker
 {
 	Actor victim, instigator, lite;
-	int amount;	// accumulated damage for the explosion
+	double amount;	// accumulated damage for the explosion
 	Vector3 oldvel;
-	bool wasonair, reentrant;
+	bool wasonair, exploding;
+	int explodetimer;
 
 	void UpdateEffect()
 	{
-		if ( !victim )
-		{
-			BlowUp();
-			return;
-		}
+		if ( !victim ) return;
 		if ( !lite )
 		{
 			lite = Actor.Spawn("TDebuffLight",victim.pos);
 			TDebuffLight(lite).dbf = self;
-			lite.Args[0] = min(Amount,64);
-			lite.Args[1] = min(Amount*3,192);
-			lite.Args[2] = min(Amount*4,255);
-			lite.Args[3] = int(max(victim.radius,victim.height))+60+min(amount/4,40);
-		}
-		if ( Random[Stinger](0,amount) > 100 )
-		{
-			amount += 30;
-			BlowUp();
+			lite.Args[0] = int(min(Amount,64));
+			lite.Args[1] = int(min(Amount*3,192));
+			lite.Args[2] = int(min(Amount*4,255));
+			lite.Args[3] = int(max(victim.radius,victim.height)+60+min(amount/4,40));
 		}
 	}
 
 	void BlowUp()
 	{
-		reentrant = true;
-		let b = victim.Spawn("TarydiumExplosion",victim.Vec3Offset(0,0,victim.default.height/2));
+		let b = victim.Spawn("TarydiumExplosion",victim.Vec3Offset(FRandom[Stinger](-victim.radius,victim.radius),FRandom[Stinger](-victim.radius,victim.radius),FRandom[Stinger](0,victim.height)));
 		b.target = instigator;
-		b.special1 = amount;
-		b.scale *= 1.+min(1.5,amount*0.02);
-		Destroy();
+		b.special1 = int(amount);	// in Unreal this was capped to 10, which would make it deal barely any damage
+		b.scale *= .8+min(1.,amount*0.01);
+		amount = amount*0.9-10;	// in Unreal this falls off linearly 10 points at a time, which can take very long at full charge
+	}
+
+	override void OnDestroy()
+	{
+		if ( lite ) lite.Destroy();
+		Super.OnDestroy();
 	}
 
 	override void Tick()
 	{
-		if ( !sting_stinger )
+		if ( !sting_stinger || !victim || (amount <= .4) )
 		{
 			Destroy();
 			return;
 		}
-		if ( !victim || (victim.Health <= 0) )
+		if ( exploding )
 		{
+			explodetimer--;
+			if ( explodetimer > 0 ) return;
+			explodetimer = Random[Stinger](3,6);
 			BlowUp();
+			return;
+		}
+		if ( victim.Health <= 0 )
+		{
+			exploding = true;
 			return;
 		}
 		if ( victim.pos.z > victim.floorz ) wasonair = true;
@@ -302,21 +312,18 @@ Class TarydiumDebuff : Thinker
 			if ( wasonair && (oldvel.z < -20) )
 			{
 				Amount += min(int(-oldvel.z),100);
-				BlowUp();
+				exploding = true;
 				return;
 			}
 			wasonair = false;
 		}
 		oldvel = victim.vel;
-		if ( !(level.maptime%20) )
+		amount *= 1.-.04/TICRATE;
+		UpdateEffect();
+		if ( amount <= .4 )
 		{
-			amount--;
-			UpdateEffect();
-			if ( amount <= 0 )
-			{
-				Destroy();
-				return;
-			}
+			Destroy();
+			return;
 		}
 		if ( level.maptime%3 ) return;
 		int numpt = clamp(int(Random[Stinger](1,3)*amount*0.02),1,8);
@@ -340,7 +347,7 @@ Class TarydiumDebuff : Thinker
 		}
 	}
 
-	static void Apply( Actor victim, Actor instigator, int amount )
+	static void Apply( Actor victim, Actor instigator, double amount )
 	{
 		if ( !victim || (victim.Health <= 0) || !victim.bISMONSTER ) return;
 		if ( !sting_stinger ) return;
@@ -446,7 +453,11 @@ Class StingerProjectile : Actor
 			target.SpawnBlood(pos,AngleTo(target),damage);
 			A_PlaySound("stinger/flesh");
 			A_AlertMonsters();
-			if ( sting_stinger ) TarydiumDebuff.Apply(target,self.target,damage/4);
+			if ( sting_stinger )
+			{
+				TarydiumDebuff.Apply(target,self.target,10);
+				damage = 2;
+			}
 		}
 		return damage;
 	}

@@ -88,7 +88,7 @@ Class OnFire : Thinker
 		if ( level.maptime%5 ) return;
 		int numpt = clamp(int(Random[FlameT](2,4)*amount*0.02),1,4);
 		double mult = max(victim.radius,victim.height)/30.;
-		numpt = int(max(1,numpt*mult**.5));
+		numpt = int(clamp(numpt*mult**.5,1,5));
 		for ( int i=0; i<numpt; i++ )
 		{
 			Vector3 pos = victim.Vec3Offset(FRandom[FlameT](-victim.radius,victim.radius)*0.8,FRandom[FlameT](-victim.radius,victim.radius)*0.8,FRandom[FlameT](victim.height*0.2,victim.height*0.8));
@@ -221,18 +221,18 @@ Class UFlame : Actor
 			let s = Spawn("UTSmoke",pos);
 			s.vel = (FRandom[FlameT](-0.2,0.2),FRandom[FlameT](-0.2,0.2),FRandom[FlameT](-0.2,0.2));
 			s.vel += vel*0.3;
-			s.alpha *= alpha*4;
+			s.alpha *= alpha*2;
 			s.scale *= 0.5+abs(scale.x)*(.5+GetAge()/6.);
 		}
 		if ( bAMBUSH ) return;
 		if ( Random[FlameT](0,int(20*((default.alpha+0.1)-alpha))) ) return;
-		double rad = 60+120*int(0.2-alpha);
+		double rad = 60+60*int(0.4-alpha);
 		let bt = BlockThingsIterator.Create(self,rad);
 		while ( bt.Next() )
 		{
 			let t = bt.Thing;
 			if ( !t || !t.bSHOOTABLE || (t.Health <= 0) || (t == tracer) || ((t == master) && (GetAge() < 6)) || (Distance3D(t) > rad+t.radius) ) continue;
-			int amt = max(1,int(alpha*10));
+			int amt = max(1,int(alpha*5));
 			OnFire.Apply(t,master,amt);
 		}
 	}
@@ -242,7 +242,7 @@ Class UFlame : Actor
 		Speed 20;
 		Radius 4;
 		Height 4;
-		Alpha 0.2;
+		Alpha 0.4;
 		Scale 0.1;
 		+NOBLOCKMAP;
 		+NOGRAVITY;
@@ -254,6 +254,7 @@ Class UFlame : Actor
 		+FORCEXYBILLBOARD;
 		+DROPOFF;
 		+NOBLOCKMONST;
+		//+THRUIMPASSABLE;	// gonna have to implement this
 	}
 	States
 	{
@@ -261,8 +262,8 @@ Class UFlame : Actor
 		SEXP AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQRRSSTT 1 Bright
 		{
 			A_Flame();
-			A_SetScale(scale.x*1.08);
-			A_FadeOut(0.005);
+			A_SetScale(scale.x*1.01+0.04);
+			A_FadeOut(0.01);
 		}
 		Stop;
 	}
@@ -803,7 +804,7 @@ Class UFlamethrower : UnrealWeapon
 		Vector3 x, y, z, x2, y2, z2;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),15*x+2.3*y-2.7*z);
-		for ( int i=0; i<2; i++ )
+		//for ( int i=0; i<2; i++ )
 		{
 			double a = FRandom[FlameT](0,360), s = FRandom[FlameT](0,.05);
 			[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
@@ -821,7 +822,7 @@ Class UFlamethrower : UnrealWeapon
 				p.vel = vel*.5+(cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed*FRandom[FlameT](0.3,0.6);
 				p.vel.z -= 3;
 				p.target = self;
-				continue;
+				//continue;
 			}
 			p.angle = atan2(dir.y,dir.x);
 			p.pitch = asin(-dir.z);

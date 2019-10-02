@@ -172,6 +172,11 @@ stinger/hit	bladehit
 stinger/hit2	ricochet
 stinger/flesh	chunkhit
 $limit stinger/hit 16
+stinger/explo1	stingex1
+stinger/explo2	stingex2
+stinger/explo3	stingex3
+$random stinger/explode { stinger/explo1 stinger/explo2 stinger/explo3 }
+$limit stinger/explode 16
 
 flak/click	click
 
@@ -318,8 +323,9 @@ flamegun/fire	flamgfir
 flamegun/end	flamgend
 flamegun/charge	flamgabg
 flamegun/alt	flamgalt
-flamegun/exp	expl04
+flamegun/exp	expl2
 $limit flamegun/exp 16
+flamegun/exp2	expl04
 
 flamet/select	flamtsel
 flamet/idle	flamtidl

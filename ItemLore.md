@@ -170,6 +170,29 @@ sometimes give you additional items like Flares, Seeds and other usables.
 
 Identical to Doom Tournament.
 
+## Minigun Sentry
+
+A big, heavy turret that will gun down any enemies that stand in its view
+range.
+
+Unlike the Light Sentries this one has a much wider range of view and can be
+resupplied with extra ammo. Conveniently, you can also recall it to put it back
+in your inventory. While carried it will slowly repair any damage it has taken.
+
+In deathmatch, the Sentry will "switch owners" to whoever last replenished it
+with ammunition, like the Turrets in ChaosUT.
+
+Note: This is an original item that mainly exists as a more polished take on
+the previous one.
+
+## Armor Bonus
+
+There needed to be an equivalent to Doom Tournament's here. These stack up to
+a total of 200. In addition, the more you have, the higher the percentage of
+damage they will absorb.
+
+They have the lowest priority, so all other armors will go down first.
+
 # Prototype Items
 
 ## Light & Dark Flares
@@ -187,21 +210,6 @@ Pocket turrets that shoot at any enemies standing in front of them. Easy to
 carry and deploy, but once they're out in the field that's it. They will keep
 going until they run out of ammo or battery, after which they will
 self-destruct.
-
-## Minigun Sentry
-
-A big, heavy turret that will gun down any enemies that stand in its view
-range.
-
-Unlike the Light Sentries this one has a much wider range of view and can be
-resupplied with extra ammo. Conveniently, you can also recall it to put it back
-in your inventory. While carried it will slowly repair any damage it has taken.
-
-In deathmatch, the Sentry will "switch owners" to whoever last replenished it
-with ammunition, like the Turrets in ChaosUT.
-
-Note: This is an original item that mainly exists as a more polished take on
-the previous one.
 
 ## Motion Detector
 
