@@ -67,9 +67,10 @@ Class DefaultAmmo : Ammo
 	override void DoEffect()
 	{
 		Super.Tick();
-		rechargespeed = max(1.1,0.11*Amount);
+		if ( rechargespeed <= 0. ) rechargespeed = 1.1;
 		rechargephase += 1./rechargespeed;
 		if ( rechargephase < 35 ) return;
+		rechargespeed = max(1.1,0.11*Amount);
 		rechargephase = 0;
 		Amount = min(Amount+1,MaxAmount);
 	}
@@ -504,6 +505,7 @@ Class DispersionPistol : UnrealWeapon
 			else weap.Ammo1.Amount -= invoker.MainUse;
 		}
 		DefaultAmmo(weap.Ammo1).rechargephase = (((weap.Ammo1.Amount>0)||!deathmatch)?0:30);
+		DefaultAmmo(weap.Ammo1).rechargespeed = 1.1;
 		switch ( ulevel )
 		{
 		case 0:
@@ -569,6 +571,7 @@ Class DispersionPistol : UnrealWeapon
 		if ( self is 'UTPlayer' )
 			UTPlayer(self).PlayAttacking3();
 		DefaultAmmo(weap.Ammo1).rechargephase = (((weap.Ammo1.Amount>0)||!deathmatch)?0:30);
+		DefaultAmmo(weap.Ammo1).rechargespeed = 1.1;
 		A_PlaySound("dpistol/altfire",CHAN_WEAPON,Dampener.Active(self)?.4:1.);
 		double mult = Amplifier.GetMult(self,int(invoker.ChargeSize*50)+50);
 		invoker.FireEffect();
@@ -878,9 +881,10 @@ Class DispersionPistol : UnrealWeapon
 		#### # 1
 		{
 			A_Overlay(-9999,"Null");
-			invoker.MainUse = min(6,invoker.upgradelevel+1);
-			invoker.UpdateSelectionOrder();
 			invoker.upgradelevel++;
+			invoker.MainUse = invoker.upgradelevel+1;
+			if ( invoker.upgradelevel > 1 ) invoker.MainUse++;
+			invoker.UpdateSelectionOrder();
 			if ( invoker.upgradelevel == 0 ) return ResolveState("Idle");
 			else if ( invoker.upgradelevel == 1 ) return ResolveState("Upgrade1");
 			else if ( invoker.upgradelevel == 2 ) return ResolveState("Upgrade2");

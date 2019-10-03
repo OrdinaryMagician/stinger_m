@@ -13,9 +13,10 @@ Class StunnerAmmo : Ammo
 	override void DoEffect()
 	{
 		Super.Tick();
-		rechargespeed = max(2.,.2*Amount);
+		if ( rechargespeed <= 0. ) rechargespeed = 2.;
 		rechargephase += 1./rechargespeed;
 		if ( rechargephase < 7 ) return;
+		rechargespeed = max(2.,.2*Amount);
 		rechargephase = 0;
 		Amount = min(Amount+1,MaxAmount);
 	}
@@ -283,7 +284,8 @@ Class Stunner : UnrealWeapon
 		invoker.bCharging = false;
 		if ( self is 'UTPlayer' )
 			UTPlayer(self).PlayAttacking3();
-		StunnerAmmo(weap.Ammo1).rechargephase = ((weap.Ammo1.Amount>0)?0:5);
+		StunnerAmmo(weap.Ammo1).rechargephase = (((weap.Ammo1.Amount>0)||!deathmatch)?0:5);
+		StunnerAmmo(weap.Ammo1).rechargespeed = 2.;
 		A_PlaySound("stun/fire",CHAN_WEAPON,Dampener.Active(self)?.4:1.,pitch:1.2-invoker.chargesize*0.06);
 		double mult = Amplifier.GetMult(self,int(invoker.ChargeSize*50)+50);
 		invoker.FireEffect();
