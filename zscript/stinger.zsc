@@ -379,7 +379,7 @@ Class StingerProjectile : Actor
 	{
 		Obituary "$O_STINGER";
 		DamageType 'Stinger';
-		DamageFunction Random[Stinger](15,25);
+		DamageFunction 14;
 		Speed 40;
 		Radius 2;
 		Height 2;
