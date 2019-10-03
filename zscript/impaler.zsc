@@ -7,7 +7,7 @@ Class ImpalerAmmo : Ammo
 		Inventory.PickupMessage "$I_IMPAMMO";
 		Inventory.Amount 3;
 		Inventory.MaxAmount 15;
-		Ammo.BackpackAmount 3;
+		Ammo.BackpackAmount 2;
 		Ammo.BackpackMaxAmount 30;
 		Ammo.DropAmount 3;
 		+INVENTORY.IGNORESKILL;

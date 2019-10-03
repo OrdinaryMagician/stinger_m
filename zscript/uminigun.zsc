@@ -7,7 +7,7 @@ Class UMiniAmmo : Ammo
 		Inventory.PickupMessage "";
 		Inventory.Amount 50;
 		Inventory.MaxAmount 200;
-		Ammo.BackpackAmount 100;
+		Ammo.BackpackAmount 25;
 		Ammo.BackpackMaxAmount 400;
 		Ammo.DropAmount 20;
 	}

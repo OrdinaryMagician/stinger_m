@@ -7,7 +7,7 @@ Class UShells : Ammo
 		Inventory.PickupMessage "";
 		Inventory.Amount 12;
 		Inventory.MaxAmount 48;
-		Ammo.BackpackAmount 12;
+		Ammo.BackpackAmount 6;
 		Ammo.BackpackMaxAmount 96;
 		Ammo.DropAmount 6;
 	}

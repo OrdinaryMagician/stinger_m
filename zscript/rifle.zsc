@@ -7,7 +7,7 @@ Class URifleAmmo : Ammo
 		Inventory.PickupMessage "";
 		Inventory.Amount 8;
 		Inventory.MaxAmount 50;
-		Ammo.BackpackAmount 12;
+		Ammo.BackpackAmount 4;
 		Ammo.BackpackMaxAmount 100;
 		Ammo.DropAmount 8;
 		+INVENTORY.IGNORESKILL;

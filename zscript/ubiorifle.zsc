@@ -7,7 +7,7 @@ Class UBioAmmo : Ammo
 		Inventory.PickupMessage "";
 		Inventory.Amount 25;
 		Inventory.MaxAmount 100;
-		Ammo.BackpackAmount 50;
+		Ammo.BackpackAmount 15;
 		Ammo.BackpackMaxAmount 200;
 		Ammo.DropAmount 10;
 	}

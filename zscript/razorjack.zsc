@@ -7,7 +7,7 @@ Class RazorAmmo : Ammo
 		Inventory.PickupMessage "$I_RIPPERAMMO";
 		Inventory.Amount 25;
 		Inventory.MaxAmount 75;
-		Ammo.BackpackAmount 20;
+		Ammo.BackpackAmount 15;
 		Ammo.BackpackMaxAmount 150;
 		Ammo.DropAmount 15;
 	}
