@@ -10,7 +10,7 @@ Class Bandages : Health
 	}
 	override String PickupMessage()
 	{
-		return String.Format("%s +%d",PickupMsg,Amount);
+		return String.Format("%s +%d",StringTable.Localize(PickupMsg),Amount);
 	}
 	States
 	{
@@ -32,7 +32,7 @@ Class UHealth : Health
 	}
 	override String PickupMessage()
 	{
-		return String.Format("%s +%d",PickupMsg,Amount);
+		return String.Format("%s +%d",StringTable.Localize(PickupMsg),Amount);
 	}
 	States
 	{
@@ -55,7 +55,7 @@ Class NaliFruit : Health
 	}
 	override String PickupMessage()
 	{
-		return String.Format("%s +%d",PickupMsg,Amount);
+		return String.Format("%s +%d",StringTable.Localize(PickupMsg),Amount);
 	}
 	override bool TryPickup( in out Actor toucher )
 	{
