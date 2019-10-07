@@ -184,12 +184,14 @@ Class UPlayer : UTPlayer
 							// force akimbo
 							let t = FindInventory(type);
 							if ( t ) t.Amount = 2;
+							t.SetTag(StringTable.Localize("$T_AUTOMAG2"));
 						}
 						else if ( (type is 'Betamag') && sting_protomags )
 						{
 							// force akimbo
 							let t = FindInventory(type);
 							if ( t ) t.Amount = 2;
+							t.SetTag(StringTable.Localize("$T_PROTOMAG2"));
 						}
 						else if ( type is 'DispersionPistol' )
 						{
@@ -801,6 +803,25 @@ Class UTeleParticle : UTMeshParticle
 
 Class UnrealWeapon : UTWeapon
 {
+	private int UWeaponFlags;
+
+	FlagDef NoFirstGive : UWeaponFlags, 0;	// don't give ammo on first pickup (for weapons with a clip count)
+
+	override void AttachToOwner (Actor other)
+	{
+		Inventory.AttachToOwner(other);
+		Ammo1 = AddAmmo(Owner,AmmoType1,bNoFirstGive?0:AmmoGive1);
+		Ammo2 = AddAmmo(Owner,AmmoType2,bNoFirstGive?0:AmmoGive2);
+		SisterWeapon = AddWeapon(SisterWeaponType);
+		if ( Owner.player )
+		{
+			if ( !Owner.player.GetNeverSwitch() && !bNo_Auto_Switch )
+				Owner.player.PendingWeapon = self;
+			if ( Owner.player.mo == players[consoleplayer].camera )
+				StatusBar.ReceivedWeapon(self);
+		}
+		GivenAsMorphWeapon = false;
+	}
 	override void FireEffect()
 	{
 		Super.FireEffect();

@@ -406,6 +406,7 @@ Class BigGun : UnrealWeapon
 		UTWeapon.DropAmmo 4;
 		BigGun.ClipCount 4;
 		+EXTREMEDEATH;
+		+UNREALWEAPON.NOFIRSTGIVE;
 	}
 	States
 	{

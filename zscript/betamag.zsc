@@ -15,8 +15,9 @@ Class Betamag : UnrealWeapon
 	{
 		if ( sting_protomags && (item.GetClass() == GetClass()) )
 		{
-			SetTag(StringTable.Localize("$T_PROTOMAG2"));
-			return Super.HandlePickup(item);
+			let rslt = Super.HandlePickup(item);
+			if ( rslt ) SetTag(StringTable.Localize("$T_PROTOMAG2"));
+			return rslt;
 		}
 		return Super.HandlePickup(item);
 	}
@@ -289,6 +290,7 @@ Class Betamag : UnrealWeapon
 			}
 		}
 		Amount = 1;
+		SetTag(StringTable.Localize("$T_AUTOMAG"));
 	}
 	Default
 	{

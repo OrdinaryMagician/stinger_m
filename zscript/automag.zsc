@@ -37,12 +37,21 @@ Class Automag : UnrealWeapon
 	}
 	override bool HandlePickup( Inventory item )
 	{
-		if ( sting_automags && (item.GetClass() == GetClass()) )
+		if ( item.GetClass() == GetClass())
 		{
-			SetTag(StringTable.Localize("$T_AUTOMAG2"));
-			return Super.HandlePickup(item);
+			if ( MaxAmount > 1 )
+			{
+				if ( Amount == 1 ) Weapon(item).AmmoGive1 = Weapon(item).AmmoGive2 = 0;
+				if ( Weapon(item).PickupForAmmo(self) ) item.bPickupGood = true;
+				let rslt = Inventory.HandlePickup(item);
+				if ( rslt ) SetTag(StringTable.Localize("$T_AUTOMAG2"));
+				return rslt;
+			}
+			else if ( Weapon(item).PickupForAmmo(self) )
+				item.bPickupGood = true;
+			return true;
 		}
-		return Super.HandlePickup(item);
+		return false;
 	}
 	override String PickupMessage()
 	{
@@ -287,6 +296,7 @@ Class Automag : UnrealWeapon
 			}
 		}
 		Amount = 1;
+		SetTag(StringTable.Localize("$T_AUTOMAG"));
 	}
 	override bool CheckAmmo( int fireMode, bool autoSwitch, bool requireAmmo, int ammocount )
 	{
@@ -308,11 +318,12 @@ Class Automag : UnrealWeapon
 		Weapon.AmmoUse 1;
 		Weapon.AmmoType2 "UMiniAmmo";
 		Weapon.AmmoUse2 1;
-		Weapon.AmmoGive 30;
+		Weapon.AmmoGive 20;
 		Weapon.Kickback 180;
 		UTWeapon.DropAmmo 10;
 		Automag.ClipCount 20;
 		Automag.SlaveClipCount 20;
+		+UNREALWEAPON.NOFIRSTGIVE;
 	}
 	States
 	{

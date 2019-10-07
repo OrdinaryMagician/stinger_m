@@ -235,6 +235,7 @@ Class OLSMP : UnrealWeapon
 		Weapon.Kickback 320;
 		UTWeapon.DropAmmo 50;
 		OLSMP.ClipCount 100;
+		+UNREALWEAPON.NOFIRSTGIVE;
 	}
 	States
 	{
