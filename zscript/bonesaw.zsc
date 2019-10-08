@@ -2,13 +2,13 @@ Class Bonesaw : UnrealWeapon
 {
 	override bool TryPickup( in out Actor toucher )
 	{
-		if ( !sting_dubious ) return false;	// not allowed
+		if ( !sting_proto || !sting_dubious ) return false;	// not allowed
 		return Super.TryPickup(toucher);
 	}
 	override void Tick()
 	{
 		Super.Tick();
-		if ( sting_dubious ) return;
+		if ( sting_proto && sting_dubious ) return;
 		if ( !Owner )
 		{
 			let r = Spawn("Chainsaw",pos,ALLOW_REPLACE);

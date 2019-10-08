@@ -183,15 +183,21 @@ Class UPlayer : UTPlayer
 						{
 							// force akimbo
 							let t = FindInventory(type);
-							if ( t ) t.Amount = 2;
-							t.SetTag(StringTable.Localize("$T_AUTOMAG2"));
+							if ( t )
+							{
+								t.Amount = 2;
+								t.SetTag(StringTable.Localize("$T_AUTOMAG2"));
+							}
 						}
 						else if ( (type is 'Betamag') && sting_protomags )
 						{
 							// force akimbo
 							let t = FindInventory(type);
-							if ( t ) t.Amount = 2;
-							t.SetTag(StringTable.Localize("$T_PROTOMAG2"));
+							if ( t )
+							{
+								t.Amount = 2;
+								t.SetTag(StringTable.Localize("$T_PROTOMAG2"));
+							}
 						}
 						else if ( type is 'DispersionPistol' )
 						{
@@ -952,29 +958,29 @@ Class UnrealMainHandler : EventHandler
 	{
 		if ( (e.Replacee == 'Chainsaw') || (e.Replacee == 'Gauntlets') )
 		{
-			if ( (sting_dubious || sting_olsmp) && !Random[Replacements](0,3) ) e.Replacement = 'WeaponPowerUp';
-			else if ( Random[Replacements](0,2) )
+			if ( ((sting_proto && sting_dubious) || sting_olsmp) && !Random[Replacements](0,sting_proto?3:1) ) e.Replacement = 'WeaponPowerUp';
+			else if ( sting_proto && Random[Replacements](0,2) )
 			{
 				if ( sting_dubious && Random[Replacements](0,1) ) e.Replacement = 'Bonesaw';
 				else e.Replacement = 'Stunner';
 			}
-			else if ( !Random[Replacements](0,2) ) e.Replacement = 'Betamag';
+			else if ( sting_proto && !Random[Replacements](0,2) ) e.Replacement = 'Betamag';
 			else e.Replacement = 'Automag';
 		}
 		else if ( (e.Replacee == 'Fist') || (e.Replacee == 'Staff') ) e.Replacement = 'DispersionPistol';
 		else if ( (e.Replacee == 'Pistol') || (e.Replacee == 'GoldWand') )
 		{
-			if ( !Random[Replacements](0,2) ) e.Replacement = 'Betamag';
+			if ( sting_proto && !Random[Replacements](0,2) ) e.Replacement = 'Betamag';
 			else e.Replacement = 'Automag';
 		}
 		else if ( (e.Replacee == 'Shotgun') || (e.Replacee == 'SuperShotgun') || (e.Replacee == 'Crossbow') )
 		{
 			if ( !Random[Replacements](0,3) && (e.Replacee != 'SuperShotgun') )
 			{
-				if ( !Random[Replacements](0,2) ) e.Replacement = 'Betamag';
+				if ( sting_proto && !Random[Replacements](0,2) ) e.Replacement = 'Betamag';
 				else e.Replacement = 'Automag';
 			}
-			else switch( Random[Replacements](0,2) )
+			else switch( Random[Replacements](0,sting_proto?2:1) )
 			{
 			case 0:
 				e.Replacement = 'Stinger';
@@ -994,7 +1000,7 @@ Class UnrealMainHandler : EventHandler
 		}
 		else if ( (e.Replacee == 'RocketLauncher') || (e.Replacee == 'PhoenixRod') )
 		{
-			if ( !Random[Replacements](0,3) )
+			if ( sting_proto && !Random[Replacements](0,3) )
 			{
 				if ( Random[Replacements](0,1) ) e.Replacement = 'UFlamethrower';
 				else e.Replacement = 'FlameGun';
@@ -1004,14 +1010,14 @@ Class UnrealMainHandler : EventHandler
 		}
 		else if ( (e.Replacee == 'PlasmaRifle') || (e.Replacee == 'SkullRod') )
 		{
-			if ( !Random[Replacements](0,2) ) e.Replacement = 'Impaler';
+			if ( sting_proto && !Random[Replacements](0,2) ) e.Replacement = 'Impaler';
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'URifle';
 			else e.Replacement = 'UBioRifle';
 		}
 		else if ( (e.Replacee == 'BFG9000') || (e.Replacee == 'Mace') )
 		{
-			if ( sting_olsmp && (!sting_dubious || Random[Replacements](0,1)) ) e.Replacement = 'OLSMP';
-			else if ( sting_dubious )
+			if ( sting_olsmp && (!sting_proto || !sting_dubious || Random[Replacements](0,1)) ) e.Replacement = 'OLSMP';
+			else if ( sting_proto && sting_dubious )
 			{
 				if ( Random[Replacements](0,1) ) e.Replacement = 'SMiniGun';
 				else e.Replacement = 'BigGun';
@@ -1033,7 +1039,7 @@ Class UnrealMainHandler : EventHandler
 		else if ( (e.Replacee == 'Shell') || (e.Replacee == 'CrossbowAmmo') )
 		{
 			if ( !Random[Replacements](0,2) ) e.Replacement = 'UClip';
-			else switch( Random[Replacements](0,2) )
+			else switch( Random[Replacements](0,sting_proto?2:1) )
 			{
 			case 0:
 				e.Replacement = 'StingerAmmo';
@@ -1048,7 +1054,7 @@ Class UnrealMainHandler : EventHandler
 		}
 		else if ( (e.Replacee == 'ShellBox') || (e.Replacee == 'CrossbowHefty') )
 		{
-			switch( Random[Replacements](0,2) )
+			switch( Random[Replacements](0,sting_proto?2:1) )
 			{
 			case 0:
 				e.Replacement = 'StingerAmmo2';
@@ -1063,7 +1069,7 @@ Class UnrealMainHandler : EventHandler
 		}
 		else if ( (e.Replacee == 'RocketAmmo') || (e.Replacee == 'PhoenixRodAmmo') || (e.Replacee == 'MaceAmmo') )
 		{
-			if ( !Random[Replacements](0,4) ) e.Replacement = 'FlameAmmo';
+			if ( sting_proto && !Random[Replacements](0,4) ) e.Replacement = 'FlameAmmo';
 			else if ( Random[Replacements](0,1) )
 			{
 				if ( !Random[Replacements](0,3) ) e.Replacement = 'UFlakBox';
@@ -1077,18 +1083,18 @@ Class UnrealMainHandler : EventHandler
 		}
 		else if ( (e.Replacee == 'RocketBox') || (e.Replacee == 'PhoenixRodHefty') || (e.Replacee == 'MaceHefty') )
 		{
-			if ( !Random[Replacements](0,3) ) e.Replacement = 'FlameAmmo';
+			if ( sting_proto && !Random[Replacements](0,3) ) e.Replacement = 'FlameAmmo';
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'UFlakBox';
 			else e.Replacement = 'URocketAmmo';
 		}
 		else if ( (e.Replacee == 'Cell') || (e.Replacee == 'SkullRodAmmo') )
 		{
-			if ( sting_dubious && !Random[Replacements](0,4) )
+			if ( sting_proto && sting_dubious && !Random[Replacements](0,4) )
 			{
 				if ( !Random[Replacements](0,2) ) e.Replacement = 'BigAmmo2';
 				else e.Replacement = 'BigAmmo3';
 			}
-			else if ( !Random[Replacements](0,3) )
+			else if ( sting_proto && !Random[Replacements](0,3) )
 			{
 				if ( !Random[Replacements](0,3) ) e.Replacement = 'ImpalerAmmo';
 				else e.Replacement = 'ImpalerAmmo2';
@@ -1106,12 +1112,12 @@ Class UnrealMainHandler : EventHandler
 		}
 		else if ( (e.Replacee == 'CellPack') || (e.Replacee == 'SkullRodHefty') )
 		{
-			if ( sting_dubious && !Random[Replacements](0,4) )
+			if ( sting_proto && sting_dubious && !Random[Replacements](0,4) )
 			{
 				if ( !Random[Replacements](0,2) ) e.Replacement = 'BigAmmo';
 				else e.Replacement = 'BigAmmo2';
 			}
-			else if ( !Random[Replacements](0,3) ) e.Replacement = 'ImpalerAmmo';
+			else if ( sting_proto && !Random[Replacements](0,3) ) e.Replacement = 'ImpalerAmmo';
 			else if ( sting_olsmp && !Random[Replacements](0,2) ) e.Replacement = 'OLSMPAmmo';
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'UBioAmmo';
 			else e.Replacement = 'URifleAmmo';
@@ -1120,13 +1126,17 @@ Class UnrealMainHandler : EventHandler
 		else if ( (e.Replacee == 'Berserk') || (e.Replacee == 'ArtiTomeOfPower') )
 		{
 			if ( sting_msentry && !Random[Replacements](0,9) ) e.Replacement = 'SentryItem';
-			else if ( (sting_dubious || sting_olsmp) && !Random[Replacements](0,2) ) e.Replacement = 'WeaponPowerUp';
+			else if ( ((sting_proto && sting_dubious) || sting_olsmp) && !Random[Replacements](0,2) ) e.Replacement = 'WeaponPowerUp';
 			else e.Replacement = 'Amplifier';
 		}
 		else if ( e.Replacee == 'ArtiEgg' ) e.Replacement = 'VoiceBox';
 		else if ( (e.Replacee == 'Soulsphere') || (e.Replacee == 'ArtiSuperHealth') ) e.Replacement = 'SuperHealth';
 		else if ( e.Replacee == 'Megasphere' ) e.Replacement = 'ShieldBelt';
-		else if ( (e.Replacee == 'Allmap') || (e.Replacee == 'SuperMap') ) e.Replacement = 'MotionDetector';
+		else if ( (e.Replacee == 'Allmap') || (e.Replacee == 'SuperMap') )
+		{
+			if ( sting_proto && Random[Replacements](0,2) ) e.Replacement = 'MotionDetector';
+			else e.Replacement = 'UAllMap';
+		}
 		else if ( (e.Replacee == 'BlurSphere') || (e.Replacee == 'ArtiInvisibility') ) e.Replacement = 'UInvisibility';
 		else if ( (e.Replacee == 'Infrared') || (e.Replacee == 'ArtiTorch') ) e.Replacement = 'UFlashlight';
 		else if ( e.Replacee == 'RadSuit' ) e.Replacement = 'UJumpBoots';
@@ -1134,7 +1144,7 @@ Class UnrealMainHandler : EventHandler
 		else if ( (e.Replacee == 'Backpack') || (e.Replacee == 'BagOfHolding') ) e.Replacement = 'UnrealBackpack';
 		else if ( (e.Replacee == 'ArmorBonus') || (e.Replacee == 'ArtiTimeBomb') )
 		{
-			if ( Random[Replacements](0,3) ) e.Replacement = 'UArmorBonus';
+			if ( sting_abonus && Random[Replacements](0,3) ) e.Replacement = 'UArmorBonus';
 			else e.Replacement = 'Flare';
 		}
 		else if ( (e.Replacee == 'HealthBonus') || (e.Replacee == 'CrystalVial') ) e.Replacement = 'Bandages';
@@ -1150,7 +1160,7 @@ Class UnrealMainHandler : EventHandler
 		else if ( e.Replacee == 'ArtiTeleport' )
 		{
 			// I have no idea what to replace this with, so just have some random stuff
-			switch( Random[Replacements](0,7) )
+			switch( Random[Replacements](0,sting_proto?7:5) )
 			{
 			case 0:
 				e.Replacement = 'UnrealBackpack';
@@ -1208,6 +1218,19 @@ Class UnrealMainHandler : EventHandler
 		else if ( e.Replacee is 'EnhancedShockAmmo' ) e.Replacement = 'UNothing';
 		else if ( e.Replacee is 'UTBackpack' ) e.Replacement = 'UnrealBackpack';
 		else if ( e.Replacee is 'UDamage' ) e.Replacement = 'Amplifier';
+		else if ( e.Replacee is 'UTInvisibility' ) e.Replacement = 'UInvisibility';
+		else if ( e.Replacee is 'UTShieldBelt' ) e.Replacement = 'ShieldBelt';
+		else if ( e.Replacee is 'UTBodyArmor' ) e.Replacement = 'UArmor';
+		else if ( e.Replacee is 'UTThighPads' ) e.Replacement = 'KevlarSuit';
+		else if ( e.Replacee is 'UTArmorBonus' )
+		{
+			if ( sting_abonus ) e.Replacement = 'UArmorBonus';
+			else e.Replacement = 'Flare';
+		}
+		else if ( (e.Replacee is 'UTMedBox') || (e.Replacee is 'UTHealthBox') ) e.Replacement = 'UHealth';
+		else if ( e.Replacee is 'UTHealthPack' ) e.Replacement = 'SuperHealth';
+		else if ( e.Replacee is 'UTHealthBonus' ) e.Replacement = 'Bandages';
+		else if ( e.Replacee is 'UTJumpBoots' ) e.Replacement = 'UJumpBoots';
 		// we don't need these
 		else if ( e.Replacee is 'UTActivatable' ) e.Replacement = 'UNothing';
 		else if ( e.Replacee is 'UTActivatableHealth' ) e.Replacement = 'UNothing';
@@ -1218,9 +1241,9 @@ Class UnrealMainHandler : EventHandler
 	{
 		if ( flak_translocator )
 			players[e.playernumber].mo.TakeInventory("Translocator",1);
-		if ( sting_telegun )
+		if ( sting_proto && sting_telegun )
 			players[e.playernumber].mo.GiveInventory("UTranslocator",1);
-		if ( sting_flares )
+		if ( sting_proto && sting_flares )
 		{
 			players[e.playernumber].mo.GiveInventory("LightFlare",1);
 			players[e.playernumber].mo.GiveInventory("DarkFlare",1);
@@ -1241,14 +1264,14 @@ Class UnrealMainHandler : EventHandler
 					players[i].mo.TakeInventory("Translocator",1);
 				}
 			}
-			if ( sting_telegun )
+			if ( sting_proto && sting_telegun )
 			{
 				for ( int i=0; i<MAXPLAYERS; i++ ) if ( playeringame[i] )
 				{
 					players[i].mo.GiveInventory("UTranslocator",1);
 				}
 			}
-			if ( sting_flares )
+			if ( sting_proto && sting_flares )
 			{
 				for ( int i=0; i<MAXPLAYERS; i++ ) if ( playeringame[i] )
 				{

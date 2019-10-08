@@ -90,24 +90,24 @@ Class UnrealBackpack : BackpackItem replaces Backpack
 		Super.DoPickupSpecial(toucher);
 		if ( gameinfo.gametype&GAME_DOOMCHEX )
 		{
-			static const Class<Inventory> xitems[] = {"Flare", "Seeds", "SentryGunItem", "VoiceBox", "ForceField", "Dampener", "Peacemaker"};
+			static const Class<Inventory> xitems[] = {"Flare", "Seeds", "VoiceBox", "ForceField", "Dampener", "Peacemaker", "SentryGunItem"};
 			int xitemn[7];
 			xitemn[0] = max(0,Random[BackpackExtra](-1,3));
 			xitemn[1] = max(0,Random[BackpackExtra](-1,3));
 			xitemn[2] = max(0,Random[BackpackExtra](-2,1));
 			xitemn[3] = max(0,Random[BackpackExtra](-2,1));
-			xitemn[4] = max(0,Random[BackpackExtra](-2,1));
-			xitemn[5] = max(0,Random[BackpackExtra](-1,1));
+			xitemn[4] = max(0,Random[BackpackExtra](-1,1));
+			xitemn[5] = max(0,Random[BackpackExtra](-2,1));
 			xitemn[6] = max(0,Random[BackpackExtra](-2,1));
 			// random doubling
 			if ( !Random[BackpackExtra](0,4) ) xitemn[0] *= 2;
 			if ( !Random[BackpackExtra](0,4) ) xitemn[1] *= 2;
-			if ( !Random[BackpackExtra](0,9) ) xitemn[2] *= 2;
-			if ( !Random[BackpackExtra](0,7) ) xitemn[3] *= 2;
-			if ( !Random[BackpackExtra](0,6) ) xitemn[4] *= 2;
-			if ( !Random[BackpackExtra](0,5) ) xitemn[5] *= 2;
+			if ( !Random[BackpackExtra](0,7) ) xitemn[2] *= 2;
+			if ( !Random[BackpackExtra](0,6) ) xitemn[3] *= 2;
+			if ( !Random[BackpackExtra](0,5) ) xitemn[4] *= 2;
+			if ( !Random[BackpackExtra](0,9) ) xitemn[5] *= 2;
 			if ( !Random[BackpackExtra](0,9) ) xitemn[6] *= 2;
-			for ( int i=0; i<7; i++ )
+			for ( int i=0; i<(sting_proto?7:5); i++ )
 			{
 				if ( xitemn[i] <= 0 ) continue;
 				toucher.GiveInventory(xitems[i],xitemn[i]);
@@ -749,13 +749,13 @@ Class BetaFlare : UnrealInventory
 
 	override bool TryPickup( in out Actor toucher )
 	{
-		if ( !sting_flares ) return false;	// not allowed
+		if ( !sting_proto || !sting_flares ) return false;	// not allowed
 		return Super.TryPickup(toucher);
 	}
 	override void Tick()
 	{
 		Super.Tick();
-		if ( sting_flares ) return;
+		if ( sting_proto && sting_flares ) return;
 		if ( Owner ) Owner.RemoveInventory(self);
 		Destroy();
 	}
@@ -2251,6 +2251,18 @@ Class SentryGunItem : UnrealInventory
 		Inventory.PickupMessage "$I_OSENTRY";
 		Inventory.RespawnTics 1050;
 	}
+	override bool TryPickup( in out Actor toucher )
+	{
+		if ( !sting_proto ) return false;	// not allowed
+		return Super.TryPickup(toucher);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( sting_proto ) return;
+		if ( Owner ) Owner.RemoveInventory(self);
+		Destroy();
+	}
 	override bool Use( bool pickup )
 	{
 		if ( pickup ) return false;
@@ -2399,6 +2411,11 @@ Class SentryGun : Actor
 	override void Tick()
 	{
 		Super.Tick();
+		if ( !sting_proto )
+		{
+			Destroy();
+			return;
+		}
 		if ( !master && (rememberedplayer != -1) && playeringame[rememberedplayer] )
 			master = players[rememberedplayer].mo;
 	}

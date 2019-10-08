@@ -114,6 +114,10 @@ Class OLSMP : UnrealWeapon
 			Destroy();
 		}
 	}
+	override void PlayUpSound( Actor origin )
+	{
+		origin.A_PlaySound(upsound,CHAN_WEAPON,Dampener.Active(origin)?.1:1.,pitch:0.8);
+	}
 	action void A_OLSMPRefire( statelabel flash = null, bool slave = false )
 	{
 		Weapon weap = Weapon(invoker);

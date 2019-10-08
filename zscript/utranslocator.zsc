@@ -12,7 +12,7 @@ Class UTranslocatorAmmo : Ammo
 	override void Tick()
 	{
 		Super.Tick();
-		if ( sting_telegun ) return;
+		if ( sting_proto && sting_telegun ) return;
 		if ( Owner ) Owner.RemoveInventory(self);
 		Destroy();
 	}
@@ -132,13 +132,13 @@ Class UTranslocator : UnrealWeapon
 
 	override bool TryPickup( in out Actor toucher )
 	{
-		if ( !sting_telegun ) return false;	// not allowed
+		if ( !sting_proto || !sting_telegun ) return false;	// not allowed
 		return Super.TryPickup(toucher);
 	}
 	override void Tick()
 	{
 		Super.Tick();
-		if ( sting_telegun ) return;
+		if ( sting_proto && sting_telegun ) return;
 		if ( Owner ) Owner.RemoveInventory(self);
 		Destroy();
 	}

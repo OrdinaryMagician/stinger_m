@@ -440,6 +440,18 @@ Object StarterImpalerBolt
 	Frame "PBLT" { light "IBOLTLIGHT" }
 }
 
+PointLight UCOMPLIGHT
+{
+	Color 0.3 1.0 0.2
+	Size 12
+	Offset 0 8 0
+	Attenuate 1
+}
+Object UAllMap
+{
+	Frame "PMAP" { light "UCOMPLIGHT" }
+}
+
 // Shaders / Brightmaps
 HardwareShader Texture "graphics/MenuBarr.png"
 {
@@ -847,6 +859,34 @@ HardwareShader Texture "models/FlametFX.png"
 	Shader "shaders/glsl/FlametFX.fp"
 }
 HardwareShader Texture "models/shield.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/JAllMap1_a00.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JAllMap1_a00.png"
+}
+HardwareShader Texture "models/JAllMap1_a01.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JAllMap1_a01.png"
+}
+HardwareShader Texture "models/JAllMap1_a02.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JAllMap1_a02.png"
+}
+HardwareShader Texture "models/JAllMap1_a03.png"
+{
+	Shader "shaders/glsl/AmbientGlow_Brightmapped.fp"
+	Texture "brighttex" "brightmaps/JAllMap1_a03.png"
+}
+HardwareShader Texture "models/JAllMap2.png"
+{
+	Shader "shaders/glsl/AmbientGlow.fp"
+}
+HardwareShader Texture "models/JAllMap3.png"
 {
 	Shader "shaders/glsl/AmbientGlow.fp"
 }

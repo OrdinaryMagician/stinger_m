@@ -11,6 +11,66 @@ Class Betamag : UnrealWeapon
 	int SlaveRefire;
 	double AltAccuracy;
 
+	override bool TryPickup( in out Actor toucher )
+	{
+		if ( !sting_proto ) return false;	// not allowed
+		return Super.TryPickup(toucher);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( sting_protomags && (MaxAmount <= 1) ) MaxAmount = 2;
+		else if ( !sting_protomags && (MaxAmount > 1) ) MaxAmount = 1;
+		if ( Owner && !sting_protomags && (Amount > 1) )
+		{
+			// no dual wielding
+			if ( Owner.player.ReadyWeapon == self )
+			{
+				// delete the slave overlay
+				PSprite psp;
+				for ( psp = Owner.player.psprites; psp; psp = psp.next )
+				{
+					if ( (psp.Caller == self) && ((psp.id == 2) || (psp.id == -9998)) ) psp.Destroy();
+					slaveactive = false;
+					slavedown = false;
+				}
+			}
+			Amount = 1;
+			SetTag(StringTable.Localize("$T_AUTOMAG"));
+		}
+		if ( sting_proto ) return;
+		if ( !Owner )
+		{
+			let r = Spawn("Pistol",pos,ALLOW_REPLACE);
+			r.spawnangle = spawnangle;
+			r.spawnpoint = spawnpoint;
+			r.angle = angle;
+			r.pitch = pitch;
+			r.roll = roll;
+			r.special = special;
+			r.args[0] = args[0];
+			r.args[1] = args[1];
+			r.args[2] = args[2];
+			r.args[3] = args[3];
+			r.args[4] = args[4];
+			r.ChangeTid(tid);
+			r.SpawnFlags = SpawnFlags&~MTF_SECRET;
+			r.HandleSpawnFlags();
+			r.SpawnFlags = SpawnFlags;
+			r.bCountSecret = SpawnFlags&MTF_SECRET;
+			r.vel = vel;
+			r.master = master;
+			r.target = target;
+			r.tracer = tracer;
+			r.bDropped = bDropped;
+			Destroy();
+		}
+		else
+		{
+			Owner.RemoveInventory(self);
+			Destroy();
+		}
+	}
 	override bool HandlePickup( Inventory item )
 	{
 		if ( sting_protomags && (item.GetClass() == GetClass()) )
@@ -270,27 +330,6 @@ Class Betamag : UnrealWeapon
 		if ( Ammo1.Amount <= 0 ) SelectionOrder = 6800;
 		else if ( Amount > 1 ) SelectionOrder = 2200;
 		else SelectionOrder = default.SelectionOrder;
-	}
-	override void Tick()
-	{
-		Super.Tick();
-		if ( sting_protomags && (MaxAmount <= 1) ) MaxAmount = 2;
-		else if ( !sting_protomags && (MaxAmount > 1) ) MaxAmount = 1;
-		if ( !Owner || sting_protomags || (Amount <= 1) ) return;
-		// no dual wielding
-		if ( Owner.player.ReadyWeapon == self )
-		{
-			// delete the slave overlay
-			PSprite psp;
-			for ( psp = Owner.player.psprites; psp; psp = psp.next )
-			{
-				if ( (psp.Caller == self) && ((psp.id == 2) || (psp.id == -9998)) ) psp.Destroy();
-				slaveactive = false;
-				slavedown = false;
-			}
-		}
-		Amount = 1;
-		SetTag(StringTable.Localize("$T_AUTOMAG"));
 	}
 	Default
 	{

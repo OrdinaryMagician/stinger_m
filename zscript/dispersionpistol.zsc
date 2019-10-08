@@ -66,7 +66,7 @@ Class DefaultAmmo : Ammo
 	}
 	override void DoEffect()
 	{
-		Super.Tick();
+		Super.DoEffect();
 		if ( rechargespeed <= 0. ) rechargespeed = 1.1;
 		rechargephase += 1./rechargespeed;
 		if ( rechargephase < 35 ) return;

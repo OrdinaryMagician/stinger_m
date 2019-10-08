@@ -797,3 +797,23 @@ Model "UArmorBonus"
 
 	FrameIndex XANH A 0 0
 }
+
+Model "UAllMap"
+{
+	Path "models"
+	Model 0 "cheapcomp_d.3d"
+	SurfaceSkin 0 1 "JAllMap2.png"
+	SurfaceSkin 0 2 "JAllMap3.png"
+	Scale 0.04 0.04 0.048
+	ZOffset 3
+	AngleOffset 90
+
+	SurfaceSkin 0 0 "JAllMap1_a00.png"
+	FrameIndex PMAP A 0 0
+	SurfaceSkin 0 0 "JAllMap1_a01.png"
+	FrameIndex PMAP B 0 0
+	SurfaceSkin 0 0 "JAllMap1_a02.png"
+	FrameIndex PMAP C 0 0
+	SurfaceSkin 0 0 "JAllMap1_a03.png"
+	FrameIndex PMAP D 0 0
+}

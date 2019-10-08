@@ -12,13 +12,25 @@ Class StunnerAmmo : Ammo
 	}
 	override void DoEffect()
 	{
-		Super.Tick();
+		Super.DoEffect();
 		if ( rechargespeed <= 0. ) rechargespeed = 2.;
 		rechargephase += 1./rechargespeed;
 		if ( rechargephase < 7 ) return;
 		rechargespeed = max(2.,.2*Amount);
 		rechargephase = 0;
 		Amount = min(Amount+1,MaxAmount);
+	}
+	override bool TryPickup( in out Actor toucher )
+	{
+		if ( !sting_proto ) return false;	// not allowed
+		return Super.TryPickup(toucher);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( sting_proto ) return;
+		if ( Owner ) Owner.RemoveInventory(self);
+		Destroy();
 	}
 }
 
@@ -271,6 +283,48 @@ Class Stunner : UnrealWeapon
 {
 	double chargesize, count;
 	bool bCharging;
+
+	override bool TryPickup( in out Actor toucher )
+	{
+		if ( !sting_proto ) return false;	// not allowed
+		return Super.TryPickup(toucher);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( sting_proto ) return;
+		if ( !Owner )
+		{
+			let r = Spawn("Chainsaw",pos,ALLOW_REPLACE);
+			r.spawnangle = spawnangle;
+			r.spawnpoint = spawnpoint;
+			r.angle = angle;
+			r.pitch = pitch;
+			r.roll = roll;
+			r.special = special;
+			r.args[0] = args[0];
+			r.args[1] = args[1];
+			r.args[2] = args[2];
+			r.args[3] = args[3];
+			r.args[4] = args[4];
+			r.ChangeTid(tid);
+			r.SpawnFlags = SpawnFlags&~MTF_SECRET;
+			r.HandleSpawnFlags();
+			r.SpawnFlags = SpawnFlags;
+			r.bCountSecret = SpawnFlags&MTF_SECRET;
+			r.vel = vel;
+			r.master = master;
+			r.target = target;
+			r.tracer = tracer;
+			r.bDropped = bDropped;
+			Destroy();
+		}
+		else
+		{
+			Owner.RemoveInventory(self);
+			Destroy();
+		}
+	}
 
 	override int, int, bool, bool GetClipAmount()
 	{

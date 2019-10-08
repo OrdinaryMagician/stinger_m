@@ -10,13 +10,13 @@ Class SMiniAmmo : Ammo
 	}
 	override bool TryPickup( in out Actor toucher )
 	{
-		if ( !sting_dubious ) return false;	// not allowed
+		if ( !sting_proto || !sting_dubious ) return false;	// not allowed
 		return Super.TryPickup(toucher);
 	}
 	override void Tick()
 	{
 		Super.Tick();
-		if ( sting_dubious ) return;
+		if ( sting_proto && sting_dubious ) return;
 		if ( Owner ) Owner.RemoveInventory(self);
 		Destroy();
 	}
@@ -123,13 +123,13 @@ Class SMiniGun : UnrealWeapon
 {
 	override bool TryPickup( in out Actor toucher )
 	{
-		if ( !sting_dubious ) return false;	// not allowed
+		if ( !sting_proto || !sting_dubious ) return false;	// not allowed
 		return Super.TryPickup(toucher);
 	}
 	override void Tick()
 	{
 		Super.Tick();
-		if ( sting_dubious ) return;
+		if ( sting_proto && sting_dubious ) return;
 		if ( !Owner )
 		{
 			let r = Spawn("BFG9000",pos,ALLOW_REPLACE);

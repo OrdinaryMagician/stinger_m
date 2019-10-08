@@ -74,18 +74,20 @@ Doom Tournament (currently the devel branch is required).
 
 ## In progress
 
- - Beta testing
+ - Final polishing
 
 ## Planned
 
- - Impaler "slice" animation for melee alt
- - Separate proto content into an add-on (if people want)
- - Alternate flamethrower secondary that behaves more like the Unreal Bible
-   describes (unlit blobs at a rate of 4 per second that catch on fire with
-   explosions/lava/etc).
- - Alternate Impaler primary that follows the Bible (laser shots from the
-   crystal), shifts crystal shooting to pressing both buttons at once.
- - Actual Bonesaw?
+ - Shifted to a 1.1 update:
+   - Impaler "slice" animation for melee alt
+   - Alternate flamethrower secondary that behaves more like the Unreal Bible
+     describes (unlit blobs at a rate of 4 per second that catch on fire with
+     explosions/lava/etc).
+   - Alternate Impaler primary that follows the Bible (laser shots from the
+     crystal), shifts crystal shooting to pressing both buttons at once.
+   - Actual Bonesaw?
+   - Implement ASMD behavior described in the Unreal novels (highly destructive
+     green beam that bounces off mirrors and water).
 
  - RTNP add-on
  - Monster pack (someday)
@@ -94,4 +96,5 @@ Doom Tournament (currently the devel branch is required).
 ## Known bugs
 
  - The Quadshot will visibly load 4 shells even when there's less available,
-   this is a limitation of the animation.
+   this is a limitation of the animation and I'll have to make alternate ones
+   for it eventually.

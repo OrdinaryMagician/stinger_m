@@ -319,6 +319,28 @@ Class UJumpBoots : UnrealInventory
 	}
 }
 
+// cheap replacement when proto content disabled
+Class UAllMap : MapRevealer
+{
+	Default
+	{
+		Tag "$T_ALLMAP";
+		+COUNTITEM;
+		+INVENTORY.ALWAYSPICKUP;
+		Inventory.MaxAmount 0;
+		Inventory.Icon "I_Detect";
+		Inventory.PickupSound "misc/p_pkup";
+		Inventory.PickupMessage "$I_ALLMAP";
+		Inventory.RespawnTics 1050;
+	}
+	States
+	{
+	Spawn:
+		PMAP ABCDCB 6;
+		Loop;
+	}
+}
+
 Class MotionDetector : UnrealInventory
 {
 	ui TextureID DetHud, DetSpot[2];
@@ -328,7 +350,6 @@ Class MotionDetector : UnrealInventory
 	{
 		Tag "$T_DETECTOR";
 		+COUNTITEM;
-		+INVENTORY.BIGPOWERUP;
 		+INVENTORY.ALWAYSPICKUP;
 		Inventory.MaxAmount 1;
 		Inventory.Icon "I_Detect";
@@ -338,9 +359,46 @@ Class MotionDetector : UnrealInventory
 	}
 	override bool TryPickup( in out Actor toucher )
 	{
+		if ( !sting_proto ) return false;	// not allowed
 		bool valid = Super.TryPickup(toucher);
 		if ( valid ) level.allmap = true;
 		return valid;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( sting_proto ) return;
+		if ( !Owner )
+		{
+			let r = Spawn("AllMap",pos,ALLOW_REPLACE);
+			r.spawnangle = spawnangle;
+			r.spawnpoint = spawnpoint;
+			r.angle = angle;
+			r.pitch = pitch;
+			r.roll = roll;
+			r.special = special;
+			r.args[0] = args[0];
+			r.args[1] = args[1];
+			r.args[2] = args[2];
+			r.args[3] = args[3];
+			r.args[4] = args[4];
+			r.ChangeTid(tid);
+			r.SpawnFlags = SpawnFlags&~MTF_SECRET;
+			r.HandleSpawnFlags();
+			r.SpawnFlags = SpawnFlags;
+			r.bCountSecret = SpawnFlags&MTF_SECRET;
+			r.vel = vel;
+			r.master = master;
+			r.target = target;
+			r.tracer = tracer;
+			r.bDropped = bDropped;
+			Destroy();
+		}
+		else
+		{
+			Owner.RemoveInventory(self);
+			Destroy();
+		}
 	}
 	override void PostRender( double lbottom )
 	{

@@ -73,6 +73,8 @@ server bool sting_olsmp = true;		// adds the stupid oldskool SMP 7243 to
 					// an option
 server bool sting_msentry = true;	// allows the new Minigun Sentry, which
 					// is an original creation for this mod
+server bool sting_abonus = true;	// allows the armor bonus pickup, which
+					// is also original for this mod
 server bool sting_dubious = true;	// allows weapons of dubious origin
 					// (Demolisher, Razorclaw, Autocannon)
 server bool sting_autoscuba = true;	// SCUBA gear toggles automatically
@@ -88,3 +90,4 @@ server bool sting_flametspread = false;	// targets on fire spread the flames
 					// to anyone nearby (may be op)
 server bool sting_impself = false;	// disable impaler beam self-hit
 user bool sting_zoomshader = true;	// rifle scope shader
+server bool sting_proto = true;		// allow prototype content

@@ -8,6 +8,18 @@ Class PeaceAmmo : Ammo
 		Ammo.BackpackAmount 0;
 		Ammo.BackpackMaxAmount 2;
 	}
+	override bool TryPickup( in out Actor toucher )
+	{
+		if ( !sting_proto ) return false;	// not allowed
+		return Super.TryPickup(toucher);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( sting_proto ) return;
+		if ( Owner ) Owner.RemoveInventory(self);
+		Destroy();
+	}
 }
 
 Class PeaceLight : RocketLight
@@ -398,6 +410,18 @@ Class PeaceBarrel : Actor
 
 Class Peacemaker : UnrealWeapon
 {
+	override bool TryPickup( in out Actor toucher )
+	{
+		if ( !sting_proto ) return false;	// not allowed
+		return Super.TryPickup(toucher);
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( sting_proto ) return;
+		if ( Owner ) Owner.RemoveInventory(self);
+		Destroy();
+	}
 	action void A_PeacemakerThrow( bool bAlt = false )
 	{
 		let weap = Weapon(invoker);

@@ -250,6 +250,49 @@ Class PowerShield : UnrealArmor
 
 Class UArmorBonus : UArmor
 {
+	override bool TryPickup( in out Actor toucher )
+	{
+		if ( !sting_abonus ) return false;	// not allowed
+		bool valid = Super.TryPickup(toucher);
+		if ( valid ) level.allmap = true;
+		return valid;
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( sting_abonus ) return;
+		if ( !Owner )
+		{
+			let r = Spawn("ArmorBonus",pos,ALLOW_REPLACE);
+			r.spawnangle = spawnangle;
+			r.spawnpoint = spawnpoint;
+			r.angle = angle;
+			r.pitch = pitch;
+			r.roll = roll;
+			r.special = special;
+			r.args[0] = args[0];
+			r.args[1] = args[1];
+			r.args[2] = args[2];
+			r.args[3] = args[3];
+			r.args[4] = args[4];
+			r.ChangeTid(tid);
+			r.SpawnFlags = SpawnFlags&~MTF_SECRET;
+			r.HandleSpawnFlags();
+			r.SpawnFlags = SpawnFlags;
+			r.bCountSecret = SpawnFlags&MTF_SECRET;
+			r.vel = vel;
+			r.master = master;
+			r.target = target;
+			r.tracer = tracer;
+			r.bDropped = bDropped;
+			Destroy();
+		}
+		else
+		{
+			Owner.RemoveInventory(self);
+			Destroy();
+		}
+	}
 	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
 	{
 		absorb = Clamp(Amount-50,25,100);
