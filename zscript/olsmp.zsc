@@ -165,6 +165,7 @@ Class OLSMP : UnrealWeapon
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
 		FLineTraceData d;
 		LineTrace(atan2(dir.y,dir.x),10000,asin(-dir.z),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
+		UTBulletTrail.DoTrail(self,origin,dir,10000,alt?6:4);
 		if ( d.HitType == TRACE_HitActor )
 		{
 			int dmg = 17;

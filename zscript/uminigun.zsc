@@ -47,12 +47,12 @@ Class UMinigun : UnrealWeapon
 		if ( alt )
 		{
 			A_QuakeEx(2,2,2,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
-			UTMainHandler.DoSwing(self,(FRandom[Minigun](-1,1),FRandom[Minigun](-1,1)),0.5,0,1,SWING_Spring,0,3);
+			UTMainHandler.DoSwing(self,(FRandom[Minigun](-1,1),FRandom[Minigun](-1,1)),0.5,0,2,SWING_Spring,0,3);
 		}
 		else
 		{
 			A_QuakeEx(1,1,1,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.08);
-			UTMainHandler.DoSwing(self,(FRandom[Minigun](-1,1),FRandom[Minigun](-1,1)),0.3,0,1,SWING_Spring,0,3);
+			UTMainHandler.DoSwing(self,(FRandom[Minigun](-1,1),FRandom[Minigun](-1,1)),0.3,0,2,SWING_Spring,0,3);
 		}
 		let l = Spawn("MinigunLight",pos);
 		l.target = self;
@@ -65,6 +65,7 @@ Class UMinigun : UnrealWeapon
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
 		FLineTraceData d;
 		LineTrace(atan2(dir.y,dir.x),10000,asin(-dir.z),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
+		UTBulletTrail.DoTrail(self,origin,dir,10000,alt?5:3);
 		if ( d.HitType == TRACE_HitActor )
 		{
 			int dmg = Random[Minigun](8,14); // fun fact: the Minigun is one of the few weapons that has actual RNG damage in Unreal
@@ -183,7 +184,8 @@ Class UMinigun : UnrealWeapon
 			let weap = Weapon(invoker);
 			if ( !(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)) || (weap.Ammo1.Amount <= 0) )
 			{
-				player.SetPSprite(PSP_WEAPON,invoker.FindState("Release"));
+				A_StopSound(CHAN_WEAPON);
+				if ( Health > 0 ) player.SetPSprite(PSP_WEAPON,invoker.FindState("Release"));
 				return ResolveState("Null");
 			}
 			return ResolveState(null);

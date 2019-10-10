@@ -65,19 +65,20 @@ Class AsbestosSuit : UnrealArmor
 		Inventory.PickupSound "misc/suit";
 		Inventory.Icon "I_Suit";
 	}
-	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
+	override void ModifyDamage( int damage, Name damageType, out int newdamage, bool passive, Actor inflictor, Actor source, int flags )
 	{
-		if ( (damageType == 'Fire') || (damageType == 'Ice') ) damage = newdamage = 0;
-		Super.AbsorbDamage(damage,damageType,newdamage);
+		if ( passive && (Amount > 0) && ((damageType == 'Fire') || (damageType == 'Ice')) )
+			newdamage = 0;
 	}
 	override void AttachToOwner( Actor other )
 	{
+		Super.AttachToOwner(other);
+		if ( sting_allsuits ) return;
 		// remove other suits
 		Inventory i = other.FindInventory("ToxinSuit");
 		if ( i ) other.RemoveInventory(i);
 		i = other.FindInventory("KevlarSuit");
 		if ( i ) other.RemoveInventory(i);
-		Super.AttachToOwner(other);
 	}
 	States
 	{
@@ -101,14 +102,15 @@ Class ToxinSuit : UnrealArmor
 		Inventory.PickupSound "misc/suit";
 		Inventory.Icon "I_TSuit";
 	}
-	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
+	override void ModifyDamage( int damage, Name damageType, out int newdamage, bool passive, Actor inflictor, Actor source, int flags )
 	{
-		if ( damageType == 'Slime' ) damage = newdamage = 0;
-		Super.AbsorbDamage(damage,damageType,newdamage);
+		if ( passive && (Amount > 0) && ((damageType == 'Slime') || (damageType == 'Poison')) )
+			newdamage = 0;
 	}
 	override void AttachToOwner( Actor other )
 	{
 		Super.AttachToOwner(other);
+		if ( sting_allsuits ) return;
 		// remove other suits
 		Inventory i = other.FindInventory("AsbestosSuit");
 		if ( i ) other.RemoveInventory(i);
@@ -140,6 +142,7 @@ Class KevlarSuit : UnrealArmor
 	override void AttachToOwner( Actor other )
 	{
 		Super.AttachToOwner(other);
+		if ( sting_allsuits ) return;
 		// remove other suits
 		Inventory i = other.FindInventory("AsbestosSuit");
 		if ( i ) other.RemoveInventory(i);
@@ -163,9 +166,13 @@ Class ShieldBelt : UnrealArmor
 			Owner.A_PlaySound("belt/absorb",CHAN_7);
 			UTMainHandler.DoFlash(Owner,Color(80,255,224,0),5);
 		}
-		int oldamt = amount;
 		Super.AbsorbDamage(damage,damageType,newdamage);
-		if ( (oldamt > 0) && (amount <= 0) && Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_SHIELDBELT"));
+	}
+	override void DepleteOrDestroy()
+	{
+		if ( (amount <= 0) && Owner.CheckLocalView() )
+			Console.Printf(StringTable.Localize("$D_SHIELDBELT"));
+		Super.DepleteOrDestroy();
 	}
 	Default
 	{
@@ -202,11 +209,16 @@ Class PowerShield : UnrealArmor
 			Owner.A_PlaySound("belt/absorb",CHAN_7);
 			UTMainHandler.DoFlash(Owner,Color(80,224,0,255),5);
 			gothit = true;
+			damage = 0;
+			newdamage = 0;
 		}
-		int oldamt = amount;
-		amount = int.max;	// blocks all damage
-		Super.AbsorbDamage(damage,damageType,newdamage);
-		amount = oldamt;	// does not drain here
+		if ( damage > 0 ) newdamage = ApplyDamageFactors(GetClass(),damageType,damage,damage);
+	}
+	override void DepleteOrDestroy()
+	{
+		if ( (amount <= 0) && Owner.CheckLocalView() )
+			Console.Printf(StringTable.Localize("$D_POWERSHIELD"));
+		Super.DepleteOrDestroy();
 	}
 	override void Tick()
 	{
@@ -218,11 +230,7 @@ Class PowerShield : UnrealArmor
 			gothit = false;
 		}
 		if ( !(level.maptime%15) && !sting_pshield ) amount--;
-		if ( amount <= 0 )
-		{
-			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_POWERSHIELD"));
-			DepleteOrDestroy();
-		}
+		if ( amount <= 0 ) DepleteOrDestroy();
 	}
 	Default
 	{

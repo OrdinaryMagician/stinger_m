@@ -1365,13 +1365,24 @@ Class UFlashlight : UnrealInventory
 			Owner.A_PlaySound("lite/off",CHAN_ITEM);
 			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_FLASHLIGHT"));
 			if ( Amount <= 0 ) DepleteOrDestroy();
+			else
+			{
+				if ( lt[0] ) lt[0].Destroy();
+				if ( lt[1] ) lt[1].Destroy();
+			}
 		}
 	}
 	override void DetachFromOwner()
 	{
-		Super.DetachFromOwner();
 		if ( lt[0] ) lt[0].Destroy();
 		if ( lt[1] ) lt[1].Destroy();
+		Super.DetachFromOwner();
+	}
+	override void OwnerDied()
+	{
+		if ( lt[0] ) lt[0].Destroy();
+		if ( lt[1] ) lt[1].Destroy();
+		Super.OwnerDied();
 	}
 	override void Travelled()
 	{
@@ -1413,6 +1424,11 @@ Class USearchlight : UFlashlight
 			Owner.A_PlaySound("lite/off",CHAN_ITEM);
 			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_SEARCHLIGHT"));
 			if ( Amount <= 0 ) DepleteOrDestroy();
+			else
+			{
+				if ( lt[0] ) lt[0].Destroy();
+				if ( lt[1] ) lt[1].Destroy();
+			}
 		}
 	}
 	override void SetupLights()

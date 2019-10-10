@@ -120,6 +120,8 @@ Class UTranslocatorModule : Actor
 			{
 				SetOrigin(tracer.Vec2OffsetZ(0,0,pos.z),false);
 				vel.xy *= 0;
+				tracer = null;
+				bHITTRACER = false;
 			}
 		}
 		Stop;

@@ -323,7 +323,7 @@ flamegun/fire	flamgfir
 flamegun/end	flamgend
 flamegun/charge	flamgabg
 flamegun/alt	flamgalt
-flamegun/exp	expl2
+flamegun/exp	cexpl2
 $limit flamegun/exp 16
 flamegun/exp2	expl04
 

@@ -91,3 +91,8 @@ server bool sting_flametspread = false;	// targets on fire spread the flames
 server bool sting_impself = false;	// disable impaler beam self-hit
 user bool sting_zoomshader = true;	// rifle scope shader
 server bool sting_proto = true;		// allow prototype content
+server bool sting_allsuits = false;	// allow the player to wear all three
+					// types of suits simultaneously
+					// (this is very unbalanced)
+server bool sting_peacehome = false;	// peacemaker doesn't home in on owner
+					// or friendlies

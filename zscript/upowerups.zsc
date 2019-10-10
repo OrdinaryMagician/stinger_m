@@ -46,10 +46,15 @@ Class UInvisibility : UnrealInventory
 			DepleteOrDestroy();
 		}
 	}
-	override void OnDrop( Actor dropper )
+	override void DetachFromOwner()
 	{
-		Super.OnDrop(dropper);
-		dropper.TakeInventory("PowerUInvisibility",1);
+		Owner.TakeInventory("PowerUInvisibility",1);
+		Super.DetachFromOwner();
+	}
+	override void OwnerDied()
+	{
+		Owner.TakeInventory("PowerUInvisibility",1);
+		Super.OwnerDied();
 	}
 	override void PostBeginPlay()
 	{

@@ -105,6 +105,7 @@ Class PeaceRocket : Actor
 		while ( bi.Next() )
 		{
 			if ( !bi.Thing || (!bi.Thing.bISMONSTER && !bi.Thing.player) || (bi.Thing.Health <= 0) || (Distance3D(bi.Thing) > 500) || !CheckSight(bi.Thing) ) continue;
+			if ( sting_peacehome && ((bi.Thing == target) || (target && target.IsFriend(bi.Thing))) ) continue;
 			double dist = Distance3D(bi.Thing);
 			if ( dist > mindist ) break;
 			tracer = bi.Thing;
@@ -185,6 +186,8 @@ Class PeaceRocket : Actor
 				A_CheckForTargets();
 				A_CountDown();
 			}
+			// early check
+			if ( GetAge() == 5 ) A_CheckForTargets();
 		}
 		Wait;
 	Death:

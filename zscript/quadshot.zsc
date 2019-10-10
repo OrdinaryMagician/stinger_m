@@ -92,6 +92,7 @@ Class QCasing : UCasing
 Class QuadshotTracer : LineTracer
 {
 	Actor ignoreme;
+	Array<Line> ShootThroughList;
 	Array<HitListEntry> hitlist;
 
 	override ETraceStatus TraceCallback()
@@ -123,6 +124,7 @@ Class QuadshotTracer : LineTracer
 		{
 			if ( !Results.HitLine.sidedef[1] || (Results.HitLine.Flags&(Line.ML_BlockHitscan|Line.ML_BlockEverything)) )
 				return TRACE_Stop;
+			ShootThroughList.Push(Results.HitLine);
 			return TRACE_Skip;
 		}
 		return TRACE_Stop;
@@ -184,8 +186,16 @@ Class QuadShot : UnrealWeapon
 		return ClipOut?-1:ClipCount, -1, (ClipCount<2), false;
 	}
 
-	action void ProcessTraceHit( QuadshotTracer t )
+	action void ProcessTraceHit( QuadshotTracer t, Vector3 origin, Vector3 dir, int bc = 1 )
 	{
+		for ( int i=0; i<invoker.t.ShootThroughList.Size(); i++ )
+			invoker.t.ShootThroughList[i].Activate(self,0,SPAC_PCross);
+		for ( int i=5; i<invoker.t.Results.Distance; i+=10 )
+		{
+			if ( !Random[Boolet](0,4*bc) ) continue;
+			let b = Actor.Spawn("UTBubble",level.Vec3Offset(origin,dir*i));
+			b.Scale *= FRandom[Boolet](0.4,0.6);
+		}
 		for ( int i=0; i<t.HitList.Size(); i++ )
 		{
 			int dmg = 12;
@@ -258,7 +268,7 @@ Class QuadShot : UnrealWeapon
 			for ( int i=0; i<invoker.clipcount; i++ )
 			{
 				for ( int i=0; i<3; i++ )
-					UTMainHandler.DoSwing(self,(FRandom[Quadshot](-0.04,-0.2),FRandom[Quadshot](-0.2,0.2)),FRandom[Quadshot](2,4),FRandom[Quadshot](-0.2,0.5),Random[Quadshot](3,4),SWING_Spring,Random[Quadshot](1,6),FRandom[Quadshot](0.8,1.4));
+					UTMainHandler.DoSwing(self,(FRandom[Quadshot](-0.04,-0.2),FRandom[Quadshot](-0.2,0.2)),FRandom[Quadshot](6,8),FRandom[Quadshot](-1.,-1.5),Random[Quadshot](6,8),SWING_Spring,0,FRandom[Quadshot](1.8,2.4));
 				for ( int i=0; i<10; i++ )
 				{
 					a = FRandom[Quadshot](0,360);
@@ -267,8 +277,9 @@ Class QuadShot : UnrealWeapon
 					if ( !invoker.t ) invoker.t = new("QuadshotTracer");
 					invoker.t.ignoreme = self;
 					invoker.t.hitlist.Clear();
+					invoker.t.ShootThroughList.Clear();
 					invoker.t.Trace(origin,CurSector,dir,10000,0);
-					ProcessTraceHit(invoker.t);
+					ProcessTraceHit(invoker.t,origin,dir,int(spread));
 				}
 			}
 			vel += (0,0,(0.3+0.3*spread))-x*(1.5+1.1*spread);
@@ -279,7 +290,7 @@ Class QuadShot : UnrealWeapon
 			A_QuakeEx(1,1,1,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
 			A_PlaySound("quadshot/fire",CHAN_WEAPON,!Dampener.Active(self)?1.:.2);
 			for ( int i=0; i<3; i++ )
-				UTMainHandler.DoSwing(self,(FRandom[Quadshot](-0.04,-0.2),FRandom[Quadshot](-0.2,0.2)),FRandom[Quadshot](2,3),FRandom[Quadshot](-0.2,0.5),Random[Quadshot](2,3),SWING_Spring,Random[Quadshot](0,3),FRandom[Quadshot](0.8,1.4));
+				UTMainHandler.DoSwing(self,(FRandom[Quadshot](-0.04,-0.2),FRandom[Quadshot](-0.2,0.2)),FRandom[Quadshot](5,7),FRandom[Quadshot](-1,-1.5),Random[Quadshot](3,6),SWING_Spring,0,FRandom[Quadshot](1.8,2.4));
 			for ( int i=0; i<10; i++ )
 			{
 				a = FRandom[Quadshot](0,360);
@@ -288,8 +299,9 @@ Class QuadShot : UnrealWeapon
 				if ( !invoker.t ) invoker.t = new("QuadshotTracer");
 				invoker.t.ignoreme = self;
 				invoker.t.hitlist.Clear();
+				invoker.t.ShootThroughList.Clear();
 				invoker.t.Trace(origin,CurSector,dir,10000,0);
-				ProcessTraceHit(invoker.t);
+				ProcessTraceHit(invoker.t,origin,dir);
 			}
 			vel += (0,0,0.3)-x*1.5;
 			invoker.clipcount--;

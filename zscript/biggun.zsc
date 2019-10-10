@@ -186,6 +186,7 @@ Class HitListEntry
 Class BigTracer : LineTracer
 {
 	Actor ignoreme;
+	Array<Line> ShootThroughList;
 	Array<HitListEntry> hitlist;
 	double penetration;	// please don't laugh
 
@@ -213,6 +214,7 @@ Class BigTracer : LineTracer
 		{
 			if ( !Results.HitLine.sidedef[1] || (Results.HitLine.Flags&(Line.ML_BlockHitscan|Line.ML_BlockEverything)) )
 				return TRACE_Stop;
+			ShootThroughList.Push(Results.HitLine);
 			return TRACE_Skip;
 		}
 		return TRACE_Stop;
@@ -308,7 +310,7 @@ Class BigGun : UnrealWeapon
 		UTMainHandler.DoFlash(self,Color(32,255,128,0),1);
 		A_QuakeEx(2,2,2,3,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollintensity:0.12);
 		for ( int i=0; i<6; i++ )
-			UTMainHandler.DoSwing(self,(FRandom[BigGun](-0.04,-0.2),FRandom[BigGun](-0.2,0.2)),FRandom[BigGun](6,9),FRandom[BigGun](-0.2,0.8),Random[BigGun](2,4),SWING_Spring,Random[BigGun](3,6),FRandom[BigGun](1.5,2.3));
+			UTMainHandler.DoSwing(self,(FRandom[BigGun](-0.04,-0.2),FRandom[BigGun](-0.2,0.2)),FRandom[BigGun](6,9),FRandom[BigGun](-2,-3),Random[BigGun](2,4),SWING_Spring,Random[BigGun](3,4),FRandom[BigGun](1.5,2.3));
 		Vector3 x, y, z, x2, y2, z2;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		vel -= x*(player.onground?9.5:2.5);
@@ -321,7 +323,16 @@ Class BigGun : UnrealWeapon
 		invoker.t.ignoreme = self;
 		invoker.t.hitlist.Clear();
 		invoker.t.penetration = 200.;
+		invoker.t.ShootThroughList.Clear();
 		invoker.t.Trace(origin,level.PointInSector(origin.xy),dir,10000.,0);
+		for ( int i=0; i<invoker.t.ShootThroughList.Size(); i++ )
+			invoker.t.ShootThroughList[i].Activate(self,0,SPAC_PCross);
+		for ( int i=5; i<invoker.t.Results.Distance; i+=10 )
+		{
+			if ( !Random[Boolet](0,bAlt?3:2) ) continue;
+			let b = Actor.Spawn("UTBubble",level.Vec3Offset(origin,dir*i));
+			b.Scale *= FRandom[Boolet](0.4,0.6);
+		}
 		for ( int i=0; i<invoker.t.hitlist.Size(); i++ )
 		{
 			let l = invoker.t.hitlist[i];
@@ -462,7 +473,7 @@ Class BigGun : UnrealWeapon
 		BIGT BCDEFGHIJKLMNOP 2;
 		BIGT Q 2
 		{
-			UTMainHandler.DoSwing(self,(FRandom[BigGun](-0.3,-0.2),FRandom[BigGun](0.4,0.5)),3,0,6,SWING_Spring,2,1.5);
+			UTMainHandler.DoSwing(self,(FRandom[BigGun](-0.3,-0.2),FRandom[BigGun](0.4,0.5)),3,0.5,6,SWING_Spring,2,1.5);
 		}
 		BIGT RSTUVWXY 2;
 		Goto Idle;
@@ -514,12 +525,12 @@ Class BigGun : UnrealWeapon
 		{
 			A_ClearRefire();
 			A_Overlay(-9999,"Null");
-			UTMainHandler.DoSwing(self,(FRandom[BigGun](0.7,0.3),FRandom[BigGun](0.4,0.3)),3,0,10,SWING_Spring,70,0.8);
+			UTMainHandler.DoSwing(self,(FRandom[BigGun](0.7,0.3),FRandom[BigGun](0.4,0.3)),3,0.2,10,SWING_Spring,70,0.8);
 		}
 		BIGR ABCDEFGHIJKL 2;
 		BIGR M 2
 		{
-			UTMainHandler.DoSwing(self,(FRandom[BigGun](0.3,0.4),FRandom[BigGun](0.6,0.8)),6,0,3,SWING_Spring,2,3);
+			UTMainHandler.DoSwing(self,(FRandom[BigGun](0.3,0.4),FRandom[BigGun](0.6,0.8)),6,-1,3,SWING_Spring,2,3);
 			invoker.clipout = true;
 			A_QuakeEx(2,2,2,5,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollintensity:0.18);
 			A_PlaySound("big/punch",CHAN_WEAPON,Dampener.Active(self)?.3:1.);
@@ -529,7 +540,7 @@ Class BigGun : UnrealWeapon
 		BIR2 ABCDEF 2;
 		BIR2 G 2
 		{
-			UTMainHandler.DoSwing(self,(FRandom[BigGun](0.2,0.3),FRandom[BigGun](0.3,0.5)),6,0,3,SWING_Spring,2,3);
+			UTMainHandler.DoSwing(self,(FRandom[BigGun](0.2,0.3),FRandom[BigGun](0.3,0.5)),6,-1,3,SWING_Spring,2,3);
 			invoker.clipout = false;
 			let aadd = min(invoker.ammo1.amount,invoker.default.clipcount-invoker.clipcount);
 			invoker.clipcount += aadd;
@@ -542,15 +553,19 @@ Class BigGun : UnrealWeapon
 		BIR2 M 2
 		{
 			invoker.PlayUpSound(self);
-			UTMainHandler.DoSwing(self,(FRandom[BigGun](-0.3,-0.2),FRandom[BigGun](0.4,0.5)),3,0,6,SWING_Spring,2,1.5);
+			UTMainHandler.DoSwing(self,(FRandom[BigGun](-0.3,-0.2),FRandom[BigGun](0.4,0.5)),3,0.5,7,SWING_Spring,3,1.5);
 		}
 		BIR2 NOP 2;
 		BIR2 Q 2
 		{
-			UTMainHandler.DoSwing(self,(FRandom[BigGun](0.2,0.3),FRandom[BigGun](-0.8,-1.2)),3,0,6,SWING_Spring,2,1.5);
+			UTMainHandler.DoSwing(self,(FRandom[BigGun](0.2,0.3),FRandom[BigGun](-0.8,-1.2)),3,-0.5,7,SWING_Spring,3,1.5);
 		}
 		BIR2 RSTUVWXYZ[\] 2;
-		BIR3 ABCDEF 2;
+		BIR3 A 2
+		{
+			UTMainHandler.DoSwing(self,(FRandom[BigGun](-0.3,-0.2),FRandom[BigGun](0.4,0.5)),2,-0.5,3,SWING_Spring,1,2.);
+		}
+		BIR3 BCDEF 2;
 		Goto Idle;
 	Deselect:
 		BIGD A 1

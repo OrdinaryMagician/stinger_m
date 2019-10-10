@@ -125,6 +125,7 @@ Class ImpalerBoltTracer : LineTracer
 {
 	Actor ignoreme;
 	Array<HitListEntry> hitlist;
+	Array<Line> ShootThroughList;
 
 	override ETraceStatus TraceCallback()
 	{
@@ -145,6 +146,7 @@ Class ImpalerBoltTracer : LineTracer
 		{
 			if ( !Results.HitLine.sidedef[1] || (Results.HitLine.Flags&(Line.ML_BlockHitscan|Line.ML_BlockEverything)) )
 				return TRACE_Stop;
+			ShootThroughList.Push(Results.HitLine);
 			return TRACE_Skip;
 		}
 		return TRACE_Stop;
@@ -167,7 +169,10 @@ Class ImpalerBurstBolt : Actor
 		t.hitlist.Clear();
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		t.ShootThroughList.Clear();
 		t.Trace(pos,CurSector,x,11.125,0);
+		for ( int i=0; i<t.ShootThroughList.Size(); i++ )
+			t.ShootThroughList[i].Activate(target,0,SPAC_PCross);
 		for ( int i=0; i<t.hitlist.Size(); i++ )
 		{
 			UTMainHandler.DoKnockback(t.hitlist[i].hitactor,t.hitlist[i].x,6000);
@@ -307,7 +312,10 @@ Class ImpalerBolt : Actor
 		t.HitList.Clear();
 		if ( bHITOWNER ) t.ignoreme = null;
 		else t.ignoreme = target;
+		t.ShootThroughList.Clear();
 		t.Trace(pos,cursector,x,beamsize,0);
+		for ( int i=0; i<t.ShootThroughList.Size(); i++ )
+			t.ShootThroughList[i].Activate(target,0,SPAC_PCross);
 		for ( int i=0; i<t.HitList.Size(); i++ )
 		{
 			if ( !(GetAge()%15) )

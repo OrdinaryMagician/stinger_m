@@ -541,7 +541,7 @@ Class DispersionPistol : UnrealWeapon
 		}
 		A_OverlayFlags(PSP_FLASH,PSPF_RenderStyle,true);
 		A_OverlayRenderstyle(PSP_FLASH,STYLE_Add);
-		UTMainHandler.DoSwing(self,(FRandom[DPistol](-0.1,-0.3),FRandom[DPistol](-0.1,0.3)),2,-0.3,3,SWING_Spring,0,3);
+		UTMainHandler.DoSwing(self,(FRandom[DPistol](-0.1,-0.3),FRandom[DPistol](-0.1,0.3)),2+invoker.upgradelevel*0.5,-0.3,3,SWING_Spring,0,3+invoker.upgradelevel);
 		if ( !Dampener.Active(self) ) A_AlertMonsters();
 		A_QuakeEx(2,2,2,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
@@ -614,7 +614,7 @@ Class DispersionPistol : UnrealWeapon
 		A_OverlayFlags(PSP_FLASH,PSPF_RenderStyle,true);
 		A_OverlayRenderstyle(PSP_FLASH,STYLE_Add);
 		double ss = 0.5+invoker.chargesize*0.3;
-		UTMainHandler.DoSwing(self,(FRandom[DPistol](-0.1,-0.3)*ss,FRandom[DPistol](-0.1,0.3))*ss,2,-0.3,3,SWING_Spring,0,3);
+		UTMainHandler.DoSwing(self,(FRandom[DPistol](-0.1,-0.3)*ss,FRandom[DPistol](-0.1,0.3))*ss,2+invoker.upgradelevel*0.5,-0.3,3,SWING_Spring,0,3+invoker.upgradelevel);
 		if ( !Dampener.Active(self) ) A_AlertMonsters();
 		int qs = int(1+invoker.chargesize*0.3);
 		A_QuakeEx(qs,qs,qs,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
@@ -850,7 +850,7 @@ Class DispersionPistol : UnrealWeapon
 		Wait;
 	AltRelease2:
 		#### # 3 A_DispAltFire();
-		DPF2 ABC 6;
+		DPF2 ABC 8;
 		DPI2 A 3;
 		Goto Idle;
 	AltFire3:
@@ -858,7 +858,7 @@ Class DispersionPistol : UnrealWeapon
 		Wait;
 	AltRelease3:
 		#### # 3 A_DispAltFire();
-		DPF3 ABC 6;
+		DPF3 ABC 9;
 		DPI3 A 3;
 		Goto Idle;
 	AltFire4:
@@ -866,7 +866,7 @@ Class DispersionPistol : UnrealWeapon
 		Wait;
 	AltRelease4:
 		#### # 3 A_DispAltFire();
-		DPF4 ABC 6;
+		DPF4 ABC 10;
 		DPI4 A 3;
 		Goto Idle;
 	AltFire5:
@@ -874,7 +874,7 @@ Class DispersionPistol : UnrealWeapon
 		Wait;
 	AltRelease5:
 		#### # 3 A_DispAltFire();
-		DPF5 ABC 6;
+		DPF5 ABC 12;
 		DPI5 A 3;
 		Goto Idle;
 	Upgrade:

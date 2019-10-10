@@ -238,6 +238,7 @@ Class Betamag : UnrealWeapon
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
 		FLineTraceData d;
 		LineTrace(atan2(dir.y,dir.x),10000,asin(-dir.z),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
+		UTBulletTrail.DoTrail(self,origin,dir,10000,int((invoker.Amount+alt)**2));
 		if ( d.HitType == TRACE_HitActor )
 		{
 			int dmg = 14;
@@ -484,14 +485,14 @@ Class Betamag : UnrealWeapon
 		{
 			A_Overlay(-9999,null);
 			invoker.slavewhip = true;
-			UTMainHandler.DoSwing(self,(FRandom[Betamag](-0.5,-0.4),FRandom[Betamag](0.2,0.3)),4,0,8,SWING_Spring,5);
+			UTMainHandler.DoSwing(self,(FRandom[Betamag](-0.5,-0.4),FRandom[Betamag](0.2,0.3)),4,0.3,8,SWING_Spring,5);
 		}
 		AUTW ABCDE 2;
 		AUTW F 0
 		{
 			if ( self is 'UTPlayer' ) UTPlayer(self).PlayAttacking3();
 			A_PlaySound("betamag/whip",CHAN_ITEM);
-			UTMainHandler.DoSwing(self,(FRandom[Betamag](-0.3,-0.2),FRandom[Betamag](-0.8,-0.5)),2,0,8,SWING_Spring,2,0.5);
+			UTMainHandler.DoSwing(self,(FRandom[Betamag](-0.3,-0.2),FRandom[Betamag](-0.8,-0.5)),7,-1,8,SWING_Spring,2,0.5);
 		}
 		AUTW FGHIJ 2;
 		AUTW K 0
@@ -515,7 +516,7 @@ Class Betamag : UnrealWeapon
 			if ( !((invoker.Ammo1.Amount<=0) && (player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK))) && !(player.cmd.buttons&BT_RELOAD) ) return ResolveState("LeftIdle");
 			invoker.slavewhip = false;
 			A_Overlay(-9998,null);
-			UTMainHandler.DoSwing(self,(FRandom[Betamag](0.4,0.5),FRandom[Betamag](0.2,0.3)),4,0,8,SWING_Spring,5);
+			UTMainHandler.DoSwing(self,(FRandom[Betamag](0.4,0.5),FRandom[Betamag](0.2,0.3)),4,0.3,8,SWING_Spring,5);
 			return ResolveState(null);
 		}
 		2UTW ABCDE 2;
@@ -523,7 +524,7 @@ Class Betamag : UnrealWeapon
 		{
 			if ( self is 'UTPlayer' ) UTPlayer(self).PlayAttacking3();
 			A_PlaySound("betamag/whip",CHAN_7);
-			UTMainHandler.DoSwing(self,(FRandom[Betamag](0.2,0.3),FRandom[Betamag](-0.8,-0.5)),2,0,8,SWING_Spring,2,0.5);
+			UTMainHandler.DoSwing(self,(FRandom[Betamag](0.2,0.3),FRandom[Betamag](-0.8,-0.5)),7,-1,8,SWING_Spring,2,0.5);
 		}
 		2UTW FGHIJ 2;
 		2UTW K 0

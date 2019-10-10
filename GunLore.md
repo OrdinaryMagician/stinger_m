@@ -42,9 +42,9 @@ this the weapon will need a short time to load up ammunition again.
 
 ### Extended behaviour
 
-With each shot, targets will be pumped with highly volatile Tarydium, and can
-be detonated with fire from other weapons, or sufficient kinetic force (e.g.
-making them fall from a considerable height).
+With each shot, targets will be pumped with highly volatile Tarydium, resulting
+in a thundering blast of sheer energy when hit with fire from other weapons, or
+sufficient kinetic force (e.g. making them fall from a considerable height).
 
 ## ASMD
 
@@ -169,8 +169,8 @@ complete opposite effect, causing targets to instead be pulled towards you.
 Since the charge rod rapidly extends on shoot, both fire modes additionally
 deal considerable melee damage to anything that's too close.
 
-Its energy supply regenerates much quicker than the Dispersion Pistol, thanks
-to superior Skaarj engineering.
+Its energy supply will regenerate quickly, as long as you have plenty of
+Tarydium Shards in your inventory.
 
 ## Razorclaw
 

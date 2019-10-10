@@ -513,7 +513,10 @@ Class ASMDBeam : Actor
 		if ( isFrozen() || !moving ) return;
 		// step trace
 		tracedir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		t.ShootThroughList.Clear();
 		t.Trace(pos,cursector,tracedir,1000,0);
+		for ( int i=0; i<t.ShootThroughList.Size(); i++ )
+			t.ShootThroughList[i].Activate(target,0,SPAC_PCross);
 		totaldist += t.Results.Distance;
 		// spawn particles
 		for ( int i=10; i<t.Results.Distance; i+=80 )

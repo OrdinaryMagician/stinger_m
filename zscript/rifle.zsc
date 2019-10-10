@@ -146,7 +146,9 @@ Class URifle : UnrealWeapon
 		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x);
 		if ( !zoomed ) origin = level.Vec3Offset(origin,y*3-z*2);
 		FLineTraceData d;
-		LineTrace(angle,10000,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
+		double pt = BulletSlope();
+		LineTrace(angle,10000,pt,TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
+		UTBulletTrail.DoTrail(self,origin,(cos(angle)*cos(pt),sin(angle)*cos(pt),-sin(pt)),10000,alt?3:1);
 		if ( d.HitType == TRACE_HitActor )
 		{
 			int dmg = 45;

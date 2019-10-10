@@ -37,7 +37,7 @@ Class SMiniShell : FastProjectile
 	{
 		Obituary "$O_SMINI";
 		DamageType 'Shot';
-		DamageFunction 300;
+		DamageFunction 400;
 		Radius 4;
 		Height 4;
 		Speed 200;
@@ -71,7 +71,7 @@ Class SMiniShell : FastProjectile
 		A_AlertMonsters();
 		A_SetRenderStyle(1.0,STYLE_Add);
 		A_NoGravity();
-		A_Explode(150,120,XF_HURTSOURCE|XF_EXPLICITDAMAGETYPE,damagetype:'exploded');
+		A_Explode(200,120,XF_HURTSOURCE|XF_EXPLICITDAMAGETYPE,damagetype:'exploded');
 		A_QuakeEx(4,4,4,10,0,250,"",QF_RELATIVE|QF_SCALEDOWN,falloff:120,rollintensity:0.2);
 		A_PlaySound("smini/explode",CHAN_VOICE,pitch:FRandom[SMini](0.8,1.2));
 		A_SprayDecal("SmallRocketBlast");
@@ -214,7 +214,7 @@ Class SMiniGun : UnrealWeapon
 		for ( int i=0; i<(bAlt?4:1); i++ )
 		{
 			if ( bAlt && !weap.DepleteAmmo(weap.bAltFire,true,1) ) break;
-			UTMainHandler.DoSwing(self,basedir+(FRandom[SMini](-0.04,0.04),FRandom[SMini](-0.04,0.04)),FRandom[SMini](3,4),FRandom[SMini](-0.2,0.8),Random[SMini](2,4),SWING_Spring,Random[SMini](3,6),FRandom[SMini](1.5,2.3));
+			UTMainHandler.DoSwing(self,basedir+(FRandom[SMini](-0.04,0.04),FRandom[SMini](-0.04,0.04)),FRandom[SMini](6,8),FRandom[SMini](-1,-2),Random[SMini](3,4),SWING_Spring,Random[SMini](3,4),FRandom[SMini](2.2,3.5));
 			int pos = bAlt?i:invoker.special1;
 			origin = level.Vec3Offset(origin,x*(!(pos%2)?-1.5:1.5)+y*(pos<2?1.5:-1.5));
 			double a = FRandom[Minigun](0,360), s = FRandom[Minigun](0,bAlt?0.12:0.03);

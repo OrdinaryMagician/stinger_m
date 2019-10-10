@@ -174,7 +174,7 @@ Class Automag : UnrealWeapon
 			else A_Overlay(-3,"LeftMuzzleFlash");
 			A_OverlayFlags(-3,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 			A_OverlayRenderstyle(-3,STYLE_Add);
-			UTMainHandler.DoSwing(self,(FRandom[Automag](0.5,0.2),FRandom[Automag](-0.3,0.2)),2,0,1,SWING_Spring,0,2);
+			UTMainHandler.DoSwing(self,(FRandom[Automag](0.5,0.2),FRandom[Automag](-0.3,0.2)),2,0.5,1,SWING_Spring,0,2);
 		}
 		else
 		{
@@ -195,6 +195,7 @@ Class Automag : UnrealWeapon
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
 		FLineTraceData d;
 		LineTrace(atan2(dir.y,dir.x),10000,asin(-dir.z),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
+		UTBulletTrail.DoTrail(self,origin,dir,10000,int((invoker.Amount+alt)**2));
 		if ( d.HitType == TRACE_HitActor )
 		{
 			int dmg = 17;
@@ -375,9 +376,10 @@ Class Automag : UnrealWeapon
 		TNT1 A 1
 		{
 			A_CheckReload();
+			int flags = (invoker.clipcount<=0)?WRF_NOFIRE:0;
 			if ( (invoker.clipcount <= 0) && (invoker.Ammo1.Amount > 0) ) player.SetPSprite(PSP_WEAPON,ResolveState("Reload"));
-			else if ( ((invoker.clipcount < invoker.default.clipcount) || (invoker.slaveclipcount < invoker.default.slaveclipcount)) && (invoker.Ammo1.Amount > 0) ) A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM);
-			else A_WeaponReady(WRF_ALLOWZOOM);
+			else if ( ((invoker.clipcount < invoker.default.clipcount) || (invoker.slaveclipcount < invoker.default.slaveclipcount)) && (invoker.Ammo1.Amount > 0) ) A_WeaponReady(flags|WRF_ALLOWRELOAD|WRF_ALLOWZOOM);
+			else A_WeaponReady(flags|WRF_ALLOWZOOM);
 			if ( !invoker.slaveactive && (CountInv("Automag") > 1) )
 			{
 				invoker.slavespin = invoker.slavereload = invoker.slaverefire = 0;

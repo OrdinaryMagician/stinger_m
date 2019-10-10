@@ -187,12 +187,12 @@ Class Bonesaw : UnrealWeapon
 		{
 			A_Overlay(-9999,"Null");
 			A_PlaySound("bonesaw/claw",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
-			UTMainHandler.DoSwing(self,(FRandom[Bonesaw](-0.1,0.1),FRandom[Bonesaw](-0.2,-0.3)),4,0,8,SWING_Spring,5,0.7);
+			UTMainHandler.DoSwing(self,(FRandom[Bonesaw](-0.1,0.1),FRandom[Bonesaw](-0.2,-0.3)),4,0.2,8,SWING_Spring,2,2.);
 		}
 		CSWA ABC 2;
 		CSWA D 0
 		{
-			UTMainHandler.DoSwing(self,(FRandom[Bonesaw](-0.1,0.1),FRandom[Bonesaw](0.8,0.5)),2,0,8,SWING_Spring,2,1.2);
+			UTMainHandler.DoSwing(self,(FRandom[Bonesaw](-0.1,0.1),FRandom[Bonesaw](0.8,0.5)),6,-1,8,SWING_Spring,2,1.2);
 		}
 		CSWA DEF 1;
 		CSWA G 0 A_Clamp();

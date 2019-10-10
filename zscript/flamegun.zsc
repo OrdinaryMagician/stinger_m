@@ -384,7 +384,7 @@ Class FlameGun : UnrealWeapon
 		for ( int i=0; i<(bAlt?1:3); i++ )
 		{
 			a = FRandom[FlameGun](0,360);
-			s = FRandom[FlameGun](0,bAlt?0.:.15);
+			s = FRandom[FlameGun](0,bAlt?0.:.06);
 			dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
 			let p = Spawn(bAlt?"UFireball2":"UFireball",origin);
 			p.angle = atan2(dir.y,dir.x);

@@ -663,7 +663,7 @@ Class UnrealInventory : Inventory
 	{
 		Charge -= val;
 		if ( Charge > 0 ) return false;
-		if ( Amount > 1 )
+		if ( Amount >= 1 )
 		{
 			Amount--;
 			Charge = DefaultCharge;
@@ -731,9 +731,15 @@ Class UnrealInventory : Inventory
 	}
 	override void DetachFromOwner()
 	{
-		Super.DetachFromOwner();
 		// deactivate
 		bActive = false;
+		Super.DetachFromOwner();
+	}
+	override void OwnerDied()
+	{
+		// deactivate
+		bActive = false;
+		Super.OwnerDied();
 	}
 	override void OnDrop( Actor dropper )
 	{

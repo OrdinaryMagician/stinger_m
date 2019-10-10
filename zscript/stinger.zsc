@@ -275,7 +275,7 @@ Class TarydiumDebuff : Thinker
 	{
 		let b = victim.Spawn("TarydiumExplosion",victim.Vec3Offset(FRandom[Stinger](-victim.radius,victim.radius),FRandom[Stinger](-victim.radius,victim.radius),FRandom[Stinger](0,victim.height)));
 		b.target = instigator;
-		b.special1 = int(amount);	// in Unreal this was capped to 10, which would make it deal barely any damage
+		b.special1 = int(min(amount,100));	// in Unreal this was capped to 10, which would make it deal barely any damage
 		b.scale *= .8+min(1.,amount*0.01);
 		amount = amount*0.9-10;	// in Unreal this falls off linearly 10 points at a time, which can take very long at full charge
 	}

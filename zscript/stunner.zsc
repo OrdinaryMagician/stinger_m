@@ -18,7 +18,13 @@ Class StunnerAmmo : Ammo
 		if ( rechargephase < 7 ) return;
 		rechargespeed = max(2.,.2*Amount);
 		rechargephase = 0;
-		Amount = min(Amount+1,MaxAmount);
+		if ( Amount >= MaxAmount ) return;
+		let sting = Owner.FindInventory("StingerAmmo");
+		if ( sting && (sting.Amount > 0) )
+		{
+			sting.Amount--;
+			Amount++;
+		}
 	}
 	override bool TryPickup( in out Actor toucher )
 	{
@@ -72,6 +78,7 @@ Class StunLight : PaletteLight
 Class StunTracer : LineTracer
 {
 	Actor owner, ignore;
+	Array<Line> ShootThroughList;
 
 	override ETraceStatus TraceCallback()
 	{
@@ -85,6 +92,7 @@ Class StunTracer : LineTracer
 		{
 			if ( !Results.HitLine.sidedef[1] || (Results.HitLine.Flags&(Line.ML_BlockHitscan|Line.ML_BlockEverything)) )
 				return TRACE_Stop;
+			ShootThroughList.Push(Results.HitLine);
 			return TRACE_Skip;
 		}
 		return TRACE_Stop;
@@ -117,7 +125,10 @@ Class StunProj : Actor
 		}
 		// step trace
 		tracedir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		t.ShootThroughList.Clear();
 		t.Trace(pos,cursector,tracedir,500,0);
+		for ( int i=0; i<t.ShootThroughList.Size(); i++ )
+			t.ShootThroughList[i].Activate(target,0,SPAC_PCross);
 		totaldist += t.Results.Distance;
 		// spawn particles
 		for ( int i=10; i<t.Results.Distance; i+=80 )
