@@ -111,7 +111,13 @@ Class Amplifier : UnrealInventory
 		let d = Amplifier(Owner.FindInventory("Amplifier"));
 		if ( !d || !d.bActive ) return 1.;
 		double Multiplier = max(1,4*(double(d.Charge-val)/d.DefaultCharge));
-		d.DrainCharge(val);
+		if ( d.DrainCharge(val) )
+		{
+			d.Owner.A_PlaySound("amplifier/unset",CHAN_ITEM);
+			if ( d.Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_AMPLIFIER"));
+			if ( d.tracer ) d.tracer.Destroy();
+			if ( d.Amount <= 0 ) d.DepleteOrDestroy();
+		}
 		return Multiplier;
 	}
 	override bool Use( bool pickup )
@@ -132,12 +138,12 @@ Class Amplifier : UnrealInventory
 		}
 		else if ( !bActive && tracer ) tracer.Destroy();
 		if ( !bActive ) return;
-		if ( (Charge <= 0) || (!(level.maptime%35) && DrainCharge(2)) )
+		if ( !(level.maptime%35) && DrainCharge(2) )
 		{
-			Owner.A_PlaySound("amplifier/set",CHAN_ITEM);
+			Owner.A_PlaySound("amplifier/unset",CHAN_ITEM);
 			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_AMPLIFIER"));
 			if ( tracer ) tracer.Destroy();
-			DepleteOrDestroy();
+			if ( Amount <= 0 ) DepleteOrDestroy();
 		}
 	}
 	States

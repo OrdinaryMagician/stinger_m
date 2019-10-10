@@ -218,8 +218,8 @@ no need to reload. An experimental entanglement unit inside the gun's internal
 mag locates spare ammunition carried by the user and automatically loads it.
 
 Both of its fire modes work exactly like the Automag, although due to
-internal differences, it's a bit weaker in terms of speed and damage. The fact
-that it never needs to reload at least compensates for this.
+internal differences, it's a bit weaker in terms of speed and damage. However
+it compensates by being much more accurate, even when rapid firing.
 
 Pressing the reload button makes use of the gun's weight to beat the crap out
 of your enemies up close.
