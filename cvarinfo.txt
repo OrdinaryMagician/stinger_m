@@ -51,12 +51,11 @@ server bool sting_dpistol = false;	// d.pistol altfire always level 0
 					// the weapon, but it's very likely
 					// that this was kept like this for
 					// the sake of balance
-server bool sting_pshield = false;	// p.shield does not drain over time
-					// this is unbalanced as all hell and
-					// it's not recommended to enable the
-					// compatibility option unless you are
-					// a die-hard purist who despises the
-					// change
+server bool sting_pshield = false;	// p.shield absorbs damage instead of
+					// individual hits, like in vanilla.
+					// note that this will make it less
+					// useful as an invulnerability
+					// replacement
 server bool sting_nopstart = false;	// players start only with the
 					// dispersion pistol, otherwise they
 					// also get an automag for the sake

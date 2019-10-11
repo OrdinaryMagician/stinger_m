@@ -201,6 +201,7 @@ Class ShieldBelt : UnrealArmor
 Class PowerShield : UnrealArmor
 {
 	bool gothit;
+	int draintimer;
 
 	override void AbsorbDamage( int damage, Name damageType, out int newdamage )
 	{
@@ -208,9 +209,17 @@ Class PowerShield : UnrealArmor
 		{
 			Owner.A_PlaySound("belt/absorb",CHAN_7);
 			UTMainHandler.DoFlash(Owner,Color(80,224,0,255),5);
-			gothit = true;
-			damage = 0;
-			newdamage = 0;
+			if ( !sting_pshield )
+			{
+				gothit = true;
+				damage = 0;
+				newdamage = 0;
+			}
+		}
+		if ( sting_pshield )
+		{
+			Super.AbsorbDamage(damage,damageType,newdamage);
+			return;
 		}
 		if ( damage > 0 ) newdamage = ApplyDamageFactors(GetClass(),damageType,damage,damage);
 	}
@@ -229,7 +238,12 @@ Class PowerShield : UnrealArmor
 			amount--;
 			gothit = false;
 		}
-		if ( !(level.maptime%15) && !sting_pshield ) amount--;
+		draintimer++;
+		if ( draintimer > 35 )
+		{
+			amount--;
+			draintimer = 0;
+		}
 		if ( amount <= 0 ) DepleteOrDestroy();
 	}
 	Default

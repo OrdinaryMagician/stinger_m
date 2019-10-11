@@ -143,12 +143,8 @@ Generates a protective barrier around you that can completely block out up to
 
 ## Power Shield
 
-A much more potent version of the Shield Belt. This one, rather than degrade
-with damage taken, wears down based on the NUMBER of hits it takes. So ideally
-it can eat up 200 attacks from anywhere.
-
-By default, it also drains slowly over time for balance reasons, but this can
-be disabled for the original behaviour.
+A much more potent version of the Shield Belt, which can absorb up to 200
+individual hits, but loses charge over time.
 
 ## Dispersion Pistol Powerups
 
