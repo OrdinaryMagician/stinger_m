@@ -275,9 +275,7 @@ Class UArmorBonus : UArmor
 	override bool TryPickup( in out Actor toucher )
 	{
 		if ( !sting_abonus ) return false;	// not allowed
-		bool valid = Super.TryPickup(toucher);
-		if ( valid ) level.allmap = true;
-		return valid;
+		return Super.TryPickup(toucher);
 	}
 	override void Tick()
 	{
