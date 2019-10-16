@@ -257,6 +257,7 @@ quadshot/shell4	qshell4
 quadshot/shell5	qshell5
 quadshot/shell6	qshell6
 $random quadshot/shell { quadshot/shell1 quadshot/shell2 quadshot/shell3 quadshot/shell4 quadshot/shell5 quadshot/shell6 }
+$attenuation quadshot/shell 2
 
 betamag/select	oldasel
 betamag/fire	oldmag
@@ -301,8 +302,12 @@ big/dry		bigmdryf
 big/punch	bigmejct
 big/reload	bigmrelo
 big/shell	bigmshel
+$attenuation big/shell 2
 big/blast	bigmhit
 $limit big/blast 16
+big/bounce	bigmagb
+$volume big/bounce 0.5
+$attenuation big/bounce 3
 
 smini/select	sminisel
 smini/fire	sminione

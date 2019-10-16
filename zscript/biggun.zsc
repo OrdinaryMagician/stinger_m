@@ -229,6 +229,30 @@ Class BigCasing : UTCasing
 	}
 }
 
+// hambagah?
+Class BigMag : UTCasing
+{
+	Default
+	{
+		BounceSound "big/bounce";	// much heavier sound
+	}
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		heat = 0.;
+	}
+	States
+	{
+	Death:
+		PCAS A -1
+		{
+			pitch = clamp(Normalize180(pitch),-5,5);
+			angle = FRandom[Junk](0,360);
+		}
+		Stop;
+	}
+}
+
 Class BigGun : UnrealWeapon
 {
 	int ClipCount;
@@ -536,7 +560,18 @@ Class BigGun : UnrealWeapon
 			A_PlaySound("big/punch",CHAN_WEAPON,Dampener.Active(self)?.3:1.);
 			if ( self is 'UTPlayer' ) UTPlayer(self).PlayReloading();
 		}
-		BIGR NOPQRSTUVWXYZ[\] 2;
+		BIGR NOPQRSTUVW 2;
+		BIGR X 2
+		{
+			Vector3 x, y, z, origin;
+			[x,y,z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+			origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),x*5.-z*9.);
+			let c = Spawn("BigMag",origin);
+			c.angle = angle;
+			c.pitch = pitch;
+			c.vel = vel*.5+x*FRandom[Junk](-.5,.5)+y*FRandom[Junk](-.5,.5)-z*FRandom[Junk](1,2);
+		}
+		BIGR YZ[\] 2;
 		BIR2 ABCDEF 2;
 		BIR2 G 2
 		{

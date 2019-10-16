@@ -291,6 +291,8 @@ Class Betamag : UnrealWeapon
 		}
 		origin = level.Vec3Offset(origin,x*5+ydir*y*8-z*2);
 		let c = Spawn(slave?"BCasing2":"BCasing",origin);
+		c.angle = angle;
+		c.pitch = pitch;
 		c.vel = x*FRandom[Junk](-1.5,1.5)+y*ydir*FRandom[Junk](2,4)+z*FRandom[Junk](2,3);
 	}
 	override String GetObituary( Actor victim, Actor inflictor, Name mod, bool playerattack )

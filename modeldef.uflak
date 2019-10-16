@@ -52,6 +52,22 @@ Model "UFlakSlug"
 	FrameIndex FSLG A 0 0
 }
 
+Model "UFlakMag"
+{
+	Path "models"
+	Model 0 "FlakShSpent_d.3d"
+	Skin 0 "Jflakshel1.png"
+	Scale 0.2 0.2 0.24
+	AngleOffset 90
+	ZOffset 1
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1
+
+	FrameIndex PCAS A 0 0
+}
+
 Model "UFlakCannon"
 {
 	Path "models"

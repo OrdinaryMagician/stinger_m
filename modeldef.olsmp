@@ -53,6 +53,21 @@ Model "OLSMP"
 	FrameIndex AMUZ I 2 0
 }
 
+Model "OLSMPMag"
+{
+	Path "models"
+	Model 0 "OLSMPSpentClip_d.3d"
+	Skin 0 "OLSMP.png"
+	Scale 0.06 0.06 0.072
+	ZOffset 1
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1
+
+	FrameIndex PCAS A 0 0
+}
+
 Model "OLSMP"
 {
 	Path "models"

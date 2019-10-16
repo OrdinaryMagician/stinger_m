@@ -30,6 +30,7 @@ Model "BCasing"
 
 	FrameIndex PCAS A 0 0
 }
+
 Model "BCasing2"
 {
 	Path "models"

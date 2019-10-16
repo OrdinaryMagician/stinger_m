@@ -352,6 +352,7 @@ Class UPlayerFemale : UPlayer
 	{
 		Player.SoundClass "ufemale";
 		UTPlayer.VoiceType VOICE_FemaleOne;
+		UTPlayer.DollType DOLL_Female;
 	}
 
 	void A_ArmPop()

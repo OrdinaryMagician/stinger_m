@@ -333,6 +333,8 @@ Class QuadShot : UnrealWeapon
 		{
 			let c = Spawn("QCasing",origin);
 			c.vel = x*FRandom[Junk](-1.5,0.25)-y*FRandom[Junk](1,4)-z*FRandom[Junk](1,4);
+			c.angle = angle;
+			c.pitch = pitch;
 		}
 	}
 	action bool A_QuadshotCheckForReload( bool bDryFire = false )

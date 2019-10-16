@@ -83,6 +83,22 @@ Model "BigCasing"
 	FrameIndex PCAS A 0 0
 }
 
+Model "BigMag"
+{
+	Path "models"
+	Model 0 "BigGMag_d.3d"
+	Skin 0 "JBigGun1.png"
+	Scale 0.1 0.1 0.12
+	AngleOffset 90
+	ZOffset 2.5
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 2.5
+
+	FrameIndex PCAS A 0 0
+}
+
 Model "BigGun"
 {
 	Path "models"

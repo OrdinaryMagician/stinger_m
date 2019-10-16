@@ -63,6 +63,7 @@ Class UFireball : Actor
 		+FORCERADIUSDMG;
 		+NODAMAGETHRUST;
 		+FORCEXYBILLBOARD;
+		+DONTSPLASH;
 		UFireball.SpreadFactor 0.2;
 		UFireball.NumSmokes 1;
 		UFireball.NumSparks 2;

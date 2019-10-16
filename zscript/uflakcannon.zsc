@@ -176,6 +176,10 @@ Class UFlakSlug : FlakSlug
 	}
 }
 
+Class UFlakMag : FlakMag
+{
+}
+
 Class UFlakCannon : UnrealWeapon
 {
 	action void A_Loading( bool first = false )
@@ -332,7 +336,16 @@ Class UFlakCannon : UnrealWeapon
 		FLKF J 5;
 		FLKE A 1 A_PlaySound("flak/click",CHAN_6,Dampener.Active(self)?.05:.5);
 		FLKE BCDEFGHIJKLMN 1;
-		FLKE S 4;
+		FLKE S 4
+		{
+			Vector3 x, y, z, origin;
+			[x,y,z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+			origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),x*4.+y*3.-z*8.);
+			let c = Spawn("UFlakMag",origin);
+			c.angle = angle;
+			c.pitch = pitch;
+			c.vel = vel*.5+x*FRandom[Junk](-.8,.1)+y*FRandom[Junk](-.2,.2)-z*FRandom[Junk](1,2);
+		}
 		Goto Loading;
 	AltFire:
 		FLKA A 1 A_FireSlug();

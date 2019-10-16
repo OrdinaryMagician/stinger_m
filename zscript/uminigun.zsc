@@ -128,6 +128,8 @@ Class UMinigun : UnrealWeapon
 		}
 		origin = level.Vec3Offset(origin,x*4+y*3-z*12);
 		let c = Spawn("UCasing",origin);
+		c.angle = angle;
+		c.pitch = pitch;
 		c.vel = x*FRandom[Junk](-1.5,1.5)-y*FRandom[Junk](2,4)+z*FRandom[Junk](-2,1);
 	}
 

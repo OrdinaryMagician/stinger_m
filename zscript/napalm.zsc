@@ -295,6 +295,7 @@ Class UFlame : Actor
 		+FORCEXYBILLBOARD;
 		+DROPOFF;
 		+NOBLOCKMONST;
+		+DONTSPLASH;
 		//+THRUIMPASSABLE;	// gonna have to implement this
 	}
 	States

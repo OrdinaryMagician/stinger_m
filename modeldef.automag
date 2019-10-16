@@ -26,6 +26,21 @@ Model "UCasing"
 	FrameIndex PCAS A 0 0
 }
 
+Model "AutomagMag"
+{
+	Path "models"
+	Model 0 "AutoMagSpentClip_d.3d"
+	Skin 0 "Automa1.png"
+	Scale 0.06 0.06 0.072
+	ZOffset 1
+	USEACTORPITCH
+	USEACTORROLL
+	USEROTATIONCENTER
+	Rotation-Center 0 0 1
+
+	FrameIndex PCAS A 0 0
+}
+
 Model "Automag"
 {
 	Path "models"

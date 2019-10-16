@@ -493,8 +493,12 @@ Class StingerProjectile : Actor
 	States
 	{
 	Spawn:
-		TPRJ A -1 Bright;
-		Stop;
+		TPRJ A 1 Bright
+		{
+			if ( waterlevel > 0 )
+				Spawn("UTBubble",pos);
+		}
+		Wait;
 	Bounce:
 		TPRJ A 0 Bright A_HandleBounce();
 		Goto Spawn;

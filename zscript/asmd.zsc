@@ -290,30 +290,27 @@ Class ViewASMDSpark : ShockSpark
 
 Class ASMDHitbox : ShockHitbox
 {
-	override void Tick()
+	override int DamageMobj( Actor inflictor, Actor source, int damage, Name mod, int flags, double angle )
 	{
-		Super.Tick();
-		if ( !target ) return;
-		let t = ThinkerIterator.Create("ASMDHitbox");
-		Actor a;
-		while ( a = Actor(t.Next()) )
+		if ( mod == 'jolted' )
+			return 0;
+		if ( !bAMBUSH )
 		{
-			if ( (a == self) || !(a is 'ASMDHitbox') || a.bAMBUSH || (Distance3D(a) > radius*2) ) continue;
-			a.bAMBUSH = true;
-			if ( a.target && a.target.InStateSequence(a.target.CurState,a.target.FindState("Spawn")) )
-				a.target.ExplodeMissile();
-			if ( !bAMBUSH )
-			{
-				bAMBUSH = true;
-				if ( target && target.InStateSequence(target.CurState,target.FindState("Spawn")) )
-					target.ExplodeMissile();
-			}
+			bAMBUSH = true;
+			if ( target && target.InStateSequence(target.CurState,target.FindState("Spawn")) )
+				target.ExplodeMissile();
 		}
+		return 0;
+	}
+	override bool CanCollideWith( Actor other, bool passive )
+	{
+		return true;
 	}
 	Default
 	{
 		Radius 6;
 		Height 12;
+		+SHOOTABLE;
 	}
 }
 
@@ -325,7 +322,7 @@ Class ASMDBall : Actor
 
 	override int SpecialMissileHit( Actor victim )
 	{
-		if ( victim == b ) return 1;
+		if ( victim is 'ASMDHitbox' ) return 1;
 		return -1;
 	}
 	override void PostBeginPlay()

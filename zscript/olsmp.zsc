@@ -61,6 +61,10 @@ Class OLSMPAmmo : Ammo
 	}
 }
 
+Class OLSMPMag : EnforcerMag
+{
+}
+
 Class OLSMP : UnrealWeapon
 {
 	int ClipCount;
@@ -217,6 +221,8 @@ Class OLSMP : UnrealWeapon
 		}
 		origin = level.Vec3Offset(origin,x*8+y*6-z*2);
 		let c = Spawn("UCasing",origin);
+		c.angle = angle;
+		c.pitch = pitch;
 		c.vel = x*FRandom[Junk](-1.5,1.5)+y*FRandom[Junk](2,4)+z*FRandom[Junk](2,3);
 	}
 	override bool CheckAmmo( int fireMode, bool autoSwitch, bool requireAmmo, int ammocount )
@@ -346,6 +352,13 @@ Class OLSMP : UnrealWeapon
 			A_PlaySound("automag/reload",CHAN_WEAPON,!Dampener.Active(self)?1.:.1,pitch:0.8);
 			if ( self is 'UTPlayer' )
 				UTPlayer(self).PlayReloading();
+			Vector3 x, y, z, origin;
+			[x,y,z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+			origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),x*4.+y*4.-z*18.);
+			let c = Spawn("OLSMPMag",origin);
+			c.angle = angle;
+			c.pitch = pitch;
+			c.vel = vel*.5+x*FRandom[Junk](-.5,.5)+y*FRandom[Junk](-.5,.5)-z*FRandom[Junk](1,2);
 		}
 		AUTS A 0 A_PlaySound("automag/select",CHAN_WEAPON,!Dampener.Active(self)?1.:.1,pitch:0.8);
 		Goto Ready;
