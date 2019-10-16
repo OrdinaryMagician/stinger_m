@@ -232,7 +232,7 @@ Class PowerShield : UnrealArmor
 	override void Tick()
 	{
 		Super.Tick();
-		if ( !Owner || !Owner.player ) return;
+		if ( !Owner || !Owner.player || (amount <= 0) ) return;
 		if ( gothit )
 		{
 			amount--;
