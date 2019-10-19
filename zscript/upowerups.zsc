@@ -244,7 +244,7 @@ Class UJumpBoots : UnrealInventory
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		if ( (level.maptime > 0) || !InStateSequence(CurState,FindState("Spawn")) ) return;
+		if ( (level.maptime > 0) || !InStateSequence(CurState,FindState("Spawn")) || (gameinfo.gametype&GAME_RAVEN) ) return;
 		// detect hurtfloors
 		// can't detect terraindef-based damage
 		// this is currently an engine limitation
