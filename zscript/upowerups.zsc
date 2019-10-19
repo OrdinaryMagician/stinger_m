@@ -347,7 +347,7 @@ Class UAllMap : MapRevealer
 	States
 	{
 	Spawn:
-		PMAP ABCDCB 6;
+		MDET ABCDCB 6;
 		Loop;
 	}
 }
