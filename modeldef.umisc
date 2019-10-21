@@ -809,11 +809,11 @@ Model "UAllMap"
 	AngleOffset 90
 
 	SurfaceSkin 0 0 "JAllMap1_a00.png"
-	FrameIndex MDET A 0 0
+	FrameIndex TRNS A 0 0
 	SurfaceSkin 0 0 "JAllMap1_a01.png"
-	FrameIndex MDET B 0 0
+	FrameIndex TRNS B 0 0
 	SurfaceSkin 0 0 "JAllMap1_a02.png"
-	FrameIndex MDET C 0 0
+	FrameIndex TRNS C 0 0
 	SurfaceSkin 0 0 "JAllMap1_a03.png"
-	FrameIndex MDET D 0 0
+	FrameIndex TRNS D 0 0
 }

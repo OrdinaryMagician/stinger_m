@@ -202,6 +202,15 @@ Class UTranslocator : UnrealWeapon
 		invoker.FireEffect();
 		// squeeze down new z if ceiling is in the way
 		if ( (newpos.z+height > moduleceilingz) ) newpos.z = max(modulefloorz,moduleceilingz-height);
+		// temporarily disable telefragging for all allies
+		bool oldnotele[MAXPLAYERS];
+		for ( int i=0; i<MAXPLAYERS; i++ )
+		{
+			if ( !playeringame[i] || !players[i].mo ) continue;
+			oldnotele[i] = players[i].mo.bNOTELEFRAG;
+			if ( !IsFriend(players[i].mo) ) continue;
+			players[i].mo.bNOTELEFRAG = true;
+		}
 		if ( Warp(self,newpos.x,newpos.y,newpos.z,flags:WARPF_ABSOLUTEPOSITION|WARPF_TESTONLY) && TeleportMove(newpos,true) )
 		{
 			A_PlaySound("flak/click",CHAN_WEAPON);
@@ -210,6 +219,11 @@ Class UTranslocator : UnrealWeapon
 			player.fov = min(175,player.desiredfov+60);
 		}
 		else A_PlaySound("transloc/return",CHAN_WEAPON);
+		for ( int i=0; i<MAXPLAYERS; i++ )
+		{
+			if ( !playeringame[i] || !players[i].mo ) continue;
+			players[i].mo.bNOTELEFRAG = oldnotele[i];
+		}
 		if ( bBroken )
 		{
 			UTMainHandler.DoFlash(self,Color(255,255,255,255),50);

@@ -213,7 +213,6 @@ M_MSNOFLOOR = "Cannot deploy Sentry at this height.";
 M_MSNOFLAT = "Cannot deploy Sentry on such a steep slope.";
 M_NSTOOFAR = "Cannot recall Sentry from this distance.";
 M_FFNOROOM = "No room to activate Force Field.";
-M_ISELECT = "%s selected.";
 S_MINHUD = "Health %d Score %d Ammo %d";
 S_MINHUD2 = "Health %d Score %d Ammo %d/%d";
 /* Menus */
@@ -463,7 +462,6 @@ M_MSNOFLOOR = "No se puede colocar la Torreta a esta altura.";
 M_MSNOFLAT = "No se puede colocar la Torreta en una cuesta tan inclinada.";
 M_NSTOOFAR = "No se puede retirar la Torreta desde esta distancia.";
 M_FFNOROOM = "No hay espacio para activar el Campo de Fuerza.";
-M_ISELECT = "Seleccionado %s.";
 S_MINHUD = "Salud %d Puntuación %d Munición %d";
 S_MINHUD2 = "Salud %d Puntuación %d Munición %d/%d";
 /* Menus */

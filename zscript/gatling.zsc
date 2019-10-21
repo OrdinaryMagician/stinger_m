@@ -169,7 +169,7 @@ Class SMiniGun : UnrealWeapon
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !bAlt && !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		invoker.FireEffect();
-		UTMainHandler.DoFlash(self,Color(32,0,0,255),1);
+		UTMainHandler.DoFlash(self,Color(32,255,255,0),1);
 		A_QuakeEx(2,2,2,bAlt?5:3,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollintensity:0.12);
 		A_PlaySound(bAlt?"smini/altfire":"smini/fire",CHAN_WEAPON);
 		A_AlertMonsters();

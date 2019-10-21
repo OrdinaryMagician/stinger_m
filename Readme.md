@@ -3,8 +3,7 @@
 The Unreal 1 counterpart to Doom Tournament. Adds Unreal 1 weapons and items
 (including dummied out stuff and others).
 
-This mod requires GZDoom g4.3pre-125-g021e548db or later, and runs on top of
-Doom Tournament (currently the devel branch is required).
+This mod requires GZDoom 4.2.3 or later, and runs on top of Doom Tournament.
 
 ## Currently Implemented
 
@@ -74,12 +73,12 @@ Doom Tournament (currently the devel branch is required).
 
 ## In progress
 
- - Final polishing
+ - N/A, this is the 1.0 release.
 
 ## Planned
 
  - Shifted to a 1.1 update:
-   - Impaler "slice" animation for melee alt
+   - Impaler "slice" animation for melee alt.
    - Alternate flamethrower secondary that behaves more like the Unreal Bible
      describes (unlit blobs at a rate of 4 per second that catch on fire with
      explosions/lava/etc).
@@ -88,13 +87,4 @@ Doom Tournament (currently the devel branch is required).
    - Actual Bonesaw?
    - Implement ASMD behavior described in the Unreal novels (highly destructive
      green beam that bounces off mirrors and water).
-
- - RTNP add-on
- - Monster pack (someday)
- - Map pack (maybe? who knows)
-
-## Known bugs
-
- - The Quadshot will visibly load 4 shells even when there's less available,
-   this is a limitation of the animation and I'll have to make alternate ones
-   for it eventually.
+   - Redo Quadshot animations (including partial reloads).

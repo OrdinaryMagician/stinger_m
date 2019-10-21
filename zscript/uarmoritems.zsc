@@ -1,31 +1,8 @@
 Class UnrealArmor : UTArmor
 {
-	int priority;
-
-	Property AbsorptionPriority : priority;
-
 	Default
 	{
 		-INVENTORY.ALWAYSPICKUP;
-		UnrealArmor.AbsorptionPriority 0;
-	}
-
-	override void AttachToOwner( Actor other )
-	{
-		Super.AttachToOwner(other);
-		// find last armor that's better than us
-		Inventory found = null;
-		for ( Inventory i=other.Inv; i; i=i.Inv )
-		{
-			if ( !(i is 'UnrealArmor') || (i == self) || (UnrealArmor(i).priority < priority) ) continue;
-			found = i;
-		}
-		if ( !found ) return;
-		// place ourselves right after it
-		Inventory saved = found.Inv;
-		found.Inv = self;
-		other.Inv = Inv;
-		Inv = saved;
 	}
 }
 
@@ -38,7 +15,7 @@ Class UArmor : UnrealArmor
 		Inventory.MaxAmount 100;
 		Inventory.InterHubAmount 100;
 		UTArmor.ArmorAbsorption 90;
-		UnrealArmor.AbsorptionPriority 7;
+		UTArmor.AbsorptionPriority 7;
 		Inventory.PickupMessage "$I_UARMOR";
 		Inventory.PickupSound "misc/u1armor";
 		Inventory.Icon "I_Armor";
@@ -60,7 +37,7 @@ Class AsbestosSuit : UnrealArmor
 		Inventory.MaxAmount 50;
 		Inventory.InterHubAmount 50;
 		UTArmor.ArmorAbsorption 50;
-		UnrealArmor.AbsorptionPriority 6;
+		UTArmor.AbsorptionPriority 6;
 		Inventory.PickupMessage "$I_ASBSUIT";
 		Inventory.PickupSound "misc/suit";
 		Inventory.Icon "I_Suit";
@@ -97,7 +74,7 @@ Class ToxinSuit : UnrealArmor
 		Inventory.MaxAmount 50;
 		Inventory.InterHubAmount 50;
 		UTArmor.ArmorAbsorption 50;
-		UnrealArmor.AbsorptionPriority 6;
+		UTArmor.AbsorptionPriority 6;
 		Inventory.PickupMessage "$I_TOXSUIT";
 		Inventory.PickupSound "misc/suit";
 		Inventory.Icon "I_TSuit";
@@ -134,7 +111,7 @@ Class KevlarSuit : UnrealArmor
 		Inventory.MaxAmount 100;
 		Inventory.InterHubAmount 100;
 		UTArmor.ArmorAbsorption 80;
-		UnrealArmor.AbsorptionPriority 6;
+		UTArmor.AbsorptionPriority 6;
 		Inventory.PickupMessage "$I_KEVSUIT";
 		Inventory.PickupSound "misc/suit";
 		Inventory.Icon "I_Kevlar";
@@ -184,7 +161,7 @@ Class ShieldBelt : UnrealArmor
 		Inventory.MaxAmount 100;
 		Inventory.InterHubAmount 100;
 		UTArmor.ArmorAbsorption 100;
-		UnrealArmor.AbsorptionPriority 10;
+		UTArmor.AbsorptionPriority 10;
 		Inventory.PickupMessage "$I_SHIELDBELT";
 		Inventory.PickupSound "belt/pickup";
 		Inventory.RespawnTics 2100;
@@ -256,7 +233,7 @@ Class PowerShield : UnrealArmor
 		Inventory.MaxAmount 200;
 		Inventory.InterHubAmount 200;
 		UTArmor.ArmorAbsorption 100;
-		UnrealArmor.AbsorptionPriority 11;	// wow dude
+		UTArmor.AbsorptionPriority 11;	// wow dude
 		Inventory.PickupMessage "$I_POWERSHIELD";
 		Inventory.PickupSound "sbelt/pickup";
 		Inventory.RespawnTics 3500;
@@ -327,7 +304,7 @@ Class UArmorBonus : UArmor
 		Inventory.MaxAmount 200;
 		Inventory.InterHubAmount 200;
 		UTArmor.ArmorAbsorption 25;
-		UnrealArmor.AbsorptionPriority 1;
+		UTArmor.AbsorptionPriority 1;
 		Inventory.PickupMessage "$I_ARMORBONUS";
 		Inventory.PickupSound "misc/u1armor";
 		Inventory.Icon "I_Bonus";

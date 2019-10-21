@@ -218,6 +218,7 @@ voice/activate	voicesnd
 
 univis/toggle	invisibl
 
+lite/pickup	fshlite1
 lite/off	fshlite2
 
 scuba/stop	scubada1

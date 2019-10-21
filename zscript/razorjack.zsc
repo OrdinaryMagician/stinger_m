@@ -164,6 +164,8 @@ Class RazorBlade : Actor
 		}
 		Goto Spawn;
 	Death:
+		TNT1 A 0 A_RazorHit();
+	XDeath:
 		TNT1 A 1 A_StopSound(CHAN_VOICE);
 		Stop;
 	}

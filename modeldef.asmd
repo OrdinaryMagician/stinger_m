@@ -69,22 +69,6 @@ Model "ASMDBall"
 	FrameIndex TAZB A 0 0
 }
 
-/*Model "ASMDExpl"
-{
-	Path "models"
-	Model 0 "TazerExpl_d.3d"
-	Skin 0 "AsmdBeam.png"
-	Scale 0.8 0.8 0.96
-	DONTCULLBACKFACES
-
-	FrameIndex TAZB A 0 0
-	FrameIndex TAZB B 0 1
-	FrameIndex TAZB C 0 2
-	FrameIndex TAZB D 0 3
-	FrameIndex TAZB E 0 4
-	FrameIndex TAZB F 0 5
-}*/
-
 Model "ASMDBeamRing"
 {
 	Path "models"
