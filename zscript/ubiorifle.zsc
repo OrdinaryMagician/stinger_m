@@ -538,15 +538,8 @@ Class UBioGlob : UBioGel
 {
 	int numsplash;
 
-	override void AlignSelf()
+	void SpawnSplash()
 	{
-		Super.AlignSelf();
-		if ( !bAMBUSH && (Scale.x > 1) ) numsplash = int(4*Scale.x)-1;
-	}
-	override void Tick()
-	{
-		Super.Tick();
-		if ( isFrozen() || !sting_biosplash ) return;
 		Vector3 ofs = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
 		for ( int i=0; i<2; i++ )
 		{
@@ -562,6 +555,18 @@ Class UBioGlob : UBioGel
 			d.vel = (cos(d.angle)*cos(d.pitch),sin(d.angle)*cos(d.pitch),-sin(d.pitch))*d.speed*FRandom[GES](0.4,0.6);
 			d.vel.z -= 2;
 		}
+	}
+	override void AlignSelf()
+	{
+		Super.AlignSelf();
+		if ( !bAMBUSH && (Scale.x > 1) ) numsplash = int(4*Scale.x)-1;
+		if ( sting_biosplash ) SpawnSplash();
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( isFrozen() || !sting_biosplash ) return;
+		SpawnSplash();
 	}
 }
 

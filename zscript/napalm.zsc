@@ -741,36 +741,8 @@ Class UNapalmGlob : UNapalm
 {
 	int numsplash;
 
-	override void AlignSelf()
+	void SpawnSplash()
 	{
-		Super.AlignSelf();
-		if ( Scale.x > 1 ) numsplash = int(8*Scale.x)-1;
-	}
-	override void OnDestroy()
-	{
-		Vector3 ofs = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
-		while ( numsplash > 0 )
-		{
-			for ( int i=0; i<2; i++ )
-			{
-				if ( numsplash-- <= 0 ) return;
-				Vector3 dir = (ofs+(FRandom[FlameT](-.8,.8),FRandom[FlameT](-.8,.8),FRandom[FlameT](-.8,.8))).unit();
-				A_SetScale(scale.x-0.05);
-				let d = Spawn("UNapalmSplash",pos+ofs*4);
-				d.target = target;
-				d.master = self;
-				d.scale *= FRandom[FlameT](0.5,0.7);
-				d.angle = atan2(dir.y,dir.x);
-				d.pitch = -asin(dir.z);
-				d.vel = (cos(d.angle)*cos(d.pitch),sin(d.angle)*cos(d.pitch),-sin(d.pitch))*d.speed*FRandom[FlameT](0.3,0.5)*scale.x;
-				d.vel.z -= 2;
-			}
-		}
-	}
-	override void Tick()
-	{
-		Super.Tick();
-		if ( isFrozen() ) return;
 		Vector3 ofs = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
 		for ( int i=0; i<2; i++ )
 		{
@@ -786,6 +758,23 @@ Class UNapalmGlob : UNapalm
 			d.vel = (cos(d.angle)*cos(d.pitch),sin(d.angle)*cos(d.pitch),-sin(d.pitch))*d.speed*FRandom[FlameT](0.3,0.5)*scale.x;
 			d.vel.z -= 2;
 		}
+	}
+	override void AlignSelf()
+	{
+		Super.AlignSelf();
+		if ( Scale.x > 1 ) numsplash = int(8*Scale.x)-1;
+		SpawnSplash();
+	}
+	override void OnDestroy()
+	{
+		Vector3 ofs = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
+		while ( numsplash > 0 ) SpawnSplash();
+	}
+	override void Tick()
+	{
+		Super.Tick();
+		if ( isFrozen() ) return;
+		SpawnSplash();
 	}
 }
 

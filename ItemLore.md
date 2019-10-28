@@ -24,7 +24,8 @@ This mod's version of the Translator has additional features:
 
 ## Amplifier
 
-When active, dramatically enhances the power of the Dispersion Pistol and ASMD.
+When active, dramatically enhances the power of the Dispersion Pistol, ASMD,
+Stunner and Impaler.
 
 ## Dampener
 
