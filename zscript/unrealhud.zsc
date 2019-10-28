@@ -228,7 +228,7 @@ Class UnrealHUD : BaseStatusBar
 		Vector2 scl = TexMan.GetScaledSize(i.Icon);
 		double mscl = 32./max(scl.x,scl.y);
 		double dw = (ClipX/mscl), dh = (ClipY/mscl);
-		double dx = CurX/mscl, dy = CurY/mscl;
+		double dx = (CurX+(32-scl.x*mscl)/2)/mscl, dy = (CurY+(32-scl.y*mscl)/2)/mscl;
 		if ( bRed )
 		{
 			Screen.DrawTexture(IconBase,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true,DTA_TranslationIndex,RedIcon);
@@ -429,14 +429,40 @@ Class UnrealHUD : BaseStatusBar
 				BestArmor = Inv;
 			}
 		}
-		if ( bDrawOne && BestArmor )
+		let ba = CPlayer.mo.FindInventory("BasicArmor");
+		if ( ba && (ba.Amount > 0) )
 		{
-			hasdrawn = true;
-			if ( !bCheckOnly ) DrawHudIcon(CurX,Y,BestArmor,false);
-			CurX += 32;
-			CurY += HudMode?29:27;
-			if ( !bCheckOnly ) DrawIconValue(BestArmor.Amount);
-			CurY -= HudMode?29:27;
+			ArmorAmount += ba.Amount;
+			if ( !bDrawOne )
+			{
+				hasdrawn = true;
+				if ( !bCheckOnly ) DrawHudIcon(CurX,y,ba,false);
+				CurX += 32;
+				CurY += HudMode?29:27;
+				if ( !bCheckOnly ) DrawIconValue(ba.Amount);
+				CurY -= HudMode?29:27;
+			}
+		}
+		if ( bDrawOne )
+		{
+			if ( BestArmor )
+			{
+				hasdrawn = true;
+				if ( !bCheckOnly ) DrawHudIcon(CurX,Y,BestArmor,false);
+				CurX += 32;
+				CurY += HudMode?29:27;
+				if ( !bCheckOnly ) DrawIconValue(BestArmor.Amount);
+				CurY -= HudMode?29:27;
+			}
+			else if ( ba && (ba.Amount > 0) )
+			{
+				hasdrawn = true;
+				if ( !bCheckOnly ) DrawHudIcon(CurX,Y,ba,false);
+				CurX += 32;
+				CurY += HudMode?29:27;
+				if ( !bCheckOnly ) DrawIconValue(ba.Amount);
+				CurY -= HudMode?29:27;
+			}
 		}
 		if ( (ArmorAmount > 0) && !HudMode )
 		{
@@ -479,7 +505,7 @@ Class UnrealHUD : BaseStatusBar
 		Vector2 scl = TexMan.GetScaledSize(icon);
 		double mscl = 32./max(scl.x,scl.y);
 		double dw = (ClipX/mscl), dh = (ClipY/mscl);
-		double dx = CurX/mscl, dy = CurY/mscl;
+		double dx = (CurX+(32-scl.x*mscl)/2)/mscl, dy = (CurY+(32-scl.y*mscl)/2)/mscl;
 		Screen.DrawTexture(icon,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_TopOffset,0,DTA_LeftOffset,0);
 		CurX += 32;
 		CurY += 29;
@@ -683,18 +709,25 @@ Class UnrealHUD : BaseStatusBar
 				BestArmor = Inv;
 			}
 		}
+		let ba = CPlayer.mo.FindInventory("BasicArmor");
+		if ( ba ) ArmorAmount += ba.amount;
+		bool drawnarmor = false;
 		for ( int i=0; i<6; i++ )
 		{
 			if ( !(BestArmor is OldArmorType[i]) ) continue;
 			DrawImage(OldArmor[i],(4,340),DI_ITEM_OFFSETS);
+			drawnarmor = true;
 			break;
 		}
+		if ( !drawnarmor && ba && (ba.Amount > 0) )
+			DrawInventoryIcon(ba,(40,366),DI_ITEM_CENTER,1.,(-1,-1),(2.,2.));
 		if ( ArmorAmount ) DrawString(mOldDigits,FormatNumber(ArmorAmount,3),(167,366),DI_TEXT_ALIGN_RIGHT);
 		Inventory Ammo1, Ammo2;
 		[Ammo1, Ammo2] = GetCurrentAmmo();
 		if ( Ammo1 )
 		{
 			if ( Ammo1.Amount ) DrawString(mOldDigits,FormatNumber(Ammo1.Amount,3),(549,366),DI_TEXT_ALIGN_RIGHT);
+			bool drawn = false;
 			for ( int i=0; i<19; i++ )
 			{
 				// match by ammo
@@ -702,8 +735,11 @@ Class UnrealHUD : BaseStatusBar
 				// match by weapon
 				if ( (OldAmmoType[i] is 'Weapon') && !(CPlayer.ReadyWeapon is OldAmmoType[i]) ) continue;
 				DrawImage(OldAmmo[i],(560,336),DI_ITEM_OFFSETS);
+				drawn = true;
 				break;
 			}
+			if ( !drawn )
+				DrawInventoryIcon(Ammo1,(600,366),DI_ITEM_CENTER,1.,(-1,-1),(2.,2.));
 		}
 		int sec = -1, sec2 = -1;
 		if ( CPlayer.ReadyWeapon && (CPlayer.ReadyWeapon is 'UnrealWeapon') )

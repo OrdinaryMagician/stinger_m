@@ -276,8 +276,19 @@ Class UTranslocator : UnrealWeapon
 		TLCI ABCDEFG 20 A_Jump(16,"Twiddle");
 		Goto Idle+1;
 	Twiddle:
-		#### # 6 { invoker.special1 = Random[TeleHand](2,5); }
-		TLCT ABCDEFGHI 3 A_SetTics(invoker.special1);
+		#### # 6;
+		TLCT A 0 A_Jump(256,"Twiddle2","Twiddle3","Twiddle4","Twiddle5");
+	Twiddle2:
+		TLCT ABCDEFGHI 2;
+		Goto Idle+1;
+	Twiddle3:
+		TLCT ABCDEFGHI 3;
+		Goto Idle+1;
+	Twiddle4:
+		TLCT ABCDEFGHI 4;
+		Goto Idle+1;
+	Twiddle5:
+		TLCT ABCDEFGHI 5;
 		Goto Idle+1;
 	Fire:
 		TLCF A 0 A_Overlay(-9999,"Null");

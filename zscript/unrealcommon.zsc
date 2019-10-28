@@ -963,6 +963,7 @@ Class UnrealMainHandler : EventHandler
 	}
 	override void CheckReplacement( ReplaceEvent e )
 	{
+		if ( e.IsFinal ) return;
 		if ( (e.Replacee == 'Chainsaw') || (e.Replacee == 'Gauntlets') )
 		{
 			if ( ((sting_proto && sting_dubious) || sting_olsmp) && !Random[Replacements](0,sting_proto?3:1) ) e.Replacement = 'WeaponPowerUp';

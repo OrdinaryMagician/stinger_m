@@ -176,7 +176,7 @@ Class Betamag : UnrealWeapon
 		{
 			if ( d.HitType == TRACE_HitActor )
 			{
-				int dmg = 15;
+				int dmg = 25;
 				dmg = d.HitActor.DamageMobj(invoker,self,dmg,'Melee',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
 				UTMainHandler.DoKnockback(d.HitActor,d.HitDir,35000);
 				if ( d.HitActor.player ) d.HitActor.A_QuakeEx(2,2,2,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.25);

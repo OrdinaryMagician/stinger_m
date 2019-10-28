@@ -60,6 +60,7 @@ Class Bonesaw : UnrealWeapon
 		{
 			if ( d.HitType == TRACE_HitActor )
 			{
+				invoker.bFORCEPAIN = !Random[Bonesaw](0,d.HitActor.bBOSS?5:2);
 				if ( d.HitLocation.z >= (d.HitActor.pos.z+d.HitActor.height*0.8) )
 					dmg = d.HitActor.DamageMobj(invoker,self,dmg*2,'Decapitated',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
 				else dmg = d.HitActor.DamageMobj(invoker,self,dmg,'slashed',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
@@ -83,7 +84,6 @@ Class Bonesaw : UnrealWeapon
 				p.pitch = asin(-d.HitDir.z);
 			}
 			else A_PlaySound("ripper/flesh",CHAN_6);
-			A_AlertMonsters();
 			if ( invoker.bAltFire ) A_QuakeEx(3,3,3,3,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.13);
 			else A_QuakeEx(1,1,1,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.06);
 			return true;
@@ -94,14 +94,42 @@ Class Bonesaw : UnrealWeapon
 	{
 		UTMainHandler.DoSwing(self,(FRandom[Bonesaw](-1,1),FRandom[Bonesaw](-1,1)),0.3,-0.2,2,SWING_Spring,0,2);
 		invoker.special1++;
-		if ( invoker.special1 < 5 ) return;
+		Vector3 x, y, z, origin;
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),x*15+y*4-z*4);
+		if ( waterlevel >= 3 )
+		{
+			UTMainHandler.DoKnockback(self,x,5000);
+			for ( int i=0; i<3; i++ )
+			{
+				let b = Spawn("UTBubble",level.Vec3Offset(origin,FRandom[Bonesaw](-4,4)*y+FRandom[Bonesaw](-4,4)*z));
+				b.scale *= .5;
+				b.vel += vel*.5;
+			}
+		}
+		if ( invoker.special1 < 4 ) return;
 		invoker.special1 = 0;
 		invoker.FireEffect();
-		for ( int i=0; i<8; i++ ) if ( TryHit(angle+i*(45./16),6) || TryHit(angle-i*(45./16),6) ) return;
+		A_AlertMonsters();
+		for ( int i=0; i<8; i++ ) if ( TryHit(angle+i*(45./16),10) || TryHit(angle-i*(45./16),10) ) return;
 	}
 	action void A_Clamp()
 	{
 		invoker.FireEffect();
+		A_AlertMonsters();
+		Vector3 x, y, z, origin;
+		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
+		origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),x*15+y*4-z*4);
+		if ( waterlevel >= 3 )
+		{
+			UTMainHandler.DoKnockback(self,x,20000);
+			for ( int i=0; i<12; i++ )
+			{
+				let b = Spawn("UTBubble",level.Vec3Offset(origin,FRandom[Bonesaw](-4,4)*y+FRandom[Bonesaw](-4,4)*z));
+				b.scale *= .5;
+				b.vel += vel*.5;
+			}
+		}
 		for ( int i=0; i<8; i++ ) if ( TryHit(angle+i*(45./16),30) || TryHit(angle-i*(45./16),30) ) return;
 	}
 	Default

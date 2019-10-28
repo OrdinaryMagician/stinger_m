@@ -401,6 +401,7 @@ Class Eightball : UnrealWeapon
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
+		A_Overlay(-9999,"Null");
 		invoker.special1 = 0;
 		if ( weap.bAltFire )
 		{
@@ -592,28 +593,35 @@ Class Eightball : UnrealWeapon
 		#### # 5
 		{
 			A_Overlay(-9999,"Null");
-			A_PlaySound("utrl/load",CHAN_6,Dampener.Active(self)?.03:.3);
+			A_PlaySound("utrl/load",CHAN_WEAPON,Dampener.Active(self)?.03:.3);
 			if ( invoker.bSingleRocket = !invoker.bSingleRocket )
 				A_Print(StringTable.Localize("$M_SINGLEROCKETON"));
 			else A_Print(StringTable.Localize("$M_SINGLEROCKETOFF"));
 		}
 		Goto Idle;
+	Dummy2:
+		TNT1 A 1
+		{
+			if ( !(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)) )
+				player.SetPSprite(PSP_WEAPON,ResolveState("Release"));
+		}
+		Wait;
 	Fire:
 	AltFire:
 		// one is loaded already
 		#### # 1
 		{
-			A_Overlay(-9999,"Null");
+			A_Overlay(-9999,"Dummy2");
 			A_LoadRocket(false);
 		}
-		#### # 3 A_JumpIf(!invoker.bAltFire&&invoker.bSingleRocket,"Release");
+		#### # 0 A_JumpIf(!invoker.bAltFire&&invoker.bSingleRocket,"Release");
 		#### # 0 A_LoadedRefire(1);
 		Goto Release;
 	Loading:
 		EBLI A 0;
-		EBLL A 0 A_LoadRocket();
-		EBLL A 0 A_PlaySound("utrl/load",CHAN_6,Dampener.Active(self)?.1:1.);
+		EBLL A 0 A_PlaySound("utrl/load",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
 		EBLL ABCDEFGHIJK 1;
+		EBLL L 0 A_LoadRocket();
 		EBLL L 0 A_PlaySound("utrl/rotate",CHAN_ITEM,Dampener.Active(self)?.01:.1);
 		EBLL LMNOPQRSTUVWXYZ[ 1;
 		EBLL Z 0;

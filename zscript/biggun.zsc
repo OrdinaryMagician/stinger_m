@@ -484,20 +484,20 @@ Class BigGun : UnrealWeapon
 	Twiddle1:
 		BIGW A 3
 		{
-			UTMainHandler.DoSwing(self,(FRandom[BigGun](-0.2,-0.3),FRandom[BigGun](0.2,0.3)),2,0,12,SWING_Spring,5,2);
+			UTMainHandler.DoSwing(self,(FRandom[BigGun](-0.1,-0.15),FRandom[BigGun](0.2,0.3)),2,0,12,SWING_Spring,5,2);
 		}
 		BIGW BCDEFGHIJKLMNO 3;
 		Goto Idle;
 	Twiddle2:
 		BIGT A 2
 		{
-			UTMainHandler.DoSwing(self,(FRandom[BigGun](-0.2,-0.3),FRandom[BigGun](0.2,0.3)),3,0,6,SWING_Spring,5,2);
-			UTMainHandler.DoSwing(self,(FRandom[BigGun](-0.2,-0.3),FRandom[BigGun](-0.4,-0.6)),4,0,12,SWING_Spring,6,1.4);
+			UTMainHandler.DoSwing(self,(FRandom[BigGun](-0.1,-0.15),FRandom[BigGun](0.2,0.3)),3,0,6,SWING_Spring,5,2);
+			UTMainHandler.DoSwing(self,(FRandom[BigGun](-0.1,-0.15),FRandom[BigGun](-0.4,-0.6)),4,0,12,SWING_Spring,6,1.4);
 		}
 		BIGT BCDEFGHIJKLMNOP 2;
 		BIGT Q 2
 		{
-			UTMainHandler.DoSwing(self,(FRandom[BigGun](-0.3,-0.2),FRandom[BigGun](0.4,0.5)),3,0.5,6,SWING_Spring,2,1.5);
+			UTMainHandler.DoSwing(self,(FRandom[BigGun](-0.15,-0.1),FRandom[BigGun](0.4,0.5)),3,0.5,6,SWING_Spring,2,1.5);
 		}
 		BIGT RSTUVWXY 2;
 		Goto Idle;
