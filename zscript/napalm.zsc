@@ -858,10 +858,15 @@ Class UFlamethrower : UnrealWeapon
 	}
 	action void A_FireFlame()
 	{
+		if ( Health <= 0 )
+		{
+			player.SetPSprite(-9999,ResolveState("Null"));
+			return;
+		}
 		let weap = Weapon(invoker);
 		if ( (weap.Ammo1.Amount <= 0) || !(player.cmd.buttons&BT_ATTACK) )
 		{
-			player.SetPSPrite(PSP_WEAPON,invoker.FindState("Release"));
+			player.SetPSprite(PSP_WEAPON,invoker.FindState("Release"));
 			return;
 		}
 		invoker.count += 10./TICRATE;
@@ -921,6 +926,12 @@ Class UFlamethrower : UnrealWeapon
 	}
 	action void A_ChargeUp()
 	{
+		if ( Health <= 0 )
+		{
+			invoker.bCharging = false;
+			player.SetPSprite(-9999,ResolveState("Null"));
+			return;
+		}
 		let weap = Weapon(invoker);
 		if ( (invoker.chargesize < 4.9) && (weap.Ammo1.Amount > 0) )
 		{

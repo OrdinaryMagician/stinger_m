@@ -56,6 +56,11 @@ server bool sting_pshield = false;	// p.shield absorbs damage instead of
 					// note that this will make it less
 					// useful as an invulnerability
 					// replacement
+server bool sting_pshield2 = true;	// p.shield does not drain over time
+					// when in vanilla mode, this was in
+					// fact a bug that never got fixed, but
+					// everyone is used to it so I made it
+					// toggleable
 server bool sting_nopstart = false;	// players start only with the
 					// dispersion pistol, otherwise they
 					// also get an automag for the sake

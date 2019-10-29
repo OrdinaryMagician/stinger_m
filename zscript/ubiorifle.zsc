@@ -640,6 +640,12 @@ Class UBioRifle : UnrealWeapon
 	}
 	action void A_ChargeUp()
 	{
+		if ( Health <= 0 )
+		{
+			invoker.bCharging = false;
+			player.SetPSprite(-9999,ResolveState("Null"));
+			return;
+		}
 		let weap = Weapon(invoker);
 		if ( (invoker.chargesize < 4.9) && (weap.Ammo1.Amount > 0) )
 		{

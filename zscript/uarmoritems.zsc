@@ -209,6 +209,7 @@ Class PowerShield : UnrealArmor
 	override void Tick()
 	{
 		Super.Tick();
+		if ( sting_pshield && sting_pshield2 ) return;
 		if ( !Owner || !Owner.player || (amount <= 0) ) return;
 		if ( gothit )
 		{

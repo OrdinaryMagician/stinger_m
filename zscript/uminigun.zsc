@@ -143,6 +143,7 @@ Class UMinigun : UnrealWeapon
 			return;
 		}
 		weap.bAltFire = !!(player.cmd.buttons&BT_ALTATTACK);
+		invoker.bcnt = 5;
 		A_Refire("Hold");
 	}
 
@@ -183,11 +184,12 @@ Class UMinigun : UnrealWeapon
 	FireDummy:
 		TNT1 A 1
 		{
+			if ( Health <= 0 ) return ResolveState("Null");
 			let weap = Weapon(invoker);
 			if ( !(player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK)) || (weap.Ammo1.Amount <= 0) )
 			{
 				A_StopSound(CHAN_WEAPON);
-				if ( Health > 0 ) player.SetPSprite(PSP_WEAPON,invoker.FindState("Release"));
+				player.SetPSprite(PSP_WEAPON,invoker.FindState("Release"));
 				return ResolveState("Null");
 			}
 			return ResolveState(null);
@@ -197,7 +199,11 @@ Class UMinigun : UnrealWeapon
 	AltFire:
 		MGNW A 0 A_PlaySound("umini/wind",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
 		MGNW ABCDEFGHIJKLMNO 1;
-		MGNW O 0 A_Refire(1);
+		MGNW O 0
+		{
+			invoker.bcnt = 5;
+			A_Refire(1);
+		}
 		Goto Release;
 	Hold:
 		MGNF A 0

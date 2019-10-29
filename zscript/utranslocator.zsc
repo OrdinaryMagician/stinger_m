@@ -291,26 +291,31 @@ Class UTranslocator : UnrealWeapon
 		TLCT ABCDEFGHI 5;
 		Goto Idle+1;
 	Fire:
-		TLCF A 0 A_Overlay(-9999,"Null");
-		TLCF A 0 A_JumpIf(invoker.module,"Recall");
+		#### # 0 A_Overlay(-9999,"Null");
+		#### # 0 A_JumpIf(invoker.module,"Recall");
+		#### # 2;
 		TLCF ABCDEF 2;
 		TLCF G 0 A_ThrowModule();
-		TLCF GHIJKLMNOPQRSTUVWXY 2;
+		TLCF GHIJKLMNOPQRSTUV 2;
+		TLCF WXY 2 A_WeaponReady();
 		Goto Idle;
 	Recall:
+		#### # 2;
 		TLCR ABCDEF 2;
 		TLCR G 0 A_ReturnModule();
 		TLCR GHIJKLM 2;
 		Goto Idle;
 	AltFire:
-		TLCA A 0 A_Overlay(-9999,"Null");
-		TLCA A 0 A_JumpIf(!invoker.module,"Reload");
+		#### # 0 A_Overlay(-9999,"Null");
+		#### # 0 A_JumpIf(!invoker.module,"Reload");
+		#### # 2;
 		TLCA ABCDE 2;
 		TLCA A 0 A_Translocate();
 		TLCA FGHIJKL 2;
 		Goto Idle;
 	Reload:
-		TLCB A 0 A_Overlay(-9999,"Null");
+		#### # 0 A_Overlay(-9999,"Null");
+		#### # 2;
 		TLCB ABCDEFGHIJKLMNOPQRSTUVWXYZ[\] 2;
 		TLB2 AB 2;
 		Goto Idle;
