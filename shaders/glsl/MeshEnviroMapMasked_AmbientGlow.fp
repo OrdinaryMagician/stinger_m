@@ -1,12 +1,12 @@
-// imitation of the Unreal Engine 1.x ambient glow effect, timing may be off
-#define PI 3.14159265
+// imitation of the Unreal Engine 1.x ambient glow effect
 vec4 ProcessLight( vec4 color )
 {
-	float glow = (1.0+sin(timer*2*PI))*0.25;
+	float glow = 0.25+0.2*sin(timer*8);
 	return vec4(min(color.rgb+vec3(glow),1.0),color.a);
 }
 
 // imitation of the Unreal Engine 1.x bMeshEnviroMap effect, not 1:1 but gets close
+// with the addition of a mask for blending the environment map with the base texture
 vec4 ProcessTexel()
 {
 	vec4 base = getTexel(vTexCoord.st);

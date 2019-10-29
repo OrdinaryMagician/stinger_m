@@ -111,7 +111,7 @@ Class Betamag : UnrealWeapon
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap || !player ) return;
-		if ( invoker.altaccuracy < 0.05 ) invoker.altaccuracy += 0.01;
+		if ( invoker.altaccuracy < 0.06 ) invoker.altaccuracy += 0.01;
 		if ( slave )
 		{
 			if ( weap.Ammo1.Amount <= 0 )
@@ -234,6 +234,7 @@ Class Betamag : UnrealWeapon
 		if ( alt ) origin = level.Vec3Offset(origin,-z*2.5+ydir*y*1.5);
 		else origin = level.Vec3Offset(origin,-z*1.5+ydir*y*2);
 		double a = FRandom[Betamag](0,360), s = FRandom[Betamag](0,alt?invoker.altaccuracy:0.);
+		if ( invoker.Amount > 1 ) s = s*2.+FRandom[Betamag](0,0.01);
 		[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
 		FLineTraceData d;
@@ -241,7 +242,7 @@ Class Betamag : UnrealWeapon
 		UTBulletTrail.DoTrail(self,origin,dir,10000,int((invoker.Amount+alt)**2));
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = 14;
+			int dmg = 10;
 			dmg = d.HitActor.DamageMobj(invoker,self,dmg,'shot',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
 			double mm = 3000;
 			if ( FRandom[Betamag](0,1) < 0.2 ) mm *= 5;
@@ -284,7 +285,7 @@ Class Betamag : UnrealWeapon
 		for ( int i=0; i<3; i++ )
 		{
 			let s = Spawn("UTViewSmoke",origin);
-			if ( alt ) UTViewSmoke(s).ofs = (10,ydir,-3);
+			if ( alt ) UTViewSmoke(s).ofs = (10,1.5*ydir,-3);
 			else UTViewSmoke(s).ofs = (10,4*ydir,-1);
 			s.target = self;
 			s.alpha *= 0.5;
@@ -421,63 +422,72 @@ Class Betamag : UnrealWeapon
 		}
 		Wait;
 	Fire:
-		AUTF A 2
+		AUTF A 1
 		{
+			if ( invoker.Ammo1.Amount <= 0 )
+				return ResolveState("Reload");
+			A_BetamagFire();
 			A_Overlay(-9999,null);
-			return A_JumpIfNoAmmo("Reload");
+			return ResolveState(null);
 		}
-		AUTF B 2;
-	Hold:
-		AUTF C 2 A_BetamagFire();
-		AUTF DE 2;
+		AUTF BCD 1;
+		AUTF E 2;
 		AUTF F 0 A_PlaySound("betamag/slide",CHAN_ITEM,!Dampener.Active(self)?.3:.03);
 		AUTF FGHI 2;
 		AUTF J 0 A_BetamagRefire("Hold");
 		AUTF J 2;
 		AUTI A 0;
 		Goto Idle;
+	Hold:
+		AUTF C 2 A_BetamagFire();
+		AUTF D 2;
+		Goto Fire+4;
 	LeftFire:
-		#### # 10 A_Overlay(-9998,null);
+		#### # 9 A_Overlay(-9998,null);
 		2UTI A 0 A_BetamagRefire(1,true);
 		Goto LeftIdle;
-		2UTF AB 1;
-	LeftHold:
-		2UTF C 2 A_BetamagFire(false,true);
-		2UTF DE 2;
+		2UTF A 1 A_BetamagFire(false,true);
+		2UTF BCD 1;
+		2UTF E 2;
 		2UTF F 0 A_PlaySound("betamag/slide",CHAN_7,!Dampener.Active(self)?.3:.03);
 		2UTF FGHI 2;
 		2UTF J 0 A_BetamagRefire("LeftHold",true);
 		2UTF J 2;
 		2UTI A 0;
 		Goto LeftIdle;
+	LeftHold:
+		2UTF C 2 A_BetamagFire(false,true);
+		2UTF D 2;
+		Goto LeftFire+6;
 	AltFire:
 		AUTA A 0
 		{
+			if ( invoker.Ammo1.Amount <= 0 )
+				return ResolveState("Reload");
 			invoker.altaccuracy = 0.08;
 			A_Overlay(-9999,null);
-			return A_JumpIfNoAmmo("Reload");
+			return ResolveState(null);
 		}
 		AUTA ABCDEFG 2;
 	AltHold:
-		AUTA H 2 A_BetamagFire(true);
-		AUTA I 2;
+		AUTA H 1 A_BetamagFire(true);
+		AUTA I 1;
 		AUTA J 0 A_PlaySound("betamag/slide",CHAN_ITEM,!Dampener.Active(self)?.3:.03);
-		AUTA JKLM 2;
+		AUTA JKLM 1;
 		AUTA N 0 A_BetamagRefire("AltHold");
-	AltRelease:
 		AUTA NOPQ 2;
 		AUTI A 2;
 		Goto Idle;
 	LeftAltFire:
-		#### # 6 A_Overlay(-9998,null);
+		#### # 4 A_Overlay(-9998,null);
 		2UTI A 0 A_BetamagRefire(1,true);
 		Goto LeftIdle;
 		2UTA ABCDEFG 2;
 	LeftAltHold:
-		2UTA H 2 A_BetamagFire(true,true);
-		2UTA I 2;
+		2UTA H 1 A_BetamagFire(true,true);
+		2UTA I 1;
 		2UTA J 0 A_PlaySound("betamag/slide",CHAN_7,!Dampener.Active(self)?.3:.03);
-		2UTA JKLM 2;
+		2UTA JKLM 1;
 		2UTA N 0 A_BetamagRefire("LeftAltHold",true);
 		2UTA NOPQ 2;
 		2UTI A 2;

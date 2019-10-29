@@ -195,6 +195,7 @@ Class Automag : UnrealWeapon
 		if ( alt ) origin = level.Vec3Offset(origin,-z*3+ydir*y);
 		else origin = level.Vec3Offset(origin,-z+ydir*y*4);
 		double a = FRandom[Automag](0,360), s = FRandom[Automag](0,alt?invoker.altaccuracy:0.01);
+		if ( invoker.Amount > 1 ) s *= 1.6;
 		[x2, y2, z2] = dt_CoordUtil.GetAxes(BulletSlope(),angle,roll);
 		Vector3 dir = (x2+y2*cos(a)*s+z2*sin(a)*s).unit();
 		FLineTraceData d;
@@ -341,6 +342,7 @@ Class Automag : UnrealWeapon
 		Stop;
 	Select:
 		AUTS A 1 A_Raise(int.max);
+		Wait;
 	Ready:
 		AUTS A 0
 		{
@@ -403,27 +405,33 @@ Class Automag : UnrealWeapon
 		}
 		Wait;
 	Fire:
-		AUTF A 1 A_Overlay(-9999,null);
+		AUTF A 1
+		{
+			A_Overlay(-9999,null);
+			A_AutomagFire();
+		}
 		AUTF BCD 1;
+		AUTF LM 3;
+		AUTF N 0 A_AutomagRefire(1);
+		Goto Release;
 	Hold:
-		AUTF E 2 A_AutomagFire();
-		AUTF FG 2;
+		AUTF N 1;
+		AUTF E 3 A_AutomagFire();
+		AUTF FG 3;
 		AUTF N 0 A_AutomagRefire(1);
 		Goto Release;
-		AUTF NN 2;
-		AUTF H 2 A_AutomagFire();
-		AUTF IJ 2;
+		AUTF N 1;
+		AUTF H 3 A_AutomagFire();
+		AUTF IJ 3;
 		AUTF N 0 A_AutomagRefire(1);
 		Goto Release;
-		AUTF NN 2;
-		AUTF K 2 A_AutomagFire();
-		AUTF LM 2;
-		AUTF N 0 A_AutomagRefire(1);
+		AUTF N 1;
+		AUTF K 3 A_AutomagFire();
+		AUTF LM 3;
+		AUTF N 0 A_AutomagRefire("Hold");
 		Goto Release;
-		AUTF NN 2;
-		Goto Hold;
 	Release:
-		AUTF NN 2;
+		AUTF N 1;
 		AUTF OPQRST 1;
 		AUTI A 0;
 		Goto Idle;
@@ -431,26 +439,29 @@ Class Automag : UnrealWeapon
 		2UTI A 5 A_Overlay(-9998,null);
 		2UTI A 0 A_AutomagRefire(1,true);
 		Goto LeftIdle;
+		2UTF A 1 A_AutomagFire(false,true);
+		2UTF BCD 1;
+		2UTF LM 3;
+		2UTF N 0 A_AutomagRefire(1,true);
+		Goto LeftRelease;
 	LeftHold:
-		2UTF ABCD 1;
-		2UTF E 2 A_AutomagFire(false,true);
-		2UTF FG 2;
+		2UTF N 1;
+		2UTF E 3 A_AutomagFire(false,true);
+		2UTF FG 3;
 		2UTF N 0 A_AutomagRefire(1,true);
 		Goto LeftRelease;
-		2UTF NN 2;
-		2UTF H 2 A_AutomagFire(false,true);
-		2UTF IJ 2;
+		2UTF N 1;
+		2UTF H 3 A_AutomagFire(false,true);
+		2UTF IJ 3;
 		2UTF N 0 A_AutomagRefire(1,true);
 		Goto LeftRelease;
-		2UTF NN 2;
-		2UTF K 2 A_AutomagFire(false,true);
-		2UTF LM 2;
-		2UTF N 0 A_AutomagRefire(1,true);
+		2UTF N 1;
+		2UTF K 3 A_AutomagFire(false,true);
+		2UTF LM 3;
+		2UTF N 0 A_AutomagRefire("LeftHold",true);
 		Goto LeftRelease;
-		2UTF NN 2;
-		Goto LeftHold+4;
 	LeftRelease:
-		2UTF NN 2;
+		2UTF N 1;
 		2UTF OPQRST 1;
 		2UTI A 0;
 		Goto LeftIdle;
@@ -466,17 +477,17 @@ Class Automag : UnrealWeapon
 		AUTA LM 2;
 		AUTA T 0 A_AutomagRefire(1);
 		Goto AltRelease;
-		AUTA T 1;
+		AUTA T 2;
 		AUTA N 2 A_AutomagFire(true);
 		AUTA OP 2;
 		AUTA T 0 A_AutomagRefire(1);
 		Goto AltRelease;
-		AUTA T 1;
+		AUTA T 2;
 		AUTA Q 2 A_AutomagFire(true);
 		AUTA RS 2;
 		AUTA T 0 A_AutomagRefire(1);
 		Goto AltRelease;
-		AUTA T 1;
+		AUTA T 2;
 		Goto AltHold;
 	AltRelease:
 		AUTA TUVWXYZ 1;
@@ -491,17 +502,17 @@ Class Automag : UnrealWeapon
 		2UTA LM 2;
 		2UTA T 0 A_AutomagRefire(1,true);
 		Goto LeftAltRelease;
-		2UTA T 1;
+		2UTA T 2;
 		2UTA N 2 A_AutomagFire(true,true);
 		2UTA OP 2;
 		2UTA T 0 A_AutomagRefire(1,true);
 		Goto LeftAltRelease;
-		2UTA T 1;
+		2UTA T 2;
 		2UTA Q 2 A_AutomagFire(true,true);
 		2UTA RS 2;
 		2UTA T 0 A_AutomagRefire(1,true);
 		Goto LeftAltRelease;
-		2UTA T 1;
+		2UTA T 2;
 		Goto LeftAltHold+10;
 	LeftAltRelease:
 		2UTA TUVWXYZ 1;
