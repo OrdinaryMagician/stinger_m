@@ -33,13 +33,10 @@ Class Bonesaw : UnrealWeapon
 			r.target = target;
 			r.tracer = tracer;
 			r.bDropped = bDropped;
-			Destroy();
+			r.bNeverRespawn = bNeverRespawn;
 		}
-		else
-		{
-			Owner.RemoveInventory(self);
-			Destroy();
-		}
+		else Owner.RemoveInventory(self);
+		Destroy();
 	}
 	override String GetObituary( Actor victim, Actor inflictor, Name mod, bool playerattack )
 	{
@@ -135,6 +132,7 @@ Class Bonesaw : UnrealWeapon
 	Default
 	{
 		Tag "$T_RAZORCLAW";
+		Inventory.Icon "I_BSaw";
 		Inventory.PickupMessage "$I_RAZORCLAW";
 		Weapon.UpSound "bonesaw/select";
 		Weapon.SlotNumber 1;

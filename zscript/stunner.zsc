@@ -22,7 +22,8 @@ Class StunnerAmmo : Ammo
 		let sting = Owner.FindInventory("StingerAmmo");
 		if ( sting && (sting.Amount > 0) )
 		{
-			sting.Amount--;
+			if ( !sv_infiniteammo && !Owner.FindInventory('PowerInfiniteAmmo',true) )
+				sting.Amount--;
 			Amount++;
 		}
 	}
@@ -328,13 +329,10 @@ Class Stunner : UnrealWeapon
 			r.target = target;
 			r.tracer = tracer;
 			r.bDropped = bDropped;
-			Destroy();
+			r.bNeverRespawn = bNeverRespawn;
 		}
-		else
-		{
-			Owner.RemoveInventory(self);
-			Destroy();
-		}
+		else Owner.RemoveInventory(self);
+		Destroy();
 	}
 
 	override int, int, bool, bool GetClipAmount()
@@ -429,7 +427,7 @@ Class Stunner : UnrealWeapon
 		invoker.count += 1.2/35.;
 		if ( invoker.count < 0.24 ) return ResolveState(null);
 		invoker.count = 0;
-		if ( !(sv_infiniteammo || (FindInventory('PowerInfiniteAmmo',true))) )
+		if ( !(sv_infiniteammo || FindInventory('PowerInfiniteAmmo',true)) )
 		{
 			if ( weap.Ammo1.Amount < 1 )
 				return ResolveState("Release");

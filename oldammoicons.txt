@@ -1,0 +1,22 @@
+# Ammo icons and their respective item class
+# Arranged so weapon-specific icons go first when needed
+Mini083,UMinigun
+Disp083,DefaultAmmo
+Clip083,UMiniAmmo
+Tary083,StingerAmmo
+Asmd083,AsmdAmmo
+Rokt083,URocketAmmo
+Flak083,UFlakBox
+Razor083,RazorAmmo
+Bio083,UBioAmmo
+Rifle083,URifleAmmo
+Shell083,UShells
+Impal083,ImpalerAmmo
+Flame083,FlameAmmo
+Tele083,UTranslocatorAmmo
+Stun083,StunnerAmmo
+Big083,BigAmmo
+Smini083,SMiniAmmo
+Peace083,PeaceAmmo
+OLSMP083,OLSMPAmmo
+Bsaw083,Bonesaw

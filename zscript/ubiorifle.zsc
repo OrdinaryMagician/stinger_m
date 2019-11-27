@@ -437,8 +437,8 @@ Class UBioGel : Actor
 		s.args[3] = int(s.args[3]*Scale.x);
 		invoker.deadtimer = -2;
 		if ( invoker.atline ) invoker.atline.RemoteActivate(target,invoker.atside,SPAC_Impact,pos);
-		UTMainHandler.DoBlast(self,Min(175,int(Scale.x*100)),40000*Scale.x);
-		A_Explode(int(40*Scale.x),Min(175,int(Scale.x*100)));
+		UTMainHandler.DoBlast(self,int(Scale.x*100),40000*Scale.x);
+		A_Explode(int(Args[0]*Scale.x),int(Scale.x*100));
 		A_PlaySound("ges/explode",CHAN_VOICE);
 		int numpt = Min(300,int(Scale.x*30))+Random[GES](-10,10);
 		for ( int i=0; i<numpt; i++ )
@@ -463,6 +463,7 @@ Class UBioGel : Actor
 	{
 		Obituary "$O_BIORIFLE";
 		DamageType 'Slime';
+		Args 40;
 		Radius 3;
 		Height 3;
 		Speed 11;
@@ -538,6 +539,11 @@ Class UBioGlob : UBioGel
 {
 	int numsplash;
 
+	Default
+	{
+		Args 75;
+	}
+
 	void SpawnSplash()
 	{
 		Vector3 ofs = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
@@ -561,6 +567,7 @@ Class UBioGlob : UBioGel
 		Super.AlignSelf();
 		if ( !bAMBUSH && (Scale.x > 1) ) numsplash = int(4*Scale.x)-1;
 		if ( sting_biosplash ) SpawnSplash();
+		else Scale *= 1.4;
 	}
 	override void Tick()
 	{

@@ -154,13 +154,10 @@ Class SMiniGun : UnrealWeapon
 			r.target = target;
 			r.tracer = tracer;
 			r.bDropped = bDropped;
-			Destroy();
+			r.bNeverRespawn = bNeverRespawn;
 		}
-		else
-		{
-			Owner.RemoveInventory(self);
-			Destroy();
-		}
+		else Owner.RemoveInventory(self);
+		Destroy();
 	}
 	action void A_SMiniFire( bool bAlt = false )
 	{

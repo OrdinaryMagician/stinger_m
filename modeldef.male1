@@ -263,4 +263,8 @@ Model "UPlayerMale1"
 	FrameIndex PLT3 M 0 563
 	FrameIndex PLT3 N 0 564
 	FrameIndex PLT3 O 0 565
+	// Ice Death (third frame of faint)
+	SurfaceSkin 0 0 "Kurganice.png"
+	SurfaceSkin 0 1 "GunPick1ice.png"
+	FrameIndex PICE A 0 131
 }

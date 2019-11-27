@@ -56,6 +56,11 @@ Class UInvisibility : UnrealInventory
 		Owner.TakeInventory("PowerUInvisibility",1);
 		Super.OwnerDied();
 	}
+	override void Travelled()
+	{
+		if ( bActive ) Owner.TakeInventory("PowerUInvisibility",1);
+		Super.Travelled();
+	}
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
@@ -403,13 +408,10 @@ Class MotionDetector : UnrealInventory
 			r.target = target;
 			r.tracer = tracer;
 			r.bDropped = bDropped;
-			Destroy();
+			r.bNeverRespawn = bNeverRespawn;
 		}
-		else
-		{
-			Owner.RemoveInventory(self);
-			Destroy();
-		}
+		else Owner.RemoveInventory(self);
+		Destroy();
 	}
 	override void PostRender( double lbottom )
 	{

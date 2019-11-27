@@ -1493,6 +1493,7 @@ Class SentryItem : UnrealInventory
 			r.target = target;
 			r.tracer = tracer;
 			r.bDropped = bDropped;
+			r.bNeverRespawn = bNeverRespawn;
 		}
 		Destroy();
 	}
@@ -1724,7 +1725,7 @@ Class MinigunSentry : Actor
 	}
 	bool TargetVisible()
 	{
-		if ( !target || (target.Health <= 0) || !CheckSight(target) ) return false;
+		if ( !master || !target || (target.Health <= 0) || !CheckSight(target) ) return false;
 		double angledelta = DeltaAngle(master.angle,AngleTo(target));
 		double pitchdelta = DeltaAngle(master.pitch,_PitchTo(target));
 		if ( (abs(angledelta) > maxangle) || (abs(pitchdelta) > maxpitch) ) return false;
@@ -1742,6 +1743,7 @@ Class MinigunSentry : Actor
 	}
 	void A_SentryFaceDir( double dest, statelabel next )
 	{
+		if ( !master ) return;
 		double angledelta = DeltaAngle(angle,master.angle+dest);
 		double pitchdelta = DeltaAngle(pitch,master.pitch);
 		if ( max(abs(angledelta),abs(pitchdelta)) < 2 )
@@ -1756,6 +1758,7 @@ Class MinigunSentry : Actor
 	}
 	void A_SentryAttack()
 	{
+		if ( !master ) return;
 		master.special1 = special1 = max(0,special1-1);
 		if ( (special1 <= 0) && master.master && master.master.CheckLocalView() ) Console.Printf(StringTable.Localize("$M_SENTRYDRY"));
 		A_SentryFaceTarget();
@@ -1817,7 +1820,7 @@ Class MinigunSentry : Actor
 		SENT A 0
 		{
 			A_PlaySound("sentry/raise");
-			master.A_AlertMonsters(0,AMF_TARGETEMITTER);
+			if ( master ) master.A_AlertMonsters(0,AMF_TARGETEMITTER);
 		}
 		SENR ABCDEFGHIJKLMNO 3;
 		Goto Idle;
@@ -1863,8 +1866,11 @@ Class MinigunSentry : Actor
 		SENW A 0
 		{
 			A_PlaySound("sentry/wind",looping:true);
-			master.A_AlertMonsters(0,AMF_TARGETEMITTER);
-			master.SetStateLabel("Missile");
+			if ( master )
+			{
+				master.A_AlertMonsters(0,AMF_TARGETEMITTER);
+				master.SetStateLabel("Missile");
+			}
 		}
 		SENW ABCDEFGHIJKLMNOPQR 1 A_SentryFaceTarget();
 		Goto MissileLoop;
@@ -1902,7 +1908,7 @@ Class MinigunSentry : Actor
 			A_LookEx(LOF_NOSOUNDCHECK|LOF_NOJUMP);
 			if ( TargetVisible() && (special1>0) ) return ResolveState("MissileLoop");
 			A_PlaySound("sentry/unwind");
-			master.SetStateLabel("MissileEnd");
+			if ( master ) master.SetStateLabel("MissileEnd");
 			return ResolveState(null);
 		}
 		SENU ABCDEFGHIJKLMNOPQR 1 A_SentryFaceTarget();
@@ -1914,8 +1920,11 @@ Class MinigunSentry : Actor
 		SENI A 0
 		{
 			A_PlaySound("sentry/raise");
-			master.A_AlertMonsters(0,AMF_TARGETEMITTER);
-			master.SetStateLabel("DoPackUp");
+			if ( master )
+			{
+				master.A_AlertMonsters(0,AMF_TARGETEMITTER);
+				master.SetStateLabel("DoPackUp");
+			}
 		}
 		SENR ONMLKJIHGFEDCBA 3;
 		Stop;

@@ -45,13 +45,10 @@ Class ImpalerAmmo : Ammo
 			r.target = target;
 			r.tracer = tracer;
 			r.bDropped = bDropped;
-			Destroy();
+			r.bNeverRespawn = bNeverRespawn;
 		}
-		else
-		{
-			Owner.RemoveInventory(self);
-			Destroy();
-		}
+		else Owner.RemoveInventory(self);
+		Destroy();
 	}
 	States
 	{
@@ -775,13 +772,10 @@ Class Impaler : UnrealWeapon
 			r.target = target;
 			r.tracer = tracer;
 			r.bDropped = bDropped;
-			Destroy();
+			r.bNeverRespawn = bNeverRespawn;
 		}
-		else
-		{
-			Owner.RemoveInventory(self);
-			Destroy();
-		}
+		else Owner.RemoveInventory(self);
+		Destroy();
 	}
 	override int, int, bool, bool GetClipAmount()
 	{
@@ -845,7 +839,8 @@ Class Impaler : UnrealWeapon
 				invoker.beam.specialf1 = mul;
 				invoker.beam.specialf1 *= .5+clamp(invoker.clipcount/double(invoker.default.clipcount),.0,.5);
 			}
-			invoker.clipcount = max(0,invoker.clipcount-int(mul));
+			if ( !sv_infiniteammo && !FindInventory('PowerInfiniteAmmo',true) )
+				invoker.clipcount = max(0,invoker.clipcount-int(mul));
 		}
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(16,255,32,255),3);

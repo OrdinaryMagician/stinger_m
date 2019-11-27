@@ -822,9 +822,12 @@ Class DispersionPistol : UnrealWeapon
 		{
 			invoker.chargesize = invoker.count = 0.;
 			let weap = Weapon(invoker);
-			if ( weap.Ammo1.Amount < max(10,invoker.ChargeUse) )
-				weap.Ammo1.Amount--;
-			else weap.Ammo1.Amount -= invoker.ChargeUse;
+			if ( !sv_infiniteammo && !FindInventory('PowerInfiniteAmmo',true) )
+			{
+				if ( weap.Ammo1.Amount < max(10,invoker.ChargeUse) )
+					weap.Ammo1.Amount--;
+				else weap.Ammo1.Amount -= invoker.ChargeUse;
+			}
 			invoker.bCharging = true;
 			// need to make sure player does the repeat fire anim
 			if ( self is 'UPlayer' )

@@ -38,6 +38,7 @@ Class OLSMPAmmo : Ammo
 			r.target = target;
 			r.tracer = tracer;
 			r.bDropped = bDropped;
+			r.bNeverRespawn = bNeverRespawn;
 		}
 		else Owner.RemoveInventory(self);
 		Destroy();
@@ -110,13 +111,10 @@ Class OLSMP : UnrealWeapon
 			r.target = target;
 			r.tracer = tracer;
 			r.bDropped = bDropped;
-			Destroy();
+			r.bNeverRespawn = bNeverRespawn;
 		}
-		else
-		{
-			Owner.RemoveInventory(self);
-			Destroy();
-		}
+		else Owner.RemoveInventory(self);
+		Destroy();
 	}
 	override void PlayUpSound( Actor origin )
 	{
@@ -348,7 +346,8 @@ Class OLSMP : UnrealWeapon
 			invoker.clipout = false;
 			let aadd = min(invoker.Ammo1.Amount,invoker.default.clipcount-invoker.clipcount);
 			invoker.clipcount += aadd;
-			invoker.Ammo1.Amount -= aadd;
+			if ( !sv_infiniteammo && !FindInventory('PowerInfiniteAmmo',true) )
+				invoker.Ammo1.Amount -= aadd;
 			A_PlaySound("automag/reload",CHAN_WEAPON,!Dampener.Active(self)?1.:.1,pitch:0.8);
 			if ( self is 'UTPlayer' )
 				UTPlayer(self).PlayReloading();

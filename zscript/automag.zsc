@@ -541,7 +541,8 @@ Class Automag : UnrealWeapon
 			invoker.clipout = false;
 			let aadd = min(invoker.Ammo1.Amount,invoker.default.clipcount-invoker.clipcount);
 			invoker.clipcount += aadd;
-			invoker.Ammo1.Amount -= aadd;
+			if ( !sv_infiniteammo && !FindInventory('PowerInfiniteAmmo',true) )
+				invoker.Ammo1.Amount -= aadd;
 			A_PlaySound("automag/reload",CHAN_WEAPON,!Dampener.Active(self)?1.:.1);
 			if ( self is 'UTPlayer' )
 				UTPlayer(self).PlayReloading();
@@ -576,7 +577,8 @@ Class Automag : UnrealWeapon
 			invoker.slaveclipout = false;
 			let aadd = min(invoker.Ammo1.Amount,invoker.default.slaveclipcount-invoker.slaveclipcount);
 			invoker.slaveclipcount += aadd;
-			invoker.Ammo1.Amount -= aadd;
+			if ( !sv_infiniteammo && !FindInventory('PowerInfiniteAmmo',true) )
+				invoker.Ammo1.Amount -= aadd;
 			A_PlaySound("automag/reload",CHAN_6,!Dampener.Active(self)?1.:.1);
 			if ( self is 'UTPlayer' )
 				UTPlayer(self).PlayReloading();

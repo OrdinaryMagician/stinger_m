@@ -327,6 +327,14 @@ Class UFlakCannon : UnrealWeapon
 		}
 		FLKL BCEFGIJKMNO 1;
 		Goto Idle;
+	AltLoading:
+		FLKL A 2
+		{
+			A_CheckReload();
+			if ( invoker.Ammo1.Amount > 0 ) A_Loading();
+		}
+		FLKL BCEFGIJKMNO 2;
+		Goto Idle;
 	Idle:
 		FLKI A 1 A_WeaponReady();
 		Wait;
@@ -351,7 +359,7 @@ Class UFlakCannon : UnrealWeapon
 		FLKA A 1 A_FireSlug();
 		FLKA BCDEFGHIJK 1;
 		FLKA K 10;
-		Goto Loading;
+		Goto AltLoading;
 	Deselect:
 		FLKD A 0 A_JumpIfNoAmmo("Deselect2");
 		FLKD ABCDEF 1;

@@ -561,7 +561,8 @@ Class ASMDBeam : Actor
 				BeamExplode(mult>1.5);
 				if ( target )
 				{
-					target.TakeInventory('ASMDAmmo',2);
+					if ( !sv_infiniteammo && !target.FindInventory('PowerInfiniteAmmo',true) )
+						target.TakeInventory('ASMDAmmo',2);
 					UTMainHandler.DoSwing(target,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),10,-2,3,SWING_Spring,3,6);
 				}
 				let b = t.Results.HitActor.target;

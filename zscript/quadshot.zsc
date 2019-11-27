@@ -49,13 +49,10 @@ Class UShells : Ammo
 			r.target = target;
 			r.tracer = tracer;
 			r.bDropped = bDropped;
-			Destroy();
+			r.bNeverRespawn = bNeverRespawn;
 		}
-		else
-		{
-			Owner.RemoveInventory(self);
-			Destroy();
-		}
+		else Owner.RemoveInventory(self);
+		Destroy();
 	}
 	States
 	{
@@ -172,13 +169,10 @@ Class QuadShot : UnrealWeapon
 			r.target = target;
 			r.tracer = tracer;
 			r.bDropped = bDropped;
-			Destroy();
+			r.bNeverRespawn = bNeverRespawn;
 		}
-		else
-		{
-			Owner.RemoveInventory(self);
-			Destroy();
-		}
+		else Owner.RemoveInventory(self);
+		Destroy();
 	}
 
 	override int, int, bool, bool GetClipAmount()
@@ -492,7 +486,7 @@ Class QuadShot : UnrealWeapon
 				if ( (invoker.clipcount >= 4) || (invoker.heldshells+weap.Ammo1.Amount <= 0) ) continue;
 				invoker.clipcount++;
 				if ( invoker.heldshells > 0 ) invoker.heldshells--;
-				else weap.Ammo1.Amount--;
+				else if ( !sv_infiniteammo && !FindInventory('PowerInfiniteAmmo',true) ) weap.Ammo1.Amount--;
 			}
 			if ( self is 'UTPlayer' )
 				UTPlayer(self).PlayReloading();
@@ -508,7 +502,7 @@ Class QuadShot : UnrealWeapon
 				if ( (invoker.clipcount >= 4) || (invoker.heldshells+weap.Ammo1.Amount <= 0) ) continue;
 				invoker.clipcount++;
 				if ( invoker.heldshells > 0 ) invoker.heldshells--;
-				else weap.Ammo1.Amount--;
+				else if ( !sv_infiniteammo && !FindInventory('PowerInfiniteAmmo',true) ) weap.Ammo1.Amount--;
 			}
 			if ( self is 'UTPlayer' )
 				UTPlayer(self).PlayReloading();

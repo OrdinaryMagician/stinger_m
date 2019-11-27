@@ -1,0 +1,8 @@
+# Armor icons and their respective item class
+Armor083,UArmor
+Kev083,KevlarSuit
+Asb083,AsbestosSuit
+Tox083,ToxinSuit
+Belt083,ShieldBelt
+PBelt083,PowerShield
+Bonus083,UArmorBonus

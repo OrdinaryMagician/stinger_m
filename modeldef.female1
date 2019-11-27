@@ -251,4 +251,8 @@ Model "UPlayerFemale1"
 	FrameIndex PLT3 M 0 595
 	FrameIndex PLT3 N 0 596
 	FrameIndex PLT3 O 0 597
+	// Ice Death (first frame of faint)
+	SurfaceSkin 0 0 "ginaice.png"
+	SurfaceSkin 0 1 "GunPick1ice.png"
+	FrameIndex PICE A 0 439
 }

@@ -137,14 +137,20 @@ Class UPlayer : UTPlayer
 		}
 		if ( giveall || (name ~== "armor") )
 		{
-			// Doomreal gives the player all subclasses of UnrealArmor
+			// Doomreal gives the player all subclasses of UTArmor that are not replaced by something
 			for ( int i=0; i<AllActorClasses.Size(); i++ )
 			{
-				if ( !(AllActorClasses[i].GetParentClass() is "UnrealArmor") ) continue;
-				let item = Inventory(Spawn(AllActorClasses[i]));
-				item.ClearCounters();	// don't increase item counts
-				item.Amount = item.MaxAmount;
-				if ( !item.CallTryPickup(self) ) item.Destroy();
+				let type = (Class<UTArmor>)(AllActorClasses[i]);
+				if ( !type ) continue;
+				let def = GetDefaultByType(type);
+				if ( !def.Icon.isValid() ) continue;
+				if ( GetReplacement(type) == type )
+				{
+					let item = Inventory(Spawn(type));
+					item.ClearCounters();	// don't increase item counts
+					item.Amount = item.MaxAmount;
+					if ( !item.CallTryPickup(self) ) item.Destroy();
+				}
 			}
 			if ( !giveall ) return;
 		}
@@ -376,7 +382,7 @@ Class UPlayerFemale : UPlayer
 		Goto Death;
 	Death.Decapitated:
 		#### # 0 A_HeadPop();
-		PLD6 A 3 A_PlayerScream();
+		PLD6 A 3 A_PlayerScreamDT();
 		PLD6 B 3 A_NoBlocking();
 		PLD6 CDEFGHIJ 3;
 		PLD6 K 1 A_DMFade();
@@ -388,42 +394,42 @@ Class UPlayerFemale : UPlayer
 		#### # 0 A_Jump(256,"Death1","Death3","Death4");
 	Death1:
 		#### # 3;
-		PLD1 A 3 A_PlayerScream();
+		PLD1 A 3 A_PlayerScreamDT();
 		PLD1 B 3 A_NoBlocking();
 		PLD1 CDEFGHIJKLMNOPQRSTU 3;
 		PLD1 V 1 A_DMFade();
 		Wait;
 	Death2:
 		#### # 3;
-		PLD2 A 3 A_PlayerScream();
+		PLD2 A 3 A_PlayerScreamDT();
 		PLD2 B 3 A_NoBlocking();
 		PLD2 CDEFGHIJKLMNOPQ 3;
 		PLD2 R 1 A_DMFade();
 		Wait;
 	Death3:
 		#### # 3;
-		PLD3 A 3 A_PlayerScream();
+		PLD3 A 3 A_PlayerScreamDT();
 		PLD3 B 3 A_NoBlocking();
 		PLD3 CDEFGHIJKLMNO 3;
 		PLD3 P 1 A_DMFade();
 		Wait;
 	Death4:
 		#### # 3;
-		PLD4 A 3 A_PlayerScream();
+		PLD4 A 3 A_PlayerScreamDT();
 		PLD4 B 3 A_NoBlocking();
 		PLD4 CDEFGHIJKL 3;
 		PLD4 M 1 A_DMFade();
 		Wait;
 	Death5:
 		#### # 3;
-		PLD5 A 3 A_PlayerScream();
+		PLD5 A 3 A_PlayerScreamDT();
 		PLD5 B 3 A_NoBlocking();
 		PLD5 CDEFGHIJKLMNO 3;
 		PLD5 P 1 A_DMFade();
 		Wait;
 	Death7:
 		#### # 0 A_ArmPop();
-		PLD7 A 3 A_PlayerScream();
+		PLD7 A 3 A_PlayerScreamDT();
 		PLD7 B 3 A_NoBlocking();
 		PLD7 CDEFGHIJKLMNOPQRSTUV 3;
 		PLD7 W 1 A_DMFade();
@@ -557,14 +563,14 @@ Class UPlayerMale : UPlayer
 		#### # 0 A_Jump(256,"Death2","Death3","Death7");
 	Death5:
 		#### # 0 A_TorsoPop();
-		PLD5 A 3 A_PlayerScream();
+		PLD5 A 3 A_PlayerScreamDT();
 		PLD5 B 3 A_NoBlocking();
 		PLD5 CDEFGHIJKLMNOPQRSTUV 3;
 		PLD5 W 1 A_DMFade();
 		Wait;
 	Death6:
 		#### # 3;
-		PLD6 A 3 A_PlayerScream();
+		PLD6 A 3 A_PlayerScreamDT();
 		PLD6 B 3 A_NoBlocking();
 		PLD6 CDEFGHIJKLMNOPQRSTUVWXYZ[ 3;
 		PLD6 \ 1 A_DMFade();
@@ -845,11 +851,6 @@ Class UnrealWeapon : UTWeapon
 	{
 		origin.A_PlaySound(upsound,CHAN_WEAPON,Dampener.Active(origin)?.1:1.);
 	}
-	// For clips
-	virtual clearscope int, int, bool, bool GetClipAmount() const
-	{
-		return -1, -1, false, false;
-	}
 }
 
 Class UnrealStaticHandler : StaticEventHandler
@@ -938,6 +939,17 @@ Class AmmoUsedInSlot
 {
 	Class<Ammo> AmmoType;
 	bool UsedInSlot[10];
+}
+
+// nothing at all
+Class UNothing : Actor
+{
+	States
+	{
+	Spawn:
+		TNT1 A 1;
+		Stop;
+	}
 }
 
 Class UnrealMainHandler : EventHandler
@@ -1197,32 +1209,35 @@ Class UnrealMainHandler : EventHandler
 			}
 		}
 		else if ( e.Replacee == 'TeleportFog' ) e.Replacement = 'UTeleportFog';
-		// replace UT items (while this is mainly for the DT map pack, it also has the added effect of preventing the guns from being added by "give all")
+		// replace UT items (prevents them from being cheated in)
 		else if ( e.Replacee is 'ImpactHammer' ) e.Replacement = 'DispersionPistol';
 		else if ( e.Replacee is 'Translocator' ) e.Replacement = 'UTranslocator';
-		else if ( e.Replacee is 'UTChainsaw' ) e.Replacement = 'Slot1Weapons';
-		else if ( e.Replacee is 'Enforcer' ) e.Replacement = 'Slot2Weapons';
-		else if ( e.Replacee is 'BioRifle' ) e.Replacement = 'Slot3Weapons';
-		else if ( e.Replacee is 'ShockRifle' ) e.Replacement = 'Slot4Weapons';
-		else if ( e.Replacee is 'PulseGun' ) e.Replacement = 'Slot5Weapons';
-		else if ( e.Replacee is 'Ripper2' ) e.Replacement = 'Slot6Weapons';
-		else if ( e.Replacee is 'Minigun' ) e.Replacement = 'Slot7Weapons';
-		else if ( e.Replacee is 'FlakCannon' ) e.Replacement = 'Slot8Ammo';
-		else if ( e.Replacee is 'UTRocketLauncher' ) e.Replacement = 'Slot0Weapons';
-		else if ( e.Replacee is 'SniperRifle' ) e.Replacement = 'Slot0Weapons';
-		else if ( e.Replacee is 'WarheadLauncher' ) e.Replacement = 'Slot0SWeapons';
-		else if ( e.Replacee is 'EnhancedShockRifle' ) e.Replacement = 'Amplifier';
+		else if ( e.Replacee is 'UTChainsaw' ) e.Replacement = 'Bonesaw';
+		else if ( e.Replacee is 'Enforcer' ) e.Replacement = 'Automag';
+		else if ( e.Replacee is 'BioRifle' ) e.Replacement = 'UBioRifle';
+		else if ( e.Replacee is 'ShockRifle' ) e.Replacement = 'ASMD';
+		else if ( e.Replacee is 'PulseGun' ) e.Replacement = 'Stinger';
+		else if ( e.Replacee is 'Ripper2' ) e.Replacement = 'Razorjack';
+		else if ( e.Replacee is 'Minigun' ) e.Replacement = 'UMinigun';
+		else if ( e.Replacee is 'FlakCannon' ) e.Replacement = 'UFlakCannon';
+		else if ( e.Replacee is 'UTRocketLauncher' ) e.Replacement = 'Eightball';
+		else if ( e.Replacee is 'SniperRifle' ) e.Replacement = 'URifle';
+		else if ( e.Replacee is 'WarheadLauncher' ) e.Replacement = 'UNothing';
+		else if ( e.Replacee is 'EnhancedShockRifle' ) e.Replacement = 'UNothing';
 		else if ( e.Replacee is 'ChainsawAmmo' ) e.Replacement = 'UNothing';
-		else if ( e.Replacee is 'EClip' ) e.Replacement = 'Slot2Ammo';
-		else if ( e.Replacee is 'BioAmmo' ) e.Replacement = 'Slot3Ammo';
-		else if ( e.Replacee is 'ShockAmmo' ) e.Replacement = 'Slot4Ammo';
-		else if ( e.Replacee is 'PulseAmmo' ) e.Replacement = 'Slot5Ammo';
-		else if ( e.Replacee is 'RipperAmmo' ) e.Replacement = 'Slot6Ammo';
-		else if ( e.Replacee is 'MiniAmmo' ) e.Replacement = 'Slot7Ammo';
-		else if ( e.Replacee is 'FlakAmmo' ) e.Replacement = 'Slot8Ammo';
-		else if ( e.Replacee is 'UTRocketAmmo' ) e.Replacement = 'Slot9Ammo';
-		else if ( e.Replacee is 'RifleAmmo' ) e.Replacement = 'Slot0Ammo';
-		else if ( e.Replacee is 'WarheadAmmo' ) e.Replacement = 'Slot0SAmmo';
+		else if ( e.Replacee is 'EClip' ) e.Replacement = 'UClip';
+		else if ( e.Replacee is 'BioAmmo2' ) e.Replacement = 'UBioAmmo2';
+		else if ( e.Replacee is 'BioAmmo' ) e.Replacement = 'UBioAmmo';
+		else if ( e.Replacee is 'ShockAmmo2' ) e.Replacement = 'ASMDAmmo2';
+		else if ( e.Replacee is 'ShockAmmo' ) e.Replacement = 'ASMDAmmo';
+		else if ( e.Replacee is 'PulseAmmo' ) e.Replacement = 'StingerAmmo';
+		else if ( e.Replacee is 'RipperAmmo' ) e.Replacement = 'RazorAmmo';
+		else if ( e.Replacee is 'MiniAmmo' ) e.Replacement = 'UMiniAmmo';
+		else if ( e.Replacee is 'FlakAmmo' ) e.Replacement = 'UFlakBox';
+		else if ( e.Replacee is 'UTRocketAmmo' ) e.Replacement = 'URocketAmmo';
+		else if ( e.Replacee is 'RifleAmmo2' ) e.Replacement = 'URifleAmmo2';
+		else if ( e.Replacee is 'RifleAmmo' ) e.Replacement = 'URifleAmmo';
+		else if ( e.Replacee is 'WarheadAmmo' ) e.Replacement = 'UNothing';
 		else if ( e.Replacee is 'EnhancedShockAmmo' ) e.Replacement = 'UNothing';
 		else if ( e.Replacee is 'UTBackpack' ) e.Replacement = 'UnrealBackpack';
 		else if ( e.Replacee is 'UDamage' ) e.Replacement = 'Amplifier';
@@ -1239,7 +1254,6 @@ Class UnrealMainHandler : EventHandler
 		else if ( e.Replacee is 'UTHealthPack' ) e.Replacement = 'SuperHealth';
 		else if ( e.Replacee is 'UTHealthBonus' ) e.Replacement = 'Bandages';
 		else if ( e.Replacee is 'UTJumpBoots' ) e.Replacement = 'UJumpBoots';
-		// we don't need these
 		else if ( e.Replacee is 'UTActivatable' ) e.Replacement = 'UNothing';
 		else if ( e.Replacee is 'UTActivatableHealth' ) e.Replacement = 'UNothing';
 	}
@@ -1293,7 +1307,7 @@ Class UnrealMainHandler : EventHandler
 			let t = players[e.player].mo.FindInventory("UTranslator");
 			if ( t ) t.Use(false);
 		}
-		else if ( e.Name ~== "Bar083SlotFlash" )
+		else if ( (e.Name ~== "Bar083SlotFlash") && (e.player == consoleplayer) )
 			slotflash[e.Args[0]] = gametic+20;
 	}
 	private static bool CmpWeapon( Class<Weapon> a, Class <Weapon> b )

@@ -57,7 +57,7 @@ OptionMenu "UnrealOptionMenu"
 	Option "$STING_FLAMETSPREAD", "sting_flametspread", "YesNo", "sting_proto"
 	Option "$STING_IMPSELF", "sting_impself", "YesNo", "sting_proto"
 	Option "$STING_ALLSUITS", "sting_allsuits", "YesNo"
-	Option "$STING_PEACEHOME", "sting_peacehome", "YesNo"
+	Option "$STING_PEACEHOME", "sting_peacehome", "YesNo", "sting_proto"
 }
 
 AddOptionMenu "OptionsMenu"

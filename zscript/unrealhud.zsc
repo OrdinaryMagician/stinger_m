@@ -36,10 +36,10 @@ Class UnrealHUD : BaseStatusBar
 	bool MidPrintLarge;
 
 	// 0.83 HUD stuff
-	String OldAmmo[19];
-	Class<Inventory> OldAmmoType[19];
-	String OldArmor[7];
-	Class<Inventory> OldArmorType[7];
+	Array<String> OldAmmo;
+	Array<Class<Inventory> > OldAmmoType;
+	Array<String> OldArmor;
+	Array<Class<Inventory> > OldArmorType;
 	String OldKeys[7];
 	HUDFont mOldDigits, mOldDigitsSmall;
 	Font OldLargeFont, OldSmallFont;
@@ -89,59 +89,43 @@ Class UnrealHUD : BaseStatusBar
 		mMapFont = HUDFont.Create(WhiteFont);
 		OldLargeFont = Font.GetFont('UOldLargeFont');
 		OldSmallFont = Font.GetFont('UOldSmallFont');
-		// arranged so weapon-specific icons are checked first
-		OldAmmo[0] = "Mini083";
-		OldAmmo[1] = "Disp083";
-		OldAmmo[2] = "Clip083";
-		OldAmmo[3] = "Tary083";
-		OldAmmo[4] = "Asmd083";
-		OldAmmo[5] = "Rokt083";
-		OldAmmo[6] = "Flak083";
-		OldAmmo[7] = "Razor083";
-		OldAmmo[8] = "Bio083";
-		OldAmmo[9] = "Rifle083";
-		OldAmmo[10] = "Shell083";
-		OldAmmo[11] = "Impal083";
-		OldAmmo[12] = "Flame083";
-		OldAmmo[13] = "Tele083";
-		OldAmmo[14] = "Stun083";
-		OldAmmo[15] = "Big083";
-		OldAmmo[16] = "Smini083";
-		OldAmmo[17] = "Peace083";
-		OldAmmo[18] = "OLSMP083";
-		OldAmmoType[0] = "UMinigun";
-		OldAmmoType[1] = "DefaultAmmo";
-		OldAmmoType[2] = "UMiniAmmo";
-		OldAmmoType[3] = "StingerAmmo";
-		OldAmmoType[4] = "AsmdAmmo";
-		OldAmmoType[5] = "URocketAmmo";
-		OldAmmoType[6] = "UFlakBox";
-		OldAmmoType[7] = "RazorAmmo";
-		OldAmmoType[8] = "UBioAmmo";
-		OldAmmoType[9] = "URifleAmmo";
-		OldAmmoType[10] = "UShells";
-		OldAmmoType[11] = "ImpalerAmmo";
-		OldAmmoType[12] = "FlameAmmo";
-		OldAmmoType[13] = "UTranslocatorAmmo";
-		OldAmmoType[14] = "StunnerAmmo";
-		OldAmmoType[15] = "BigAmmo";
-		OldAmmoType[16] = "SMiniAmmo";
-		OldAmmoType[17] = "PeaceAmmo";
-		OldAmmoType[18] = "OLSMPAmmo";
-		OldArmor[0] = "Armor083";
-		OldArmor[1] = "Kev083";
-		OldArmor[2] = "Asb083";
-		OldArmor[3] = "Tox083";
-		OldArmor[4] = "Belt083";
-		OldArmor[5] = "Pbelt083";
-		OldArmor[6] = "Bonus083";
-		OldArmorType[0] = "UArmor";
-		OldArmorType[1] = "KevlarSuit";
-		OldArmorType[2] = "AsbestosSuit";
-		OldArmorType[3] = "ToxinSuit";
-		OldArmorType[4] = "ShieldBelt";
-		OldArmorType[5] = "PowerShield";
-		OldArmorType[6] = "UArmorBonus";
+		// load icon lists
+		Array<String> lst, ent;
+		String dat;
+		for ( int lmp = Wads.FindLump("oldammoicons.txt"); lmp > 0; lmp = Wads.FindLump("oldammoicons.txt",lmp+1) )
+		{
+			dat = Wads.ReadLump(lmp);
+			lst.Clear();
+			dat.Split(lst,"\n",0);
+			for ( int i=0; i<lst.Size(); i++ )
+			{
+				if ( (lst[i].Length() <= 0) || (lst[i].Left(1) ~== "#") ) continue;
+				ent.Clear();
+				lst[i].Split(ent,",",0);
+				if ( ent.Size() != 2 ) continue;
+				Class<Inventory> i = ent[1];
+				if ( !i ) continue;
+				OldAmmo.Push(ent[0]);
+				OldAmmoType.Push(i);
+			}
+		}
+		for ( int lmp = Wads.FindLump("oldarmoricons.txt"); lmp > 0; lmp = Wads.FindLump("oldarmoricons.txt",lmp+1) )
+		{
+			dat = Wads.ReadLump(lmp);
+			lst.Clear();
+			dat.Split(lst,"\n",0);
+			for ( int i=0; i<lst.Size(); i++ )
+			{
+				if ( (lst[i].Length() <= 0) || (lst[i].Left(1) ~== "#") ) continue;
+				ent.Clear();
+				lst[i].Split(ent,",",0);
+				if ( ent.Size() != 2 ) continue;
+				Class<Inventory> i = ent[1];
+				if ( !i ) continue;
+				OldArmor.Push(ent[0]);
+				OldArmorType.Push(i);
+			}
+		}
 		OldKeys[0] = "Redk083";
 		OldKeys[1] = "Bluek083";
 		OldKeys[2] = "Goldk083";
@@ -476,13 +460,52 @@ Class UnrealHUD : BaseStatusBar
 	{
 		CurX = x;
 		CurY = y;
-		if ( !CPlayer.ReadyWeapon || !CPlayer.ReadyWeapon.Ammo1 ) return;
-		Font cfont = LargeFont;
-		if ( CPlayer.ReadyWeapon.Ammo1.Amount <= min(9,CPlayer.ReadyWeapon.Ammo1.MaxAmount/3) ) cfont = LargeRedFont;
+		if ( !CPlayer.ReadyWeapon ) return;
 		int sec = -1, sec2 = -1;
 		bool red = false, red2 = false;
-		if ( CPlayer.ReadyWeapon is 'UnrealWeapon' )
-			[sec, sec2, red, red2] = UnrealWeapon(CPlayer.ReadyWeapon).GetClipAmount();
+		if ( CPlayer.ReadyWeapon is 'UTWeapon' )
+			[sec, sec2, red, red2] = UTWeapon(CPlayer.ReadyWeapon).GetClipAmount();
+		Font cfont = LargeFont;
+		if ( !CPlayer.ReadyWeapon.Ammo1 )
+		{
+			if ( CPlayer.ReadyWeapon.Icon.IsNull() ) return;
+			if ( !HudMode )
+			{
+				double bx = CurX;
+				CurX = bx-MedFont.StringWidth(String.Format("%d",sec))-2;
+				CurY += cfont.GetHeight()-MedFont.GetHeight()-4;
+				if ( sec != -1 )
+					Screen.DrawText(MedFont,red?Font.CR_RED:Font.CR_UNTRANSLATED,CurX,CurY,String.Format("%d",sec),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+				CurX = bx-MedFont.StringWidth(String.Format("%d",sec2))-2;
+				CurY -= MedFont.GetHeight()+2;
+				if ( sec2 != -1 )
+					Screen.DrawText(MedFont,red2?Font.CR_RED:Font.CR_UNTRANSLATED,CurX,CurY,String.Format("%d",sec2),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+			}
+			CurX = x;
+			CurY = y;
+			Screen.DrawTexture(IconBase,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+			// scale to fit
+			Vector2 scl = TexMan.GetScaledSize(CPlayer.ReadyWeapon.Icon);
+			double mscl = 32./max(scl.x,scl.y);
+			double dw = (ClipX/mscl), dh = (ClipY/mscl);
+			double dx = (CurX+(32-scl.x*mscl)/2)/mscl, dy = (CurY+(32-scl.y*mscl)/2)/mscl;
+			Screen.DrawTexture(CPlayer.ReadyWeapon.Icon,false,dx,dy,DTA_VirtualWidthF,dw,DTA_VirtualHeightF,dh,DTA_KeepRatio,true,DTA_TopOffset,0,DTA_LeftOffset,0);
+			if ( HudMode )
+			{
+				CurX = x;
+				CurY = y;
+				Screen.DrawTexture(IconBase,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+				CurX = (x+30)-TinyFont.StringWidth(String.Format("%d",sec));
+				CurY = y+2;
+				if ( sec != -1 )
+					Screen.DrawText(red?TinyRedFont:TinyFont,Font.CR_UNTRANSLATED,CurX,CurY,String.Format("%d",sec),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+				CurX = x+3;
+				if ( sec2 != -1 )
+					Screen.DrawText(red2?TinyRedFont:TinyFont,Font.CR_UNTRANSLATED,CurX,CurY,String.Format("%d",sec2),DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+			}
+			return;
+		}
+		if ( CPlayer.ReadyWeapon.Ammo1.Amount <= min(9,CPlayer.ReadyWeapon.Ammo1.MaxAmount/3) ) cfont = LargeRedFont;
 		if ( !HudMode )
 		{
 			CurX -= cfont.StringWidth(String.Format("%d",CPlayer.ReadyWeapon.Ammo1.Amount))+2;
@@ -712,7 +735,7 @@ Class UnrealHUD : BaseStatusBar
 		let ba = CPlayer.mo.FindInventory("BasicArmor");
 		if ( ba ) ArmorAmount += ba.amount;
 		bool drawnarmor = false;
-		for ( int i=0; i<6; i++ )
+		for ( int i=0; i<OldArmor.Size(); i++ )
 		{
 			if ( !(BestArmor is OldArmorType[i]) ) continue;
 			DrawImage(OldArmor[i],(4,340),DI_ITEM_OFFSETS);
@@ -724,26 +747,23 @@ Class UnrealHUD : BaseStatusBar
 		if ( ArmorAmount ) DrawString(mOldDigits,FormatNumber(ArmorAmount,3),(167,366),DI_TEXT_ALIGN_RIGHT);
 		Inventory Ammo1, Ammo2;
 		[Ammo1, Ammo2] = GetCurrentAmmo();
-		if ( Ammo1 )
+		if ( Ammo1 && Ammo1.Amount ) DrawString(mOldDigits,FormatNumber(Ammo1.Amount,3),(549,366),DI_TEXT_ALIGN_RIGHT);
+		bool drawn = false;
+		for ( int i=0; i<OldAmmo.Size(); i++ )
 		{
-			if ( Ammo1.Amount ) DrawString(mOldDigits,FormatNumber(Ammo1.Amount,3),(549,366),DI_TEXT_ALIGN_RIGHT);
-			bool drawn = false;
-			for ( int i=0; i<19; i++ )
-			{
-				// match by ammo
-				if ( (OldAmmoType[i] is 'Ammo') && !(Ammo1 is OldAmmoType[i]) ) continue;
-				// match by weapon
-				if ( (OldAmmoType[i] is 'Weapon') && !(CPlayer.ReadyWeapon is OldAmmoType[i]) ) continue;
-				DrawImage(OldAmmo[i],(560,336),DI_ITEM_OFFSETS);
-				drawn = true;
-				break;
-			}
-			if ( !drawn )
-				DrawInventoryIcon(Ammo1,(600,366),DI_ITEM_CENTER,1.,(-1,-1),(2.,2.));
+			// match by ammo
+			if ( (OldAmmoType[i] is 'Ammo') && (!Ammo1 || !(Ammo1 is OldAmmoType[i])) ) continue;
+			// match by weapon
+			if ( (OldAmmoType[i] is 'Weapon') && !(CPlayer.ReadyWeapon is OldAmmoType[i]) ) continue;
+			DrawImage(OldAmmo[i],(560,336),DI_ITEM_OFFSETS);
+			drawn = true;
+			break;
 		}
+		if ( !drawn && Ammo1 )
+			DrawInventoryIcon(Ammo1,(600,366),DI_ITEM_CENTER,1.,(-1,-1),(2.,2.));
 		int sec = -1, sec2 = -1;
-		if ( CPlayer.ReadyWeapon && (CPlayer.ReadyWeapon is 'UnrealWeapon') )
-			[sec, sec2] = UnrealWeapon(CPlayer.ReadyWeapon).GetClipAmount();
+		if ( CPlayer.ReadyWeapon && (CPlayer.ReadyWeapon is 'UTWeapon') )
+			[sec, sec2] = UTWeapon(CPlayer.ReadyWeapon).GetClipAmount();
 		if ( sec != -1 )
 			DrawString(mOldDigitsSmall,FormatNumber(sec,3),(633,378),DI_TEXT_ALIGN_RIGHT);
 		if ( sec2 != -1 )

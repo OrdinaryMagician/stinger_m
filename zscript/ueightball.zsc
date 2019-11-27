@@ -556,6 +556,8 @@ Class Eightball : UnrealWeapon
 		Wait;
 	Ready:
 		EBLS ABCDEFGHIJKLMNO 1 A_WeaponReady(WRF_NOFIRE);
+		EBLS O 8 A_Overlay(-9999,"Dummy");
+		Goto Idle+1;
 	Ready2:
 		EBLS O 0 A_CheckReload();
 		EBLL A 0 A_PlaySound("utrl/load",CHAN_6,Dampener.Active(self)?.1:1.);
