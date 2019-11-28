@@ -141,9 +141,7 @@ Class UPlayer : UTPlayer
 			for ( int i=0; i<AllActorClasses.Size(); i++ )
 			{
 				let type = (Class<UTArmor>)(AllActorClasses[i]);
-				if ( !type ) continue;
-				let def = GetDefaultByType(type);
-				if ( !def.Icon.isValid() ) continue;
+				if ( !type || (type == 'UTArmor') || (type == 'UnrealArmor') ) continue;
 				if ( GetReplacement(type) == type )
 				{
 					let item = Inventory(Spawn(type));
