@@ -121,7 +121,7 @@ Class UFlakSlug : FlakSlug
 		UTMainHandler.DoBlast(self,120,75000);
 		A_Explode(70,120);
 		A_QuakeEx(4,4,4,8,0,170,"",QF_RELATIVE|QF_SCALEDOWN,falloff:120,rollIntensity:0.2);
-		A_PlaySound("flak/explode",CHAN_VOICE);
+		A_PlaySound("uflak/explode",CHAN_VOICE);
 		A_AlertMonsters();
 		if ( !Tracer ) Spawn("SlugSmoke",pos);
 		Spawn("SlugLight",pos);
@@ -184,8 +184,8 @@ Class UFlakCannon : UnrealWeapon
 {
 	action void A_Loading( bool first = false )
 	{
-		if ( first ) A_PlaySound("flak/load",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
-		else A_PlaySound("flak/reload",CHAN_6,Dampener.Active(self)?.06:.6);
+		if ( first ) A_PlaySound("uflak/load",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+		else A_PlaySound("uflak/reload",CHAN_6,Dampener.Active(self)?.06:.6);
 	}
 	action void A_FireChunks()
 	{
@@ -193,7 +193,7 @@ Class UFlakCannon : UnrealWeapon
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
-		A_PlaySound("flak/fire",CHAN_WEAPON,Dampener.Active(self)?.2:1.);
+		A_PlaySound("uflak/fire",CHAN_WEAPON,Dampener.Active(self)?.2:1.);
 		A_Overlay(PSP_FLASH,"Flash");
 		A_OverlayFlags(PSP_FLASH,PSPF_RenderStyle,true);
 		A_OverlayRenderstyle(PSP_FLASH,STYLE_Add);
@@ -252,7 +252,7 @@ Class UFlakCannon : UnrealWeapon
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
-		A_PlaySound("flak/altfire",CHAN_WEAPON,Dampener.Active(self)?.2:1.);
+		A_PlaySound("uflak/altfire",CHAN_WEAPON,Dampener.Active(self)?.2:1.);
 		A_Overlay(PSP_FLASH,"Flash");
 		A_OverlayFlags(PSP_FLASH,PSPF_RenderStyle,true);
 		A_OverlayRenderstyle(PSP_FLASH,STYLE_Add);
@@ -292,7 +292,7 @@ Class UFlakCannon : UnrealWeapon
 	{
 		Tag "$T_FLAKCANNON";
 		Inventory.PickupMessage "$I_FLAKCANNON";
-		Weapon.UpSound "flak/select";
+		Weapon.UpSound "uflak/select";
 		Weapon.SlotNumber 6;
 		Weapon.SelectionOrder 1100;
 		Weapon.SlotPriority 1;
@@ -342,7 +342,7 @@ Class UFlakCannon : UnrealWeapon
 		FLKF A 1 A_FireChunks();
 		FLKF BCDEFGHI 1;
 		FLKF J 5;
-		FLKE A 1 A_PlaySound("flak/click",CHAN_6,Dampener.Active(self)?.05:.5);
+		FLKE A 1 A_PlaySound("uflak/click",CHAN_6,Dampener.Active(self)?.05:.5);
 		FLKE BCDEFGHIJKLMN 1;
 		FLKE S 4
 		{

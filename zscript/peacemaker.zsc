@@ -128,7 +128,7 @@ Class PeaceRocket : Actor
 		UTMainHandler.DoBlast(self,200,70000);
 		A_Explode(100,200);
 		A_QuakeEx(3,3,3,8,0,250,"",QF_RELATIVE|QF_SCALEDOWN,falloff:200,rollIntensity:0.2);
-		A_PlaySound("utrl/explode",CHAN_VOICE);
+		A_PlaySound("eightball/explode",CHAN_VOICE);
 		A_AlertMonsters();
 		Spawn("RocketExplLight",pos);
 		int numpt = Random[Peace](15,30);
@@ -230,7 +230,7 @@ Class PeaceBarrel : Actor
 	}
 	action void A_FireRocket( int n )
 	{
-		A_PlaySound("flak/altfire",CHAN_AUTO);
+		A_PlaySound("uflak/altfire",CHAN_AUTO);
 		A_AlertMonsters();
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
@@ -275,7 +275,7 @@ Class PeaceBarrel : Actor
 		A_SetScale(bAMBUSH?1.8:1.2);
 		A_Explode(bAMBUSH?500:125,bAMBUSH?200:100);
 		A_PlaySound("sentry/explode",CHAN_BODY,pitch:0.6);
-		A_PlaySound("utrl/explode",CHAN_VOICE,pitch:0.8);
+		A_PlaySound("eightball/explode",CHAN_VOICE,pitch:0.8);
 		A_AlertMonsters();
 		A_QuakeEx(4,4,4,10,0,400,"",QF_RELATIVE|QF_SCALEDOWN,falloff:300,rollIntensity:0.2);
 		UTMainHandler.DoBlast(self,bAMBUSH?200:100,50000);
@@ -356,7 +356,7 @@ Class PeaceBarrel : Actor
 		PEAM A 4 A_AlignSelf();
 		PEAM A 35
 		{
-			A_PlaySound((special1<=0)?"utrl/seeklost":"utrl/seeklock",CHAN_AUTO);
+			A_PlaySound((special1<=0)?"eightball/seeklost":"eightball/seeklock",CHAN_AUTO);
 			A_AlertMonsters();
 			return A_JumpIf(--special1<0,1);
 		}
@@ -384,14 +384,14 @@ Class PeaceBarrel : Actor
 			A_PlaySound("transloc/bounce",CHAN_AUTO,.8,pitch:FRandom[Peace](0.8,1.2));
 			A_PlaySound("transloc/bounce",CHAN_AUTO,.5,pitch:FRandom[Peace](0.8,1.2));
 		}
-		PEAM K 3 A_PlaySound("utrl/rotate",CHAN_AUTO,.1);
+		PEAM K 3 A_PlaySound("eightball/rotate",CHAN_AUTO,.1);
 		PEAM L 3 A_PlaySound("transloc/bounce",CHAN_AUTO,.5,pitch:FRandom[Peace](0.8,1.2));
 		PEAM M 3;
-		PEAM N 3 A_PlaySound("utrl/rotate",CHAN_AUTO,.1);
+		PEAM N 3 A_PlaySound("eightball/rotate",CHAN_AUTO,.1);
 		PEAM OPQ 3;
-		PEAM R 3 A_PlaySound("utrl/rotate",CHAN_AUTO,.1);
+		PEAM R 3 A_PlaySound("eightball/rotate",CHAN_AUTO,.1);
 		PEAM STU 3;
-		PEAM V 3 A_PlaySound("utrl/rotate",CHAN_AUTO,.1);
+		PEAM V 3 A_PlaySound("eightball/rotate",CHAN_AUTO,.1);
 		PEAM XYZ[\] 3;
 		PEAM ] 35;
 		PEAM ] 0 A_FireRocket(0);

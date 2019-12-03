@@ -178,14 +178,38 @@ stinger/explo3	stingex3
 $random stinger/explode { stinger/explo1 stinger/explo2 stinger/explo3 }
 $limit stinger/explode 16
 
-flak/click	click
+uflak/select	pdown
+uflak/load	hidraul2
+uflak/reload	load1
+uflak/fire	shot1
+uflak/altfire	explode1
+uflak/click	click
 
-eightball/fly	brocket
+eightball/select	selectin
+eightball/rotate	barrelmv
+eightball/load		loading
+eightball/fire		ignite
+eightball/altfire	eightalt
+eightball/seeklock	seeklock
+eightball/seeklost	seeklost
+eightball/fly		brocket
 
+asmd/select	tazersel
+asmd/fire	tazefire
+asmd/altfire	tazealtf
+asmd/hit	expl03
+asmd/blast	specexpl
+asmd/ball	expla02
 asmd/vapour	vapour
 
-ges/drip	GelDrip
+ges/hit		gelhit
+ges/select	gelselec
+ges/fire	gelshot
 ges/load	GelLoad
+ges/drip	GelDrip
+ges/explode	explg02
+$limit ges/hit 64
+$limit ges/explode 64
 
 dampener/on	dampsnd
 dampener/off	dampndea
@@ -216,7 +240,7 @@ flare/explode	explo1
 
 voice/activate	voicesnd
 
-univis/toggle	invisibl
+uinvis/toggle	invisibl
 
 lite/pickup	fshlite1
 lite/off	fshlite2
@@ -229,11 +253,14 @@ automag/select	cocking
 automag/fire	shot
 automag/click	click
 automag/reload	reload
+automag/casing	shell2
 
+rifle/select	riflesel
 rifle/fire	riflesht
 rifle/scopeon	rifllon
 rifle/scopeoff	riflloff
 
+umini/select	minisel
 umini/wind	windu2
 umini/fire	regf1
 umini/altfire	altf1
@@ -275,6 +302,7 @@ peace/open	peaceopn
 peace/fly	brufly1
 
 telehand/throw	peacethr
+telehand/spark	tdisrupt
 
 stun/select	stunsel
 stun/charge	stunchrg
@@ -359,3 +387,9 @@ sentry/movestop	sentmove
 vfrag/bounce1	glasstk1
 vfrag/bounce2	glasstk2
 $random vfrag/bounce { vfrag/bounce1 vfrag/bounce2 }
+
+razorjack/select	beam
+razorjack/fire		stblade
+razorjack/hum		razorhum
+razorjack/hit		bladehit
+razorjack/flesh		bladethk

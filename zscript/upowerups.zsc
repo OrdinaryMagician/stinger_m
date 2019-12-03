@@ -18,7 +18,7 @@ Class UInvisibility : UnrealInventory
 		bActive = !bActive;
 		if ( bActive )
 		{
-			Owner.A_PlaySound("invis/pickup",CHAN_ITEM);
+			Owner.A_PlaySound("uinvis/toggle",CHAN_ITEM);
 			Owner.GiveInventory("PowerUInvisibility",1);
 		}
 		else Owner.TakeInventory("PowerUInvisibility",1);

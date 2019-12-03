@@ -225,7 +225,7 @@ Class URifle : UnrealWeapon
 		Tag "$T_RIFLE";
 		Obituary "$O_SNIPER";
 		Inventory.PickupMessage "$I_RIFLE";
-		Weapon.UpSound "sniper/select";
+		Weapon.UpSound "rifle/select";
 		Weapon.SlotNumber 9;
 		Weapon.SelectionOrder 900;
 		Weapon.SlotPriority 1;

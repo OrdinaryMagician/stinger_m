@@ -151,7 +151,7 @@ Class UMinigun : UnrealWeapon
 	{
 		Tag "$T_MINIGUN";
 		Inventory.PickupMessage "$I_MINIGUN";
-		Weapon.UpSound "minigun/select";
+		Weapon.UpSound "umini/select";
 		Weapon.SlotNumber 0;
 		Weapon.SelectionOrder 500;
 		Weapon.SlotPriority 1;

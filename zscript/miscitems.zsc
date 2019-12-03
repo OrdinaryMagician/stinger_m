@@ -358,13 +358,13 @@ Class VoiceBoxActive : Actor
 		static const String BattleSounds[] =
 		{
 			"automag/shot",
-			"utrl/explode",
+			"eightball/explode",
 			"automag/shot",
 			"automag/shot",
-			"flak/altfire",
-			"utrl/explode",
-			"flak/fire",
-			"shock/fire",
+			"uflak/altfire",
+			"eightball/explode",
+			"uflak/fire",
+			"asmd/fire",
 			"stinger/hit2",
 			"automag/shot"
 		};
@@ -1215,6 +1215,7 @@ Class ForcefieldEffect : Actor
 		+SOLID;
 		+NODAMAGE;
 		+NOBLOOD;
+		+DONTGIB;
 		Mass int.max;
 		Health int.max;
 		Radius 15;
@@ -2115,6 +2116,8 @@ Class MinigunSentryBase : Actor
 		+SHOOTABLE;
 		+NOBLOOD;
 		+DONTTHRUST;
+		+NOICEDEATH;
+		+DONTGIB;
 	}
 	override void PostBeginPlay()
 	{
@@ -2409,6 +2412,8 @@ Class SentryGun : Actor
 		+NOBLOOD;
 		+DONTTHRUST;
 		+FRIENDLY;
+		+NOICEDEATH;
+		+DONTGIB;
 	}
 	override void PostBeginPlay()
 	{

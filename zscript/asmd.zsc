@@ -391,8 +391,8 @@ Class ASMDBall : Actor
 		r.angle = atan2(HitNormal.y,HitNormal.x);
 		r.pitch = asin(-HitNormal.z);
 		r.scale *= 1.5;
-		A_PlaySound("shock/hit",CHAN_VOICE);
-		A_PlaySound("shock/ball",CHAN_WEAPON,pitch:FRandom[ASMD](0.5,1.5));
+		A_PlaySound("asmd/hit",CHAN_VOICE);
+		A_PlaySound("asmd/ball",CHAN_WEAPON,pitch:FRandom[ASMD](0.5,1.5));
 		A_QuakeEx(4,4,4,30,0,200,"",QF_RELATIVE|QF_SCALEDOWN,falloff:70,rollIntensity:0.15);
 		A_AlertMonsters();
 		int numpt = Random[ASMD](50,100);
@@ -581,7 +581,7 @@ Class ASMDBeam : Actor
 				let r = Spawn("ASMDBlastRing",b.pos);
 				r.angle = atan2(t.Results.HitVector.y,t.Results.HitVector.x);
 				r.pitch = asin(-t.Results.HitVector.z);
-				A_PlaySound("shock/blast",CHAN_WEAPON,attenuation:0.5,pitch:0.6);
+				A_PlaySound("asmd/blast",CHAN_WEAPON,attenuation:0.5,pitch:0.6);
 				int numpt = Random[ASMD](200,300);
 				for ( int i=0; i<numpt; i++ )
 				{
@@ -649,7 +649,7 @@ Class ASMDBeam : Actor
 			Spawn("ASMDBeamLight",pos);
 		}
 		A_QuakeEx(2,2,2,5,0,120,"",QF_RELATIVE|QF_SCALEDOWN,falloff:60,rollIntensity:0.1);
-		A_PlaySound("shock/hit",CHAN_VOICE);
+		A_PlaySound("asmd/hit",CHAN_VOICE);
 		A_AlertMonsters();
 		int numpt = Random[ASMD](20,50);
 		for ( int i=0; i<numpt; i++ )
@@ -681,7 +681,7 @@ Class ASMD : UnrealWeapon
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
-		A_PlaySound("shock/fire",CHAN_WEAPON,Dampener.Active(self)?.2:1.);
+		A_PlaySound("asmd/fire",CHAN_WEAPON,Dampener.Active(self)?.2:1.);
 		invoker.FireEffect();
 		A_Overlay(PSP_FLASH,"Flash");
 		A_OverlayFlags(PSP_FLASH,PSPF_RenderStyle,true);
@@ -712,7 +712,7 @@ Class ASMD : UnrealWeapon
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
-		A_PlaySound("shock/altfire",CHAN_WEAPON,Dampener.Active(self)?.2:1.);
+		A_PlaySound("asmd/altfire",CHAN_WEAPON,Dampener.Active(self)?.2:1.);
 		double mult = Amplifier.GetMult(self,80);
 		invoker.FireEffect();
 		A_Overlay(PSP_FLASH,"Flash");
@@ -744,7 +744,7 @@ Class ASMD : UnrealWeapon
 	{
 		Tag "$T_ASMD";
 		Inventory.PickupMessage "$I_ASMD";
-		Weapon.UpSound "shock/select";
+		Weapon.UpSound "asmd/select";
 		Weapon.SlotNumber 4;
 		Weapon.SelectionOrder 2000;
 		Weapon.SlotPriority 1;

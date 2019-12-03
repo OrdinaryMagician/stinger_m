@@ -17,6 +17,10 @@ Class UClip : UMiniAmmo
 
 Class UCasing : UTCasing
 {
+	Default
+	{
+		BounceSound "automag/casing";
+	}
 }
 
 Class AutomagMag : EnforcerMag

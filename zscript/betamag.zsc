@@ -1,8 +1,16 @@
 Class BCasing : UTCasing
 {
+	Default
+	{
+		BounceSound "automag/casing";
+	}
 }
 Class BCasing2 : UTCasing
 {
+	Default
+	{
+		BounceSound "automag/casing";
+	}
 }
 
 Class Betamag : UnrealWeapon
