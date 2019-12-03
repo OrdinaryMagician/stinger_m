@@ -73,7 +73,7 @@ This mod requires GZDoom 4.2.4 or later, and runs on top of Doom Tournament.
 
 ## In progress
 
- - Adjustments and fixes.
+ - N/A, this is the 1.0.5 release.
 
 ## Planned
 
