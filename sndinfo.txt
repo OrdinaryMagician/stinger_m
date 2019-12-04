@@ -255,7 +255,7 @@ automag/click	click
 automag/reload	reload
 automag/casing	shell2
 
-rifle/select	riflesel
+rifle/select	riflpck
 rifle/fire	riflesht
 rifle/scopeon	rifllon
 rifle/scopeoff	riflloff
