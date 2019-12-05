@@ -3,8 +3,8 @@ Model "UnrealBackpack"
 	Path "models"
 	Model 0 "Backpack2_d.3d"	// edited out of SelectionMale1
 	Skin 0 "bpak.png"
-	ZOffset 16
-	Scale 0.3 0.3 0.36
+	ZOffset 14
+	Scale 0.3 0.3 0.3
 	AngleOffset -90
 	ROTATING
 
@@ -16,7 +16,7 @@ Model "UTranslator"
 	Path "models"
 	Model 0 "TranslatorMesh_d.3d"
 	Skin 0 "JTranslator1.png"
-	Scale 0.08 0.08 0.096
+	Scale 0.08 0.08 0.08
 	ZOffset 4
 
 	FrameIndex TRNS A 0 0
@@ -27,9 +27,9 @@ Model "UArmor"
 	Path "models"
 	Model 0 "ArmorM_d.3d"
 	Skin 0 "Jarmor1.png"
-	ZOffset 9
+	ZOffset 8
 	AngleOffset -90
-	Scale 0.07 -0.07 0.084
+	Scale 0.07 -0.07 0.07
 
 	FrameIndex UARM A 0 0
 }
@@ -42,7 +42,7 @@ Model "AsbestosSuit"
 	RollOffset 90
 	AngleOffset -90
 	ZOffset 17
-	Scale 0.096 -0.08 0.08
+	Scale 0.08 -0.08 0.08
 
 	FrameIndex ASBS A 0 0
 }
@@ -55,7 +55,7 @@ Model "ToxinSuit"
 	RollOffset 90
 	AngleOffset -90
 	ZOffset 17
-	Scale 0.096 -0.08 0.08
+	Scale 0.08 -0.08 0.08
 
 	FrameIndex TOXS A 0 0
 }
@@ -67,7 +67,7 @@ Model "KevlarSuit"
 	Skin 0 "AkevSuit1.png"
 	AngleOffset -90
 	ZOffset 5
-	Scale 0.08 -0.08 0.096
+	Scale 0.08 -0.08 0.08
 
 	FrameIndex KEVS A 0 0
 }
@@ -79,7 +79,7 @@ Model "ShieldBelt"
 	Skin 0 "Abelt1.png"
 	AngleOffset 90
 	ZOffset 2
-	Scale 0.05 -0.05 0.06
+	Scale 0.05 -0.05 0.05
 
 	FrameIndex BELT A 0 0
 }
@@ -91,7 +91,7 @@ Model "PowerShield"
 	Skin 0 "Apbelt1.png"
 	AngleOffset 90
 	ZOffset 2
-	Scale 0.05 -0.05 0.06
+	Scale 0.05 -0.05 0.05
 
 	FrameIndex BELT A 0 0
 }
@@ -101,8 +101,8 @@ Model "VoiceBox"
 	Path "models"
 	Model 0 "VoiceBoxMesh_d.3d"
 	Skin 0 "Ainv1_.png"
-	ZOffset 4
-	Scale 0.08 -0.08 0.096
+	ZOffset 3.5
+	Scale 0.08 -0.08 0.08
 
 	FrameIndex VBOX A 0 0
 }
@@ -111,8 +111,8 @@ Model "VoiceBoxActive"
 	Path "models"
 	Model 0 "VoiceBoxMesh_d.3d"
 	Skin 0 "Ainv1.png"
-	ZOffset 4
-	Scale 0.08 -0.08 0.096
+	ZOffset 3.5
+	Scale 0.08 -0.08 0.08
 
 	FrameIndex VBOX A 0 0
 	FrameIndex VBOX B 0 1
@@ -131,8 +131,8 @@ Model "Dampener"
 	Path "models"
 	Model 0 "DampenerM_d.3d"
 	Skin 0 "Ainv1.png"
-	ZOffset 6
-	Scale 0.06 -0.06 0.072
+	ZOffset 5
+	Scale 0.06 -0.06 0.06
 
 	FrameIndex DAMP A 0 0
 	FrameIndex DAMP B 0 1
@@ -151,8 +151,8 @@ Model "Forcefield"
 	Path "models"
 	Model 0 "ForceFieldPick_d.3d"
 	SurfaceSkin 0 1 "aforce1.png"
-	ZOffset 11
-	Scale 0.14 -0.14 0.168
+	ZOffset 9
+	Scale 0.14 -0.14 0.14
 
 	FrameIndex FFPK A 0 0
 }
@@ -162,8 +162,8 @@ Model "ForcefieldX"
 	Path "models"
 	Model 0 "ForceFieldPick_d.3d"
 	SurfaceSkin 0 0 "ForceF.png"
-	ZOffset 11
-	Scale 0.14 -0.14 0.168
+	ZOffset 9
+	Scale 0.14 -0.14 0.14
 	DONTCULLBACKFACES
 
 	FrameIndex FFPK A 0 0
@@ -195,8 +195,8 @@ Model "UInvisibility"
 	Path "models"
 	Model 0 "InvisibilityMesh_d.3d"
 	SurfaceSkin 0 1 "JInvisibility1.png"
-	ZOffset 8
-	Scale 0.1 -0.1 0.12
+	ZOffset 7
+	Scale 0.1 -0.1 0.1
 
 	FrameIndex INVS A 0 0
 }
@@ -206,8 +206,8 @@ Model "UInvisibilityX"
 	Path "models"
 	Model 0 "InvisibilityMesh_d.3d"
 	SurfaceSkin 0 0 "InvisFX.png"
-	ZOffset 8
-	Scale 0.1 -0.1 0.12
+	ZOffset 7
+	Scale 0.1 -0.1 0.1
 	DONTCULLBACKFACES
 
 	FrameIndex INVS A 0 0
@@ -218,9 +218,9 @@ Model "Amplifier"
 	Path "models"
 	Model 0 "AmplifierM_d.3d"
 	Skin 0 "JAmplifier1.png"
-	ZOffset 3
+	ZOffset 2.5
 	AngleOffset 90
-	Scale 0.16 -0.16 0.192
+	Scale 0.16 -0.16 0.16
 
 	FrameIndex AMPP A 0 0
 }
@@ -230,8 +230,8 @@ Model "UHealth"
 	Path "models"
 	Model 0 "HealthM_d.3d"
 	Skin 0 "Jhealth1.png"
-	ZOffset 3
-	Scale 0.04 -0.04 0.048
+	ZOffset 2.5
+	Scale 0.04 -0.04 0.04
 
 	FrameIndex HLTH A 0 0
 }
@@ -241,8 +241,8 @@ Model "Bandages"
 	Path "models"
 	Model 0 "bandage_d.3d"
 	Skin 0 "Jband1.png"
-	ZOffset 2.2
-	Scale 0.06 -0.06 0.072
+	ZOffset 2
+	Scale 0.06 -0.06 0.06
 
 	FrameIndex BAND A 0 0
 }
@@ -252,9 +252,9 @@ Model "SuperHealth"
 	Path "models"
 	Model 0 "SuperHealthMesh_d.3d"
 	SurfaceSkin 0 1 "Jshealth1.png"
-	ZOffset 10
+	ZOffset 8
 	RollOffset 180
-	Scale 0.08 -0.08 0.096
+	Scale 0.08 -0.08 0.08
 
 	FrameIndex SHTH A 0 0
 }
@@ -264,9 +264,9 @@ Model "SuperHealthX"
 	Path "models"
 	Model 0 "SuperHealthMesh_d.3d"
 	SurfaceSkin 0 0 "SHealthFX.png"
-	ZOffset 10
+	ZOffset 8
 	RollOffset 180
-	Scale 0.08 -0.08 0.096
+	Scale 0.08 -0.08 0.08
 
 	FrameIndex SHTH A 0 0
 }
@@ -277,7 +277,7 @@ Model "NaliFruit"
 	Model 0 "NaliFruitMesh_d.3d"
 	Skin 0 "JNaliFruit1.png"
 	ZOffset 0
-	Scale 0.3 -0.3 0.36
+	Scale 0.3 -0.3 0.3
 
 	// root
 	FrameIndex FRUT A 0 1
@@ -318,7 +318,7 @@ Model "Seeds"
 	Model 0 "Seed_d.3d"
 	Skin 0 "Jseed1.png"
 	ZOffset 1
-	Scale 0.08 -0.08 0.096
+	Scale 0.08 -0.08 0.08
 
 	FrameIndex SEED A 0 0
 }
@@ -329,7 +329,7 @@ Model "SeedProj"
 	Model 0 "Seed_d.3d"
 	Skin 0 "Jseed1.png"
 	ZOffset 1
-	Scale 0.08 -0.08 0.096
+	Scale 0.08 -0.08 0.08
 	USEACTORPITCH
 
 	FrameIndex SEED A 0 0
@@ -343,7 +343,7 @@ Model "Flare"
 	Offset 4 0 2
 	PitchOffset 90
 	AngleOffset 180
-	Scale 0.04 -0.048 0.04
+	Scale 0.04 -0.04 0.04
 
 	FrameIndex FLAR A 0 0
 }
@@ -356,7 +356,7 @@ Model "FlareThrown"
 	Offset 4 0 2
 	PitchOffset 90
 	AngleOffset 180
-	Scale 0.04 -0.048 0.04
+	Scale 0.04 -0.04 0.04
 	USEACTORPITCH
 	USEROTATIONCENTER
 	Rotation-Center 0 0 1
@@ -372,7 +372,7 @@ Model "FlareThrownX"
 	Offset 3.5 0 2
 	PitchOffset 90
 	AngleOffset 180
-	Scale 0.08 -0.048 0.04
+	Scale 0.08 -0.04 0.04
 	USEACTORPITCH
 	DONTCULLBACKFACES
 	USEROTATIONCENTER
@@ -388,7 +388,7 @@ Model "LightFlareThrown"
 	SurfaceSkin 0 0 "Jflare.png"
 	AngleOffset -90
 	Offset 4 0 1
-	Scale 0.1 -0.1 0.12
+	Scale 0.1 -0.1 0.1
 	USEACTORPITCH
 	USEROTATIONCENTER
 	Rotation-Center 0 0 1
@@ -402,7 +402,7 @@ Model "DarkFlareThrown"
 	SurfaceSkin 0 0 "Jflare.png"
 	AngleOffset -90
 	Offset 4 0 1
-	Scale 0.1 -0.1 0.12
+	Scale 0.1 -0.1 0.1
 	USEACTORPITCH
 	USEROTATIONCENTER
 	Rotation-Center 0 0 1
@@ -415,9 +415,9 @@ Model "UJumpBoots"
 	Path "models"
 	Model 0 "lboot_d.3d"
 	Skin 0 "Jlboot1.png"
-	Scale 0.06 0.06 0.072
+	Scale 0.06 0.06 0.06
 	AngleOffset 180
-	ZOffset 6
+	ZOffset 5
 
 	FrameIndex JBUT A 0 0
 }
@@ -427,7 +427,7 @@ Model "UFlashlight"
 	Path "models"
 	Model 0 "Flashl_d.3d"
 	Skin 0 "JFlashl1.png"
-	Scale 0.04 0.04 0.048
+	Scale 0.04 0.04 0.04
 	AngleOffset 180
 	ZOffset 2
 
@@ -439,9 +439,9 @@ Model "USearchlight"
 	Path "models"
 	Model 0 "BigFlash_d.3d"
 	Skin 0 "JBigFlash1.png"
-	Scale 0.07 0.07 0.084
+	Scale 0.07 0.07 0.07
 	AngleOffset -90
-	ZOffset 9
+	ZOffset 8
 
 	FrameIndex SLIT A 0 0
 }
@@ -453,8 +453,8 @@ Model "SentryItem"
 	SurfaceSkin 0 0 "Minigun_.png"
 	SurfaceSkin 0 1 "minigun1_.png"
 	SurfaceSkin 0 2 "JRifle1_.png"
-	Scale 0.15 0.15 0.18
-	ZOffset 38
+	Scale 0.15 0.15 0.15
+	ZOffset 32
 
 	FrameIndex SENT A 0 0
 }
@@ -465,7 +465,7 @@ Model "MinigunSentry"
 	Model 0 "SentryGun_d.3d"
 	SurfaceSkin 0 1 "Minigun.png"
 	SurfaceSkin 0 2 "minigun1.png"
-	Scale 0.15 0.15 0.18
+	Scale 0.15 0.15 0.15
 	USEACTORPITCH
 	USEACTORROLL
 
@@ -552,7 +552,7 @@ Model "MinigunSentryX"
 	Path "models"
 	Model 0 "SentryGun_d.3d"
 	SurfaceSkin 0 0 "JRifle1.png"
-	Scale 0.15 0.15 0.18
+	Scale 0.15 0.15 0.15
 	USEACTORPITCH
 	USEACTORROLL
 
@@ -569,7 +569,7 @@ Model "SentryFragment"
 	Path "models"
 	Model 0 "sfrag_d.3d"
 	Skin 0 "Minigun.png"
-	Scale 0.1 0.1 0.12
+	Scale 0.1 0.1 0.1
 	USEACTORPITCH
 	USEACTORROLL
 
@@ -588,8 +588,8 @@ Model "MinigunSentryBase"
 	SurfaceSkin 0 0 "Minigun.png"
 	SurfaceSkin 0 1 "minigun1.png"
 	SurfaceSkin 0 2 "JRifle1.png"
-	Scale 0.15 0.15 0.18
-	ZOffset 38
+	Scale 0.15 0.15 0.15
+	ZOffset 32
 	USEACTORPITCH
 	USEACTORROLL
 
@@ -678,8 +678,8 @@ Model "SentryGunItem"
 	Model 0 "SentryM_d.3d"
 	SurfaceSkin 0 1 "JSentry1_.png"
 	AngleOffset -90
-	Scale 0.12 0.12 0.144
-	ZOffset 16
+	Scale 0.12 0.12 0.12
+	ZOffset 14
 
 	FrameIndex SENT A 0 0
 }
@@ -690,8 +690,8 @@ Model "SentryGunX"
 	Model 0 "SentryM_d.3d"
 	SurfaceSkin 0 0 "JSentry1.png"
 	AngleOffset -90
-	Scale 0.12 0.12 0.144
-	ZOffset 16
+	Scale 0.12 0.12 0.12
+	ZOffset 14
 	DONTCULLBACKFACES
 
 	FrameIndex SENF A 0 20
@@ -704,8 +704,8 @@ Model "SentryGun"
 	Model 0 "SentryM_d.3d"
 	SurfaceSkin 0 1 "JSentry1.png"
 	AngleOffset -90
-	Scale 0.12 0.12 0.144
-	ZOffset 16
+	Scale 0.12 0.12 0.12
+	ZOffset 14
 
 	// Spawn
 	FrameIndex SENT A 0 0
@@ -768,9 +768,9 @@ Model "MotionDetector"
 	Path "models"
 	Model 0 "DetectorMesh_d.3d"
 	Skin 0 "JDetector.png"
-	Scale 0.08 -0.08 0.096
+	Scale 0.08 -0.08 0.08
 	PitchOffset 3
-	ZOffset 4
+	ZOffset 3
 
 	FrameIndex MDET A 0 0
 }
@@ -780,9 +780,9 @@ Model "SCUBAGear"
 	Path "models"
 	Model 0 "Scuba_d.3d"
 	Skin 0 "ASC1.png"
-	Scale 0.08 0.08 0.096
+	Scale 0.08 0.08 0.08
 	AngleOffset -90
-	ZOffset 11
+	ZOffset 9
 
 	FrameIndex SCUB A 0 0
 }
@@ -792,7 +792,7 @@ Model "UArmorBonus"
 	Path "models"
 	Model 0 "ubonus_d.3d"
 	Skin 0 "shield.png"
-	Scale 0.08 -0.08 0.096
+	Scale 0.08 -0.08 0.08
 	AngleOffset 90
 
 	FrameIndex XANH A 0 0
@@ -804,8 +804,8 @@ Model "UAllMap"
 	Model 0 "cheapcomp_d.3d"
 	SurfaceSkin 0 1 "JAllMap2.png"
 	SurfaceSkin 0 2 "JAllMap3.png"
-	Scale 0.04 0.04 0.048
-	ZOffset 3
+	Scale 0.04 0.04 0.04
+	ZOffset 2.5
 	AngleOffset 90
 
 	SurfaceSkin 0 0 "JAllMap1_a00.png"

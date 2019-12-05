@@ -4,7 +4,7 @@ Model "UFireball"
 	Model 0 "Flame_d.3d"
 	Skin 0 "JFlame2.png"
 	PitchOffset 90
-	Scale 0.048 0.04 0.04
+	Scale 0.04 0.04 0.04
 	Offset -4 0 0
 	PITCHFROMMOMENTUM
 
@@ -26,7 +26,7 @@ Model "UFireball2"
 	Model 0 "Flame_d.3d"
 	Skin 0 "JFlame3.png"
 	PitchOffset 90
-	Scale 0.06 0.05 0.05
+	Scale 0.05 0.05 0.05
 	Offset -5 0 0
 	PITCHFROMMOMENTUM
 
@@ -48,7 +48,7 @@ Model "UFireballEmber"
 	Model 0 "Flame_d.3d"
 	Skin 0 "JFlame3.png"
 	PitchOffset 90
-	Scale 0.024 0.02 0.02
+	Scale 0.02 0.02 0.02
 	Offset -2 0 0
 	PITCHFROMMOMENTUM
 
@@ -70,12 +70,12 @@ Model "FlameGun"
 	Path "models"
 	Model 1 "FlameGPick_d.3d"
 	Skin 1 "JFlameG1_.png"
-	ZOffset 6
-	Scale 0.04 0.04 0.048
+	ZOffset 5
+	Scale 0.04 0.04 0.04
 
 	FrameIndex FGNP B 1 0
 
-	ZOffset 12
+	ZOffset 10
 	ROTATING
 	FrameIndex FGNP A 1 0
 }

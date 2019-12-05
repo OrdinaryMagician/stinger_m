@@ -4,7 +4,7 @@ Model "BigAmmo"
 	Model 0 "BigGAmmoBox_d.3d"
 	SurfaceSkin 0 0 "Jclip1_.png"
 	SurfaceSkin 0 1 "RifleBul1.png"
-	Scale 0.15 0.15 0.18
+	Scale 0.15 0.15 0.15
 
 	FrameIndex BIGA A 0 0
 }
@@ -13,7 +13,7 @@ Model "BigAmmo2"
 	Path "models"
 	Model 0 "BigGAmmo_d.3d"
 	Skin 0 "Jclip1_.png"
-	Scale 0.15 0.15 0.18
+	Scale 0.15 0.15 0.15
 
 	FrameIndex BIGA A 0 0
 }
@@ -22,7 +22,7 @@ Model "BigAmmo3"
 	Path "models"
 	Model 0 "BigGAmmoSingle_d.3d"
 	Skin 0 "Jclip1_.png"
-	Scale 0.15 0.15 0.18
+	Scale 0.15 0.15 0.15
 
 	FrameIndex BIGA A 0 0
 }
@@ -33,7 +33,7 @@ Model "FatRing"
 	Model 0 "FatRing_d.3d"
 	Skin 0 "JRingEx1.png"
 	PitchOffset 90
-	Scale 1.2 1.0 1.0
+	Scale 1.0 1.0 1.0
 	DONTCULLBACKFACES
 	USEACTORPITCH
 	USEACTORROLL
@@ -56,13 +56,13 @@ Model "BigGun"
 	Path "models"
 	Model 1 "BigGPick_d.3d"
 	Skin 1 "JBigGun1_.png"
-	ZOffset 15
+	ZOffset 13
 	AngleOffset 90
-	Scale 0.1 0.1 0.12
+	Scale 0.1 0.1 0.1
 
 	FrameIndex BIGP B 1 0
 
-	ZOffset 16
+	ZOffset 14
 	ROTATING
 	FrameIndex BIGP A 1 0
 }
@@ -72,7 +72,7 @@ Model "BigCasing"
 	Path "models"
 	Model 0 "BigGShellC_d.3d"
 	Skin 0 "Jclip1.png"
-	Scale 0.12 0.1 0.1
+	Scale 0.1 0.1 0.1
 	PitchOffset 90
 	Offset 3 0 2
 	USEACTORPITCH
@@ -88,9 +88,9 @@ Model "BigMag"
 	Path "models"
 	Model 0 "BigGMag_d.3d"
 	Skin 0 "JBigGun1.png"
-	Scale 0.1 0.1 0.12
+	Scale 0.1 0.1 0.1
 	AngleOffset 90
-	ZOffset 2.5
+	ZOffset 2.2
 	USEACTORPITCH
 	USEACTORROLL
 	USEROTATIONCENTER

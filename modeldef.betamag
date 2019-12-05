@@ -3,13 +3,13 @@ Model "Betamag"
 	Path "models"
 	Model 1 "OldAutoMagPick_d.3d"
 	Skin 1 "AutoHand1_.png"
-	Scale 0.05 -0.05 0.06
+	Scale 0.05 -0.05 0.05
 	AngleOffset -90
-	ZOffset 9
+	ZOffset 8
 
 	FrameIndex AUTP B 1 0
 
-	ZOffset 13
+	ZOffset 11
 	ROTATING
 	FrameIndex AUTP A 1 0
 }
@@ -19,7 +19,7 @@ Model "BCasing"
 	Path "models"
 	Model 0 "OldShell_d.3d"
 	Skin 0 "AutoHand1.png"
-	Scale 0.0264 -0.022 0.022
+	Scale 0.022 -0.022 0.022
 	AngleOffset 90
 	RollOffset 180
 	ZOffset 1
@@ -36,7 +36,7 @@ Model "BCasing2"
 	Path "models"
 	Model 0 "OldShell_d.3d"
 	Skin 0 "Autom1.png"
-	Scale 0.0264 -0.022 0.022
+	Scale 0.022 -0.022 0.022
 	AngleOffset 90
 	RollOffset 180
 	ZOffset 1

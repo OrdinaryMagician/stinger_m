@@ -3,9 +3,9 @@ Model "ImpalerAmmo"
 	Path "models"
 	Model 0 "ImpalerAmmo_d.3d"
 	Skin 0 "JImpale1_.png"
-	Scale 0.25 0.25 0.3
+	Scale 0.25 0.25 0.25
 	AngleOffset 90
-	ZOffset 4
+	ZOffset 3.5
 
 	FrameIndex IAMO A 0 0
 }
@@ -14,9 +14,9 @@ Model "ImpalerAmmo2"
 	Path "models"
 	Model 0 "ImpalerProj_d.3d"
 	Skin 0 "JImpale1_.png"
-	Scale 0.25 0.25 0.3
+	Scale 0.25 0.25 0.25
 	AngleOffset 90
-	ZOffset 2
+	ZOffset 1.5
 
 	FrameIndex IAMO A 0 0
 }
@@ -26,7 +26,7 @@ Model "ImpalerBurstBolt"
 	Path "models"
 	Model 0 "PBolt_d.3d"
 	Offset 5.0125 0 0
-	Scale 0.050125 0.1025 0.123
+	Scale 0.050125 0.1025 0.1025
 	AngleOffset 90
 	DONTCULLBACKFACES
 	USEACTORPITCH
@@ -49,7 +49,7 @@ Model "ImpalerBolt"
 	Path "models"
 	Model 0 "PBolt_d.3d"
 	Offset 10.125 0 0
-	Scale 0.10125 0.2025 0.243
+	Scale 0.10125 0.2025 0.2025
 	AngleOffset 90
 	DONTCULLBACKFACES
 	USEACTORPITCH
@@ -72,7 +72,7 @@ Model "StarterImpalerBolt"
 	Path "models"
 	Model 0 "SBolt_d.3d"
 	Offset 10.125 0 0
-	Scale 0.10125 0.2025 0.243
+	Scale 0.10125 0.2025 0.2025
 	AngleOffset 90
 	DONTCULLBACKFACES
 	USEACTORPITCH
@@ -94,7 +94,7 @@ Model "ImpalerChunk"
 	Path "models"
 	Model 0 "burstx_d.3d"
 	Skin 0 "JIBurst1.png"
-	Scale 0.4 0.4 0.48
+	Scale 0.4 0.4 0.4
 	USEACTORPITCH
 	USEACTORROLL
 
@@ -114,7 +114,7 @@ Model "ImpalerProjectile"
 	Path "models"
 	Model 0 "ImpalerProj_d.3d"
 	Skin 0 "JImpale1.png"
-	Scale 0.15 0.15 0.18
+	Scale 0.15 0.15 0.15
 	PITCHFROMMOMENTUM
 	USEACTORROLL
 
@@ -130,13 +130,13 @@ Model "Impaler"
 	PitchOffset -5
 	RollOffset 45
 	AngleOffset 180
-	Scale 0.15 -0.18 0.18
+	Scale 0.2 -0.2 0.2
 
 	FrameIndex IMPP B 1 0
 
 	PitchOffset 0
 	RollOffset 0
-	Scale 0.2 -0.2 0.24
+	Scale 0.2 -0.2 0.2
 	Offset 6 0 9
 	ROTATING
 	FrameIndex IMPP A 1 0

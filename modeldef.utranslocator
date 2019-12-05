@@ -3,9 +3,9 @@ Model "UTranslocatorModule"
 	Path "models"
 	Model 0 "TeleportProj_d.3d"
 	Skin 0 "Ahand1.png"
-	Scale 0.03 0.03 0.036
+	Scale 0.03 0.03 0.03
 	AngleOffset 180
-	ZOffset 3
+	ZOffset 2.5
 
 	FrameIndex TMOD A 0 0
 }
@@ -15,13 +15,13 @@ Model "UTranslocator"
 	Path "models"
 	Model 1 "TelePickup_d.3d"
 	Skin 1 "Ahand1_.png"
-	Scale 0.04 -0.04 0.048
+	Scale 0.04 -0.04 0.04
 	AngleOffset 90
-	ZOffset 6
+	ZOffset 5
 
 	FrameIndex TLCP B 1 0
 
-	ZOffset 12
+	ZOffset 10
 	ROTATING
 	FrameIndex TLCP A 1 0
 }

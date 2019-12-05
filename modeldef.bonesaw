@@ -3,7 +3,7 @@ Model "Bonesaw"
 	Path "models"
 	Model 1 "BonesawPick_d.3d"
 	Skin 1 "JBoneSw1_.png"
-	Scale 0.096 -0.08 0.096
+	Scale 0.08 -0.08 0.08
 	AngleOffset 180
 	Offset 8 0 6
 

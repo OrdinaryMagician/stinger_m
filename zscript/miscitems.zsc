@@ -1714,7 +1714,7 @@ Class MinigunSentry : Actor
 		}
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(master.pitch,master.angle,master.roll);
-		SetOrigin(level.Vec3Offset(master.pos,z*38),true);
+		SetOrigin(level.Vec3Offset(master.pos,z*32),true);
 	}
 	double _PitchTo( Actor other )
 	{
@@ -2111,7 +2111,7 @@ Class MinigunSentryBase : Actor
 		Health sentryhealth;
 		Mass int.max;
 		Radius 8;
-		Height 46;
+		Height 35;
 		+SOLID;
 		+SHOOTABLE;
 		+NOBLOOD;
@@ -2406,7 +2406,7 @@ Class SentryGun : Actor
 		Health 50;
 		Mass int.max;
 		Radius 6;
-		Height 18;
+		Height 15;
 		+SOLID;
 		+SHOOTABLE;
 		+NOBLOOD;

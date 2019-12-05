@@ -4,7 +4,7 @@ Model "Peacerocket"
 	Model 0 "perock_d.3d"
 	SurfaceSkin 0 1 "Jpeace1.png"
 	PitchOffset -90
-	Scale 0.16 0.192 0.16
+	Scale 0.16 0.16 0.16
 	USEACTORPITCH
 	USEACTORROLL
 
@@ -16,7 +16,7 @@ Model "PeaceFragment"
 	Path "models"
 	Model 0 "sfrag_d.3d"
 	Skin 0 "Jpeace1.png"
-	Scale 0.1 0.1 0.12
+	Scale 0.1 0.1 0.1
 	USEACTORPITCH
 	USEACTORROLL
 
@@ -33,9 +33,9 @@ Model "Peacebarrel"
 	Path "models"
 	Model 0 "peace_d.3d"
 	Skin 0 "Jpeace1.png"
-	ZOffset 10
+	ZOffset 9
 	AngleOffset -45
-	Scale 0.16 -0.16 0.192
+	Scale 0.16 -0.16 0.16
 	USEACTORPITCH
 	USEACTORROLL
 
@@ -83,7 +83,7 @@ Model "Peacemaker"
 	Skin 1 "Jpeacehand1_.png"
 	RollOffset 90	// normally upright, but it's easier to tell apart from a deployed one this way
 	ZOffset 5
-	Scale 0.16 -0.192 0.16
+	Scale 0.16 -0.16 0.16
 
 	FrameIndex PEAP B 1 0
 

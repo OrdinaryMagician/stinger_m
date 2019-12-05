@@ -3,8 +3,8 @@ Model "URocketAmmo"
 	Path "models"
 	Model 0 "RocketCanMesh_d.3d"
 	Skin 0 "JRocketCan1.png"
-	Scale 0.12 0.12 0.144
-	ZOffset 7
+	Scale 0.12 0.12 0.12
+	ZOffset 6
 
 	FrameIndex RPAK A 0 0
 	FrameIndex RPAK B 0 1
@@ -24,8 +24,8 @@ Model "URocketAmmo2"
 	Model 0 "SingleRocketMesh_d.3d"
 	SurfaceSkin 0 0 "JRocketCan1.png"
 	SurfaceSkin 0 1 "JRocket1_.png"
-	Scale 0.05 0.05 0.056
-	ZOffset 4
+	Scale 0.05 0.05 0.05
+	ZOffset 3.5
 
 	FrameIndex RCKT A 0 0
 	FrameIndex RCKT B 0 1
@@ -36,13 +36,13 @@ Model "Eightball"
 	Path "models"
 	Model 1 "EightPick_d.3d"
 	Skin 1 "JEightB1_.png"
-	ZOffset 4
+	ZOffset 3.5
 	AngleOffset 90
-	Scale 0.08 0.08 0.096
+	Scale 0.08 0.08 0.08
 
 	FrameIndex EBLP B 1 0
 
-	ZOffset 12
+	ZOffset 10
 	ROTATING
 	FrameIndex EBLP A 1 0
 }
@@ -54,7 +54,7 @@ Model "URocket"
 	Skin 0 "JRocket1.png"
 	AngleOffset 90
 	Offset 5 0 0
-	Scale 0.05 0.05 0.06
+	Scale 0.05 0.05 0.05
 	USEACTORPITCH
 
 	FrameIndex RCKT A 0 1
@@ -69,7 +69,7 @@ Model "UGrenade"
 	Skin 0 "JRocket1.png"
 	AngleOffset 90
 	Offset -2 0 0
-	Scale 0.05 0.05 0.06
+	Scale 0.05 0.05 0.05
 	USEACTORPITCH
 
 	FrameIndex RCKT A 0 0

@@ -3,8 +3,8 @@ Model "UClip"
 	Path "models"
 	Model 0 "ClipM_d.3d"
 	Skin 0 "Jclip1_.png"
-	Scale 0.04 -0.04 0.048
-	ZOffset 1.5
+	Scale 0.04 -0.04 0.04
+	ZOffset 1.2
 
 	FrameIndex UCLP A 0 0
 }
@@ -14,7 +14,7 @@ Model "UCasing"
 	Path "models"
 	Model 0 "Shell_d.3d"
 	Skin 0 "Shell1.png"
-	Scale 0.0264 -0.022 0.022
+	Scale 0.022 -0.022 0.022
 	AngleOffset 90
 	RollOffset 180
 	ZOffset 1
@@ -31,7 +31,7 @@ Model "AutomagMag"
 	Path "models"
 	Model 0 "AutoMagSpentClip_d.3d"
 	Skin 0 "Automa1.png"
-	Scale 0.06 0.06 0.072
+	Scale 0.06 0.06 0.06
 	ZOffset 1
 	USEACTORPITCH
 	USEACTORROLL
@@ -46,13 +46,13 @@ Model "Automag"
 	Path "models"
 	Model 1 "AutoMagPickup_d.3d"
 	Skin 1 "Automa1_.png"
-	Scale 0.08 -0.08 0.096
+	Scale 0.08 -0.08 0.08
 	AngleOffset -90
-	ZOffset 6
+	ZOffset 5
 
 	FrameIndex AUTP B 1 0
 
-	ZOffset 12
+	ZOffset 10
 	ROTATING
 	FrameIndex AUTP A 1 0
 }

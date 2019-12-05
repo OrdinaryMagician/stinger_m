@@ -3,8 +3,8 @@ Model "UBioAmmo"
 	Path "models"
 	Model 0 "sludgemesh_d.3d"
 	Skin 0 "JPickup1.png"
-	Scale 0.08 -0.08 0.096
-	ZOffset 7
+	Scale 0.08 -0.08 0.08
+	ZOffset 6
 
 	FrameIndex BIOA A 0 0
 	FrameIndex BIOA B 0 1
@@ -42,7 +42,7 @@ Model "UBioAmmo2"
 	Path "models"
 	Model 0 "sludgemeshsmall_d.3d"
 	Skin 0 "JPickup1.png"
-	Scale 0.04 0.04 0.048
+	Scale 0.04 0.04 0.04
 	ZOffset 1
 
 	FrameIndex BIOA A 0 0
@@ -63,7 +63,7 @@ Model "UBioGel"
 	Path "models"
 	Model 0 "BioRGel_d.3d"
 	Skin 0 "Jflare.png"
-	Scale 0.12 0.1 0.1
+	Scale 0.1 0.1 0.1
 	PitchOffset -90
 	USEACTORPITCH
 	USEACTORROLL
@@ -135,7 +135,7 @@ Model "UBioSplash"
 	Path "models"
 	Model 0 "BioRGel_d.3d"
 	Skin 0 "Jflare.png"
-	Scale 0.12 0.1 0.1
+	Scale 0.1 0.1 0.1
 	PitchOffset -90
 	USEACTORPITCH
 	USEACTORROLL
@@ -207,7 +207,7 @@ Model "UBioGlob"
 	Path "models"
 	Model 0 "BioRGel_d.3d"
 	Skin 0 "Jflare.png"
-	Scale 0.12 0.1 0.1
+	Scale 0.1 0.1 0.1
 	PitchOffset -90
 	USEACTORPITCH
 	USEACTORROLL
@@ -279,7 +279,7 @@ Model "UBioRifle"
 	Path "models"
 	Model 1 "BRiflePick_d.3d"
 	Skin 1 "JBRifle1_.png"
-	Scale 0.2 -0.2 0.24
+	Scale 0.2 -0.2 0.2
 	AngleOffset 180
 	ZOffset 0
 

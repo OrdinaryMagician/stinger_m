@@ -3,9 +3,9 @@ Model "UShells"
 	Path "models"
 	Model 0 "ShellsM_d.3d"
 	Skin 0 "JQuadAm1_.png"
-	Scale 0.03 0.03 0.036
+	Scale 0.03 0.03 0.03
 	AngleOffset 90
-	ZOffset 3
+	ZOffset 2.5
 
 	FrameIndex QAMO A 0 0
 }
@@ -15,9 +15,9 @@ Model "UShells2"
 	Path "models"
 	Model 0 "ShellsSmallM_d.3d"
 	Skin 0 "JQuadAm1_.png"
-	Scale 0.03 0.03 0.036
+	Scale 0.03 0.03 0.03
 	AngleOffset 90
-	ZOffset 1.5
+	ZOffset 1.25
 
 	FrameIndex QAMO A 0 0
 }
@@ -27,7 +27,7 @@ Model "QCasing"
 	Path "models"
 	Model 0 "QShell_d.3d"
 	Skin 0 "JQuadAm2.png"
-	Scale 0.03 -0.03 0.036
+	Scale 0.03 -0.03 0.03
 	AngleOffset 90
 	ZOffset 1
 	USEACTORPITCH
@@ -43,13 +43,13 @@ Model "Quadshot"
 	Path "models"
 	Model 1 "QuadShotPickup_d.3d"
 	Skin 1 "GunPick1_.png"
-	ZOffset 6
+	ZOffset 5
 	AngleOffset -90
-	Scale 0.08 -0.08 0.096
+	Scale 0.08 -0.08 0.08
 
 	FrameIndex QSPK B 1 0
 
-	ZOffset 12
+	ZOffset 10
 	ROTATING
 	FrameIndex QSPK A 1 0
 }

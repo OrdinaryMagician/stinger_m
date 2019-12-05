@@ -5,7 +5,7 @@ Model "Stinger"
 	Skin 1 "Sting1_.png"
 	Offset -3 3 2
 	AngleOffset -90
-	Scale 0.06 0.06 0.072
+	Scale 0.06 0.06 0.06
 
 	FrameIndex STNP B 1 0
 
@@ -19,7 +19,7 @@ Model "StingerAmmo"
 	Path "models"
 	Model 0 "TarydiumPickup_d.3d"
 	Skin 0 "JTaryPick1_.png"
-	Scale 0.04 0.04 0.048
+	Scale 0.04 0.04 0.04
 	ZOffset 1
 
 	FrameIndex SAMO A 0 0
@@ -30,8 +30,8 @@ Model "StingerAmmo2"
 	Path "models"
 	Model 0 "TarydiumLarge_d.3d"
 	Skin 0 "JTaryPick1_.png"
-	Scale 0.04 0.04 0.048
-	ZOffset 3
+	Scale 0.04 0.04 0.04
+	ZOffset 2.5
 
 	FrameIndex SAMO B 0 0
 }
@@ -41,7 +41,7 @@ Model "StingerProjectile"
 	Path "models"
 	Model 0 "TarydiumProjectile_d.3d"
 	Skin 0 "JTaryPick1.png"
-	Scale 0.03 0.03 0.036
+	Scale 0.03 0.03 0.03
 	AngleOffset -90
 	PITCHFROMMOMENTUM
 	USEACTORROLL
@@ -54,7 +54,7 @@ Model "StingerChunk"
 	Path "models"
 	Model 0 "burstx_d.3d"
 	Skin 0 "JBurst1.png"
-	Scale 0.2 0.2 0.24
+	Scale 0.2 0.2 0.2
 	USEACTORPITCH
 	USEACTORROLL
 
@@ -73,7 +73,7 @@ Model "ViewStingerChunk"
 	Path "models"
 	Model 0 "burstx_d.3d"
 	Skin 0 "JBurst1.png"
-	Scale 0.08 0.08 0.096
+	Scale 0.08 0.08 0.08
 	USEACTORPITCH
 	USEACTORROLL
 
