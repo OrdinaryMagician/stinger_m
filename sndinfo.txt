@@ -184,6 +184,7 @@ uflak/reload	load1
 uflak/fire	shot1
 uflak/altfire	explode1
 uflak/click	click
+uflak/explode	expl04
 
 eightball/select	selectin
 eightball/rotate	barrelmv
