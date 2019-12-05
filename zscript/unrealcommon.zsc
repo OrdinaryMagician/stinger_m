@@ -859,7 +859,7 @@ Class UnrealStaticHandler : StaticEventHandler
 
 	ui void StartMenu()
 	{
-		CVar protomenu = CVar.GetCVar('stinger_introtype',players[consoleplayer]);
+		CVar protomenu = CVar.GetCVar('sting_introtype',players[consoleplayer]);
 		if ( !protomenu ) return;	// this can happen
 		int proto = protomenu.GetInt();
 		tex[0] = TexMan.CheckForTexture("graphics/UnLogo0.png",TexMan.Type_Any);

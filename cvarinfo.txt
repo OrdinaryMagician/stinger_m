@@ -1,11 +1,11 @@
-user int stinger_hudmode = 0;	// hud mode
+user int sting_hudmode = 0;	// hud mode
 				// 0 - full, large numbers, cummulative armor
 				// 1 - full, small numbers, individial armor
 				// 2 - all on bottom
 				// 3 - bottom corners only, no numbers
 				// 4 - minimal display on bottom right corner
 				// 5 - minimalistic top hud from 0.871 and up
-user int stinger_introtype = 0;	// 0 - unreal '98
+user int sting_introtype = 0;	// 0 - unreal '98
 				// 1 - unreal '97
 				// 2 - unreal '96
 				// 3 - unreal '95

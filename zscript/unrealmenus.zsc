@@ -119,7 +119,7 @@ Class OptionMenuItemHudType : OptionMenuItem
 	OptionMenuItemHudType Init( String label )
 	{
 		Super.Init(label,"",true);
-		mCVar = CVar.FindCVar('stinger_hudmode');
+		mCVar = CVar.FindCVar('sting_hudmode');
 		tex[0] = TexMan.CheckForTexture("graphics/Hud1.png",TexMan.Type_Any);
 		tex[1] = TexMan.CheckForTexture("graphics/Hud2.png",TexMan.Type_Any);
 		tex[2] = TexMan.CheckForTexture("graphics/Hud3.png",TexMan.Type_Any);

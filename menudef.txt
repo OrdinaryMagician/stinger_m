@@ -8,9 +8,10 @@ OptionValue "IntroTypeMenu"
 
 OptionMenu "UnrealOptionMenu"
 {
+	Class "UTOptionMenu"
 	Title "$STING_MTITLE"
 
-	Option "$STING_INTRO", "stinger_introtype", "IntroTypeMenu"
+	Option "$STING_INTRO", "sting_introtype", "IntroTypeMenu"
 	Command "$FLAK_APPLY", "event refreshmenu"
 	StaticText " "
 	StaticText "$STING_HOPTS", "Gold"
@@ -19,7 +20,7 @@ OptionMenu "UnrealOptionMenu"
 	StaticText " "
 	StaticText " "
 	StaticText " "
-	Slider "$STING_HUDMODE", "stinger_hudmode", 0, 5, 1, 0
+	Slider "$STING_HUDMODE", "sting_hudmode", 0, 5, 1, 0
 	Option "$STING_TRANSEXT", "sting_transext", "YesNo"
 	StaticText " "
 	StaticText "$STING_POPTS", "Gold"

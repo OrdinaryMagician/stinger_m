@@ -139,7 +139,7 @@ Class UnrealHUD : BaseStatusBar
 	{
 		Super.Draw(state,TicFrac);
 		FracTic = TicFrac;
-		HudMode = CVar.GetCVar('stinger_hudmode',players[consoleplayer]).GetInt();
+		HudMode = CVar.GetCVar('sting_hudmode',players[consoleplayer]).GetInt();
 		scalev.x = scalev.y = CVar.GetCVar('hud_scale',players[consoleplayer]).GetInt();
 		if ( scalev.x < 0 ) scalev.x = scalev.y = max(1,min(Screen.GetWidth()/640.,Screen.GetHeight()/480.));	// the typical behavior is scaling to 640x400 but we're expecting 4:3 here
 		else if ( scalev.x == 0 )

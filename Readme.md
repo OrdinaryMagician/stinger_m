@@ -73,7 +73,10 @@ This mod requires GZDoom 4.2.4 or later, and runs on top of Doom Tournament.
 
 ## In progress
 
- - N/A, this is the 1.0.6 release.
+ - Tooltips for options.
+ - Extension to the Translator so it can show item descriptions and whatnot
+   when picking them up. Give it some usability for normal gameplay. Could
+   eventually extend this further to make it more like Serious Sam's NETRICSA.
 
 ## Planned
 
