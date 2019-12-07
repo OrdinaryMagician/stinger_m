@@ -1319,7 +1319,7 @@ Class UnrealMainHandler : EventHandler
 	override void WorldLoaded( WorldEvent e )
 	{
 		// More "authentic" Unreal flavor of these edits
-		if ( (level.GetChecksum() ~== "959A613006CC3AA912C4A22908B7566A") || (level.GetChecksum() ~== "0EADB2F82732A968B8513E4DC6138439") )
+		if ( (level.levelname == "Modder Test Map") && flak_doomtest )
 		{
 			S_ChangeMusic("Cyrene");
 			TextureID sky95 = TexMan.CheckForTexture("Sky95",TexMan.Type_Any);
