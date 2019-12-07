@@ -40,11 +40,10 @@ Class Bonesaw : UnrealWeapon
 	}
 	override String GetObituary( Actor victim, Actor inflictor, Name mod, bool playerattack )
 	{
-		if ( !bAltFire )
-			return StringTable.Localize((mod=='Decapitated')?"$O_RAZORCLAWDECAP2":"$O_RAZORCLAW2");
-		return StringTable.Localize((mod=='Decapitated')?"$O_RAZORCLAWDECAP1":"$O_RAZORCLAW1");
+		if ( !bAltFire ) return StringTable.Localize("$O_RAZORCLAW2");
+		return StringTable.Localize((mod=='Decapitated')?"$O_RAZORCLAWDECAP":"$O_RAZORCLAW1");
 	}
-	private action bool TryHit( double angle, int dmg )
+	private action bool TryHit( double angle, int dmg, bool decap = false )
 	{
 		FTranslatedLineTarget t;
 		double slope = AimLineAttack(angle,DEFMELEERANGE,t,0.,ALF_CHECK3D);
@@ -58,7 +57,7 @@ Class Bonesaw : UnrealWeapon
 			if ( d.HitType == TRACE_HitActor )
 			{
 				invoker.bFORCEPAIN = !Random[Bonesaw](0,d.HitActor.bBOSS?5:2);
-				if ( d.HitLocation.z >= (d.HitActor.pos.z+d.HitActor.height*0.8) )
+				if ( decap && (d.HitLocation.z >= (d.HitActor.pos.z+d.HitActor.height*0.8)) )
 					dmg = d.HitActor.DamageMobj(invoker,self,dmg*2,'Decapitated',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
 				else dmg = d.HitActor.DamageMobj(invoker,self,dmg,'slashed',DMG_USEANGLE|DMG_THRUSTLESS,atan2(d.HitDir.y,d.HitDir.x));
 				UTMainHandler.DoKnockback(d.HitActor,d.HitDir,-7000);
@@ -127,7 +126,7 @@ Class Bonesaw : UnrealWeapon
 				b.vel += vel*.5;
 			}
 		}
-		for ( int i=0; i<8; i++ ) if ( TryHit(angle+i*(45./16),30) || TryHit(angle-i*(45./16),30) ) return;
+		for ( int i=0; i<8; i++ ) if ( TryHit(angle+i*(45./16),30,true) || TryHit(angle-i*(45./16),30,true) ) return;
 	}
 	Default
 	{
