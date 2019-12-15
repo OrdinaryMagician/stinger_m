@@ -73,14 +73,14 @@ This mod requires GZDoom 4.2.4 or later, and runs on top of Doom Tournament.
 
 ## In progress
 
- - Tooltips for options.
- - Extension to the Translator so it can show item descriptions and whatnot
-   when picking them up. Give it some usability for normal gameplay. Could
-   eventually extend this further to make it more like Serious Sam's NETRICSA.
+ - N/A, this is the 1.1 release.
 
 ## Planned
 
- - Shifted to a 1.1 update:
+ - Shifted to a 1.2 update:
+   - Extension to the Translator so it can show item descriptions and whatnot
+     when picking them up. Give it some usability for normal gameplay. Could
+     eventually extend it further to make it more like Serious Sam's NETRICSA.
    - Impaler "slice" animation for melee alt.
    - Alternate flamethrower secondary that behaves more like the Unreal Bible
      describes (unlit blobs at a rate of 4 per second that catch on fire with

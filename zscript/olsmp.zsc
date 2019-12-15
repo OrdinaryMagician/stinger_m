@@ -245,6 +245,7 @@ Class OLSMP : UnrealWeapon
 		UTWeapon.DropAmmo 50;
 		OLSMP.ClipCount 100;
 		+UNREALWEAPON.NOFIRSTGIVE;
+		+INVENTORY.ALWAYSPICKUP;
 	}
 	States
 	{
@@ -337,7 +338,7 @@ Class OLSMP : UnrealWeapon
 			invoker.clipout = true;
 			A_Overlay(-9999,null);
 			A_WeaponOffset(0,32);	// fix sudden psprite lowering
-			A_PlaySound("automag/click",CHAN_WEAPON,!Dampener.Active(self)?1.:.1,pitch:0.8);
+			A_PlaySound("automag/click",CHAN_ITEM,!Dampener.Active(self)?1.:.1,pitch:0.8);
 		}
 		AUTR ABCDEFGHIJKLMNOPQRSTUVWXY 1;
 		AUTD ABCD 1;

@@ -8,7 +8,7 @@ Model "Peacerocket"
 	USEACTORPITCH
 	USEACTORROLL
 
-	FrameIndex PEAR A 0 0
+	FrameIndex PEMR A 0 0
 }
 
 Model "PeaceFragment"
@@ -40,40 +40,40 @@ Model "Peacebarrel"
 	USEACTORROLL
 
 	// unfold
-	FrameIndex PEAM A 0 0
-	FrameIndex PEAM B 0 1
-	FrameIndex PEAM C 0 2
-	FrameIndex PEAM D 0 3
-	FrameIndex PEAM E 0 4
-	FrameIndex PEAM F 0 5
-	FrameIndex PEAM G 0 6
-	FrameIndex PEAM H 0 7
-	FrameIndex PEAM I 0 8
-	FrameIndex PEAM J 0 9
-	FrameIndex PEAM K 0 10
-	FrameIndex PEAM L 0 11
-	FrameIndex PEAM M 0 12
-	FrameIndex PEAM N 0 13
-	FrameIndex PEAM O 0 14
-	FrameIndex PEAM P 0 15
-	FrameIndex PEAM Q 0 16
-	FrameIndex PEAM R 0 17
-	FrameIndex PEAM S 0 18
-	FrameIndex PEAM T 0 19
-	FrameIndex PEAM U 0 20
-	FrameIndex PEAM V 0 21
-	FrameIndex PEAM W 0 22
-	FrameIndex PEAM X 0 23
-	FrameIndex PEAM Y 0 24
-	FrameIndex PEAM Z 0 25
-	FrameIndex PEAM [ 0 26
-	FrameIndex PEAM \ 0 27
-	FrameIndex PEAM ] 0 28
+	FrameIndex PEMM A 0 0
+	FrameIndex PEMM B 0 1
+	FrameIndex PEMM C 0 2
+	FrameIndex PEMM D 0 3
+	FrameIndex PEMM E 0 4
+	FrameIndex PEMM F 0 5
+	FrameIndex PEMM G 0 6
+	FrameIndex PEMM H 0 7
+	FrameIndex PEMM I 0 8
+	FrameIndex PEMM J 0 9
+	FrameIndex PEMM K 0 10
+	FrameIndex PEMM L 0 11
+	FrameIndex PEMM M 0 12
+	FrameIndex PEMM N 0 13
+	FrameIndex PEMM O 0 14
+	FrameIndex PEMM P 0 15
+	FrameIndex PEMM Q 0 16
+	FrameIndex PEMM R 0 17
+	FrameIndex PEMM S 0 18
+	FrameIndex PEMM T 0 19
+	FrameIndex PEMM U 0 20
+	FrameIndex PEMM V 0 21
+	FrameIndex PEMM W 0 22
+	FrameIndex PEMM X 0 23
+	FrameIndex PEMM Y 0 24
+	FrameIndex PEMM Z 0 25
+	FrameIndex PEMM [ 0 26
+	FrameIndex PEMM \ 0 27
+	FrameIndex PEMM ] 0 28
 	// launch
-	FrameIndex PEAL A 0 29
-	FrameIndex PEAL B 0 30
-	FrameIndex PEAL C 0 31
-	FrameIndex PEAL D 0 32
+	FrameIndex PEML A 0 29
+	FrameIndex PEML B 0 30
+	FrameIndex PEML C 0 31
+	FrameIndex PEML D 0 32
 }
 
 Model "Peacemaker"
@@ -85,11 +85,11 @@ Model "Peacemaker"
 	ZOffset 5
 	Scale 0.16 -0.16 0.16
 
-	FrameIndex PEAP B 1 0
+	FrameIndex PEMP B 1 0
 
 	ZOffset 9
 	ROTATING
-	FrameIndex PEAP A 1 0
+	FrameIndex PEMP A 1 0
 }
 
 Model "Peacemaker"
@@ -102,57 +102,57 @@ Model "Peacemaker"
 	Offset 7.5 -15 -7.5
 
 	// Select
-	FrameIndex PEAS A 0 0
-	FrameIndex PEAS B 0 1
-	FrameIndex PEAS C 0 2
-	FrameIndex PEAS D 0 3
-	FrameIndex PEAS E 0 4
-	FrameIndex PEAS F 0 5
-	FrameIndex PEAS G 0 6
-	FrameIndex PEAS H 0 7
-	FrameIndex PEAS I 0 8
-	FrameIndex PEAS J 0 9
-	FrameIndex PEAS K 0 10
-	FrameIndex PEAS L 0 11
-	FrameIndex PEAS M 0 12
-	FrameIndex PEAS N 0 13
-	FrameIndex PEAS O 0 14
-	FrameIndex PEAS P 0 15
-	FrameIndex PEAS Q 0 16
-	FrameIndex PEAS R 0 17
-	FrameIndex PEAS S 0 18
-	FrameIndex PEAS T 0 19
+	FrameIndex PEMS A 0 0
+	FrameIndex PEMS B 0 1
+	FrameIndex PEMS C 0 2
+	FrameIndex PEMS D 0 3
+	FrameIndex PEMS E 0 4
+	FrameIndex PEMS F 0 5
+	FrameIndex PEMS G 0 6
+	FrameIndex PEMS H 0 7
+	FrameIndex PEMS I 0 8
+	FrameIndex PEMS J 0 9
+	FrameIndex PEMS K 0 10
+	FrameIndex PEMS L 0 11
+	FrameIndex PEMS M 0 12
+	FrameIndex PEMS N 0 13
+	FrameIndex PEMS O 0 14
+	FrameIndex PEMS P 0 15
+	FrameIndex PEMS Q 0 16
+	FrameIndex PEMS R 0 17
+	FrameIndex PEMS S 0 18
+	FrameIndex PEMS T 0 19
 	// Idle
-	FrameIndex PEAI A 0 20
+	FrameIndex PEMI A 0 20
 	// Down
-	FrameIndex PEAD A 0 22
-	FrameIndex PEAD B 0 23
-	FrameIndex PEAD C 0 24
-	FrameIndex PEAD D 0 25
-	FrameIndex PEAD E 0 26
-	FrameIndex PEAD F 0 27
-	FrameIndex PEAD G 0 28
-	FrameIndex PEAD H 0 29
-	FrameIndex PEAD I 0 30
+	FrameIndex PEMD A 0 22
+	FrameIndex PEMD B 0 23
+	FrameIndex PEMD C 0 24
+	FrameIndex PEMD D 0 25
+	FrameIndex PEMD E 0 26
+	FrameIndex PEMD F 0 27
+	FrameIndex PEMD G 0 28
+	FrameIndex PEMD H 0 29
+	FrameIndex PEMD I 0 30
 	// Throw
-	FrameIndex PEAF A 0 32
-	FrameIndex PEAF B 0 33
-	FrameIndex PEAF C 0 34
-	FrameIndex PEAF D 0 35
-	FrameIndex PEAF E 0 36
-	FrameIndex PEAF F 0 37
-	FrameIndex PEAF G 0 38
-	FrameIndex PEAF H 0 39
-	FrameIndex PEAF I 0 40
+	FrameIndex PEMF A 0 32
+	FrameIndex PEMF B 0 33
+	FrameIndex PEMF C 0 34
+	FrameIndex PEMF D 0 35
+	FrameIndex PEMF E 0 36
+	FrameIndex PEMF F 0 37
+	FrameIndex PEMF G 0 38
+	FrameIndex PEMF H 0 39
+	FrameIndex PEMF I 0 40
 	// Count (0-9)
-	FrameIndex PEAC A 0 43
-	FrameIndex PEAC B 0 44
-	FrameIndex PEAC C 0 45
-	FrameIndex PEAC D 0 46
-	FrameIndex PEAC E 0 47
-	FrameIndex PEAC F 0 48
-	FrameIndex PEAC G 0 49
-	FrameIndex PEAC H 0 50
-	FrameIndex PEAC I 0 51
-	FrameIndex PEAC J 0 52
+	FrameIndex PEMC A 0 43
+	FrameIndex PEMC B 0 44
+	FrameIndex PEMC C 0 45
+	FrameIndex PEMC D 0 46
+	FrameIndex PEMC E 0 47
+	FrameIndex PEMC F 0 48
+	FrameIndex PEMC G 0 49
+	FrameIndex PEMC H 0 50
+	FrameIndex PEMC I 0 51
+	FrameIndex PEMC J 0 52
 }

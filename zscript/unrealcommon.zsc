@@ -682,7 +682,8 @@ Class UnrealInventory : Inventory
 		Super.AttachToOwner(other);
 		if ( !Charge ) Charge = DefaultCharge;
 		// it's annoying to set this per-subclass
-		InterHubAmount = bUNLIMITEDCOPIES?int.max:MaxAmount;
+		if ( !(gameinfo.gametype&GAME_Hexen) )
+			InterHubAmount = bUNLIMITEDCOPIES?int.max:MaxAmount;
 	}
 	override bool HandlePickup( Inventory item )
 	{
@@ -950,6 +951,52 @@ Class UNothing : Actor
 	}
 }
 
+Class HexenEitherOrSession : Thinker
+{
+	Array<Class<Actor> > done;
+
+	private bool IsAvailable( Class<Actor> item )
+	{
+		let ti = ThinkerIterator.Create(item);
+		Actor a;
+		while ( a = Actor(ti.Next()) ) return true;
+		for ( int i=0; i<done.Size(); i++ ) if ( done[i] == item ) return true;
+		return false;
+	}
+
+	void MarkDone( Class<Actor> item )
+	{
+		for ( int i=0; i<done.Size(); i++ ) if ( done[i] == item ) return;
+		done.Push(item);
+	}
+	void MarkUnDone( Class<Actor> item )
+	{
+		for ( int i=0; i<done.Size(); i++ )
+		{
+			if ( done[i] != item ) continue;
+			done.Delete(i);
+			i--;
+		}
+	}
+
+	Class<Actor> EitherOr( Class<Actor> a, Class<Actor> b, bool allowed = true )
+	{
+		if ( !allowed ) return a;
+		if ( IsAvailable(a) )
+		{
+			MarkDone(a);
+			if ( IsAvailable(b) )
+			{
+				MarkDone(b);
+				if ( Random[Replacements](0,1) ) return b;
+				return a;
+			}
+			return b;
+		}
+		return a;
+	}
+}
+
 Class UnrealMainHandler : EventHandler
 {
 	Array<AmmoUsedInSlot> AmmoSlots;
@@ -970,6 +1017,25 @@ Class UnrealMainHandler : EventHandler
 			t.exploding = true;
 			break;
 		}
+	}
+	private bool IsAvailable( Class<Actor> item )
+	{
+		let ti = ThinkerIterator.Create(item);
+		Actor a;
+		while ( a = Actor(ti.Next()) ) return true;
+		return false;
+	}
+	private Class<Actor> EitherOr( Class<Actor> a, Class<Actor> b, bool allowed = true )
+	{
+		let ti = ThinkerIterator.Create("HexenEitherOrSession",Thinker.STAT_STATIC);
+		HexenEitherOrSession hs = HexenEitherOrSession(ti.Next());
+		if ( !hs )
+		{
+			hs = new("HexenEitherOrSession");
+			hs.ChangeStatNum(Thinker.STAT_STATIC);
+			hs.done.Clear();
+		}
+		return hs.EitherOr(a,b,allowed);
 	}
 	override void CheckReplacement( ReplaceEvent e )
 	{
@@ -1140,16 +1206,16 @@ Class UnrealMainHandler : EventHandler
 			else if ( Random[Replacements](0,1) ) e.Replacement = 'UBioAmmo';
 			else e.Replacement = 'URifleAmmo';
 		}
-		else if ( (e.Replacee == 'InvulnerabilitySphere') || (e.Replacee == 'ArtiInvulnerability') ) e.Replacement = 'PowerShield';
+		else if ( (e.Replacee == 'InvulnerabilitySphere') || (e.Replacee == 'ArtiInvulnerability') || (e.Replacee == 'ArtiInvulnerability2') ) e.Replacement = 'PowerShield';
 		else if ( (e.Replacee == 'Berserk') || (e.Replacee == 'ArtiTomeOfPower') )
 		{
 			if ( sting_msentry && !Random[Replacements](0,9) ) e.Replacement = 'SentryItem';
 			else if ( ((sting_proto && sting_dubious) || sting_olsmp) && !Random[Replacements](0,2) ) e.Replacement = 'WeaponPowerUp';
 			else e.Replacement = 'Amplifier';
 		}
-		else if ( e.Replacee == 'ArtiEgg' ) e.Replacement = 'VoiceBox';
+		else if ( (e.Replacee == 'ArtiEgg') || (e.Replacee == 'ArtiPork') ) e.Replacement = 'VoiceBox';
 		else if ( (e.Replacee == 'Soulsphere') || (e.Replacee == 'ArtiSuperHealth') ) e.Replacement = 'SuperHealth';
-		else if ( e.Replacee == 'Megasphere' ) e.Replacement = 'ShieldBelt';
+		else if ( (e.Replacee == 'Megasphere') || (e.Replacee == 'ArtiBoostArmor') ) e.Replacement = 'ShieldBelt';
 		else if ( (e.Replacee == 'Allmap') || (e.Replacee == 'SuperMap') )
 		{
 			if ( sting_proto && Random[Replacements](0,2) ) e.Replacement = 'MotionDetector';
@@ -1158,16 +1224,18 @@ Class UnrealMainHandler : EventHandler
 		else if ( (e.Replacee == 'BlurSphere') || (e.Replacee == 'ArtiInvisibility') ) e.Replacement = 'UInvisibility';
 		else if ( (e.Replacee == 'Infrared') || (e.Replacee == 'ArtiTorch') ) e.Replacement = 'UFlashlight';
 		else if ( e.Replacee == 'RadSuit' ) e.Replacement = 'UJumpBoots';
-		else if ( e.Replacee == 'ArtiFly' ) e.Replacement = 'UJumpBoots';
-		else if ( (e.Replacee == 'Backpack') || (e.Replacee == 'BagOfHolding') ) e.Replacement = 'UnrealBackpack';
-		else if ( (e.Replacee == 'ArmorBonus') || (e.Replacee == 'ArtiTimeBomb') )
+		else if ( (e.Replacee == 'ArtiFly') || (e.Replacee == 'ArtiSpeedBoots') ) e.Replacement = 'UJumpBoots';
+		else if ( (e.Replacee == 'Backpack') || (e.Replacee == 'BagOfHolding') || (e.Replacee == 'ArtiHealingRadius') ) e.Replacement = 'UnrealBackpack';
+		else if ( (e.Replacee == 'ArmorBonus') || (e.Replacee == 'ArtiTimeBomb') || (e.Replacee is 'ArtiPoisonBag') || (e.Replacee is 'ArtiBlastRadius') )
 		{
 			if ( sting_abonus && Random[Replacements](0,3) ) e.Replacement = 'UArmorBonus';
 			else e.Replacement = 'Flare';
 		}
 		else if ( (e.Replacee == 'HealthBonus') || (e.Replacee == 'CrystalVial') ) e.Replacement = 'Bandages';
-		else if ( (e.Replacee == 'GreenArmor') || (e.Replacee == 'Silvershield') ) e.Replacement = 'KevlarSuit';
-		else if ( (e.Replacee == 'BlueArmor') || (e.Replacee == 'EnchantedShield') ) e.Replacement = 'UArmor';
+		else if ( (e.Replacee == 'GreenArmor') || (e.Replacee == 'Silvershield') || (e.Replacee == 'PlatinumHelm') ) e.Replacement = 'KevlarSuit';
+		else if ( (e.Replacee == 'BlueArmor') || (e.Replacee == 'EnchantedShield') || (e.Replacee == 'MeshArmor') ) e.Replacement = 'UArmor';
+		else if ( e.Replacee == 'AmuletOfWarding' ) e.Replacement = 'AsbestosSuit';
+		else if ( e.Replacee == 'FalconShield' ) e.Replacement = 'ToxinSuit';
 		else if ( (e.Replacee == 'Stimpack') || (e.Replacee == 'ArtiHealth') )
 		{
 			if ( Random[Replacements](0,1) ) e.Replacement = 'UHealth';
@@ -1175,7 +1243,7 @@ Class UnrealMainHandler : EventHandler
 			else e.Replacement = 'Seeds';
 		}
 		else if ( e.Replacee == 'Medikit' ) e.Replacement = 'UHealth';
-		else if ( e.Replacee == 'ArtiTeleport' )
+		else if ( (e.Replacee == 'ArtiTeleport') || (e.Replacee == 'ArtiTeleportOther') || (e.Replacee == 'ArtiDarkServant') )
 		{
 			// I have no idea what to replace this with, so just have some random stuff
 			switch( Random[Replacements](0,sting_proto?7:5) )
@@ -1207,6 +1275,40 @@ Class UnrealMainHandler : EventHandler
 			}
 		}
 		else if ( e.Replacee == 'TeleportFog' ) e.Replacement = 'UTeleportFog';
+		// Doomreal's weapon progression for Hexen is a bit more... involved when it comes to including proto content
+		else if ( (e.Replacee == 'FWeapFist') || (e.Replacee == 'CWeapMace') || (e.Replacee == 'MWeapWand') )
+			e.Replacement = 'DispersionPistol';
+		else if ( e.Replacee == 'FWeapAxe' ) e.Replacement = EitherOr('Automag','Betamag',sting_proto);
+		else if ( e.Replacee == 'CWeapStaff' ) e.Replacement = EitherOr('Stinger','Quadshot',sting_proto);
+		else if ( e.Replacee == 'MWeapFrost' ) e.Replacement = EitherOr('ASMD','Stunner',sting_proto);
+		else if ( (e.Replacee == 'FWeaponPiece3') || (e.Replacee == 'FWeapQuietus') || (e.Replacee.GetClassName() == 'mkFullQuietus') ) e.Replacement = 'Eightball';
+		else if ( e.Replacee == 'CWeaponPiece3' ) e.Replacement = 'WeaponPowerUp';
+		else if ( e.Replacee == 'MWeaponPiece3' ) e.Replacement = EitherOr('Automag','Betamag',sting_proto);
+		else if ( e.Replacee == 'FWeapHammer' ) e.Replacement = EitherOr('UFlakCannon','FlameGun',sting_proto);
+		else if ( e.Replacee == 'CWeapFlame' ) e.Replacement = EitherOr('Razorjack','UFlamethrower',sting_proto);
+		else if ( e.Replacee == 'MWeapLightning' ) e.Replacement = EitherOr('UBioRifle','Impaler',sting_proto);
+		else if ( e.Replacee == 'FWeaponPiece2' )
+		{
+			if ( sting_proto && sting_dubious ) e.Replacement = 'Bonesaw';
+			else e.Replacement = 'WeaponPowerUp';
+		}
+		else if ( (e.Replacee == 'CWeaponPiece2') || (e.Replacee == 'CWeapWraithverge') || (e.Replacee.GetClassName() == 'mkFullWraithverge') ) e.Replacement = 'URifle';
+		else if ( e.Replacee == 'MWeaponPiece2' ) e.Replacement = 'WeaponPowerUp';
+		else if ( e.Replacee == 'FWeaponPiece1' )
+		{
+			if ( sting_proto && sting_dubious ) e.Replacement = 'BigGun';
+			else e.Replacement = 'UnrealBackpack';
+		}
+		else if ( e.Replacee == 'CWeaponPiece1' )
+		{
+			if ( sting_proto && sting_dubious ) e.Replacement = 'SMiniGun';
+			else e.Replacement = 'UnrealBackpack';
+		}
+		else if ( (e.Replacee == 'MWeaponPiece1') || (e.Replacee == 'MWeapBloodscourge') || (e.Replacee.GetClassName() == 'mkFullBloodscourge') )
+		{
+			if ( sting_olsmp ) e.Replacement = 'OLSMP';
+			else e.Replacement = 'UnrealBackpack';
+		}
 		// replace UT items (prevents them from being cheated in)
 		else if ( e.Replacee is 'ImpactHammer' ) e.Replacement = 'DispersionPistol';
 		else if ( e.Replacee is 'Translocator' ) e.Replacement = 'UTranslocator';
@@ -1252,7 +1354,7 @@ Class UnrealMainHandler : EventHandler
 		else if ( e.Replacee is 'UTHealthPack' ) e.Replacement = 'SuperHealth';
 		else if ( e.Replacee is 'UTHealthBonus' ) e.Replacement = 'Bandages';
 		else if ( e.Replacee is 'UTJumpBoots' ) e.Replacement = 'UJumpBoots';
-		else if ( e.Replacee is 'UTActivatable' ) e.Replacement = 'UNothing';
+		else if ( (e.Replacee is 'UTActivatable') && (!(e.Replacee is 'ActUTFullAmmoBox') || !(gameinfo.gametype&GAME_Hexen)) ) e.Replacement = 'UNothing';
 		else if ( e.Replacee is 'UTActivatableHealth' ) e.Replacement = 'UNothing';
 	}
 

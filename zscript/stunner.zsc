@@ -167,7 +167,7 @@ Class StunProj : Actor
 			SetOrigin(t.Results.HitPos-t.Results.HitVector*4,false);
 			StunExplode();
 			Actor a = t.Results.HitActor;
-			a.DamageMobj(self,target,max(1,int(4*specialf1)),'jolted',DMG_USEANGLE,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
+			a.DamageMobj(self,target,max(1,int(10*specialf1)),'jolted',DMG_USEANGLE,atan2(t.Results.HitVector.y,t.Results.HitVector.x));
 			if ( !a.bDONTTHRUST )
 			{
 				UTMainHandler.DoKnockback(a,t.Results.HitVector,(bAMBUSH?-22000:26000)*specialf1);
@@ -208,10 +208,9 @@ Class StunProj : Actor
 	{
 		moving = false;
 		SetStateLabel("Death");
-		A_Explode(int(0.6*specialf1),50);
 		A_QuakeEx(1,1,1,3,0,250,"",QF_RELATIVE|QF_SCALEDOWN,falloff:120,rollintensity:0.2);
 		A_PlaySound("stun/hit",CHAN_VOICE,pitch:FRandom[Stunner](1.5,1.9)-0.08*specialf1);
-		UTMainHandler.DoBlast(self,50,(bAMBUSH?-7000:11000)*specialf1);
+		A_AlertMonsters(gameinfo.gametype&GAME_Strife?100:0);
 		Vector3 dir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
 		int numpt = Random[ExploS](10,15);
 		for ( int i=0; i<numpt; i++ )
@@ -222,6 +221,12 @@ Class StunProj : Actor
 			s.bNOGRAVITY = true;
 			s.vel = pvel;
 		}
+	}
+	override int DoSpecialDamage( Actor target, int damage, Name damagetype )
+	{
+		if ( gameinfo.gametype&GAME_Strife )
+			target.DaggerAlert(self.target);
+		return damage;
 	}
 	Default
 	{
@@ -237,6 +242,7 @@ Class StunProj : Actor
 		+NODAMAGETHRUST;
 		+NOTELEPORT;
 		+FORCEXYBILLBOARD;
+		+NOEXTREMEDEATH;
 	}
 	States
 	{
@@ -368,7 +374,7 @@ Class Stunner : UnrealWeapon
 		LineTrace(angle,60,BulletSlope(),TRF_ABSPOSITION,origin.z,origin.x,origin.y,d);
 		if ( d.HitType == TRACE_HitActor )
 		{
-			int dmg = int(5*invoker.chargesize);
+			int dmg = int(12*invoker.chargesize);
 			if ( d.HitLocation.z >= (d.HitActor.pos.z+d.HitActor.height*0.81) )
 				dmg = d.HitActor.DamageMobj(invoker,self,dmg*2,'Decapitated',DMG_THRUSTLESS);
 			else dmg = d.HitActor.DamageMobj(invoker,self,dmg,'impact',DMG_THRUSTLESS);
@@ -405,7 +411,7 @@ Class Stunner : UnrealWeapon
 		A_OverlayFlags(-2,PSPF_RenderStyle,true);
 		A_OverlayRenderStyle(-2,STYLE_Add);
 		StunnerAmmo(weap.Ammo1).rechargephase = 0;
-		if ( !Dampener.Active(self) ) A_AlertMonsters();
+		if ( !Dampener.Active(self) && !(gameinfo.gametype&GAME_Strife) ) A_AlertMonsters();
 	}
 	action State A_ChargeUp()
 	{
@@ -416,7 +422,7 @@ Class Stunner : UnrealWeapon
 		StunnerAmmo(weap.Ammo1).rechargephase = 0;
 		UTMainHandler.DoSwing(self,(FRandom[Stunner](-1,1),FRandom[Stunner](-1,1)),0.02*invoker.chargesize,0,2,SWING_Spring);
 		A_WeaponOffset(FRandom[Stunner](-1,1)*1.2*invoker.chargesize,32+FRandom[Stunner](-1,1)*1.2*invoker.chargesize);
-		if ( !Dampener.Active(self) ) A_AlertMonsters();
+		if ( !Dampener.Active(self) && !(gameinfo.gametype&GAME_Strife) ) A_AlertMonsters();
 		if ( invoker.chargesize >= 5. )
 		{
 			invoker.count += 1./35.;
@@ -451,6 +457,7 @@ Class Stunner : UnrealWeapon
 		Weapon.AmmoGive 50;
 		UTWeapon.DropAmmo 50;
 		+WEAPON.WIMPY_WEAPON;
+		+NOEXTREMEDEATH;
 	}
 	States
 	{

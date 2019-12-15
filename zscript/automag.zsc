@@ -536,7 +536,7 @@ Class Automag : UnrealWeapon
 		{
 			invoker.clipout = true;
 			A_Overlay(-9999,null);
-			A_PlaySound("automag/click",CHAN_WEAPON,!Dampener.Active(self)?1.:.1);
+			A_PlaySound("automag/click",CHAN_ITEM,!Dampener.Active(self)?1.:.1);
 		}
 		AUTR ABCDEFGHIJKLMNOPQRSTUVWXY 1;
 		AUTD ABCD 1;

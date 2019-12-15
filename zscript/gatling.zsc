@@ -250,6 +250,7 @@ Class SMiniGun : UnrealWeapon
 		Weapon.AmmoGive 32;
 		Inventory.RespawnTics 2100;
 		+INVENTORY.IGNORESKILL;
+		+INVENTORY.ALWAYSPICKUP;
 		UTWeapon.DropAmmo 4;
 	}
 	States

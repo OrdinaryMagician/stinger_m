@@ -593,7 +593,39 @@ Class UnrealHUD : BaseStatusBar
 	private void DrawKeys( double x, double y, bool leftright = false )
 	{
 		if ( deathmatch ) return;	// no need to draw in DM
-		if ( gameinfo.gametype&(GAME_Hexen|GAME_Strife) ) return;	// no key display for these ATM (will do eventually)
+		if ( gameinfo.gametype&(GAME_Hexen|GAME_Strife) )
+		{
+			if ( !automapactive ) return;
+			int kw = (gameinfo.gametype&GAME_Strife)?20:30,
+				kh = (gameinfo.gametype&GAME_Strife)?20:40;
+			int nkeys = 0;
+			Array<int> rows;
+			Array<Inventory> keys;
+			keys.Clear();
+			rows.Clear();
+			rows.Push(0);
+			for ( Inventory i=CPlayer.mo.inv; i; i=i.inv )
+			{
+				if ( !(i is 'Key') ) continue;
+				keys.Push(i);
+				if ( rows[rows.Size()-1] >= 6 ) rows.Push(1);
+				else rows[rows.Size()-1]++;
+			}
+			int j = 0;
+			CurX = (ClipX-kw);
+			for ( int i=0; i<rows.Size(); i++ )
+			{
+				CurY = (ClipY-rows[i]*kh)*0.5;
+				for ( int k=0; k<rows[i]; k++ )
+				{
+					Screen.DrawTexture(keys[j].Icon,false,CurX,CurY,DTA_VirtualWidthF,ClipX,DTA_VirtualHeightF,ClipY,DTA_KeepRatio,true);
+					j++;
+					CurY += kh;
+				}
+				CurX -= kw;
+			}
+			return;
+		}
 		CurX = x;
 		CurY = y;
 		int cnt = 0;
@@ -768,10 +800,14 @@ Class UnrealHUD : BaseStatusBar
 			DrawString(mOldDigitsSmall,FormatNumber(sec,3),(633,378),DI_TEXT_ALIGN_RIGHT);
 		if ( sec2 != -1 )
 			DrawString(mOldDigitsSmall,FormatNumber(sec2,3),(556,378),DI_TEXT_ALIGN_LEFT);
-		for ( int i=0; i<6; i++ )
+		if ( gameinfo.gametype&(GAME_Hexen|GAME_Strife) ) DrawKeys(0,0);
+		else
 		{
-			if ( !CPlayer.mo.CheckKeys(i+1,false,true) ) continue;
-			DrawImage(OldKeys[((i==0)&&(gameinfo.gametype&GAME_Heretic))?6:i],(keyofs[i],366),DI_ITEM_OFFSETS);
+			for ( int i=0; i<6; i++ )
+			{
+				if ( !CPlayer.mo.CheckKeys(i+1,false,true) ) continue;
+				DrawImage(OldKeys[((i==0)&&(gameinfo.gametype&GAME_Heretic))?6:i],(keyofs[i],366),DI_ITEM_OFFSETS);
+			}
 		}
 		if ( HudMode > 5 ) return;
 		// Draw frags in DM

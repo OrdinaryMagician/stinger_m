@@ -432,6 +432,7 @@ Class BigGun : UnrealWeapon
 		Weapon.AmmoGive 4;
 		Inventory.RespawnTics 2100;
 		+INVENTORY.IGNORESKILL;
+		+INVENTORY.ALWAYSPICKUP;
 		UTWeapon.DropAmmo 4;
 		BigGun.ClipCount 4;
 		+EXTREMEDEATH;
