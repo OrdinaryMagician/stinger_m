@@ -140,7 +140,7 @@ Class ShieldBelt : UnrealArmor
 	{
 		if ( (damage > 0) && (amount > 0) && !DamageTypeDefinition.IgnoreArmor(damageType) )
 		{
-			Owner.A_PlaySound("belt/absorb",CHAN_7);
+			Owner.A_StartSound("belt/absorb",CHAN_POWERUP4);
 			UTMainHandler.DoFlash(Owner,Color(80,255,224,0),5);
 		}
 		Super.AbsorbDamage(damage,damageType,newdamage);
@@ -184,7 +184,7 @@ Class PowerShield : UnrealArmor
 	{
 		if ( (damage > 0) && (amount > 0) && !DamageTypeDefinition.IgnoreArmor(damageType) )
 		{
-			Owner.A_PlaySound("belt/absorb",CHAN_7);
+			Owner.A_StartSound("belt/absorb",CHAN_POWERUP4);
 			UTMainHandler.DoFlash(Owner,Color(80,224,0,255),5);
 			if ( !sting_pshield )
 			{

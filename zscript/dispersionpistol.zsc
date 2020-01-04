@@ -353,7 +353,7 @@ Class DispersionAmmo : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		A_PlaySound("dpistol/fly",CHAN_VOICE,.9,true,2.);
+		A_StartSound("dpistol/fly",CHAN_VOICE,CHANF_LOOPING,.9,2.);
 		mult = max(1.,mult);
 	}
 	Default
@@ -386,7 +386,7 @@ Class DispersionAmmo : Actor
 	Death:
 		TNT1 A 1
 		{
-			A_PlaySound("dpistol/hit",CHAN_VOICE);
+			A_StartSound("dpistol/hit",CHAN_VOICE);
 			A_DispExpl();
 		}
 		Stop;
@@ -496,7 +496,7 @@ Class DispersionPistol : UnrealWeapon
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
-		A_PlaySound("dpistol/fire",CHAN_WEAPON,Dampener.Active(self)?.4:1.,pitch:1.2);
+		A_StartSound("dpistol/fire",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.4:1.,pitch:1.2);
 		double mult = Amplifier.GetMult(self,80);
 		invoker.FireEffect();
 		Class<Actor> proj, part;
@@ -578,7 +578,8 @@ Class DispersionPistol : UnrealWeapon
 			UTPlayer(self).PlayAttacking3();
 		DefaultAmmo(weap.Ammo1).rechargephase = (((weap.Ammo1.Amount>0)||!deathmatch)?0:30);
 		DefaultAmmo(weap.Ammo1).rechargespeed = 1.1;
-		A_PlaySound("dpistol/altfire",CHAN_WEAPON,Dampener.Active(self)?.4:1.);
+		A_StopSound(CHAN_WEAPONMISC);
+		A_StartSound("dpistol/altfire",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.4:1.);
 		double mult = Amplifier.GetMult(self,int(invoker.ChargeSize*50)+50);
 		invoker.FireEffect();
 		int ulevel = sting_dpistol?0:invoker.upgradelevel;
@@ -675,6 +676,7 @@ Class DispersionPistol : UnrealWeapon
 		DefaultAmmo(weap.Ammo1).rechargephase = 0;
 		UTMainHandler.DoSwing(self,(FRandom[DPistol](-1,1),FRandom[DPistol](-1,1)),0.02*invoker.chargesize,0,2,SWING_Spring);
 		A_WeaponOffset(FRandom[DPistol](-1,1)*1.2*invoker.chargesize,32+FRandom[DPistol](-1,1)*1.2*invoker.chargesize);
+		A_SoundVolume(CHAN_WEAPONMISC,Dampener.Active(self)?.4:1.);
 		if ( !Dampener.Active(self) ) A_AlertMonsters();
 		invoker.chargesize += (2.-invoker.upgradelevel*0.15)/35.;
 		invoker.count += 1./35.;
@@ -838,7 +840,7 @@ Class DispersionPistol : UnrealWeapon
 			// need to make sure player does the repeat fire anim
 			if ( self is 'UPlayer' )
 				UPlayer(self).PlayAttacking();
-			A_PlaySound("dpistol/charge",CHAN_WEAPON,Dampener.Active(self)?.4:1.);
+			A_StartSound("dpistol/charge",CHAN_WEAPONMISC,CHANF_DEFAULT,Dampener.Active(self)?.4:1.);
 			A_Overlay(-9999,"Null");
 			if ( invoker.upgradelevel == 0 ) return ResolveState("AltFire1");
 			else if ( invoker.upgradelevel == 1 ) return ResolveState("AltFire2");
@@ -901,22 +903,22 @@ Class DispersionPistol : UnrealWeapon
 			return ResolveState("Upgrade4");
 		}
 	Upgrade1:
-		#### # 0 A_PlaySound("dpistol/up1",CHAN_6,Dampener.Active(self)?.2:1.);
+		#### # 0 A_StartSound("dpistol/up1",CHAN_WEAPONMISC,CHANF_DEFAULT,Dampener.Active(self)?.2:1.);
 		DPU1 ABCD 9;
 		DPI2 A 4 A_JumpIf(invoker.pendingupgrade>invoker.upgradelevel,"Upgrade");
 		Goto Idle;
 	Upgrade2:
-		#### # 0 A_PlaySound("dpistol/up2",CHAN_6,Dampener.Active(self)?.2:1.);
+		#### # 0 A_StartSound("dpistol/up2",CHAN_WEAPONMISC,CHANF_DEFAULT,Dampener.Active(self)?.2:1.);
 		DPU2 ABCDEFGHI 9;
 		DPI3 A 4 A_JumpIf(invoker.pendingupgrade>invoker.upgradelevel,"Upgrade");
 		Goto Idle;
 	Upgrade3:
-		#### # 0 A_PlaySound("dpistol/up3",CHAN_6,Dampener.Active(self)?.2:1.);
+		#### # 0 A_StartSound("dpistol/up3",CHAN_WEAPONMISC,CHANF_DEFAULT,Dampener.Active(self)?.2:1.);
 		DPU3 ABCDEFGHI 9;
 		DPI4 A 4 A_JumpIf(invoker.pendingupgrade>invoker.upgradelevel,"Upgrade");
 		Goto Idle;
 	Upgrade4:
-		#### # 0 A_PlaySound("dpistol/up4",CHAN_6,Dampener.Active(self)?.2:1.);
+		#### # 0 A_StartSound("dpistol/up4",CHAN_WEAPONMISC,CHANF_DEFAULT,Dampener.Active(self)?.2:1.);
 		DPU4 ABCDEFGHI 9;
 		DPI5 A 4 A_JumpIf(invoker.pendingupgrade>invoker.upgradelevel,"Upgrade");
 		Goto Idle;

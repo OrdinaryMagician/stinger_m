@@ -197,7 +197,7 @@ Class UMinigun : UnrealWeapon
 		Wait;
 	Fire:
 	AltFire:
-		MGNW A 0 A_PlaySound("umini/wind",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+		MGNW A 0 A_StartSound("umini/wind",CHAN_WEAPON,volume:Dampener.Active(self)?.1:1.);
 		MGNW ABCDEFGHIJKLMNO 1;
 		MGNW O 0
 		{
@@ -209,7 +209,7 @@ Class UMinigun : UnrealWeapon
 		MGNF A 0
 		{
 			A_Overlay(-9999,"FireDummy");
-			A_PlaySound("umini/fire",CHAN_WEAPON,Dampener.Active(self)?.1:1.,true);
+			A_StartSound("umini/fire",CHAN_WEAPON,CHANF_LOOPING,Dampener.Active(self)?.1:1.);
 		}
 		MGNF ABCDEFGHIJKLMNO 1 A_FireBullet(false);
 		MGNF A 0 A_JumpIf(player.cmd.buttons&BT_ALTATTACK,1);
@@ -218,12 +218,12 @@ Class UMinigun : UnrealWeapon
 		MGNA A 0
 		{
 			A_Overlay(-9999,"FireDummy");
-			A_PlaySound("umini/altfire",CHAN_WEAPON,Dampener.Active(self)?.1:1.,true);
+			A_StartSound("umini/altfire",CHAN_WEAPON,CHANF_LOOPING,Dampener.Active(self)?.1:1.);
 		}
 		MGNA ABCDEFGHIJKLMNOPQRST 1 A_FireBullet(true);
 		Goto AltHold+1;
 	Release:
-		MGNU A 0 A_PlaySound("umini/unwind",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+		MGNU A 0 A_StartSound("umini/unwind",CHAN_WEAPON,volume:Dampener.Active(self)?.1:1.);
 		MGNU ABCDEFGHIJKLMNO 2 A_MinigunRefire();
 		Goto Idle;
 	Deselect:

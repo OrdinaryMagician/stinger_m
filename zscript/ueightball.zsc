@@ -114,7 +114,7 @@ Class URocket : Actor
 		Super.PostBeginPlay();
 		let l = Spawn("URocketTrail",pos);
 		l.target = self;
-		A_PlaySound("eightball/fly",CHAN_VOICE,1.0,true,2.5);
+		A_StartSound("eightball/fly",CHAN_VOICE,CHANF_LOOPING,1.,2.5);
 		if ( tracer ) vel *= 0.9;
 		Acceleration = vel.unit()*50;
 	}
@@ -128,7 +128,7 @@ Class URocket : Actor
 		UTMainHandler.DoBlast(self,rad,80000);
 		A_Explode(dmg,rad);
 		A_QuakeEx(3,3,3,8,0,rad+50,"",QF_RELATIVE|QF_SCALEDOWN,falloff:rad,rollIntensity:0.2);
-		A_PlaySound("eightball/explode",CHAN_VOICE);
+		A_StartSound("eightball/explode",CHAN_VOICE);
 		A_AlertMonsters();
 		Spawn("RocketExplLight",pos);
 		int numpt = Random[Eightball](15,30);
@@ -303,7 +303,7 @@ Class UGrenade : URocket
 		RCKT A 0
 		{
 			bHITOWNER = true;
-			A_PlaySound("utrl/bounce");
+			A_StartSound("utrl/bounce");
 			rollvel = FRandom[Eightball](-16,16);
 			pitchvel = FRandom[Eightball](-16,16);
 			anglevel = FRandom[Eightball](-16,16);
@@ -363,7 +363,7 @@ Class Eightball : UnrealWeapon
 			LockedOn = false;
 			if ( Owner.player.ReadyWeapon == self )
 			{
-				Owner.A_PlaySound("eightball/seeklost",CHAN_WEAPON,Dampener.Active(Owner)?.1:1.);
+				Owner.A_StartSound("eightball/seeklost",CHAN_WEAPONMISC,CHANF_OVERLAP,Dampener.Active(Owner)?.1:1.);
 				if ( !Dampener.Active(Owner) ) Owner.A_AlertMonsters();
 			}
 		}
@@ -405,12 +405,14 @@ Class Eightball : UnrealWeapon
 		invoker.special1 = 0;
 		if ( weap.bAltFire )
 		{
-			A_PlaySound("eightball/altfire",CHAN_WEAPON,Dampener.Active(self)?.3:3.);
+			for ( int i=0; i<num; i++ )
+				A_StartSound("eightball/altfire",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.3:3.);
 			if ( !Dampener.Active(self) ) A_AlertMonsters();
 		}
 		else
 		{
-			A_PlaySound("eightball/fire",CHAN_WEAPON);
+			for ( int i=0; i<num; i++ )
+				A_StartSound("eightball/fire",CHAN_WEAPON,CHANF_OVERLAP);
 			A_AlertMonsters();
 		}
 		invoker.FireEffect();
@@ -481,7 +483,7 @@ Class Eightball : UnrealWeapon
 			}
 		}
 		// lose lock-on
-		if ( invoker.LockedOn ) A_PlaySound("eightball/seeklost",CHAN_6);
+		if ( invoker.LockedOn ) A_StartSound("eightball/seeklost",CHAN_WEAPONMISC,CHANF_OVERLAP);
 		invoker.LockedTarget = null;
 		invoker.LockedOn = false;
 		for ( int i=0; i<12; i++ )
@@ -518,12 +520,12 @@ Class Eightball : UnrealWeapon
 		}
 		if ( invoker.LockedTarget )
 		{
-			A_PlaySound("eightball/seeklock",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+			A_StartSound("eightball/seeklock",CHAN_WEAPONMISC,CHANF_OVERLAP,Dampener.Active(self)?.1:1.);
 			if ( !Dampener.Active(self) ) A_AlertMonsters();
 		}
 		else if ( invoker.LockedOn )
 		{
-			A_PlaySound("eightball/seeklost",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+			A_StartSound("eightball/seeklost",CHAN_WEAPONMISC,CHANF_OVERLAP,Dampener.Active(self)?.1:1.);
 			if ( !Dampener.Active(self) ) A_AlertMonsters();
 		}
 		if ( invoker.LockedTarget ) invoker.LockedOn = true;
@@ -560,9 +562,9 @@ Class Eightball : UnrealWeapon
 		Goto Idle+1;
 	Ready2:
 		EBLS O 0 A_CheckReload();
-		EBLL A 0 A_PlaySound("eightball/load",CHAN_6,Dampener.Active(self)?.1:1.);
+		EBLL A 0 A_StartSound("eightball/load",CHAN_WEAPONMISC,CHANF_OVERLAP,Dampener.Active(self)?.1:1.);
 		EBLL ABCDEFGHIJK 1 A_WeaponReady(WRF_NOFIRE);
-		EBLL L 0 A_PlaySound("eightball/rotate",CHAN_ITEM,Dampener.Active(self)?.01:.1);
+		EBLL L 0 A_StartSound("eightball/rotate",CHAN_WEAPONMISC,CHANF_OVERLAP,Dampener.Active(self)?.01:.1);
 		EBLL LMNOPQRSTUVWXYZ[ 1 A_WeaponReady(WRF_NOFIRE);
 		EBLL Z 0;	// force no tweening
 		EBLI A 0;
@@ -595,7 +597,7 @@ Class Eightball : UnrealWeapon
 		#### # 5
 		{
 			A_Overlay(-9999,"Null");
-			A_PlaySound("eightball/load",CHAN_WEAPON,Dampener.Active(self)?.03:.3);
+			A_StartSound("eightball/load",CHAN_WEAPONMISC,CHANF_OVERLAP,Dampener.Active(self)?.03:.3);
 			if ( invoker.bSingleRocket = !invoker.bSingleRocket )
 				A_Print(StringTable.Localize("$M_SINGLEROCKETON"));
 			else A_Print(StringTable.Localize("$M_SINGLEROCKETOFF"));
@@ -621,10 +623,10 @@ Class Eightball : UnrealWeapon
 		Goto Release;
 	Loading:
 		EBLI A 0;
-		EBLL A 0 A_PlaySound("eightball/load",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+		EBLL A 0 A_StartSound("eightball/load",CHAN_WEAPONMISC,CHANF_OVERLAP,Dampener.Active(self)?.1:1.);
 		EBLL ABCDEFGHIJK 1;
 		EBLL L 0 A_LoadRocket();
-		EBLL L 0 A_PlaySound("eightball/rotate",CHAN_ITEM,Dampener.Active(self)?.01:.1);
+		EBLL L 0 A_StartSound("eightball/rotate",CHAN_WEAPONMISC,CHANF_OVERLAP,Dampener.Active(self)?.01:.1);
 		EBLL LMNOPQRSTUVWXYZ[ 1;
 		EBLL Z 0;
 		EBLI A 0;

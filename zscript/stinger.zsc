@@ -179,8 +179,8 @@ Class TarydiumExplosion : Actor
 										// (just going off the novels here, it's supposed to be pretty strong)
 		A_QuakeEx(clamp(special1/6,2,9),clamp(special1/6,2,9),clamp(special1/6,2,9),10,0,300+special1*2,"",QF_RELATIVE|QF_SCALEDOWN,falloff:200+special1*2,rollIntensity:0.12);
 		SetOrigin(Vec3Offset(0,0,16),false);
-		A_PlaySound("stinger/explode",CHAN_VOICE,pitch:FRandom[Stinger](0.8,1.5));
-		A_PlaySound("stinger/explode",CHAN_ITEM,pitch:FRandom[Stinger](0.8,1.5));
+		A_StartSound("stinger/explode",CHAN_VOICE,pitch:FRandom[Stinger](0.8,1.5));
+		A_StartSound("stinger/explode",CHAN_ITEM,pitch:FRandom[Stinger](0.8,1.5));
 		let l = Spawn("TarydiumExLight",pos);
 		l.args[3] = int(60*scale.x);
 		scale.x *= RandomPick[Stinger](-1,1);
@@ -417,8 +417,8 @@ Class StingerProjectile : Actor
 			ExplodeMissile();
 			return;
 		}
-		if ( !Random[Stinger](0,2) ) A_PlaySound("stinger/hit2",CHAN_BODY,0.5,pitch:FRandom[Stinger](0.5,1.5));
-		else A_PlaySound("stinger/hit",CHAN_BODY,0.6);
+		if ( !Random[Stinger](0,2) ) A_StartSound("stinger/hit2",volume:.5,pitch:FRandom[Stinger](0.5,1.5));
+		else A_StartSound("stinger/hit",volume:.6);
 		A_SprayDecal("WallCrack",-20);
 		A_AlertMonsters();
 		let l = Spawn("StingerBurstLight",pos);
@@ -451,7 +451,7 @@ Class StingerProjectile : Actor
 		if ( !target.bNOBLOOD )
 		{
 			target.SpawnBlood(pos,AngleTo(target),damage);
-			A_PlaySound("stinger/flesh");
+			A_StartSound("stinger/flesh");
 			A_AlertMonsters();
 			if ( sting_stinger )
 			{
@@ -463,8 +463,8 @@ Class StingerProjectile : Actor
 	}
 	action void A_StingerHit()
 	{
-		if ( !Random[Stinger](0,2) ) A_PlaySound("stinger/hit2",CHAN_BODY,0.5,pitch:FRandom[Stinger](0.5,1.5));
-		else A_PlaySound("stinger/hit",CHAN_BODY,0.6);
+		if ( !Random[Stinger](0,2) ) A_StartSound("stinger/hit2",volume:.5,pitch:FRandom[Stinger](0.5,1.5));
+		else A_StartSound("stinger/hit",volume:.6);
 		A_SprayDecal("WallCrack",20);
 		A_AlertMonsters();
 		Spawn("StingerBurstLight",pos);
@@ -547,12 +547,12 @@ Class Stinger : UnrealWeapon
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		if ( hold )
 		{
-			A_SoundVolume(CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+			A_SoundVolume(CHAN_WEAPONMISC,Dampener.Active(self)?.1:1.);
 			A_Overlay(PSP_FLASH,"MFlashHold");
 		}
 		else
 		{
-			A_PlaySound("stinger/fire",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+			A_StartSound("stinger/fire",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.1:1.);
 			A_Overlay(PSP_FLASH,"MFlash");
 		}
 		A_OverlayFlags(PSP_FLASH,PSPF_RenderStyle,true);
@@ -598,7 +598,7 @@ Class Stinger : UnrealWeapon
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
 		if ( weap.Ammo1.Amount <= 0 ) return;
-		A_PlaySound("stinger/altfire",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+		A_StartSound("stinger/altfire",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.1:1.);
 		A_Overlay(PSP_FLASH,"MFlash");
 		A_OverlayFlags(PSP_FLASH,PSPF_RenderStyle,true);
 		A_OverlayRenderstyle(PSP_FLASH,STYLE_Add);
@@ -677,7 +677,7 @@ Class Stinger : UnrealWeapon
 		Goto Idle;
 		STNI A 0
 		{
-			A_PlaySound("stinger/hold",CHAN_WEAPON,Dampener.Active(self)?.1:1.,true);
+			A_StartSound("stinger/hold",CHAN_WEAPONMISC,CHANF_LOOPING,Dampener.Active(self)?.1:1.);
 			invoker.flashnum = Random[Stinger](0,3);
 		}
 	Hold:
@@ -692,7 +692,11 @@ Class Stinger : UnrealWeapon
 		STNH BCDEFG 1;
 		STNH A 0 A_JumpIfNoAmmo(1);
 		STNH A 0 A_Refire();
-		STNH A 2 A_PlaySound("stinger/release",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+		STNH A 2
+		{
+			A_StopSound(CHAN_WEAPONMISC);
+			A_StartSound("stinger/release",CHAN_WEAPON,volume:Dampener.Active(self)?.1:1.);
+		}
 		Goto Idle;
 	AltFire:
 		STNF A 2 A_StingerAltFire();

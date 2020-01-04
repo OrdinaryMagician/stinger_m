@@ -128,7 +128,7 @@ Class BigBlast : Actor
 		A_AlertMonsters();
 		A_Explode(50+special1,150);
 		A_QuakeEx(4,4,4,10,0,300,"",QF_RELATIVE|QF_SCALEDOWN,falloff:150,rollintensity:0.2);
-		A_PlaySound("big/blast",CHAN_VOICE,pitch:FRandom[BigGun](0.8,1.2));
+		A_StartSound("big/blast",CHAN_VOICE,pitch:FRandom[BigGun](0.8,1.2));
 		A_SprayDecal("RazorBlast",-172);
 		UTMainHandler.DoBlast(self,150,80000);
 		let r = Spawn("FatRing",pos);
@@ -319,7 +319,7 @@ Class BigGun : UnrealWeapon
 		if ( !weap ) return;
 		if ( invoker.clipcount <= 0 ) return;
 		invoker.clipcount--;
-		A_PlaySound("big/fire",CHAN_WEAPON);
+		A_StartSound("big/fire",CHAN_WEAPON,CHANF_OVERLAP);
 		A_AlertMonsters();
 		A_Overlay(-2,"MuzzleFlash");
 		A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
@@ -534,7 +534,7 @@ Class BigGun : UnrealWeapon
 		BIGF AB 2;
 		BIGF C 2
 		{
-			A_PlaySound("big/dry",CHAN_WEAPON,Dampener.Active(self)?.3:1.);
+			A_StartSound("big/dry",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.3:1.);
 			if ( !Dampener.Active(self) ) A_AlertMonsters();
 		}
 		BIGF LMNOP 2;
@@ -552,7 +552,7 @@ Class BigGun : UnrealWeapon
 			UTMainHandler.DoSwing(self,(FRandom[BigGun](0.3,0.4),FRandom[BigGun](0.6,0.8)),6,-1,3,SWING_Spring,2,3);
 			invoker.clipout = true;
 			A_QuakeEx(2,2,2,5,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollintensity:0.18);
-			A_PlaySound("big/punch",CHAN_WEAPON,Dampener.Active(self)?.3:1.);
+			A_StartSound("big/punch",CHAN_WEAPONMISC,CHANF_OVERLAP,Dampener.Active(self)?.3:1.);
 			if ( self is 'UTPlayer' ) UTPlayer(self).PlayReloading();
 		}
 		BIGR NOPQRSTUVW 2;
@@ -577,7 +577,7 @@ Class BigGun : UnrealWeapon
 			if ( !sv_infiniteammo && !FindInventory('PowerInfiniteAmmo',true) )
 				invoker.Ammo1.Amount -= aadd;
 			A_QuakeEx(1,1,1,3,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollintensity:0.12);
-			A_PlaySound("big/reload",CHAN_WEAPON,Dampener.Active(self)?.3:1.);
+			A_StartSound("big/reload",CHAN_WEAPONMISC,CHANF_OVERLAP,Dampener.Active(self)?.3:1.);
 			if ( self is 'UTPlayer' ) UTPlayer(self).PlayReloading();
 		}
 		BIR2 HIJKL 2;

@@ -256,8 +256,8 @@ Class QuadShot : UnrealWeapon
 		{
 			A_QuakeEx(1,1,1,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
 			double blend = invoker.clipcount/4.;
-			A_PlaySound("quadshot/alt",CHAN_WEAPON,(!Dampener.Active(self)?1.:.2)*blend);
-			A_PlaySound("quadshot/fire",CHAN_7,(!Dampener.Active(self)?1.:.2)*(1.-blend));
+			A_StartSound("quadshot/alt",CHAN_WEAPON,CHANF_OVERLAP,(!Dampener.Active(self)?1.:.2)*blend);
+			A_StartSound("quadshot/fire",CHAN_WEAPONMISC,CHANF_OVERLAP,(!Dampener.Active(self)?1.:.2)*(1.-blend));
 			double spread = invoker.clipcount;
 			for ( int i=0; i<invoker.clipcount; i++ )
 			{
@@ -282,7 +282,7 @@ Class QuadShot : UnrealWeapon
 		else
 		{
 			A_QuakeEx(1,1,1,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
-			A_PlaySound("quadshot/fire",CHAN_WEAPON,!Dampener.Active(self)?1.:.2);
+			A_StartSound("quadshot/fire",CHAN_WEAPON,CHANF_OVERLAP,!Dampener.Active(self)?1.:.2);
 			for ( int i=0; i<3; i++ )
 				UTMainHandler.DoSwing(self,(FRandom[Quadshot](-0.04,-0.2),FRandom[Quadshot](-0.2,0.2)),FRandom[Quadshot](5,7),FRandom[Quadshot](-1,-1.5),Random[Quadshot](3,6),SWING_Spring,0,FRandom[Quadshot](1.8,2.4));
 			for ( int i=0; i<10; i++ )
@@ -427,7 +427,7 @@ Class QuadShot : UnrealWeapon
 		#### # 1
 		{
 			A_Overlay(-9999,"Null");
-			A_PlaySound("automag/click",CHAN_WEAPON,Dampener.Active(self)?.05:.5);
+			A_StartSound("automag/click",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.05:.5);
 		}
 		QUAF AJK 2;
 		Goto Idle;
@@ -449,9 +449,9 @@ Class QuadShot : UnrealWeapon
 				UTPlayer(self).PlayReloading();
 		}
 		QUAP ABCD 1;
-		QUAP E 0 A_PlaySound("quadshot/pump1",CHAN_6,Dampener.Active(self)?.1:1.);
+		QUAP E 0 A_StartSound("quadshot/pump1",CHAN_WEAPONMISC,CHANF_OVERLAP,Dampener.Active(self)?.1:1.);
 		QUAP EFGHIJKLM 1;
-		QUAP N 0 A_PlaySound("quadshot/pump2",CHAN_6,Dampener.Active(self)?.1:1.);
+		QUAP N 0 A_StartSound("quadshot/pump2",CHAN_WEAPONMISC,CHANF_OVERLAP,Dampener.Active(self)?.1:1.);
 		QUAP NOPQRSTUVWXYZ[\ 1;
 		QUAP \ 0;
 		QUAI A 0; // force no tween
@@ -461,7 +461,7 @@ Class QuadShot : UnrealWeapon
 		QUAR ABCDEFGHIJK 1;
 		QUAR L 0
 		{
-			A_PlaySound("quadshot/open",CHAN_6,Dampener.Active(self)?.1:1.);
+			A_StartSound("quadshot/open",CHAN_WEAPONMISC,CHANF_OVERLAP,Dampener.Active(self)?.1:1.);
 			if ( self is 'UTPlayer' )
 				UTPlayer(self).PlayAttacking3();
 		}
@@ -479,7 +479,7 @@ Class QuadShot : UnrealWeapon
 			invoker.clipout = false;
 			invoker.heldshells = invoker.clipcount;
 			invoker.clipcount = 0;
-			A_PlaySound("quadshot/load",CHAN_6,Dampener.Active(self)?.1:1.);
+			A_StartSound("quadshot/load",CHAN_WEAPONMISC,CHANF_OVERLAP,Dampener.Active(self)?.1:1.);
 			let weap = Weapon(invoker);
 			for ( int i=0; i<2; i++ )
 			{
@@ -495,7 +495,7 @@ Class QuadShot : UnrealWeapon
 		QUR3 ABCDEFGHIJKLMNO 1;
 		QUR3 P 0
 		{
-			A_PlaySound("quadshot/load",CHAN_6,Dampener.Active(self)?.1:1.);
+			A_StartSound("quadshot/load",CHAN_WEAPONMISC,CHANF_OVERLAP,Dampener.Active(self)?.1:1.);
 			let weap = Weapon(invoker);
 			for ( int i=0; i<2; i++ )
 			{
@@ -511,7 +511,7 @@ Class QuadShot : UnrealWeapon
 		QUR4 ABCDE 1;
 		QUR4 F 0
 		{
-			A_PlaySound("quadshot/close",CHAN_6,Dampener.Active(self)?.1:1.);
+			A_StartSound("quadshot/close",CHAN_WEAPONMISC,CHANF_OVERLAP,Dampener.Active(self)?.1:1.);
 			if ( self is 'UTPlayer' ) UTPlayer(self).PlayAttacking3();
 		}
 		QUR4 FGHIJKLMNOPQ 1;

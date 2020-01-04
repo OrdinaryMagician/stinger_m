@@ -301,8 +301,8 @@ Class UPlayer : UTPlayer
 	override void PlayFootstep( double vol )
 	{
 		let boot = UJumpBoots(FindInventory("UJumpBoots"));
-		if ( boot ) A_PlaySound("u1/bootfootstep",CHAN_5,min(1.,vol*2));
-		else A_PlaySound("ut/playerfootstep",CHAN_5,vol);
+		if ( boot ) A_StartSound("u1/bootfootstep",CHAN_FOOTSTEP,CHANF_OVERLAP,min(1.,vol*2));
+		else A_StartSound("ut/playerfootstep",CHAN_FOOTSTEP,CHANF_OVERLAP,vol);
 	}
 }
 
@@ -595,12 +595,12 @@ Class UPlayerMale1 : UPlayerMale
 	override void PlayFootstep( double vol )
 	{
 		let boot = UJumpBoots(FindInventory("UJumpBoots"));
-		if ( boot ) A_PlaySound("u1/bootfootstep",CHAN_5,min(1.,vol*2));
+		if ( boot ) A_StartSound("u1/bootfootstep",CHAN_FOOTSTEP,CHANF_OVERLAP,min(1.,vol*2));
 		else
 		{
 			double ang = level.time/(20*TICRATE/35.)*360.;
-			if ( sin(ang) > 0 ) A_PlaySound("u1/metalfootstep",CHAN_5,min(1.,vol*2));
-			else A_PlaySound("ut/playerfootstep",CHAN_5,vol);
+			if ( sin(ang) > 0 ) A_StartSound("u1/metalfootstep",CHAN_FOOTSTEP,CHANF_OVERLAP,min(1.,vol*2));
+			else A_StartSound("ut/playerfootstep",CHAN_FOOTSTEP,CHANF_OVERLAP,vol);
 		}
 	}
 	Default
@@ -783,7 +783,7 @@ Class UTeleportFog : Actor
 	{
 		Super.PostBeginPlay();
 		Spawn("UTTeleportLight",Vec3Offset(0,0,16));
-		A_PlaySound("misc/teleport",volume:.5);
+		A_StartSound("misc/teleport",volume:.5);
 		Spawn("UTeleportParticles",Vec3Offset(0,0,16));
 	}
 	States
@@ -848,7 +848,7 @@ Class UnrealWeapon : UTWeapon
 	}
 	override void PlayUpSound( Actor origin )
 	{
-		origin.A_PlaySound(upsound,CHAN_WEAPON,Dampener.Active(origin)?.1:1.);
+		origin.A_StartSound(upsound,CHAN_WEAPON,volume:Dampener.Active(origin)?.1:1.);
 	}
 }
 
@@ -871,11 +871,12 @@ Class UnrealStaticHandler : StaticEventHandler
 		tex[5] = TexMan.CheckForTexture("graphics/97Bg.png",TexMan.Type_Any);
 		tex[6] = TexMan.CheckForTexture("graphics/96Bg.png",TexMan.Type_Any);
 		tex[7] = TexMan.CheckForTexture("graphics/95Bg.png",TexMan.Type_Any);
-		if ( proto > 2 ) S_ChangeMusic("Unreal");
-		else if ( proto == 2 ) S_ChangeMusic("Isotox96");
-		else if ( proto == 1 ) S_ChangeMusic("Unreal2");
-		else S_ChangeMusic("FlyBy");
-		cur = proto;
+		if ( proto > 3 ) S_ChangeMusic("music/Unreal_Extended.it");
+		else if ( proto == 3 ) S_ChangeMusic("music/Unreal.it");
+		else if ( proto == 2 ) S_ChangeMusic("music/isotox96.s3m");
+		else if ( proto == 1 ) S_ChangeMusic("music/Unreal2.it");
+		else S_ChangeMusic("music/FlyBy.it");
+		cur = clamp(proto,0,3);
 	}
 
 	override void OnRegister()
@@ -1226,7 +1227,7 @@ Class UnrealMainHandler : EventHandler
 		else if ( e.Replacee == 'RadSuit' ) e.Replacement = 'UJumpBoots';
 		else if ( (e.Replacee == 'ArtiFly') || (e.Replacee == 'ArtiSpeedBoots') ) e.Replacement = 'UJumpBoots';
 		else if ( (e.Replacee == 'Backpack') || (e.Replacee == 'BagOfHolding') || (e.Replacee == 'ArtiHealingRadius') ) e.Replacement = 'UnrealBackpack';
-		else if ( (e.Replacee == 'ArmorBonus') || (e.Replacee == 'ArtiTimeBomb') || (e.Replacee is 'ArtiPoisonBag') || (e.Replacee is 'ArtiBlastRadius') )
+		else if ( (e.Replacee == 'ArmorBonus') || (e.Replacee == 'ArtiTimeBomb') || (e.Replacee == 'ArtiBlastRadius') )
 		{
 			if ( sting_abonus && Random[Replacements](0,3) ) e.Replacement = 'UArmorBonus';
 			else e.Replacement = 'Flare';

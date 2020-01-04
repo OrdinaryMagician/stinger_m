@@ -58,9 +58,9 @@ Class RazorBlade : Actor
 		if ( special1 > 0 )
 		{
 			vel *= 1.+.06+special1;
-			A_PlaySound("razorjack/hum",CHAN_VOICE,1.0,true,3.0,pitch:3.125+special1*.2);
+			A_StartSound("razorjack/hum",CHAN_VOICE,CHANF_LOOPING,1.,3.,3.125+special1*.2);
 		}
-		else A_PlaySound("razorjack/hum",CHAN_VOICE,1.0,true,3.0,pitch:3.125);
+		else A_StartSound("razorjack/hum",CHAN_VOICE,CHANF_LOOPING,1.,3.,3.125);
 		Vector3 dir = vel.unit();
 		A_SetAngle(atan2(dir.y,dir.x));
 		A_SetPitch(asin(-dir.z));
@@ -79,7 +79,7 @@ Class RazorBlade : Actor
 		if ( !target.bNOBLOOD )
 		{
 			target.SpawnBlood(pos,AngleTo(target),damage);
-			A_PlaySound("razorjack/flesh");
+			A_StartSound("razorjack/flesh");
 			A_AlertMonsters();
 		}
 		UTMainHandler.DoKnockback(target,vel.unit(),15000);
@@ -120,7 +120,7 @@ Class RazorBlade : Actor
 	}
 	action void A_RazorHit()
 	{
-		A_PlaySound("razorjack/hit");
+		A_StartSound("razorjack/hit");
 		A_AlertMonsters();
 		A_SprayDecal("WallCrack",-20);
 		int numpt = Random[Ripper](5,10);
@@ -240,7 +240,7 @@ Class Razorjack : UnrealWeapon
 		if ( !weap.DepleteAmmo(weap.bAltFire,true,1) ) return;
 		if ( self is 'UTPlayer' )
 			UTPlayer(self).PlayAttacking3();
-		A_PlaySound("razorjack/fire",CHAN_WEAPON,pitch:bAlt?1.:(1.+invoker.special1*.1));
+		A_StartSound("razorjack/fire",CHAN_WEAPON,CHANF_OVERLAP,pitch:bAlt?1.:(1.+invoker.special1*.1));
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(16,255,0,255),1);
 		A_AlertMonsters();

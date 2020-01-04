@@ -74,12 +74,12 @@ Class Bonesaw : UnrealWeapon
 			A_QuakeEx(1,1,1,3,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
 			if ( !d.HitActor || d.HitActor.bNOBLOOD )
 			{
-				A_PlaySound("ripper/hit",CHAN_6);
+				A_StartSound("ripper/hit",CHAN_WEAPON,CHANF_OVERLAP);
 				let p = Spawn("SawImpact",d.HitLocation-d.HitDir*4);
 				p.angle = atan2(d.HitDir.y,d.HitDir.x);
 				p.pitch = asin(-d.HitDir.z);
 			}
-			else A_PlaySound("ripper/flesh",CHAN_6);
+			else A_StartSound("ripper/flesh",CHAN_WEAPON,CHANF_OVERLAP);
 			if ( invoker.bAltFire ) A_QuakeEx(3,3,3,3,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.13);
 			else A_QuakeEx(1,1,1,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.06);
 			return true;
@@ -169,7 +169,7 @@ Class Bonesaw : UnrealWeapon
 		#### # 2
 		{
 			A_Overlay(-9999,"Null");
-			A_PlaySound("bonesaw/spin",CHAN_WEAPON,Dampener.Active(self)?.1:1.,true);
+			A_StartSound("bonesaw/spin",CHAN_WEAPONMISC,CHANF_LOOPING,Dampener.Active(self)?.1:1.);
 			invoker.special2 = 0;
 		}
 		CSWF ABCDEFGHIJKLMNO 1
@@ -185,7 +185,7 @@ Class Bonesaw : UnrealWeapon
 		}
 		Goto Hold;
 	Hold:
-		CSWH A 0 A_SoundVolume(CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+		CSWH A 0 A_SoundVolume(CHAN_WEAPONMISC,Dampener.Active(self)?.1:1.);
 		CSWH ABCDEFGHIJKLMNOPQR 1
 		{
 			A_WeaponOffset(0+FRandom[Bonesaw](-0.1,0.1)*invoker.special2,32+FRandom[Bonesaw](-0.1,0.1)*invoker.special2,WOF_INTERPOLATE);
@@ -194,7 +194,11 @@ Class Bonesaw : UnrealWeapon
 		CSWH A 0 A_Refire("Hold");
 		Goto Release;
 	Release:
-		CSWR A 0 A_PlaySound("bonesaw/spinend",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+		CSWR A 0
+		{
+			A_StopSound(CHAN_WEAPONMISC);
+			A_StartSound("bonesaw/spinend",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.1:1.);
+		}
 		CSWR ABCDEFGHI 1
 		{
 			A_WeaponOffset(0+FRandom[Bonesaw](-0.1,0.1)*invoker.special2,32+FRandom[Bonesaw](-0.1,0.1)*invoker.special2,WOF_INTERPOLATE);
@@ -211,7 +215,7 @@ Class Bonesaw : UnrealWeapon
 		#### # 1
 		{
 			A_Overlay(-9999,"Null");
-			A_PlaySound("bonesaw/claw",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+			A_StartSound("bonesaw/claw",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.1:1.);
 			UTMainHandler.DoSwing(self,(FRandom[Bonesaw](-0.1,0.1),FRandom[Bonesaw](-0.2,-0.3)),4,0.2,8,SWING_Spring,2,2.);
 		}
 		CSWA ABC 2;

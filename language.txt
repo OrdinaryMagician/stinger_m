@@ -226,6 +226,7 @@ STING_UNREAL98 = "Unreal '98";
 STING_UNREAL97 = "Unreal '97";
 STING_UNREAL96 = "Unreal '96";
 STING_UNREAL95 = "Unreal '95";
+STING_UNREAL95EXT = "Unreal '95 (Extended theme)";
 STING_POPTS = "Prototype features";
 STING_PROTO = "Enable prototype content";
 STING_TELEHAND = "Teleport Capsules";
@@ -500,6 +501,7 @@ M_FFNOROOM = "No hay espacio para activar el Campo de Fuerza.";
 S_MINHUD = "Salud %d Puntuación %d Munición %d";
 S_MINHUD2 = "Salud %d Puntuación %d Munición %d/%d";
 /* Menus */
+STING_UNREAL95EXT = "Unreal '95 (Tema extendido)";
 STING_MTITLE = "Opciones de Unreal";
 STING_HOPTS = "Opciones de HUD";
 STING_HUDMODE = "Modo de HUD";

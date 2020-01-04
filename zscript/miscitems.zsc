@@ -118,7 +118,7 @@ Class TranslatorEvent : Actor
 		{
 			if ( special2 ) Console.Printf(StringTable.Localize("$TR_MSG"));
 			else Console.Printf(StringTable.Localize("$TR_NEWMSG"));
-			S_Sound("translator/event",CHAN_VOICE|CHAN_UI);
+			S_StartSound("translator/event",CHAN_VOICE,CHANF_UI);
 		}
 		Translator.AddMessage(user_message,user_hint);
 		if ( special2 ) Translator.bNotNewMessage = true;
@@ -273,7 +273,7 @@ Class VoiceBoxActive : Actor
 			"automag/shot"
 		};
 		if ( invoker.b ) invoker.b.A_AlertMonsters(0,AMF_TARGETEMITTER);
-		for ( int i=0; i<10; i++ ) if ( !Random[Voicebox](0,30) ) A_PlaySound(BattleSounds[i],CHAN_AUTO,FRandom[Voicebox](0.5,1.0));
+		for ( int i=0; i<10; i++ ) if ( !Random[Voicebox](0,30) ) A_StartSound(BattleSounds[i],CHAN_VOICE,CHANF_OVERLAP,FRandom[Voicebox](0.5,1.0));
 	}
 	override void Tick()
 	{
@@ -314,7 +314,7 @@ Class VoiceBoxActive : Actor
 		VBOX A 30
 		{
 			invoker.anglevel *= 0;
-			A_PlaySound("voice/activate");
+			A_StartSound("voice/activate");
 		}
 		VBOX ABCDEFGHIJ 1
 		{
@@ -327,7 +327,7 @@ Class VoiceBoxActive : Actor
 		VBOX A 0
 		{
 			if ( invoker.b ) invoker.b.Destroy();
-			A_PlaySound("flare/explode",CHAN_VOICE);
+			A_StartSound("flare/explode",CHAN_VOICE);
 			A_NoGravity();
 			A_Stop();
 			A_SetRenderStyle(1.,STYLE_Add);
@@ -481,8 +481,8 @@ Class FlareThrown : Actor
 		}
 		if ( !b )
 		{
-			A_PlaySound("flare/on");
-			A_PlaySound("flare/loop",CHAN_VOICE,.5,true);
+			A_StartSound("flare/on");
+			A_StartSound("flare/loop",CHAN_VOICE,CHANF_LOOPING,.5);
 			tracer = Spawn("FlareThrownX",pos);
 			tracer.angle = angle;
 			tracer.pitch = pitch;
@@ -534,7 +534,7 @@ Class FlareThrown : Actor
 				return ResolveState("Fizz");
 			}
 			A_StopSound(CHAN_VOICE);
-			A_PlaySound("flare/explode");
+			A_StartSound("flare/explode");
 			A_Explode(50,50);
 			A_NoGravity();
 			A_Stop();
@@ -797,8 +797,8 @@ Class BetaFlareThrown : Actor
 		}
 		if ( !b )
 		{
-			A_PlaySound("flare/on");
-			A_PlaySound("flare/loop",CHAN_VOICE,.5,true);
+			A_StartSound("flare/on");
+			A_StartSound("flare/loop",CHAN_VOICE,CHANF_LOOPING,.5);
 			b = Spawn("FlareHitbox",pos);
 			b.master = self;
 		}
@@ -847,7 +847,7 @@ Class BetaFlareThrown : Actor
 			if ( waterlevel > 0 ) return ResolveState("Fizz");
 			A_RemoveLight('PLight');
 			A_StopSound(CHAN_VOICE);
-			A_PlaySound("flare/explode");
+			A_StartSound("flare/explode");
 			A_Explode(50,50);
 			A_NoGravity();
 			A_Stop();
@@ -980,7 +980,7 @@ Class Dampener : UnrealInventory
 	{
 		if ( pickup ) return false;
 		bActive = !bActive;
-		Owner.A_PlaySound(bActive?"dampener/on":"dampener/off",CHAN_ITEM);
+		Owner.A_StartSound(bActive?"dampener/on":"dampener/off",CHAN_ITEM);
 		return false;
 	}
 	override void DoEffect()
@@ -989,7 +989,7 @@ Class Dampener : UnrealInventory
 		if ( !bActive ) return;
 		if ( DrainCharge(1) )
 		{
-			Owner.A_PlaySound("dampener/off",CHAN_ITEM);
+			Owner.A_StartSound("dampener/off",CHAN_ITEM);
 			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_DAMPENER"));
 			if ( Amount <= 0 ) DepleteOrDestroy();
 		}
@@ -1127,14 +1127,14 @@ Class ForcefieldEffect : Actor
 	}
 	override int DamageMobj( Actor inflictor, Actor source, int damage, Name mod, int flags, double angle )
 	{
-		A_PlaySound("ffield/hit",CHAN_BODY);
+		A_StartSound("ffield/hit",flags:CHANF_OVERLAP);
 		return Super.DamageMobj(inflictor,source,damage,mod,flags,angle);
 	}
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		A_PlaySound("ffield/on",CHAN_ITEM);
-		A_PlaySound("ffield/active",CHAN_VOICE,0.6,true);
+		A_StartSound("ffield/on",CHAN_ITEM);
+		A_StartSound("ffield/active",CHAN_VOICE,CHANF_LOOPING,.6);
 		let tracer = Spawn("ForceFieldLight",pos);
 		tracer.target = self;
 		lct = 24;
@@ -1149,7 +1149,7 @@ Class ForcefieldEffect : Actor
 			A_UnsetShootable();
 			A_UnsetSolid();
 		}
-		FFLD A 1 Bright A_PlaySound("ffield/hit",CHAN_VOICE);
+		FFLD A 1 Bright A_StartSound("ffield/hit",CHAN_VOICE);
 		Stop;
 	}
 }
@@ -1243,7 +1243,7 @@ Class UFlashlight : UnrealInventory
 	{
 		if ( pickup ) return false;
 		bActive = !bActive;
-		Owner.A_PlaySound(bActive?"lite/pickup":"lite/off",CHAN_ITEM);
+		Owner.A_StartSound(bActive?"lite/pickup":"lite/off",CHAN_ITEM);
 		if ( bActive )
 		{
 			if ( !lt[0] ) lt[0] = UFlashLight1(Spawn("UFlashLight1",owner.pos));
@@ -1267,7 +1267,7 @@ Class UFlashlight : UnrealInventory
 		if ( !bActive ) return;
 		if ( DrainCharge(1) )
 		{
-			Owner.A_PlaySound("lite/off",CHAN_ITEM);
+			Owner.A_StartSound("lite/off",CHAN_ITEM);
 			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_FLASHLIGHT"));
 			if ( Amount <= 0 ) DepleteOrDestroy();
 			else
@@ -1326,7 +1326,7 @@ Class USearchlight : UFlashlight
 		if ( !bActive ) return;
 		if ( DrainCharge(1) )
 		{
-			Owner.A_PlaySound("lite/off",CHAN_ITEM);
+			Owner.A_StartSound("lite/off",CHAN_ITEM);
 			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_SEARCHLIGHT"));
 			if ( Amount <= 0 ) DepleteOrDestroy();
 			else
@@ -1668,7 +1668,7 @@ Class MinigunSentry : Actor
 		if ( (special1 <= 0) && master.master && master.master.CheckLocalView() ) Console.Printf(StringTable.Localize("$M_SENTRYDRY"));
 		A_SentryFaceTarget();
 		master.A_AlertMonsters(0,AMF_TARGETEMITTER);
-		A_PlaySound("sentry/fire",CHAN_WEAPON);
+		A_StartSound("sentry/fire",CHAN_WEAPON,CHANF_OVERLAP);
 		Vector3 x, y, z, origin;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		origin = level.Vec3Offset(pos,x*24+z*8);
@@ -1724,7 +1724,7 @@ Class MinigunSentry : Actor
 		SENT A 15;
 		SENT A 0
 		{
-			A_PlaySound("sentry/raise");
+			A_StartSound("sentry/raise");
 			if ( master ) master.A_AlertMonsters(0,AMF_TARGETEMITTER);
 		}
 		SENR ABCDEFGHIJKLMNO 3;
@@ -1732,7 +1732,7 @@ Class MinigunSentry : Actor
 	Idle:
 		SENI A 0
 		{
-			A_PlaySound("sentry/move",CHAN_BODY,0.4,true,pitch:0.8);
+			A_StartSound("sentry/move",flags:CHANF_LOOPING,.4,pitch:.8);
 			if ( specialf1 > 0 ) specialf1 = -maxangle;
 			else specialf1 = maxangle;
 			special2 = 0;
@@ -1745,7 +1745,7 @@ Class MinigunSentry : Actor
 		}
 		Wait;
 	IdleStop:
-		SENI A 0 A_PlaySound("sentry/movestop",CHAN_BODY,0.4,pitch:0.8);
+		SENI A 0 A_StartSound("sentry/movestop",volume:.4,pitch:.8);
 		SENI A 1
 		{
 			A_LookEx(LOF_NOSOUNDCHECK|LOF_NOJUMP);
@@ -1754,7 +1754,7 @@ Class MinigunSentry : Actor
 		}
 		Wait;
 	See:
-		SENI A 0 A_PlaySound("sentry/movestop",CHAN_BODY,0.4,pitch:0.8);
+		SENI A 0 A_StartSound("sentry/movestop",volume:.4,pitch:.8);
 		SENI A 1
 		{
 			if ( !TargetVisible() )
@@ -1770,7 +1770,7 @@ Class MinigunSentry : Actor
 	Missile:
 		SENW A 0
 		{
-			A_PlaySound("sentry/wind",looping:true);
+			A_StartSound("sentry/wind",flags:CHANF_LOOPING);
 			if ( master )
 			{
 				master.A_AlertMonsters(0,AMF_TARGETEMITTER);
@@ -1812,7 +1812,7 @@ Class MinigunSentry : Actor
 		{
 			A_LookEx(LOF_NOSOUNDCHECK|LOF_NOJUMP);
 			if ( TargetVisible() && (special1>0) ) return ResolveState("MissileLoop");
-			A_PlaySound("sentry/unwind");
+			A_StartSound("sentry/unwind");
 			if ( master ) master.SetStateLabel("MissileEnd");
 			return ResolveState(null);
 		}
@@ -1824,7 +1824,7 @@ Class MinigunSentry : Actor
 		Wait;
 		SENI A 0
 		{
-			A_PlaySound("sentry/raise");
+			A_StartSound("sentry/raise");
 			if ( master )
 			{
 				master.A_AlertMonsters(0,AMF_TARGETEMITTER);
@@ -1903,7 +1903,7 @@ Class SentryFragment : Actor
 			pitchvel = FRandom[Junk](10,30)*RandomPick[Junk](-1,1);
 			rollvel = FRandom[Junk](10,30)*RandomPick[Junk](-1,1);
 			vel = (vel.unit()+(FRandom[Junk](-.2,.2),FRandom[Junk](-.2,.2),FRandom[Junk](-.2,.2))).unit()*vel.length();
-			A_PlaySound("vfrag/bounce",CHAN_BODY,min(1.,vel.length()*0.1),pitch:FRandom[Junk](0.6,1.4));
+			A_StartSound("vfrag/bounce",volume:min(1.,vel.length()*0.1),pitch:FRandom[Junk](0.6,1.4));
 		}
 		Goto Spawn;
 	Death:
@@ -1944,7 +1944,7 @@ Class SentryBoom : Actor
 	{
 		Super.PostBeginPlay();
 		A_Explode(80,250);
-		A_PlaySound("sentry/explode");
+		A_StartSound("sentry/explode");
 		UTMainHandler.DoBlast(self,250,70000);
 		double ang, pt;
 		for ( int i=0; i<16; i++ )
@@ -2102,7 +2102,7 @@ Class MinigunSentryBase : Actor
 		}
 		let amo = user.FindInventory("UMiniAmmo");
 		if ( !amo || (amo.Amount <= 0) || (tracer.special1 >= sentryammo) ) return false;
-		A_PlaySound("misc/i_pkup",CHAN_ITEM);
+		A_StartSound("misc/i_pkup",CHAN_ITEM);
 		int xammo = min(sentryammo-tracer.special1,amo.Amount);
 		special1 = tracer.special1 += xammo;
 		amo.Amount -= xammo;
@@ -2409,7 +2409,7 @@ Class SentryGun : Actor
 			return;
 		}
 		A_AlertMonsters(0,AMF_TARGETEMITTER);
-		A_PlaySound("sentry/fire",CHAN_WEAPON,pitch:1.6);
+		A_StartSound("sentry/fire",CHAN_WEAPON,CHANF_OVERLAP,pitch:1.6);
 		Vector3 x, y, z, origin;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		origin = level.Vec3Offset(pos,x*12+z*16);
@@ -2471,7 +2471,7 @@ Class SentryGun : Actor
 	StartUp:
 		SENR A 0
 		{
-			A_PlaySound("sentry/raise",pitch:1.6);
+			A_StartSound("sentry/raise",pitch:1.6);
 			A_AlertMonsters(0,AMF_TARGETEMITTER);
 		}
 		SENR ABCDE 4;
@@ -2482,7 +2482,7 @@ Class SentryGun : Actor
 	WindUp:
 		SENW A 0
 		{
-			A_PlaySound("sentry/wind",looping:true,pitch:1.6);
+			A_StartSound("sentry/wind",flags:CHANF_LOOPING,pitch:1.6);
 			A_AlertMonsters(0,AMF_TARGETEMITTER);
 		}
 		SENW ABCDEFGHIJKLMN 1;
@@ -2502,11 +2502,11 @@ Class SentryGun : Actor
 		SENU A 0;	// tweening hack
 		Loop;
 	Unwind:
-		SENU A 0 A_PlaySound("sentry/unwind",pitch:1.6);
+		SENU A 0 A_StartSound("sentry/unwind",pitch:1.6);
 		SENU ABCDEFGHIJKLMN 1;
 		Goto Idle;
 	ShutDown:
-		SEND A 0 A_PlaySound("sentry/raise",pitch:1.6);
+		SEND A 0 A_StartSound("sentry/raise",pitch:1.6);
 		SEND ABCDE 4;
 		SEND E 20;
 		SEND E -1 A_Die();
@@ -2515,7 +2515,7 @@ Class SentryGun : Actor
 		TNT1 A 0
 		{
 			A_StopSound(CHAN_BODY);
-			A_PlaySound("flare/explode",CHAN_VOICE);
+			A_StartSound("flare/explode",CHAN_VOICE);
 			A_NoGravity();
 			A_Stop();
 			A_SetRenderStyle(1.,STYLE_Add);

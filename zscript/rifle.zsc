@@ -84,7 +84,7 @@ Class URifle : UnrealWeapon
 	action void A_ToggleLight()
 	{
 		invoker.bLightOn = !invoker.bLightOn;
-		A_PlaySound(invoker.bLightOn?"lite/pickup":"lite/off",CHAN_ITEM);
+		A_StartSound(invoker.bLightOn?"lite/pickup":"lite/off",CHAN_ITEM);
 		if ( invoker.bLightOn )
 		{
 			if ( !invoker.lt[0] ) invoker.lt[0] = UFlashLight1(Spawn("UFlashLight1",pos));
@@ -121,8 +121,8 @@ Class URifle : UnrealWeapon
 			UTPlayer(self).PlayAttacking3();
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,0,0,255),1);
-		if ( alt ) A_PlaySound("rifle/fire",CHAN_WEAPON,Dampener.Active(self)?.3:1.,pitch:FRandom[Sniper](0.9,1.1));
-		else A_PlaySound("rifle/fire",CHAN_WEAPON,Dampener.Active(self)?.3:1.);
+		if ( alt ) A_StartSound("rifle/fire",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.3:1.,pitch:FRandom[Sniper](0.9,1.1));
+		else A_StartSound("rifle/fire",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.3:1.);
 		if ( !Dampener.Active(self) ) A_AlertMonsters();
 		if ( zoomed )
 		{
@@ -306,7 +306,7 @@ Class URifle : UnrealWeapon
 		Goto Idle;
 	Zoom:
 		SRSU A 0 A_JumpIf(invoker.sniperzoom>1.0,"ZoomOut");
-		SRSU A 0 A_PlaySound("rifle/scopeon",CHAN_ITEM,.5);
+		SRSU A 0 A_StartSound("rifle/scopeon",CHAN_WEAPONMISC,volume:.5);
 		SRSU ABCDEFGHIJKLMN 1;
 		SRSI A 0;
 		Goto ZoomHold;
@@ -321,14 +321,14 @@ Class URifle : UnrealWeapon
 		Goto ZoomedIdle;
 	ZoomOut:
 		SRSD A 0 A_ZoomFactor(invoker.sniperzoom=1.0,ZOOM_INSTANT);
-		SRSD A 0 A_PlaySound("rifle/scopeoff",CHAN_ITEM,.5);
+		SRSD A 0 A_StartSound("rifle/scopeoff",CHAN_WEAPONMISC,volume:.5);
 		SRSI A 1;
 		SRSD ABCDEFGHIJKLMNO 1;
 		Goto Idle;
 	Deselect:
 		SRFD A 0 A_JumpIf(invoker.sniperzoom<=1.0,"Deselect2");
 		SRSD A 0 A_ZoomFactor(invoker.sniperzoom=1.0,ZOOM_INSTANT);
-		SRSD A 0 A_PlaySound("rifle/scopeoff",CHAN_ITEM,.5);
+		SRSD A 0 A_StartSound("rifle/scopeoff",CHAN_WEAPONMISC,volume:.5);
 		SRSI A 1;
 		SRSD ABCDEFGHIJKLMNO 1;
 	Deselect2:

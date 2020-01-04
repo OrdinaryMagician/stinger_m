@@ -18,7 +18,7 @@ Class UInvisibility : UnrealInventory
 		bActive = !bActive;
 		if ( bActive )
 		{
-			Owner.A_PlaySound("uinvis/toggle",CHAN_ITEM);
+			Owner.A_StartSound("uinvis/toggle",CHAN_ITEM);
 			Owner.GiveInventory("PowerUInvisibility",1);
 		}
 		else Owner.TakeInventory("PowerUInvisibility",1);
@@ -118,7 +118,7 @@ Class Amplifier : UnrealInventory
 		double Multiplier = max(1,4*(double(d.Charge-val)/d.DefaultCharge));
 		if ( d.DrainCharge(val) )
 		{
-			d.Owner.A_PlaySound("amplifier/unset",CHAN_ITEM);
+			d.Owner.A_StartSound("amplifier/unset",CHAN_ITEM);
 			if ( d.Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_AMPLIFIER"));
 			if ( d.tracer ) d.tracer.Destroy();
 			if ( d.Amount <= 0 ) d.DepleteOrDestroy();
@@ -129,7 +129,7 @@ Class Amplifier : UnrealInventory
 	{
 		if ( pickup ) return false;
 		bActive = !bActive;
-		Owner.A_PlaySound(bActive?"amplifier/set":"amplifier/unset",CHAN_ITEM);
+		Owner.A_StartSound(bActive?"amplifier/set":"amplifier/unset",CHAN_ITEM);
 		return false;
 	}
 	override void DoEffect()
@@ -145,7 +145,7 @@ Class Amplifier : UnrealInventory
 		if ( !bActive ) return;
 		if ( !(level.maptime%35) && DrainCharge(2) )
 		{
-			Owner.A_PlaySound("amplifier/unset",CHAN_ITEM);
+			Owner.A_StartSound("amplifier/unset",CHAN_ITEM);
 			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_AMPLIFIER"));
 			if ( tracer ) tracer.Destroy();
 			if ( Amount <= 0 ) DepleteOrDestroy();
@@ -189,8 +189,8 @@ Class AmpSound : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		A_PlaySound("amplifier/act",CHAN_VOICE,0.25,true,1.5);
-		A_PlaySound("amplifier/act",CHAN_7,1.0,true,ATTN_NONE);
+		A_StartSound("amplifier/act",CHAN_VOICE,CHANF_LOOPING,.25,1.5);
+		A_StartSound("amplifier/act",CHAN_7,CHANF_LOOPING,1.,ATTN_NONE);
 	}
 	override void OnDestroy()
 	{
@@ -220,7 +220,7 @@ Class UJumpBoots : UnrealInventory
 	{
 		if ( pickup ) return false;
 		bActive = !bActive;
-		Owner.A_PlaySound("boot/pickup",CHAN_ITEM);
+		Owner.A_StartSound("boot/pickup",CHAN_ITEM);
 		if ( bActive ) Owner.GiveInventory("PowerJumpBoots_HighJump",1);
 		else Owner.TakeInventory("PowerJumpBoots_HighJump",1);
 		return false;
@@ -234,7 +234,7 @@ Class UJumpBoots : UnrealInventory
 		{
 			draincnt = 0;
 			charge--;
-			Owner.A_PlaySound("boot/jump",CHAN_BODY);
+			Owner.A_StartSound("boot/jump",CHAN_POWERUP3,CHANF_OVERLAP);
 		}
 		else if ( (charge <= 0) && owner.player.onground )
 		{
@@ -444,8 +444,8 @@ Class MotionDetector : UnrealInventory
 	{
 		if ( pickup ) return false;
 		bActive = !bActive;
-		if ( bActive ) Owner.A_PlaySound("detector/start",CHAN_ITEM);
-		else Owner.A_PlaySound("detector/stop",CHAN_ITEM,0.1,false,3.);
+		if ( bActive ) Owner.A_StartSound("detector/start",CHAN_ITEM);
+		else Owner.A_StartSound("detector/stop",CHAN_ITEM,volume:.1,attenuation:3.);
 		return false;
 	}
 	override void DoEffect()
@@ -468,7 +468,7 @@ Class MotionDetector : UnrealInventory
 		}
 		if ( (Charge <= 0) || DrainCharge(1) )
 		{
-			Owner.A_PlaySound("detector/stop",CHAN_ITEM,0.1,false,3.);
+			Owner.A_StartSound("detector/stop",CHAN_ITEM,volume:.1,attenuation:3.);
 			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_DETECTOR"));
 			if ( tracer ) tracer.Destroy();
 			DepleteOrDestroy();
@@ -505,8 +505,8 @@ Class DetectorSound : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		A_PlaySound("detector/active",CHAN_VOICE,0.1,true,ATTN_NONE);
-		A_PlaySound("detector/active",CHAN_7,0.1,true,3.);
+		A_StartSound("detector/active",CHAN_VOICE,CHANF_LOOPING,.1,ATTN_NONE);
+		A_StartSound("detector/active",CHAN_7,CHANF_LOOPING,.1,3.);
 	}
 	override void OnDestroy()
 	{
@@ -532,7 +532,7 @@ Class SCUBAGear : UnrealInventory
 	{
 		if ( pickup ) return false;
 		bActive = !bActive;
-		if ( !bActive ) Owner.A_PlaySound("scuba/stop",CHAN_ITEM);
+		if ( !bActive ) Owner.A_StartSound("scuba/stop",CHAN_ITEM);
 		return false;
 	}
 	override void AttachToOwner( Actor other )
@@ -569,7 +569,7 @@ Class SCUBAGear : UnrealInventory
 		if ( PlayerPawn(Owner) ) PlayerPawn(Owner).ResetAirSupply();
 		if ( (Charge <= 0) || DrainCharge(1) )
 		{
-			Owner.A_PlaySound("scuba/stop",CHAN_ITEM);
+			Owner.A_StartSound("scuba/stop",CHAN_ITEM);
 			if ( Owner.CheckLocalView() ) Console.Printf(StringTable.Localize("$D_SCUBA"));
 			if ( tracer ) tracer.Destroy();
 			DepleteOrDestroy();
@@ -617,10 +617,10 @@ Class SCUBASound : Actor
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
-		A_PlaySound("scuba/air",CHAN_VOICE,0.25,true,1.5);
-		A_PlaySound("scuba/water",CHAN_5,0.25,true,1.5);
-		A_PlaySound("scuba/air",CHAN_6,1.0,true,ATTN_NONE);
-		A_PlaySound("scuba/water",CHAN_7,1.0,true,ATTN_NONE);
+		A_StartSound("scuba/air",CHAN_VOICE,CHANF_LOOPING,.25,1.5);
+		A_StartSound("scuba/water",CHAN_5,CHANF_LOOPING,.25,1.5);
+		A_StartSound("scuba/air",CHAN_6,CHANF_LOOPING,1.,ATTN_NONE);
+		A_StartSound("scuba/water",CHAN_7,CHANF_LOOPING,1.,ATTN_NONE);
 	}
 	override void OnDestroy()
 	{

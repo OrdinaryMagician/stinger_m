@@ -406,7 +406,7 @@ Class UBioGel : Actor
 		}
 		b = Spawn("BioHitbox",pos);
 		b.target = self;
-		A_PlaySound("ges/hit");
+		A_StartSound("ges/hit");
 		A_SprayDecal("BioSplat",-172);
 		int numpt = Min(100,int(Scale.x*10))+Random[GES](-5,5);
 		for ( int i=0; i<numpt; i++ )
@@ -439,7 +439,7 @@ Class UBioGel : Actor
 		if ( invoker.atline ) invoker.atline.RemoteActivate(target,invoker.atside,SPAC_Impact,pos);
 		UTMainHandler.DoBlast(self,int(Scale.x*100),40000*Scale.x);
 		A_Explode(int(Args[0]*Scale.x),int(Scale.x*100));
-		A_PlaySound("ges/explode",CHAN_VOICE);
+		A_StartSound("ges/explode",CHAN_VOICE);
 		int numpt = Min(300,int(Scale.x*30))+Random[GES](-10,10);
 		for ( int i=0; i<numpt; i++ )
 		{
@@ -606,8 +606,9 @@ Class UBioRifle : UnrealWeapon
 		}
 		invoker.bCharging = false;
 		invoker.chargesize = min(invoker.chargesize,4.9);
-		if ( bAlt ) A_PlaySound("ges/fire",CHAN_WEAPON,Dampener.Active(self)?.17:1.,pitch:max(.5,1.35-invoker.chargesize/8.));
-		else A_PlaySound("ges/fire",CHAN_WEAPON,Dampener.Active(self)?.17:1.);
+		A_StopSound(CHAN_WEAPONMISC);
+		if ( bAlt ) A_StartSound("ges/fire",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.17:1.,pitch:max(.5,1.35-invoker.chargesize/8.));
+		else A_StartSound("ges/fire",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.17:1.);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(48,0,255,0),1);
 		if ( !Dampener.Active(self) ) A_AlertMonsters();
@@ -653,6 +654,7 @@ Class UBioRifle : UnrealWeapon
 			player.SetPSprite(-9999,ResolveState("Null"));
 			return;
 		}
+		A_SoundVolume(CHAN_WEAPONMISC,Dampener.Active(self)?.13:1.);
 		let weap = Weapon(invoker);
 		if ( (invoker.chargesize < 4.9) && (weap.Ammo1.Amount > 0) )
 		{
@@ -673,7 +675,7 @@ Class UBioRifle : UnrealWeapon
 		invoker.bCharging = true;
 		weap.DepleteAmmo(weap.bAltFire,true,1);
 		invoker.count = invoker.chargesize = 0;
-		A_PlaySound("ges/load",CHAN_WEAPON,Dampener.Active(self)?.13:1.,true);
+		A_StartSound("ges/load",CHAN_WEAPONMISC,CHANF_LOOPING,Dampener.Active(self)?.13:1.);
 		A_Overlay(-9999,"Dummy2");
 	}
 	override bool CheckAmmo( int fireMode, bool autoSwitch, bool requireAmmo, int ammocount )
@@ -731,7 +733,7 @@ Class UBioRifle : UnrealWeapon
 	Drip:
 		#### # 4;
 		BIOT ABC 6;
-		BIOT D 6 A_PlaySound("ges/drip",CHAN_ITEM,Dampener.Active(self)?.05:.5);
+		BIOT D 6 A_StartSound("ges/drip",CHAN_WEAPONMISC,volume:Dampener.Active(self)?.05:.5);
 		BIOT EFG 6;
 		BIOI A 4;
 		Goto Idle;

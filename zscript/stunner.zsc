@@ -209,7 +209,7 @@ Class StunProj : Actor
 		moving = false;
 		SetStateLabel("Death");
 		A_QuakeEx(1,1,1,3,0,250,"",QF_RELATIVE|QF_SCALEDOWN,falloff:120,rollintensity:0.2);
-		A_PlaySound("stun/hit",CHAN_VOICE,pitch:FRandom[Stunner](1.5,1.9)-0.08*specialf1);
+		A_StartSound("stun/hit",CHAN_VOICE,pitch:FRandom[Stunner](1.5,1.9)-0.08*specialf1);
 		A_AlertMonsters(gameinfo.gametype&GAME_Strife?100:0);
 		Vector3 dir = (cos(angle)*cos(pitch),sin(angle)*cos(pitch),-sin(pitch));
 		int numpt = Random[ExploS](10,15);
@@ -355,7 +355,8 @@ Class Stunner : UnrealWeapon
 			UTPlayer(self).PlayAttacking3();
 		StunnerAmmo(weap.Ammo1).rechargephase = (((weap.Ammo1.Amount>0)||!deathmatch)?0:5);
 		StunnerAmmo(weap.Ammo1).rechargespeed = 2.;
-		A_PlaySound("stun/fire",CHAN_WEAPON,Dampener.Active(self)?.4:1.,pitch:1.2-invoker.chargesize*0.06);
+		A_StopSound(CHAN_WEAPONMISC);
+		A_StartSound("stun/fire",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.4:1.,pitch:1.2-invoker.chargesize*0.06);
 		double mult = Amplifier.GetMult(self,int(invoker.ChargeSize*50)+50);
 		invoker.FireEffect();
 		A_QuakeEx(1+int(0.5*invoker.chargesize),1+int(0.5*invoker.chargesize),1+int(0.5*invoker.chargesize),5+int(1.2*invoker.chargesize),0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05+0.01*invoker.chargesize);
@@ -406,7 +407,7 @@ Class Stunner : UnrealWeapon
 		weap.DepleteAmmo(weap.bAltFire,true,1);
 		invoker.count = 0;
 		invoker.chargesize = .6;
-		A_PlaySound("stun/charge",CHAN_WEAPON,Dampener.Active(self)?.15:1.);
+		A_StartSound("stun/charge",CHAN_WEAPONMISC,volume:Dampener.Active(self)?.15:1.);
 		A_Overlay(-2,"Sparks");
 		A_OverlayFlags(-2,PSPF_RenderStyle,true);
 		A_OverlayRenderStyle(-2,STYLE_Add);
@@ -422,6 +423,7 @@ Class Stunner : UnrealWeapon
 		StunnerAmmo(weap.Ammo1).rechargephase = 0;
 		UTMainHandler.DoSwing(self,(FRandom[Stunner](-1,1),FRandom[Stunner](-1,1)),0.02*invoker.chargesize,0,2,SWING_Spring);
 		A_WeaponOffset(FRandom[Stunner](-1,1)*1.2*invoker.chargesize,32+FRandom[Stunner](-1,1)*1.2*invoker.chargesize);
+		A_SoundVolume(CHAN_WEAPONMISC,Dampener.Active(self)?.15:1.);
 		if ( !Dampener.Active(self) && !(gameinfo.gametype&GAME_Strife) ) A_AlertMonsters();
 		if ( invoker.chargesize >= 5. )
 		{

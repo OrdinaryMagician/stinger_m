@@ -656,7 +656,7 @@ Class UNapalm : Actor
 			if ( waterlevel > 0 ) hittype = HIT_FLOOR;
 			else hittype = HIT_WALL;
 		}
-		A_PlaySound("napalm/hit",CHAN_BODY,min(1.,scale.x));
+		A_StartSound("napalm/hit",volume:min(1.,scale.x));
 	}
 	action void A_DropDrip()
 	{
@@ -833,15 +833,8 @@ Class UFlamethrower : UnrealWeapon
 	}
 	override void DetachFromOwner()
 	{
-		Owner.A_StopSound(CHAN_6);
-		A_PlaySound("flamet/down",CHAN_6);
+		A_StartSound("flamet/down",CHAN_WEAPONMISC);
 		Super.DetachFromOwner();
-	}
-	override void OwnerDied()
-	{
-		if ( Owner.player && (Owner.player.ReadyWeapon == self) )
-			Owner.A_StopSound(CHAN_6);
-		Super.OwnerDied();
 	}
 	override void DoEffect()
 	{
@@ -907,7 +900,7 @@ Class UFlamethrower : UnrealWeapon
 		weap.DepleteAmmo(weap.bAltFire,true,1);
 		invoker.count = 0;
 		invoker.special1 = 0;
-		A_PlaySound("flamet/fire",CHAN_WEAPON,Dampener.Active(self)?.1:1.,true);
+		A_StartSound("flamet/fire",CHAN_WEAPON,CHANF_LOOPING,Dampener.Active(self)?.1:1.);
 		A_Overlay(-9999,"Dummy2");
 	}
 	action void A_BeginCharge()
@@ -915,7 +908,7 @@ Class UFlamethrower : UnrealWeapon
 		let weap = Weapon(invoker);
 		weap.DepleteAmmo(weap.bAltFire,true,1);
 		invoker.count = invoker.chargesize = 0;
-		A_PlaySound("flamet/charge",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
+		A_StartSound("flamet/charge",CHAN_WEAPON,volume:Dampener.Active(self)?.1:1.);
 		A_Overlay(-9999,"Dummy3");
 	}
 	action void A_ChargeUp()
@@ -956,7 +949,7 @@ Class UFlamethrower : UnrealWeapon
 		A_WeaponOffset(0,32);
 		A_OverlayOffset(-2,0,0);
 		invoker.bCharging = false;
-		A_PlaySound("flamet/altfire",CHAN_WEAPON,Dampener.Active(self)?.1:1.,pitch:max(.5,1.2-invoker.chargesize/10.));
+		A_StartSound("flamet/altfire",CHAN_WEAPON,volume:Dampener.Active(self)?.1:1.,pitch:max(.5,1.2-invoker.chargesize/10.));
 		if ( self is 'UTPlayer' ) UTPlayer(self).PlayAttacking3();
 		A_QuakeEx(1+int(0.5*invoker.chargesize),1+int(0.5*invoker.chargesize),1+int(0.5*invoker.chargesize),5+int(1.2*invoker.chargesize),0,64,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05+0.01*invoker.chargesize);
 		Vector3 x, y, z;
@@ -1009,7 +1002,7 @@ Class UFlamethrower : UnrealWeapon
 		FLMS ABCDEF 2 A_WeaponReady(WRF_NOFIRE);
 		FLMS G 0
 		{
-			A_PlaySound("flamet/idle",CHAN_6,Dampener.Active(self)?.1:1.,true);
+			A_StartSound("flamet/idle",CHAN_WEAPONMISC,CHANF_LOOPING,Dampener.Active(self)?.1:1.);
 			A_Overlay(-2,"FlameReady");
 			A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE|PSPF_ALPHA|PSPF_FORCEALPHA,true);
 			A_OverlayRenderStyle(-2,STYLE_Add);
@@ -1025,17 +1018,17 @@ Class UFlamethrower : UnrealWeapon
 		Wait;
 	Idle:
 		FLMI A 0 A_Overlay(-9999,"Dummy");
-		FLMI ABCDEFG 12 A_SoundVolume(CHAN_6,Dampener.Active(self)?.1:1.);
+		FLMI ABCDEFG 12 A_SoundVolume(CHAN_WEAPONMISC,Dampener.Active(self)?.1:1.);
 		FLMI A 0 A_Jump(20,"Twiddle");
 		Goto Idle+1;
 	Twiddle:
 		#### # 2
 		{
-			A_SoundVolume(CHAN_6,Dampener.Active(self)?.1:1.);
+			A_SoundVolume(CHAN_WEAPONMISC,Dampener.Active(self)?.1:1.);
 			player.SetPSprite(-2,ResolveState("FlameTwiddle"));
 		}
-		FLMT ABCDEFGHIJKLMNOPQRSTUVWXYZ[\] 2 A_SoundVolume(CHAN_6,Dampener.Active(self)?.1:1.);
-		FLT2 ABCDEF 2 A_SoundVolume(CHAN_6,Dampener.Active(self)?.1:1.);
+		FLMT ABCDEFGHIJKLMNOPQRSTUVWXYZ[\] 2 A_SoundVolume(CHAN_WEAPONMISC,Dampener.Active(self)?.1:1.);
+		FLT2 ABCDEF 2 A_SoundVolume(CHAN_WEAPONMISC,Dampener.Active(self)?.1:1.);
 		Goto Idle+1;
 	Fire:
 		#### # 2
@@ -1053,7 +1046,7 @@ Class UFlamethrower : UnrealWeapon
 		FLMF FGHIJK 2
 		{
 			A_SoundVolume(CHAN_WEAPON,Dampener.Active(self)?.1:1.);
-			A_SoundVolume(CHAN_6,Dampener.Active(self)?.02:.2);
+			A_SoundVolume(CHAN_WEAPONMISC,Dampener.Active(self)?.02:.2);
 		}
 		Loop;
 	Release:
@@ -1061,8 +1054,8 @@ Class UFlamethrower : UnrealWeapon
 		{
 			A_Overlay(-9999,"Null");
 			player.SetPSprite(-2,ResolveState("FlameRelease"));
-			A_PlaySound("flamet/fireend",CHAN_WEAPON,Dampener.Active(self)?.1:1.);
-			A_SoundVolume(CHAN_6,Dampener.Active(self)?.1:1.);
+			A_StartSound("flamet/fireend",CHAN_WEAPON,volume:Dampener.Active(self)?.1:1.);
+			A_SoundVolume(CHAN_WEAPONMISC,Dampener.Active(self)?.1:1.);
 			A_ClearRefire();
 		}
 		FLMF MNOP 2;
@@ -1111,7 +1104,7 @@ Class UFlamethrower : UnrealWeapon
 		#### # 1
 		{
 			A_Overlay(-9999,"Null");
-			A_PlaySound("flamet/down",CHAN_6,Dampener.Active(self)?.1:1.);
+			A_StartSound("flamet/down",CHAN_WEAPONMISC,volume:Dampener.Active(self)?.1:1.);
 			player.SetPSprite(-2,ResolveState("FlameDeselect"));
 		}
 		FLMD ABCDEFHIJ 1;

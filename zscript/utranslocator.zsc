@@ -70,7 +70,7 @@ Class UTranslocatorModule : Actor
 		Super.Tick();
 		if ( bAMBUSH && !Random[Transloc](0,40) )
 		{
-			A_PlaySound("telehand/spark");
+			A_StartSound("telehand/spark");
 			int numpt = Random[Transloc](20,40);
 			for ( int i=0; i<numpt; i++ )
 			{
@@ -108,7 +108,7 @@ Class UTranslocatorModule : Actor
 			else
 			{
 				anglevel = FRandom[TeleHand](5,30)*RandomPick[TeleHand](-1,1);
-				A_PlaySound("transloc/bounce");
+				A_StartSound("transloc/bounce");
 				if ( BlockingFloor || (tracer && (pos.z >= tracer.pos.z+tracer.height) && tracer.bACTLIKEBRIDGE) ) alreadyhit = true;
 			}
 		}
@@ -153,7 +153,7 @@ Class UTranslocator : UnrealWeapon
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
-		A_PlaySound("telehand/throw",CHAN_WEAPON);
+		A_StartSound("telehand/throw",CHAN_WEAPON);
 		invoker.FireEffect();
 		UTMainHandler.DoSwing(self,(FRandom[Translocator](0.2,-0.4),FRandom[Translocator](0.2,-0.7)),2,-0.3,3,SWING_Spring,2,3);
 		Vector3 x, y, z;
@@ -173,13 +173,13 @@ Class UTranslocator : UnrealWeapon
 	{
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return;
-		A_PlaySound("transloc/return",CHAN_WEAPON);
+		A_StartSound("transloc/return",CHAN_WEAPON);
 		invoker.FireEffect();
 		UTMainHandler.DoSwing(self,(FRandom[Translocator](-0.2,-0.4),FRandom[Translocator](-0.2,0.7)),3,-1,2,SWING_Spring,2,2);
 		if ( invoker.module && invoker.module.bAMBUSH )
 		{
 			UTMainHandler.DoFlash(self,Color(255,255,255,255),50);
-			A_PlaySound("transloc/spark",CHAN_WEAPON);
+			A_StartSound("transloc/spark",CHAN_WEAPON);
 			DamageMobj(invoker,self,int.max,'Telefrag',DMG_THRUSTLESS);
 		}
 		if ( invoker.module ) invoker.module.Destroy();
@@ -191,7 +191,7 @@ Class UTranslocator : UnrealWeapon
 		if ( !invoker.module )
 		{
 			invoker.FireEffect();
-			A_PlaySound("transloc/return",CHAN_WEAPON);
+			A_StartSound("transloc/return",CHAN_WEAPON);
 			return;
 		}
 		// check if there's enough space
@@ -213,12 +213,12 @@ Class UTranslocator : UnrealWeapon
 		}
 		if ( Warp(self,newpos.x,newpos.y,newpos.z,flags:WARPF_ABSOLUTEPOSITION|WARPF_TESTONLY) && TeleportMove(newpos,true) )
 		{
-			A_PlaySound("flak/click",CHAN_WEAPON);
+			A_StartSound("flak/click",CHAN_WEAPON);
 			SpawnTeleportFog(oldpos,true,false);
 			SpawnTeleportFog(newpos,false,false);
 			player.fov = min(175,player.desiredfov+60);
 		}
-		else A_PlaySound("transloc/return",CHAN_WEAPON);
+		else A_StartSound("transloc/return",CHAN_WEAPON);
 		for ( int i=0; i<MAXPLAYERS; i++ )
 		{
 			if ( !playeringame[i] || !players[i].mo ) continue;
@@ -227,7 +227,7 @@ Class UTranslocator : UnrealWeapon
 		if ( bBroken )
 		{
 			UTMainHandler.DoFlash(self,Color(255,255,255,255),50);
-			A_PlaySound("transloc/spark",CHAN_WEAPON);
+			A_StartSound("transloc/spark",CHAN_WEAPON);
 			DamageMobj(invoker,self,int.max,'Telefrag',DMG_THRUSTLESS);
 		}
 	}
