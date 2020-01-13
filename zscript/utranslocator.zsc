@@ -213,7 +213,7 @@ Class UTranslocator : UnrealWeapon
 		}
 		if ( Warp(self,newpos.x,newpos.y,newpos.z,flags:WARPF_ABSOLUTEPOSITION|WARPF_TESTONLY) && TeleportMove(newpos,true) )
 		{
-			A_StartSound("flak/click",CHAN_WEAPON);
+			A_StartSound("uflak/click",CHAN_WEAPON);
 			SpawnTeleportFog(oldpos,true,false);
 			SpawnTeleportFog(newpos,false,false);
 			player.fov = min(175,player.desiredfov+60);
