@@ -690,7 +690,7 @@ Class Stinger : UnrealWeapon
 			invoker.flashnum = (invoker.flashnum+1)%4;
 		}
 		STNH BCDEFG 1;
-		STNH A 0 A_JumpIfNoAmmo(1);
+		STNH A 0 A_JumpIfNoAmmo(2);
 		STNH A 0 A_Refire();
 		STNH A 2
 		{
