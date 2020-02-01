@@ -194,6 +194,7 @@ eightball/altfire	eightalt
 eightball/seeklock	seeklock
 eightball/seeklost	seeklost
 eightball/fly		brocket
+eightball/explode	expl2
 
 asmd/select	tazersel
 asmd/fire	tazefire

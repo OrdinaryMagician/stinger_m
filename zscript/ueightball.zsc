@@ -114,6 +114,7 @@ Class URocket : Actor
 		Super.PostBeginPlay();
 		let l = Spawn("URocketTrail",pos);
 		l.target = self;
+		A_StartSound("eightball/fire",CHAN_WEAPON,attenuation:.6);
 		A_StartSound("eightball/fly",CHAN_VOICE,CHANF_LOOPING,1.,2.5);
 		if ( tracer ) vel *= 0.9;
 		Acceleration = vel.unit()*50;
@@ -405,16 +406,10 @@ Class Eightball : UnrealWeapon
 		invoker.special1 = 0;
 		if ( weap.bAltFire )
 		{
-			for ( int i=0; i<num; i++ )
-				A_StartSound("eightball/altfire",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.3:3.);
+			A_StartSound("eightball/altfire",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.3:3.);
 			if ( !Dampener.Active(self) ) A_AlertMonsters();
 		}
-		else
-		{
-			for ( int i=0; i<num; i++ )
-				A_StartSound("eightball/fire",CHAN_WEAPON,CHANF_OVERLAP);
-			A_AlertMonsters();
-		}
+		else A_AlertMonsters();
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(64,255,0,0),1);
 		if ( self is 'UTPlayer' )
