@@ -1,7 +1,6 @@
 # DOOMREAL
 
-The Unreal 1 counterpart to Doom Tournament. Adds Unreal 1 weapons and items
-(including dummied out stuff and others).
+The Unreal 1 counterpart to Doom Tournament. Adds Unreal 1 weapons and items (including dummied out stuff and others).
 
 This mod requires GZDoom 4.3 or later, and runs on top of Doom Tournament.
 
@@ -73,21 +72,15 @@ This mod requires GZDoom 4.3 or later, and runs on top of Doom Tournament.
 
 ## In progress
 
- - N/A, this is the 1.2.1 release.
+ - N/A, this is the 1.1.3 release.
 
 ## Planned
 
  - Shifted to a 1.2 update:
-   - Extension to the Translator so it can show item descriptions and whatnot
-     when picking them up. Give it some usability for normal gameplay. Could
-     eventually extend it further to make it more like Serious Sam's NETRICSA.
+   - Extension to the Translator so it can show item descriptions and whatnot when picking them up. Give it some usability for normal gameplay. Could eventually extend it further to make it more like Serious Sam's NETRICSA.
    - Impaler "slice" animation for melee alt.
-   - Alternate flamethrower secondary that behaves more like the Unreal Bible
-     describes (unlit blobs at a rate of 4 per second that catch on fire with
-     explosions/lava/etc).
-   - Alternate Impaler primary that follows the Bible (laser shots from the
-     crystal), shifts crystal shooting to pressing both buttons at once.
+   - Alternate flamethrower secondary that behaves more like the Unreal Bible describes (unlit blobs at a rate of 4 per second that catch on fire with explosions/lava/etc).
+   - Alternate Impaler primary that follows the Bible (laser shots from the crystal), shifts crystal shooting to pressing both buttons at once.
    - Actual Bonesaw?
-   - Implement ASMD behavior described in the Unreal novels (highly destructive
-     green beam that bounces off mirrors and water).
+   - Implement ASMD behavior described in the Unreal novels (highly destructive green beam that bounces off mirrors and water).
    - Redo Quadshot animations (including partial reloads).

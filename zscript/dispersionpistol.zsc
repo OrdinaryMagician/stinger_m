@@ -547,7 +547,6 @@ Class DispersionPistol : UnrealWeapon
 		}
 		A_OverlayFlags(PSP_FLASH,PSPF_RenderStyle,true);
 		A_OverlayRenderstyle(PSP_FLASH,STYLE_Add);
-		UTMainHandler.DoSwing(self,(FRandom[DPistol](-0.1,-0.3),FRandom[DPistol](-0.1,0.3)),2+invoker.upgradelevel*0.5,-0.3,3,SWING_Spring,0,3+invoker.upgradelevel);
 		if ( !Dampener.Active(self) ) A_AlertMonsters(gameinfo.gametype&GAME_Strife?120:0);
 		A_QuakeEx(2,2,2,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
@@ -621,7 +620,6 @@ Class DispersionPistol : UnrealWeapon
 		A_OverlayFlags(PSP_FLASH,PSPF_RenderStyle,true);
 		A_OverlayRenderstyle(PSP_FLASH,STYLE_Add);
 		double ss = 0.5+invoker.chargesize*0.3;
-		UTMainHandler.DoSwing(self,(FRandom[DPistol](-0.1,-0.3)*ss,FRandom[DPistol](-0.1,0.3))*ss,2+invoker.upgradelevel*0.5,-0.3,3,SWING_Spring,0,3+invoker.upgradelevel);
 		if ( !Dampener.Active(self) ) A_AlertMonsters(gameinfo.gametype&GAME_Strife?120:0);
 		int qs = int(1+invoker.chargesize*0.3);
 		A_QuakeEx(qs,qs,qs,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
@@ -674,7 +672,6 @@ Class DispersionPistol : UnrealWeapon
 		if ( !weap ) return ResolveState(null);
 		if ( !(player.cmd.buttons&BT_ALTATTACK) ) return ResolveState(next);
 		DefaultAmmo(weap.Ammo1).rechargephase = 0;
-		UTMainHandler.DoSwing(self,(FRandom[DPistol](-1,1),FRandom[DPistol](-1,1)),0.02*invoker.chargesize,0,2,SWING_Spring);
 		A_WeaponOffset(FRandom[DPistol](-1,1)*1.2*invoker.chargesize,32+FRandom[DPistol](-1,1)*1.2*invoker.chargesize);
 		A_SoundVolume(CHAN_WEAPONMISC,Dampener.Active(self)?.4:1.);
 		if ( !Dampener.Active(self) ) A_AlertMonsters();

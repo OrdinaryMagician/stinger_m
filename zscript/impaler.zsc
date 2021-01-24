@@ -790,7 +790,6 @@ Class Impaler : UnrealWeapon
 		A_StartSound("impaler/fire",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.1:1.);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(16,224,64,255),1);
-		UTMainHandler.DoSwing(self,(FRandom[Impaler](-0.1,-0.2),FRandom[Impaler](-0.1,0.1)),4,-1.5,2,SWING_Spring,2,2);
 		if ( !Dampener.Active(self) ) A_AlertMonsters();
 		A_QuakeEx(1,1,1,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
@@ -845,7 +844,6 @@ Class Impaler : UnrealWeapon
 		}
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(16,255,32,255),3);
-		UTMainHandler.DoSwing(self,(FRandom[Impaler](-1,1),FRandom[Impaler](-1,1)),0.05,0.05,8,SWING_Spring);
 		A_AlertMonsters();
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
@@ -935,7 +933,6 @@ Class Impaler : UnrealWeapon
 	action void A_Stab()
 	{
 		invoker.FireEffect();
-		UTMainHandler.DoSwing(self,(FRandom[Impaler](-1,1),FRandom[Impaler](-1,1)),0.3,-0.2,2,SWING_Spring,0,2);
 		for ( int i=0; i<8; i++ ) if ( TryHit(angle+i*(45./16),15) || TryHit(angle-i*(45./16),15) ) return;
 	}
 	override void DoEffect()

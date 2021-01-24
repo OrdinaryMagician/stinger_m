@@ -559,7 +559,6 @@ Class Stinger : UnrealWeapon
 		A_OverlayRenderstyle(PSP_FLASH,STYLE_Add);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(16,0,64,255),1);
-		UTMainHandler.DoSwing(self,(FRandom[Stinger](-0.1,-0.2),FRandom[Stinger](-0.1,0.1)),4,-1.5,2,SWING_Spring,2,2);
 		if ( !Dampener.Active(self) ) A_AlertMonsters();
 		A_QuakeEx(1,1,1,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
@@ -604,7 +603,6 @@ Class Stinger : UnrealWeapon
 		A_OverlayRenderstyle(PSP_FLASH,STYLE_Add);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(16,0,64,255),1);
-		UTMainHandler.DoSwing(self,(FRandom[Stinger](-0.3,-0.8),FRandom[Stinger](-0.4,0.4)),4,-1,3,SWING_Spring,3,5);
 		if ( !Dampener.Active(self) ) A_AlertMonsters();
 		A_QuakeEx(1,1,1,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;

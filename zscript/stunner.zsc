@@ -360,7 +360,6 @@ Class Stunner : UnrealWeapon
 		double mult = Amplifier.GetMult(self,int(invoker.ChargeSize*50)+50);
 		invoker.FireEffect();
 		A_QuakeEx(1+int(0.5*invoker.chargesize),1+int(0.5*invoker.chargesize),1+int(0.5*invoker.chargesize),5+int(1.2*invoker.chargesize),0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.05+0.01*invoker.chargesize);
-		UTMainHandler.DoSwing(self,(FRandom[Stunner](-0.04,0.04),FRandom[Stunner](-0.9,-0.4)),1+invoker.chargesize*0.3,-0.1,3,SWING_Spring,3,2.5);
 		A_Overlay(-2,"Null");
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
@@ -421,7 +420,6 @@ Class Stunner : UnrealWeapon
 		Weapon weap = Weapon(invoker);
 		if ( !weap ) return ResolveState(null);
 		StunnerAmmo(weap.Ammo1).rechargephase = 0;
-		UTMainHandler.DoSwing(self,(FRandom[Stunner](-1,1),FRandom[Stunner](-1,1)),0.02*invoker.chargesize,0,2,SWING_Spring);
 		A_WeaponOffset(FRandom[Stunner](-1,1)*1.2*invoker.chargesize,32+FRandom[Stunner](-1,1)*1.2*invoker.chargesize);
 		A_SoundVolume(CHAN_WEAPONMISC,Dampener.Active(self)?.15:1.);
 		if ( !Dampener.Active(self) && !(gameinfo.gametype&GAME_Strife) ) A_AlertMonsters();

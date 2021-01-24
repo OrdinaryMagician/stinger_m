@@ -222,7 +222,6 @@ Class Betamag : UnrealWeapon
 			else A_Overlay(-3,"LeftMuzzleFlash");
 			A_OverlayFlags(-3,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 			A_OverlayRenderstyle(-3,STYLE_Add);
-			UTMainHandler.DoSwing(self,(FRandom[Betamag](0.5,0.2),FRandom[Betamag](-0.3,0.2)),2,0,1,SWING_Spring,0,2);
 		}
 		else
 		{
@@ -230,7 +229,6 @@ Class Betamag : UnrealWeapon
 			else A_Overlay(-2,"MuzzleFlash");
 			A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 			A_OverlayRenderstyle(-2,STYLE_Add);
-			UTMainHandler.DoSwing(self,(FRandom[Betamag](-0.2,-0.5),FRandom[Betamag](-0.3,0.2)),2,0,1,SWING_Spring,0,2);
 		}
 		Vector3 x, y, z, x2, y2, z2;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
@@ -502,20 +500,14 @@ Class Betamag : UnrealWeapon
 		{
 			A_Overlay(-9999,null);
 			invoker.slavewhip = true;
-			UTMainHandler.DoSwing(self,(FRandom[Betamag](-0.5,-0.4),FRandom[Betamag](0.2,0.3)),4,0.3,8,SWING_Spring,5);
 		}
 		AUTW ABCDE 2;
 		AUTW F 0
 		{
 			if ( self is 'UTPlayer' ) UTPlayer(self).PlayAttacking3();
 			A_StartSound("betamag/whip",CHAN_WEAPON,CHANF_OVERLAP);
-			UTMainHandler.DoSwing(self,(FRandom[Betamag](-0.3,-0.2),FRandom[Betamag](-0.8,-0.5)),7,-1,8,SWING_Spring,2,0.5);
 		}
 		AUTW FGHIJ 2;
-		AUTW K 0
-		{
-			UTMainHandler.DoSwing(self,(FRandom[Betamag](0.2,0.3),FRandom[Betamag](0.8,0.5)),3,0.5,6,SWING_Spring,3,3);
-		}
 		AUTW KLM 1;
 		AUTW N 0 A_BetamagWhip();
 		AUTW NOPQR 1;
@@ -533,7 +525,6 @@ Class Betamag : UnrealWeapon
 			if ( !((invoker.Ammo1.Amount<=0) && (player.cmd.buttons&(BT_ATTACK|BT_ALTATTACK))) && !(player.cmd.buttons&BT_RELOAD) ) return ResolveState("LeftIdle");
 			invoker.slavewhip = false;
 			A_Overlay(-9998,null);
-			UTMainHandler.DoSwing(self,(FRandom[Betamag](0.4,0.5),FRandom[Betamag](0.2,0.3)),4,0.3,8,SWING_Spring,5);
 			return ResolveState(null);
 		}
 		2UTW ABCDE 2;
@@ -541,13 +532,8 @@ Class Betamag : UnrealWeapon
 		{
 			if ( self is 'UTPlayer' ) UTPlayer(self).PlayAttacking3();
 			A_StartSound("betamag/whip",CHAN_LEFTWEAPON,CHANF_OVERLAP);
-			UTMainHandler.DoSwing(self,(FRandom[Betamag](0.2,0.3),FRandom[Betamag](-0.8,-0.5)),7,-1,8,SWING_Spring,2,0.5);
 		}
 		2UTW FGHIJ 2;
-		2UTW K 0
-		{
-			UTMainHandler.DoSwing(self,(FRandom[Betamag](-0.3,-0.2),FRandom[Betamag](0.8,0.5)),3,0.5,6,SWING_Spring,3,3);
-		}
 		2UTW KLM 1;
 		2UTW N 0 A_BetamagWhip(true);
 		2UTW NOPQR 1;

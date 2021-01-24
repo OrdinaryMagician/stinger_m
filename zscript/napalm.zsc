@@ -957,7 +957,6 @@ Class UFlamethrower : UnrealWeapon
 		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x+2.3*y-2.7*z);
 		Actor p = Spawn("UNapalmGlob",origin);
 		p.A_SetScale(0.5+invoker.chargesize/3.5);
-		UTMainHandler.DoSwing(self,(FRandom[FlameT](-0.6,-1.3),FRandom[FlameT](-0.9,-0.2)),1+invoker.chargesize*0.3,-0.1,3,SWING_Spring,3,2);
 		p.angle = angle;
 		p.pitch = BulletSlope();
 		p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed;

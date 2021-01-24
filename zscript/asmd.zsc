@@ -559,12 +559,8 @@ Class ASMDBeam : Actor
 			if ( t.Results.HitActor is 'ASMDHitbox' )
 			{
 				BeamExplode(mult>1.5);
-				if ( target )
-				{
-					if ( !sv_infiniteammo && !target.FindInventory('PowerInfiniteAmmo',true) )
-						target.TakeInventory('ASMDAmmo',2);
-					UTMainHandler.DoSwing(target,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),10,-2,3,SWING_Spring,3,6);
-				}
+				if ( target && !sv_infiniteammo && !target.FindInventory('PowerInfiniteAmmo',true) )
+					target.TakeInventory('ASMDAmmo',2);
 				let b = t.Results.HitActor.target;
 				b.bAMBUSH = true;
 				b.ExplodeMissile();
@@ -687,7 +683,6 @@ Class ASMD : UnrealWeapon
 		A_OverlayFlags(PSP_FLASH,PSPF_RenderStyle,true);
 		A_OverlayRenderstyle(PSP_FLASH,STYLE_Add);
 		UTMainHandler.DoFlash(self,Color(80,64,32,255),1);
-		UTMainHandler.DoSwing(self,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),2,-0.3,3,SWING_Spring,0,4);
 		if ( !Dampener.Active(self) ) A_AlertMonsters();
 		A_QuakeEx(1,1,1,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;
@@ -719,7 +714,6 @@ Class ASMD : UnrealWeapon
 		A_OverlayFlags(PSP_FLASH,PSPF_RenderStyle,true);
 		A_OverlayRenderstyle(PSP_FLASH,STYLE_Add);
 		UTMainHandler.DoFlash(self,Color(80,64,32,255),1);
-		UTMainHandler.DoSwing(self,(FRandom[ASMD](-0.1,-0.6),FRandom[ASMD](-0.1,0.5)),3,-0.4,3,SWING_Spring,0,4);
 		if ( !Dampener.Active(self) ) A_AlertMonsters();
 		A_QuakeEx(1,1,1,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		Vector3 x, y, z;

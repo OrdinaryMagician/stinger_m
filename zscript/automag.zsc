@@ -182,7 +182,6 @@ Class Automag : UnrealWeapon
 			else A_Overlay(-3,"LeftMuzzleFlash");
 			A_OverlayFlags(-3,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 			A_OverlayRenderstyle(-3,STYLE_Add);
-			UTMainHandler.DoSwing(self,(FRandom[Automag](0.5,0.2),FRandom[Automag](-0.3,0.2)),2,0.5,1,SWING_Spring,0,2);
 		}
 		else
 		{
@@ -190,7 +189,6 @@ Class Automag : UnrealWeapon
 			else A_Overlay(-2,"MuzzleFlash");
 			A_OverlayFlags(-2,PSPF_RENDERSTYLE|PSPF_FORCESTYLE,true);
 			A_OverlayRenderstyle(-2,STYLE_Add);
-			UTMainHandler.DoSwing(self,(FRandom[Automag](-0.2,-0.5),FRandom[Automag](-0.3,0.2)),2,0,1,SWING_Spring,0,2);
 		}
 		Vector3 x, y, z, x2, y2, z2;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);

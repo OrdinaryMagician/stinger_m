@@ -526,16 +526,8 @@ Class Peacemaker : UnrealWeapon
 		PEMC # 1 A_CountUp(1);
 		Wait;
 		PEMF ABCD 2;
-		PEMF E 0
-		{
-			A_StartSound("peace/down",CHAN_WEAPONMISC,volume:.4);
-			UTMainHandler.DoSwing(self,(FRandom[Peace](-0.1,-0.04),FRandom[Peace](0.4,0.6)),3,0,7,SWING_Spring,3,0.8);
-		}
+		PEMF E 0 A_StartSound("peace/down",CHAN_WEAPONMISC,volume:.4);
 		PEMF EFG 2;
-		PEMF H 0
-		{
-			UTMainHandler.DoSwing(self,(FRandom[Peace](0.08,0.12),FRandom[Peace](-1.2,-0.9)),4,0,6,SWING_Spring,3,1.5);
-		}
 		PEMF HI 2; // hello
 		PEMF I -1 A_PeacemakerThrow();
 		Stop;
@@ -544,16 +536,8 @@ Class Peacemaker : UnrealWeapon
 		PEMC # 1 A_CountUp(1);
 		Wait;
 		PEMF ABCD 2;
-		PEMF E 0
-		{
-			A_StartSound("peace/down",CHAN_WEAPONMISC,volume:.4);
-			UTMainHandler.DoSwing(self,(FRandom[Peace](-0.1,-0.04),FRandom[Peace](0.4,0.6)),3,0,7,SWING_Spring,3,0.8);
-		}
+		PEMF E 0 A_StartSound("peace/down",CHAN_WEAPONMISC,volume:.4);
 		PEMF EFG 2;
-		PEMF H 0
-		{
-			UTMainHandler.DoSwing(self,(FRandom[Peace](0.08,0.12),FRandom[Peace](-1.2,-0.9)),4,0,6,SWING_Spring,3,1.5);
-		}
 		PEMF HI 2; // howdy
 		PEMF I -1 A_PeacemakerThrow(true);
 		Stop;

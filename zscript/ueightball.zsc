@@ -415,8 +415,6 @@ Class Eightball : UnrealWeapon
 		if ( self is 'UTPlayer' )
 			UTPlayer(self).PlayAttacking3();
 		A_QuakeEx(2+num,2+num,2+num,6+num,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1+num*0.05);
-		for ( int i=0; i<num; i++ )
-			UTMainHandler.DoSwing(self,(FRandom[Eightball](-0.8,-0.8),FRandom[Eightball](-0.5,0.5)),1,-0.2,Random[Eightball](3,4),SWING_Spring,Random[Eightball](2,5),Random[Eightball](2,4));
 		Vector3 x, y, z, x2, y2, z2;
 		double a, s;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);

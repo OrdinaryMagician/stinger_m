@@ -245,8 +245,6 @@ Class Razorjack : UnrealWeapon
 		UTMainHandler.DoFlash(self,Color(16,255,0,255),1);
 		A_AlertMonsters();
 		A_QuakeEx(1,1,1,5,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.08);
-		if ( bAlt ) UTMainHandler.DoSwing(self,(FRandom[Ripper](-0.6,-0.3),FRandom[Ripper](0.2,0.4)),1,-0.3,2,SWING_Spring,2,2);
-		else UTMainHandler.DoSwing(self,(FRandom[Ripper](-0.3,0.3),FRandom[Ripper](0.2,0.6)),1,-0.3,2,SWING_Spring,2,2);
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = Vec2OffsetZ(0,0,player.viewz);

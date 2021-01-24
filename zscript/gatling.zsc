@@ -211,7 +211,6 @@ Class SMiniGun : UnrealWeapon
 		for ( int i=0; i<(bAlt?4:1); i++ )
 		{
 			if ( bAlt && !weap.DepleteAmmo(weap.bAltFire,true,1) ) break;
-			UTMainHandler.DoSwing(self,basedir+(FRandom[SMini](-0.04,0.04),FRandom[SMini](-0.04,0.04)),FRandom[SMini](6,8),FRandom[SMini](-1,-2),Random[SMini](3,4),SWING_Spring,Random[SMini](3,4),FRandom[SMini](2.2,3.5));
 			int pos = bAlt?i:invoker.special1;
 			origin = level.Vec3Offset(origin,x*(!(pos%2)?-1.5:1.5)+y*(pos<2?1.5:-1.5));
 			double a = FRandom[Minigun](0,360), s = FRandom[Minigun](0,bAlt?0.12:0.03);
@@ -264,15 +263,7 @@ Class SMiniGun : UnrealWeapon
 		SMIS A 1 A_Raise(int.max);
 		Wait;
 	Ready:
-		SMIS A 0
-		{
-			UTMainHandler.DoSwing(self,(FRandom[SMini](-0.3,-0.2),FRandom[SMini](0.4,0.5)),3,0,4,SWING_Spring,2,1.8);
-		}
 		SMIS ABC 2 A_WeaponReady(WRF_NOFIRE);
-		SMIS D 0
-		{
-			UTMainHandler.DoSwing(self,(FRandom[SMini](0.2,0.3),FRandom[SMini](-0.8,-1.2)),3,0,4,SWING_Spring,2,2.0);
-		}
 		SMIS DEFGHI 2 A_WeaponReady(WRF_NOFIRE);
 		Goto Idle;
 	Dummy:
@@ -354,16 +345,8 @@ Class SMiniGun : UnrealWeapon
 		SMIR A 1;
 		Stop;
 	Deselect:
-		#### # 1
-		{
-			A_Overlay(-9999,"Null");
-			UTMainHandler.DoSwing(self,(FRandom[SMini](0.4,0.6),FRandom[SMini](-0.4,-0.2)),3,0,4,SWING_Spring,2,2.0);
-		}
+		#### # 1 A_Overlay(-9999,"Null");
 		SMID ABC 1;
-		SMID D 0
-		{
-			UTMainHandler.DoSwing(self,(FRandom[SMini](-0.3,-0.2),FRandom[SMini](0.4,0.5)),3,0,4,SWING_Spring,2,1.8);
-		}
 		SMID DEF 1;
 		SMID F 1 A_Lower(int.max);
 		Wait;

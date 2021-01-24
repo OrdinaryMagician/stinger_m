@@ -44,16 +44,8 @@ Class UMinigun : UnrealWeapon
 		UTMainHandler.DoFlash(self,Color(32,255,255,0),1);
 		if ( !Dampener.Active(self) ) A_AlertMonsters();
 		A_SoundVolume(CHAN_WEAPON,Dampener.Active(self)?.1:1.);
-		if ( alt )
-		{
-			A_QuakeEx(2,2,2,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
-			UTMainHandler.DoSwing(self,(FRandom[Minigun](-1,1),FRandom[Minigun](-1,1)),0.5,0,2,SWING_Spring,0,3);
-		}
-		else
-		{
-			A_QuakeEx(1,1,1,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.08);
-			UTMainHandler.DoSwing(self,(FRandom[Minigun](-1,1),FRandom[Minigun](-1,1)),0.3,0,2,SWING_Spring,0,3);
-		}
+		if ( alt ) A_QuakeEx(2,2,2,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
+		else A_QuakeEx(1,1,1,8,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.08);
 		let l = Spawn("MinigunLight",pos);
 		l.target = self;
 		if ( !alt ) MinigunLight(l).cnt--;

@@ -363,16 +363,8 @@ Class FlameGun : UnrealWeapon
 		A_StartSound(bAlt?"flamegun/alt":"flamegun/fire",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.2:1.);
 		invoker.FireEffect();
 		UTMainHandler.DoFlash(self,Color(32,96,255,0),1);
-		if ( bAlt )
-		{
-			A_QuakeEx(2,2,2,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
-			UTMainHandler.DoSwing(self,(FRandom[FlameGun](-0.6,-0.5),FRandom[FlameGun](-0.3,0.3)),4,-1,5,SWING_Spring,3,2.5);
-		}
-		else
-		{
-			A_QuakeEx(1,1,1,2,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
-			UTMainHandler.DoSwing(self,(FRandom[FlameGun](-0.3,-0.2),FRandom[FlameGun](-0.2,0.2)),4,-1,3,SWING_Spring,2,2);
-		}
+		if ( bAlt ) A_QuakeEx(2,2,2,6,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
+		else A_QuakeEx(1,1,1,2,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.1);
 		if ( !Dampener.Active(self) ) A_AlertMonsters();
 		Vector3 x, y, z, x2, y2, z2, dir;
 		double a, s;

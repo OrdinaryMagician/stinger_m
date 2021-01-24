@@ -623,13 +623,8 @@ Class UBioRifle : UnrealWeapon
 		{
 			p = Spawn("UBioGlob",origin);
 			p.A_SetScale(0.5+invoker.chargesize/3.5);
-			UTMainHandler.DoSwing(self,(FRandom[GES](-0.6,-1.3),FRandom[GES](-0.9,-0.2)),1+invoker.chargesize*0.3,-0.1,3,SWING_Spring,3,2);
 		}
-		else
-		{
-			p = Spawn("UBioGel",origin);
-			UTMainHandler.DoSwing(self,(FRandom[GES](-0.6,-1.3),FRandom[GES](-0.9,-0.2)),2,-0.5,2,SWING_Spring,2,2);
-		}
+		else p = Spawn("UBioGel",origin);
 		p.angle = angle;
 		p.pitch = BulletSlope();
 		p.vel = (cos(p.angle)*cos(p.pitch),sin(p.angle)*cos(p.pitch),-sin(p.pitch))*p.speed;

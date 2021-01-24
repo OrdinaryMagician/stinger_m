@@ -261,8 +261,6 @@ Class QuadShot : UnrealWeapon
 			double spread = invoker.clipcount;
 			for ( int i=0; i<invoker.clipcount; i++ )
 			{
-				for ( int i=0; i<3; i++ )
-					UTMainHandler.DoSwing(self,(FRandom[Quadshot](-0.04,-0.2),FRandom[Quadshot](-0.2,0.2)),FRandom[Quadshot](6,8),FRandom[Quadshot](-1.,-1.5),Random[Quadshot](6,8),SWING_Spring,0,FRandom[Quadshot](1.8,2.4));
 				for ( int i=0; i<10; i++ )
 				{
 					a = FRandom[Quadshot](0,360);
@@ -283,8 +281,6 @@ Class QuadShot : UnrealWeapon
 		{
 			A_QuakeEx(1,1,1,4,0,1,"",QF_RELATIVE|QF_SCALEDOWN,rollIntensity:0.12);
 			A_StartSound("quadshot/fire",CHAN_WEAPON,CHANF_OVERLAP,!Dampener.Active(self)?1.:.2);
-			for ( int i=0; i<3; i++ )
-				UTMainHandler.DoSwing(self,(FRandom[Quadshot](-0.04,-0.2),FRandom[Quadshot](-0.2,0.2)),FRandom[Quadshot](5,7),FRandom[Quadshot](-1,-1.5),Random[Quadshot](3,6),SWING_Spring,0,FRandom[Quadshot](1.8,2.4));
 			for ( int i=0; i<10; i++ )
 			{
 				a = FRandom[Quadshot](0,360);

@@ -88,7 +88,6 @@ Class Bonesaw : UnrealWeapon
 	}
 	action void A_Slice()
 	{
-		UTMainHandler.DoSwing(self,(FRandom[Bonesaw](-1,1),FRandom[Bonesaw](-1,1)),0.3,-0.2,2,SWING_Spring,0,2);
 		invoker.special1++;
 		Vector3 x, y, z, origin;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
@@ -216,13 +215,8 @@ Class Bonesaw : UnrealWeapon
 		{
 			A_Overlay(-9999,"Null");
 			A_StartSound("bonesaw/claw",CHAN_WEAPON,CHANF_OVERLAP,Dampener.Active(self)?.1:1.);
-			UTMainHandler.DoSwing(self,(FRandom[Bonesaw](-0.1,0.1),FRandom[Bonesaw](-0.2,-0.3)),4,0.2,8,SWING_Spring,2,2.);
 		}
 		CSWA ABC 2;
-		CSWA D 0
-		{
-			UTMainHandler.DoSwing(self,(FRandom[Bonesaw](-0.1,0.1),FRandom[Bonesaw](0.8,0.5)),6,-1,8,SWING_Spring,2,1.2);
-		}
 		CSWA DEF 1;
 		CSWA G 0 A_Clamp();
 		CSWA GH 1;

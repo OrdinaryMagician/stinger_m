@@ -155,7 +155,6 @@ Class UTranslocator : UnrealWeapon
 		if ( !weap ) return;
 		A_StartSound("telehand/throw",CHAN_WEAPON);
 		invoker.FireEffect();
-		UTMainHandler.DoSwing(self,(FRandom[Translocator](0.2,-0.4),FRandom[Translocator](0.2,-0.7)),2,-0.3,3,SWING_Spring,2,3);
 		Vector3 x, y, z;
 		[x, y, z] = dt_CoordUtil.GetAxes(pitch,angle,roll);
 		Vector3 origin = level.Vec3Offset(Vec2OffsetZ(0,0,player.viewz),10*x-8*y-12*z);
@@ -175,7 +174,6 @@ Class UTranslocator : UnrealWeapon
 		if ( !weap ) return;
 		A_StartSound("transloc/return",CHAN_WEAPON);
 		invoker.FireEffect();
-		UTMainHandler.DoSwing(self,(FRandom[Translocator](-0.2,-0.4),FRandom[Translocator](-0.2,0.7)),3,-1,2,SWING_Spring,2,2);
 		if ( invoker.module && invoker.module.bAMBUSH )
 		{
 			UTMainHandler.DoFlash(self,Color(255,255,255,255),50);
