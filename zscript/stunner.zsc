@@ -13,6 +13,7 @@ Class StunnerAmmo : Ammo
 	override void DoEffect()
 	{
 		Super.DoEffect();
+		if ( !Owner.player || !(Owner.player.ReadyWeapon is 'Stunner') ) return;	// don't recharge if we don't have a stunner out
 		if ( rechargespeed <= 0. ) rechargespeed = 2.;
 		rechargephase += 1./rechargespeed;
 		if ( rechargephase < 7 ) return;
