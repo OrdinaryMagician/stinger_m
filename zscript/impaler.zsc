@@ -157,7 +157,7 @@ Class ImpalerBurstBolt : Actor
 	override void Tick()
 	{
 		Super.Tick();
-		frame++;
+		frame += 1;
 		if ( frame >= 5 ) frame = 0;
 	}
 	action void A_Trace()
@@ -535,7 +535,7 @@ Class StarterImpalerBolt : ImpalerBolt
 	override void Tick()
 	{
 		Super.Tick();
-		frame++;
+		frame += 1;
 		if ( frame > 4 ) frame = 0;
 		if ( isFrozen() ) return;
 		if ( !target )
